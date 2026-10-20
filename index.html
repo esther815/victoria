@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Victoria">
+<meta name="theme-color" content="#E6F1FA">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icon-180.png">
+<link rel="icon" href="./icon-192.png">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;-webkit-tap-highlight-color:transparent}</style>
+<title>Victoria Quest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&family=Noto+Serif+KR:wght@700&display=swap">
+<style>
+/* Layout: 게임 허브 — 홈(4개 퀘스트 타일) → 각 퀘스트 화면. 한 화면에 한 가지 일만. */
+:root{
+  --bg:#E6F1FA; --card:#FFFFFF; --soft:#F1F6FB; --ink:#1E2940; --muted:#5B6782; --line:#C9D8E8; --lock:#AEB9CC;
+  --accent:#2F6FEB; --good:#2E9E62; --bad:#D9485F;
+  --cook:#F2A516; --hist:#E8664A; --hanja:#B8323F; --eng:#2F6FEB;
+  --butter:#FFC93C; --crust:#C9822B; --cheese:#FFB627;
+  --display:"Jua","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --body:"Gowun Dodum","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --han:"Noto Serif KR","AppleMyungjo","Batang",serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#121B2A; --card:#1C2739; --soft:#243149; --ink:#EEF2FA; --muted:#A3B0C8; --line:#2E3C55; --lock:#4A5872; --accent:#7AA5FF;
+  --good:#4CC488; --bad:#FF7A8C; --hanja:#FF7D88; --eng:#7AA5FF; --hist:#FF8C70; color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121B2A; --card:#1C2739; --soft:#243149; --ink:#EEF2FA; --muted:#A3B0C8; --line:#2E3C55; --lock:#4A5872; --accent:#7AA5FF;
+  --good:#4CC488; --bad:#FF7A8C; --hanja:#FF7D88; --eng:#7AA5FF; --hist:#FF8C70; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px 48px}
+#app{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+h1,h2,h3{font-family:var(--display);font-weight:400;margin:0;text-wrap:balance}
+h1{font-size:2rem;line-height:1.2} h2{font-size:1.6rem;line-height:1.3} h3{font-size:1.25rem}
+p{margin:0}
+button{font:inherit;color:inherit}
+button:focus-visible,label:focus-within{outline:3px solid var(--accent);outline-offset:2px}
+.muted{color:var(--muted)}
+.top{display:flex;align-items:center;gap:12px}
+.back{appearance:none;border:2px solid var(--line);background:var(--card);border-radius:14px;padding:6px 14px;cursor:pointer;font-family:var(--display)}
+.hud{display:flex;flex-direction:column;gap:8px}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.pill{font-family:var(--display);font-size:1rem;color:var(--muted)}
+.bar{height:14px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--butter);border-radius:99px}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{appearance:none;text-align:left;border:3px solid var(--line);background:var(--card);border-radius:22px;padding:14px;cursor:pointer;display:flex;flex-direction:column;gap:6px;min-width:0}
+.tile .ic{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;font-family:var(--display);font-size:1.6rem;color:#fff}
+.tile h3{font-size:1.3rem}
+.tile .when{font-size:.95rem;color:var(--muted)}
+.chip{align-self:flex-start;border-radius:99px;padding:2px 12px;font-family:var(--display);font-size:.95rem;background:var(--soft)}
+.chip.go{background:var(--good);color:#fff}
+.chip.done{background:var(--butter);color:#3A2A00}
+.chip.wait{background:var(--soft);color:var(--muted)}
+.card{background:var(--card);border-radius:22px;padding:18px;border:3px solid var(--line);display:flex;flex-direction:column;gap:14px}
+.big{appearance:none;border:0;border-radius:18px;padding:14px 18px;font-family:var(--display);font-size:1.3rem;cursor:pointer;background:var(--good);color:#fff;width:100%}
+.big.alt{background:var(--soft);color:var(--ink)}
+.big:disabled{background:var(--lock);cursor:not-allowed}
+.btns{display:flex;flex-direction:column;gap:10px}
+.lock{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;padding:24px 8px}
+.lock .clock{font-family:var(--display);font-size:3rem;color:var(--accent);line-height:1}
+/* 퀴즈 */
+.qprog{display:flex;gap:6px}
+.qprog i{flex:1;height:8px;border-radius:99px;background:var(--line)}
+.qprog i.ok{background:var(--good)} .qprog i.no{background:var(--bad)} .qprog i.now{background:var(--accent)}
+.prompt{font-size:1.25rem;font-family:var(--display);text-align:center}
+.prompt .hz{font-family:var(--han);font-size:5rem;line-height:1.1;display:block}
+.prompt .em{font-size:4.5rem;line-height:1.1;display:block}
+.prompt .word{font-family:var(--display);font-size:2.6rem;display:block}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opt{appearance:none;border:3px solid var(--line);background:var(--card);border-radius:18px;padding:12px 8px;cursor:pointer;font-family:var(--display);font-size:1.25rem;min-height:64px;display:grid;place-items:center;text-align:center}
+.opt .hz{font-family:var(--han);font-size:2.4rem;line-height:1}
+.opt .em{font-size:2.4rem;line-height:1}
+.opt .word{font-size:2rem;line-height:1}
+.opt.ok{border-color:var(--good);background:color-mix(in srgb,var(--good) 18%,var(--card))}
+.opt.no{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--card))}
+.opt:disabled{cursor:default;color:var(--ink)}
+.say{appearance:none;border:2px solid var(--line);background:var(--soft);border-radius:99px;padding:6px 16px;cursor:pointer;font-family:var(--display);align-self:center}
+.fb{border-radius:18px;padding:12px 14px;background:var(--soft);display:flex;gap:10px;align-items:flex-start}
+.fb b{font-family:var(--display);font-weight:400}
+.ava{flex:none;width:46px;height:46px;border-radius:50%;background:var(--hist);color:#fff;display:grid;place-items:center;font-family:var(--display);font-size:.95rem}
+.bubble{min-width:0}
+.result{text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center}
+.stars{font-size:2.6rem;color:var(--cheese);letter-spacing:4px}
+/* 카드 학습 */
+.flash{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;padding:10px 0}
+.flash .hz{font-family:var(--han);font-size:7rem;line-height:1;color:var(--hanja)}
+.flash .em{font-size:5.5rem;line-height:1}
+.flash .word{font-family:var(--display);font-size:2.8rem;line-height:1.1}
+.flash .mean{font-size:1.3rem;font-family:var(--display)}
+.dots{display:flex;gap:6px;justify-content:center}
+.dots i{width:10px;height:10px;border-radius:50%;background:var(--line)} .dots i.on{background:var(--accent)}
+.nav2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dday{font-family:var(--display);font-size:1.1rem;color:var(--hanja)}
+/* 요리 */
+.map{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.lv{appearance:none;border:3px solid var(--line);background:var(--card);border-radius:16px;padding:6px 2px;display:flex;flex-direction:column;align-items:center;gap:0;cursor:pointer;font-family:var(--display);font-size:.95rem}
+.lv svg{width:100%;max-width:64px;height:auto}
+.lv[aria-current="true"]{border-color:var(--accent)}
+.lv.locked{color:var(--lock);cursor:not-allowed} .lv.locked svg{opacity:.3;filter:grayscale(1)}
+.lv .st{font-size:.8rem;color:var(--cheese);min-height:1.2em}
+.qhead{display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:center} .qhead>div{min-width:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
+.chips li{background:var(--soft);border-radius:99px;padding:3px 12px;font-size:.95rem}
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.steps li{background:var(--soft);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.steps b{font-family:var(--display);font-weight:400;font-size:1.4rem;color:var(--crust);line-height:1}
+.timer{display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:center;background:var(--soft);border-radius:16px;padding:12px}
+.timer>div{min-width:0;display:flex;flex-direction:column;gap:6px}
+.safe{display:flex;flex-direction:column;gap:8px}
+.safe label{display:flex;gap:10px;align-items:flex-start;background:var(--soft);border-radius:14px;padding:10px 12px;cursor:pointer}
+.safe input{width:22px;height:22px;flex:none;margin-top:3px;accent-color:var(--good)}
+.rate{display:flex;gap:6px}
+.rate button{appearance:none;border:0;background:none;font-size:2.3rem;line-height:1;cursor:pointer;color:var(--lock);padding:2px}
+.rate button.on{color:var(--cheese)}
+.foot{text-align:center;font-size:.85rem;color:var(--muted);user-select:none;cursor:default}
+.test{background:var(--bad);color:#fff;border-radius:12px;padding:6px 12px;text-align:center;font-family:var(--display)}
+@media (max-width:480px){h1{font-size:1.7rem}.qhead{grid-template-columns:88px 1fr}.timer{grid-template-columns:72px 1fr}.tile h3{font-size:1.15rem}.tile .ic{width:46px;height:46px}}
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+
+<script>
+/* ===================== 데이터 ===================== */
+const NAME="Victoria";
+const EXAM=new Date(2026,10,28); // 2026-11-28(토) 대한검정회 한자급수자격검정 제113회
+
+// 대한검정회 8급 선정한자 30자 [한자, 훈, 음]
+const HZ=[["一","한","일"],["二","두","이"],["三","석","삼"],["四","넉","사"],["五","다섯","오"],["六","여섯","륙"],["七","일곱","칠"],["八","여덟","팔"],["九","아홉","구"],["十","열","십"],
+["日","날","일"],["月","달","월"],["火","불","화"],["水","물","수"],["木","나무","목"],["金","쇠","금"],["土","흙","토"],["人","사람","인"],["父","아버지","부"],["母","어머니","모"],
+["子","아들","자"],["男","사내","남"],["女","여자","녀"],["兄","맏","형"],["弟","아우","제"],["門","문","문"],["東","동녘","동"],["西","서녘","서"],["南","남녘","남"],["北","북녘","북"]];
+const HZTIP={"六":"'육'으로도 읽어요. 六月은 '유월'!","女":"단어 맨 앞에서는 '여'로 읽어요. 女子 = 여자","十":"十月은 '시월'!","兄":"'맏'은 첫째라는 뜻이에요.","三":"'석'은 셋이라는 뜻이에요.","四":"'넉'은 넷이라는 뜻이에요."};
+const HZWORD=[["父母","부모","아버지와 어머니"],["兄弟","형제","형과 아우"],["男女","남녀","남자와 여자"],["子女","자녀","아들과 딸"],["父子","부자","아버지와 아들"],["母子","모자","어머니와 아들"],["母女","모녀","어머니와 딸"],["女子","여자","여자"],["男子","남자","남자"],["東西","동서","동쪽과 서쪽"],["南北","남북","남쪽과 북쪽"],["日月","일월","해와 달"],["水門","수문","물을 막거나 흘려보내는 문"],["土木","토목","흙과 나무로 하는 공사"],["東門","동문","동쪽 문"],["南門","남문","남쪽 문"],["西門","서문","서쪽 문"],["北門","북문","북쪽 문"],["三月","삼월","3월"],["五月","오월","5월"],["六月","유월","6월"],["十月","시월","10월"],["八月","팔월","8월"],["九月","구월","9월"],["人子","인자","사람의 아들"]].filter(w=>w[0]!=="人子");
+const YOIL=[["월요일","月"],["화요일","火"],["수요일","水"],["목요일","木"],["금요일","金"],["토요일","土"],["일요일","日"]];
+const HZDAYS=[[0,1,2],[3,4,5],[6,7,8],[9,10,11],[12,13,14],[15,16,17],[18,19,20],[21,22,23],[24,25,26],[27,28,29]];
+
+// 한국사 100문제 [질문, 정답, 오답3, 선애 설명]
+const HIST=[
+["구석기 사람들이 돌을 깨뜨려 만든 도구는?","뗀석기",["간석기","청동 거울","철 낫"],"구석기 사람들은 돌을 깨뜨려 만든 뗀석기로 사냥하고 고기를 잘랐어."],
+["신석기 시대에 음식을 담으려고 만든 대표적인 토기는?","빗살무늬 토기",["민무늬 토기","고려청자","백자"],"겉에 빗살 같은 줄무늬가 있어서 빗살무늬 토기라고 불러."],
+["신석기 시대에 처음 시작된 것은?","농사",["불 사용","철기 사용","한글 사용"],"불은 구석기 때부터 썼고, 농사는 신석기 시대에 시작됐어."],
+["우리 역사에서 처음 세워진 나라는?","고조선",["고구려","신라","고려"],"우리 역사 최초의 나라는 고조선이야."],
+["고조선을 세웠다고 전해지는 사람은?","단군왕검",["주몽","온조","박혁거세"],"옛이야기에 따르면 단군왕검이 고조선을 세웠대."],
+["청동기 시대에 큰 돌로 만든 무덤은?","고인돌",["피라미드","천마총","무령왕릉"],"고인돌은 힘센 지배자의 무덤이야. 우리나라에 특히 많아."],
+["단군 이야기에서 쑥과 마늘을 먹고 사람이 된 동물은?","곰",["호랑이","토끼","사슴"],"호랑이는 참지 못하고 뛰쳐나갔고, 곰이 끝까지 참아서 사람이 되었다는 이야기야."],
+["고조선의 법으로, 지금은 3개 조항만 전해지는 것은?","8조법",["경국대전","대전회통","훈민정음"],"8조법은 8개 조항 중 3개만 전해져. 사람을 죽이면 사형에 처한다는 내용이 있어."],
+["고조선을 멸망시킨 중국의 나라는?","한",["당","수","송"],"고조선은 기원전 108년에 한나라의 공격으로 멸망했어."],
+["만주에 있던 나라로, '영고'라는 하늘 제사를 지낸 나라는?","부여",["고구려","동예","가야"],"부여는 12월에 영고라는 제천 행사를 열었어."],
+["고구려를 세운 사람은?","주몽",["온조","김수로","왕건"],"활을 잘 쏘던 주몽이 고구려를 세웠어. 동명성왕이라고도 해."],
+["백제를 세운 사람은?","온조",["주몽","박혁거세","견훤"],"주몽의 아들 온조가 한강 근처에 백제를 세웠어."],
+["신라를 세운 사람은?","박혁거세",["김유신","온조","대조영"],"알에서 태어났다는 이야기가 전해지는 박혁거세가 신라를 세웠어."],
+["금관가야를 세웠다고 전해지는 사람은?","김수로",["김춘추","궁예","이성계"],"김수로왕이 금관가야를 세웠다고 전해져."],
+["가야가 특히 유명했던 것은?","철",["비단","소금","종이"],"가야는 철이 많이 나서 철로 만든 물건을 다른 나라에 팔았어."],
+["광개토 대왕의 업적을 새긴 비석은?","광개토 대왕릉비",["진흥왕 순수비","척화비","첨성대"],"아들 장수왕이 아버지의 업적을 기록하려고 세운 비석이야."],
+["고구려의 수도를 평양으로 옮긴 왕은?","장수왕",["광개토 대왕","소수림왕","주몽"],"장수왕은 427년에 수도를 평양으로 옮기고 남쪽으로 영토를 넓혔어."],
+["살수 대첩에서 수나라 군대를 크게 물리친 고구려 장군은?","을지문덕",["계백","강감찬","이순신"],"을지문덕은 살수(청천강)에서 수나라 군대를 크게 무찔렀어."],
+["당 태종의 공격을 끝까지 막아 낸 고구려의 성은?","안시성",["남한산성","공산성","행주산성"],"안시성 사람들은 당나라 대군에 맞서 성을 지켜 냈어."],
+["고구려 사람들이 말 타고 사냥하는 그림(수렵도)이 있는 무덤은?","무용총",["천마총","무령왕릉","석굴암"],"무용총 벽화에는 춤추는 모습과 사냥하는 모습이 그려져 있어."],
+["4세기에 백제의 전성기를 이끈 왕은?","근초고왕",["의자왕","무령왕","성왕"],"근초고왕 때 백제는 영토를 크게 넓혔어."],
+["무덤 주인을 알려 주는 돌(지석)이 나온 백제 왕릉은?","무령왕릉",["천마총","무용총","장군총"],"무령왕릉에서 나온 지석 덕분에 무덤 주인이 무령왕이라는 걸 알게 됐어."],
+["백제의 마지막 왕은?","의자왕",["근초고왕","문무왕","장수왕"],"백제는 의자왕 때인 660년에 멸망했어."],
+["황산벌 전투에서 신라군과 싸운 백제 장군은?","계백",["김유신","을지문덕","연개소문"],"계백은 결사대 5천 명과 함께 황산벌에서 싸웠어."],
+["부여에서 발견된 백제의 대표 공예품은?","백제 금동 대향로",["금관","천마도","측우기"],"향을 피우는 그릇이야. 산과 동물, 사람이 정교하게 새겨져 있어."],
+["신라가 불교를 받아들이는 계기가 된 인물은?","이차돈",["원효","의상","김유신"],"이차돈의 희생 뒤에 법흥왕이 불교를 공식 인정했어."],
+["한강 유역을 차지하고 순수비를 세운 신라 왕은?","진흥왕",["법흥왕","문무왕","선덕 여왕"],"진흥왕은 영토를 넓히고 곳곳에 순수비를 세웠어."],
+["신라의 청소년 수련 단체는?","화랑도",["성균관","서원","향교"],"화랑도는 몸과 마음을 함께 갈고닦던 신라의 청소년 단체야."],
+["선덕 여왕 때 세웠다고 전해지는 별 관측대는?","첨성대",["석굴암","다보탑","팔만대장경"],"경주에 있는 첨성대는 하늘의 별을 관찰하던 곳으로 알려져 있어."],
+["신라의 골품제는 무엇에 따라 신분을 나눈 제도일까?","태어난 집안",["시험 성적","가진 재산","나이"],"골품제는 혈통, 즉 태어난 집안에 따라 신분을 나눴어."],
+["삼국 통일에 큰 역할을 한 신라 장군은?","김유신",["계백","을지문덕","장보고"],"김유신은 김춘추와 힘을 합쳐 삼국 통일의 길을 열었어."],
+["신라와 손잡고 백제와 고구려를 무너뜨린 중국 나라는?","당",["한","수","원"],"신라는 당과 동맹을 맺었어. 나중에는 당과 싸워 당 군대를 몰아냈지."],
+["당과 동맹을 맺고 왕이 되어 '태종 무열왕'이 된 인물은?","김춘추",["김유신","김수로","왕건"],"김춘추는 태종 무열왕이 되었고, 그때 백제가 멸망했어."],
+["죽어서 바다의 용이 되어 나라를 지키겠다고 한 신라 왕은?","문무왕",["진흥왕","법흥왕","장수왕"],"문무왕은 삼국 통일을 완성한 왕이야. 바다에 묻혔다고 전해져."],
+["고구려 사람 대조영이 세운 나라는?","발해",["고려","후백제","가야"],"고구려가 멸망한 뒤 대조영이 698년에 발해를 세웠어."],
+["발해를 세운 사람은?","대조영",["왕건","궁예","견훤"],"대조영은 고구려 출신이야."],
+["'바다 동쪽의 번성한 나라'라는 뜻으로 발해를 부른 이름은?","해동성국",["조용한 아침의 나라","황금의 나라","고요한 나라"],"발해가 크게 번성하자 중국에서 해동성국이라고 불렀어."],
+["다보탑과 석가탑이 있는 경주의 절은?","불국사",["해인사","부석사","봉은사"],"불국사는 통일 신라 때 지었고, 다보탑과 석가탑이 있어."],
+["청해진을 세우고 '바다의 왕'이라 불린 사람은?","장보고",["최무선","이순신","문익점"],"장보고는 완도에 청해진을 세우고 바다 무역을 이끌었어."],
+["통일 신라 때 만든 인공 석굴 사원은?","석굴암",["첨성대","불국사","무용총"],"석굴암은 돌을 쌓아 만든 석굴 안에 큰 부처님이 있어."],
+["고려를 세운 사람은?","왕건",["궁예","견훤","이성계"],"왕건이 918년에 고려를 세웠어."],
+["후백제를 세운 사람은?","견훤",["궁예","온조","대조영"],"통일 신라가 약해지자 견훤이 후백제를 세웠어."],
+["후고구려를 세운 사람은?","궁예",["견훤","왕건","주몽"],"궁예가 후고구려를 세웠고, 나중에 왕건이 고려를 세웠어."],
+["고려의 수도는?","개경",["한양","경주","부여"],"고려의 수도는 개경이야. 지금의 개성이지."],
+["시험으로 관리를 뽑는 과거 제도를 처음 실시한 고려 왕은?","광종",["태조 왕건","세종","정조"],"광종은 958년에 과거 제도를 처음 실시했어."],
+["거란 장수와 말로 담판을 지어 강동 6주를 얻은 사람은?","서희",["강감찬","윤관","최영"],"서희는 싸우지 않고 대화로 땅을 얻어 냈어."],
+["귀주 대첩에서 거란군을 크게 물리친 장군은?","강감찬",["서희","을지문덕","권율"],"강감찬은 1019년 귀주에서 거란군을 크게 이겼어."],
+["여진을 물리치고 동북 9성을 쌓은 사람은?","윤관",["서희","최무선","김유신"],"윤관은 별무반이라는 군대를 만들어 여진을 정벌했어."],
+["몽골이 쳐들어오자 고려 조정이 옮겨 간 섬은?","강화도",["제주도","울릉도","거제도"],"고려 조정은 1232년에 강화도로 옮겨 몽골에 맞섰어."],
+["몽골에 끝까지 맞서 싸운 고려의 군대는?","삼별초",["화랑도","별무반","의병"],"삼별초는 진도와 제주도로 옮겨 가며 끝까지 싸웠어."],
+["해인사에 보관된, 나무판 8만여 장에 새긴 불교 경전은?","팔만대장경",["직지심체요절","삼국사기","훈민정음"],"몽골을 물리치기를 바라는 마음으로 만들었어."],
+["지금 남아 있는 세계에서 가장 오래된 금속 활자 인쇄본은?","직지심체요절",["팔만대장경","삼국유사","동의보감"],"줄여서 '직지'라고 해. 고려 때 금속 활자로 찍었어."],
+["푸른빛이 나는 고려의 대표 도자기는?","고려청자",["백자","분청사기","빗살무늬 토기"],"고려청자는 은은한 푸른빛으로 유명해."],
+["김부식이 쓴, 지금 전하는 가장 오래된 우리 역사책은?","삼국사기",["삼국유사","고려사","동국통감"],"삼국사기는 고려 때 김부식이 썼어."],
+["단군 이야기가 실린, 승려 일연이 쓴 역사책은?","삼국유사",["삼국사기","경국대전","목민심서"],"삼국유사에는 단군 이야기와 옛이야기가 많이 실려 있어."],
+["원나라에서 목화씨를 들여온 사람은?","문익점",["최무선","장보고","정약용"],"문익점 덕분에 무명옷을 입게 되었어."],
+["화약을 만들어 왜구를 물리친 사람은?","최무선",["문익점","강감찬","이순신"],"최무선은 화약과 화포를 만들어 왜구를 무찔렀어."],
+["위화도에서 군대를 돌려 돌아온 장군은?","이성계",["최영","왕건","정몽주"],"이성계는 위화도 회군 뒤 권력을 잡았어."],
+["조선을 세운 사람은?","이성계",["왕건","세종","정도전"],"이성계가 1392년에 조선을 세웠어. 태조라고 불러."],
+["조선의 수도는?","한양",["개경","경주","평양"],"조선은 한양에 수도를 정했어. 지금의 서울이야."],
+["훈민정음을 만든 왕은?","세종",["태조","정조","영조"],"세종은 백성이 쉽게 쓸 수 있는 글자를 만들었어."],
+["훈민정음을 백성에게 널리 알린(반포한) 해는?","1446년",["1392년","1592년","1910년"],"1446년에 훈민정음을 반포했어. 그래서 한글날이 10월 9일이야."],
+["세종 때 만든, 비가 내린 양을 재는 기구는?","측우기",["자격루","앙부일구","거중기"],"측우기로 전국의 비 양을 재서 농사에 활용했어."],
+["장영실이 만든, 스스로 시간을 알려 주는 물시계는?","자격루",["측우기","혼천의","거북선"],"자격루는 정해진 시간에 저절로 종과 북을 울렸어."],
+["세종 때 학자들이 모여 연구하던 기관은?","집현전",["성균관","규장각","향교"],"집현전 학자들이 훈민정음 연구에도 참여했어."],
+["조선의 기본 법전은?","경국대전",["8조법","삼국사기","목민심서"],"경국대전은 성종 때 완성된 조선의 기본 법전이야."],
+["조선 최고의 국립 교육 기관은?","성균관",["서원","서당","집현전"],"성균관은 한양에 있던 최고의 교육 기관이야."],
+["조선 시대 지방에 세운 사립 교육 기관은?","서원",["성균관","향교","집현전"],"서원에서 선비들이 공부하고 훌륭한 학자에게 제사를 지냈어."],
+["조선 시대 신분 가운데 가장 높은 계층은?","양반",["중인","상민","천민"],"조선은 양반, 중인, 상민, 천민으로 신분을 나눴어."],
+["조선을 세운 뒤 가장 먼저 지은 궁궐은?","경복궁",["창덕궁","덕수궁","경희궁"],"경복궁은 조선의 정궁이야."],
+["1592년 일본이 조선을 침략한 전쟁은?","임진왜란",["병자호란","정묘호란","6·25 전쟁"],"임진년에 일어나서 임진왜란이라고 불러."],
+["한산도 대첩에서 학익진으로 일본 수군을 물리친 장군은?","이순신",["권율","곽재우","김시민"],"학이 날개를 편 모양으로 적을 둘러싸는 작전이 학익진이야."],
+["이순신이 전투에서 사용한, 덮개를 씌운 배는?","거북선",["판옥선","황포돛배","뗏목"],"거북선은 등에 덮개를 씌워 적이 올라타기 어려웠어."],
+["임진왜란 때 행주산성에서 크게 이긴 장군은?","권율",["이순신","곽재우","강감찬"],"행주 대첩에서는 백성들도 함께 싸웠어."],
+["붉은 옷을 입고 싸워 '홍의 장군'이라 불린 의병장은?","곽재우",["권율","김좌진","홍범도"],"곽재우는 스스로 의병을 모아 일본군과 싸웠어."],
+["1636년 청나라가 쳐들어온 전쟁은?","병자호란",["임진왜란","정유재란","귀주 대첩"],"병자년에 일어나서 병자호란이라고 해."],
+["병자호란 때 인조가 피란해 버틴 산성은?","남한산성",["행주산성","안시성","수원 화성"],"인조는 남한산성에서 버티다가 결국 청에 항복했어."],
+["수원 화성을 쌓게 한 왕은?","정조",["세종","영조","태조"],"정조는 아버지 사도 세자의 무덤을 옮기고 그 근처에 화성을 쌓았어."],
+["수원 화성을 지을 때 쓴 '거중기'를 설계한 학자는?","정약용",["김정호","장영실","이황"],"거중기는 무거운 돌을 적은 힘으로 들어 올리는 기계야."],
+["대동여지도를 만든 사람은?","김정호",["정약용","장영실","김홍도"],"대동여지도는 조선 후기에 만든 우리나라 전체 지도야."],
+["흥선 대원군이 서양과 교류하지 않겠다는 뜻으로 세운 비석은?","척화비",["순수비","광개토 대왕릉비","독립문"],"척화비에는 서양과 친하게 지내는 것은 나라를 파는 일이라는 내용이 새겨져 있어."],
+["1876년 조선이 일본과 맺어 항구를 열게 된 조약은?","강화도 조약",["을사늑약","한일 병합 조약","휴전 협정"],"강화도 조약으로 조선은 부산 등 항구를 열었어."],
+["1894년 전봉준 등이 일으킨 농민 운동은?","동학 농민 운동",["3·1 운동","4·19 혁명","만적의 난"],"농민들이 나라의 잘못된 정치와 외세에 맞서 일어났어."],
+["1897년 고종이 새로 정한 나라 이름은?","대한 제국",["대한민국","조선","고려"],"고종은 나라 이름을 대한 제국으로 바꾸고 황제가 되었어."],
+["1909년 하얼빈에서 이토 히로부미를 저격한 독립운동가는?","안중근",["윤봉길","김구","유관순"],"안중근은 하얼빈역에서 이토 히로부미를 저격했어."],
+["우리나라가 일본에 나라를 빼앗긴 해는?","1910년",["1876년","1919년","1945년"],"1910년부터 1945년까지를 일제 강점기라고 해."],
+["1919년 전국에서 일어난 독립 만세 운동은?","3·1 운동",["4·19 혁명","동학 농민 운동","6·10 만세 운동"],"1919년 3월 1일, 사람들이 태극기를 들고 만세를 외쳤어."],
+["3·1 운동 때 아우내 장터에서 만세를 외친 학생 독립운동가는?","유관순",["안중근","윤봉길","김구"],"유관순은 고향 천안의 아우내 장터에서 만세 운동을 이끌었어."],
+["1919년 중국 상하이에 세운 우리 정부는?","대한민국 임시 정부",["대한 제국","조선 총독부","통감부"],"3·1 운동 뒤에 독립운동을 이끌기 위해 세웠어."],
+["봉오동 전투에서 일본군을 물리친 독립군 장군은?","홍범도",["김좌진","곽재우","권율"],"홍범도 부대는 1920년 봉오동에서 일본군을 크게 이겼어."],
+["1932년 상하이 훙커우 공원에서 의거를 일으킨 독립운동가는?","윤봉길",["안중근","유관순","이봉창"],"윤봉길의 의거는 대한민국 임시 정부에 큰 힘이 되었어."],
+["'백범'이라는 호를 쓰고 대한민국 임시 정부를 이끈 사람은?","김구",["안창호","이승만","윤봉길"],"백범 김구는 평생 독립운동에 힘썼어."],
+["일제 강점기에 우리말 사전을 만들려고 노력한 단체는?","조선어 학회",["집현전","독립 협회","신간회"],"조선어 학회 사람들은 우리말을 지키려다 감옥에 갇히기도 했어."],
+["우리나라가 광복한 날은?","1945년 8월 15일",["1919년 3월 1일","1948년 8월 15일","1950년 6월 25일"],"1945년 8월 15일에 일제로부터 해방되었어. 그래서 광복절이야."],
+["대한민국 정부가 세워진 해는?","1948년",["1945년","1950년","1919년"],"1948년 8월 15일에 대한민국 정부가 수립되었어."],
+["1950년 6월 25일에 시작된 전쟁은?","6·25 전쟁",["임진왜란","병자호란","청일 전쟁"],"6·25 전쟁으로 많은 사람이 다치고 가족과 헤어졌어."],
+["6·25 전쟁의 휴전 협정을 맺은 해는?","1953년",["1950년","1945년","1960년"],"1953년에 휴전 협정을 맺었어. 전쟁이 완전히 끝난 건 아니고 멈춘 상태야."],
+["1960년 학생과 시민이 부정 선거에 맞서 일어난 민주화 운동은?","4·19 혁명",["3·1 운동","5·18 민주화 운동","6월 민주 항쟁"],"4·19 혁명은 학생들이 앞장선 민주화 운동이야."],
+["1980년 광주에서 일어난 민주화 운동은?","5·18 민주화 운동",["4·19 혁명","3·1 운동","동학 농민 운동"],"광주 시민들이 민주주의를 지키려고 일어났어."],
+["1988년 서울에서 열린 세계적인 스포츠 대회는?","서울 올림픽",["월드컵","아시안 게임","평창 올림픽"],"1988년 서울 올림픽은 우리나라에서 처음 열린 하계 올림픽이야."]
+];
+
+// 영어: 알파벳 3일 + 주제 20일
+const ABC=[["A","apple","🍎","사과"],["B","bear","🐻","곰"],["C","cat","🐱","고양이"],["D","dog","🐶","개"],["E","egg","🥚","달걀"],["F","fish","🐟","물고기"],["G","grape","🍇","포도"],["H","hat","🧢","모자"],["I","ice cream","🍦","아이스크림"],
+["J","juice","🧃","주스"],["K","king","🤴","왕"],["L","lion","🦁","사자"],["M","moon","🌙","달"],["N","nose","👃","코"],["O","orange","🍊","오렌지"],["P","pig","🐷","돼지"],["Q","queen","👸","여왕"],["R","rabbit","🐰","토끼"],
+["S","sun","☀️","해"],["T","tree","🌳","나무"],["U","umbrella","☂️","우산"],["V","violin","🎻","바이올린"],["W","water","💧","물"],["X","fox","🦊","여우 (끝에 x!)"],["Y","yo-yo","🪀","요요"],["Z","zebra","🦓","얼룩말"]];
+const THEMES=[
+["아침 식탁",[["bread","🍞","빵"],["butter","🧈","버터"],["cheese","🧀","치즈"],["egg","🥚","달걀"],["milk","🥛","우유"],["apple","🍎","사과"],["banana","🍌","바나나"],["water","💧","물"],["rice","🍚","밥"],["cookie","🍪","쿠키"]]],
+["가족",[["mom","👩","엄마"],["dad","👨","아빠"],["sister","👧","언니, 여동생"],["brother","👦","오빠, 남동생"],["baby","👶","아기"],["grandma","👵","할머니"],["grandpa","👴","할아버지"],["family","👨‍👩‍👧","가족"],["friend","🧑‍🤝‍🧑","친구"],["love","❤️","사랑"]]],
+["동물",[["cat","🐱","고양이"],["dog","🐶","개"],["bird","🐦","새"],["fish","🐟","물고기"],["rabbit","🐰","토끼"],["horse","🐴","말"],["cow","🐮","소"],["pig","🐷","돼지"],["lion","🦁","사자"],["bear","🐻","곰"]]],
+["색깔",[["red","🔴","빨간색"],["blue","🔵","파란색"],["yellow","🟡","노란색"],["green","🟢","초록색"],["black","⚫","검은색"],["white","⚪","흰색"],["pink","🩷","분홍색"],["orange","🟠","주황색"],["purple","🟣","보라색"],["brown","🟤","갈색"]]],
+["숫자",[["one","1️⃣","하나"],["two","2️⃣","둘"],["three","3️⃣","셋"],["four","4️⃣","넷"],["five","5️⃣","다섯"],["six","6️⃣","여섯"],["seven","7️⃣","일곱"],["eight","8️⃣","여덟"],["nine","9️⃣","아홉"],["ten","🔟","열"]]],
+["내 몸",[["eye","👁️","눈"],["ear","👂","귀"],["nose","👃","코"],["mouth","👄","입"],["hand","✋","손"],["foot","🦶","발"],["leg","🦵","다리"],["arm","💪","팔"],["hair","💇","머리카락"],["face","😀","얼굴"]]],
+["우리 집",[["house","🏠","집"],["door","🚪","문"],["bed","🛏️","침대"],["chair","🪑","의자"],["window","🪟","창문"],["sofa","🛋️","소파"],["clock","⏰","시계"],["key","🔑","열쇠"],["book","📖","책"],["lamp","💡","전등"]]],
+["학교",[["school","🏫","학교"],["teacher","🧑‍🏫","선생님"],["student","🧑‍🎓","학생"],["pencil","✏️","연필"],["bag","🎒","가방"],["paper","📄","종이"],["scissors","✂️","가위"],["ruler","📏","자"],["crayon","🖍️","크레용"],["notebook","📓","공책"]]],
+["옷",[["shirt","👕","셔츠"],["pants","👖","바지"],["dress","👗","원피스"],["cap","🧢","모자"],["shoes","👟","신발"],["socks","🧦","양말"],["coat","🧥","코트"],["glasses","👓","안경"],["gloves","🧤","장갑"],["scarf","🧣","목도리"]]],
+["하늘과 자연",[["sun","☀️","해"],["moon","🌙","달"],["star","⭐","별"],["rain","🌧️","비"],["snow","❄️","눈"],["cloud","☁️","구름"],["tree","🌳","나무"],["flower","🌸","꽃"],["sea","🌊","바다"],["mountain","⛰️","산"]]],
+["탈것",[["car","🚗","자동차"],["bus","🚌","버스"],["train","🚆","기차"],["plane","✈️","비행기"],["ship","🚢","배"],["bike","🚲","자전거"],["taxi","🚕","택시"],["truck","🚚","트럭"],["boat","⛵","보트"],["subway","🚇","지하철"]]],
+["움직임",[["eat","🍽️","먹다"],["drink","🥤","마시다"],["sleep","😴","자다"],["read","📖","읽다"],["write","✍️","쓰다"],["sing","🎤","노래하다"],["swim","🏊","수영하다"],["cook","🧑‍🍳","요리하다"],["run","🏃","달리다"],["walk","🚶","걷다"]]],
+["기분",[["happy","😊","행복한"],["sad","😢","슬픈"],["angry","😠","화난"],["tired","😫","피곤한"],["hungry","🤤","배고픈"],["hot","🥵","더운"],["cold","🥶","추운"],["big","🐘","큰"],["small","🐜","작은"],["good","👍","좋은"]]],
+["운동과 놀이",[["taekwondo","🥋","태권도"],["soccer","⚽","축구"],["baseball","⚾","야구"],["basketball","🏀","농구"],["tennis","🎾","테니스"],["game","🎮","게임"],["dance","💃","춤"],["music","🎵","음악"],["piano","🎹","피아노"],["skate","⛸️","스케이트"]]],
+["부엌",[["cup","☕","컵"],["plate","🍽️","접시"],["spoon","🥄","숟가락"],["fork","🍴","포크"],["knife","🔪","칼"],["pan","🍳","프라이팬"],["bowl","🥣","그릇"],["salt","🧂","소금"],["honey","🍯","꿀"],["candy","🍬","사탕"]]],
+["과일과 채소",[["strawberry","🍓","딸기"],["grape","🍇","포도"],["peach","🍑","복숭아"],["watermelon","🍉","수박"],["lemon","🍋","레몬"],["tomato","🍅","토마토"],["carrot","🥕","당근"],["potato","🥔","감자"],["corn","🌽","옥수수"],["onion","🧅","양파"]]],
+["장소",[["park","🏞️","공원"],["hospital","🏥","병원"],["bank","🏦","은행"],["store","🏪","가게"],["church","⛪","교회"],["library","📚","도서관"],["zoo","🦓","동물원"],["beach","🏖️","해변"],["city","🏙️","도시"],["home","🏡","집, 가정"]]],
+["요일과 시간",[["Monday","월","월요일"],["Tuesday","화","화요일"],["Wednesday","수","수요일"],["Thursday","목","목요일"],["Friday","금","금요일"],["Saturday","토","토요일"],["Sunday","일","일요일"],["morning","🌅","아침"],["night","🌃","밤"],["today","📅","오늘"]]],
+["직업",[["doctor","🧑‍⚕️","의사"],["police","👮","경찰"],["farmer","🧑‍🌾","농부"],["chef","🧑‍🍳","요리사"],["singer","🎤","가수"],["pilot","🧑‍✈️","조종사"],["firefighter","🧑‍🚒","소방관"],["artist","🧑‍🎨","화가"],["king","🤴","왕"],["queen","👸","여왕"]]],
+["인사와 대답",[["hello","👋","안녕"],["bye","🙋","잘 가"],["yes","⭕","네"],["no","❌","아니요"],["thank you","🙏","고마워"],["sorry","🙇","미안해"],["please","🥺","부탁해"],["up","⬆️","위"],["down","⬇️","아래"],["okay","👌","좋아"]]]
+];
+const ENGDAYS=[{abc:ABC.slice(0,9)},{abc:ABC.slice(9,18)},{abc:ABC.slice(18)}].concat(THEMES.map(t=>({title:t[0],words:t[1]})));
+
+// 요리
+const LEVELS=[
+ {id:1,name:"버터 토스트",sub:"이미 마스터한 기본 레벨",layers:{bread:"white",butter:1},ing:["식빵 1장","버터"],timer:2,
+  steps:["식빵을 토스터에 넣는다","워치 타이머 2분을 맞추고 굽는다","알람이 울리면 집게로 꺼낸다","버터를 바른다"]},
+ {id:2,name:"치즈 토스트",sub:"버터 토스트 + 치즈 한 장",layers:{bread:"white",butter:1,cheese:1},ing:["식빵 1장","버터","슬라이스 치즈 1장"],timer:2,
+  steps:["식빵에 버터를 바르고 치즈를 올린다","토스터에 넣고 워치 타이머 2분을 맞춘다","알람이 울리면 치즈를 본다. 덜 녹았으면 1분 더","치즈가 녹으면 집게로 꺼낸다"]},
+ {id:3,name:"반반 통밀 치즈 토스트",sub:"빵 하나만 바꿔 보는 레벨",layers:{bread:"half",butter:1,cheese:1},ing:["식빵 1장","통밀식빵 1장","버터","슬라이스 치즈 2장"],timer:2,
+  steps:["식빵 1장, 통밀식빵 1장을 준비한다","둘 다 버터 바르고 치즈를 올린다","워치 타이머 2분, 덜 녹았으면 1분 더","두 개를 비교해서 먹어 본다"]},
+ {id:4,name:"달걀 치즈 구멍 토스트",sub:"단백질 파워업 레벨",layers:{bread:"wheat",butter:1,egg:1,cheese:1},ing:["통밀식빵 1장","달걀 1개","슬라이스 치즈 1장","버터 조금"],timer:10,
+  steps:["컵으로 빵 가운데를 꾹 눌러 구멍을 낸다","달걀을 그릇에 깨서 포크로 푼다","포일 깐 트레이에 빵을 놓고 구멍에 달걀을 붓는다","워치 타이머 10분. 달걀이 흔들리지 않으면 치즈 올리고 1분 더"]},
+ {id:5,name:"과일 콤보 세트",sub:"좋아하는 토스트 + 과일 한 가지",layers:{bread:"wheat",butter:1,cheese:1,fruit:1},ing:["좋아하는 토스트","과일 한 가지(바나나, 딸기, 사과 중 선택)"],timer:2,
+  steps:["오늘의 토스트를 만든다","과일 한 가지를 직접 고른다","접시에 같이 담는다","과일은 한 입만 먹어도 클리어"]}
+];
+const SAFE_BASE=["워치 타이머를 맞췄다","오븐장갑을 꼈다","토스트는 손 말고 집게로 꺼낸다","다 쓰면 토스터를 끈다"];
+const SAFE_EXTRA={4:["달걀을 만진 뒤 손을 씻었다","달걀이 흔들리지 않을 때까지 익혔다"]};
+
+/* ===================== 상태 ===================== */
+const KEY="victoriaQuest-start";
+let S={};
+try{S=JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){S={}}
+S.xp=S.xp||0; S.days=S.days||[]; S.test=!!S.test;
+S.cook=S.cook||{1:{clear:true,stars:3,cook:0}}; S.cookCur=S.cookCur||1;
+S.hist=S.hist||{n:0,last:"",wrong:[]}; S.hz=S.hz||{n:0,last:"",best:0}; S.en=S.en||{n:0,last:""};
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const pad=n=>String(n).padStart(2,"0");
+function today(){const d=new Date();return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
+function hourNow(){const d=new Date();return d.getHours()+d.getMinutes()/60}
+function isOpen(h){return S.test||hourNow()>=h}
+function doneToday(t){return S[t].last===today()&&!S.test}
+function addXP(n){S.xp+=n;const t=today();if(!S.days.includes(t))S.days.push(t);if(S.days.length>60)S.days=S.days.slice(-60);save()}
+function streak(){let c=0;const d=new Date();for(;;){const s=d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());if(S.days.includes(s)){c++;d.setDate(d.getDate()-1)}else{if(c===0&&s===today()){d.setDate(d.getDate()-1);if(S.days.includes(d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())))continue}break}}return c}
+function dday(){const t=new Date();t.setHours(0,0,0,0);return Math.round((EXAM-t)/864e5)}
+
+/* ===================== 도구 ===================== */
+const $=s=>document.querySelector(s);
+const app=$("#app");
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const pick=(arr,n,ex=[])=>shuffle(arr.filter(x=>!ex.includes(x))).slice(0,n);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function say(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="en-US";u.rate=.75;speechSynthesis.speak(u)}catch(e){}}
+function hdr(title){return `<div class="top"><button class="back" id="back" type="button">← 홈</button><h2>${title}</h2></div>`}
+function bindBack(){const b=$("#back");if(b)b.onclick=home}
+function mkQ(prompt,right,wrongs,exp,extra={}){const o=shuffle([right,...wrongs]);return Object.assign({prompt,opts:o,ans:o.indexOf(right),exp},extra)}
+
+/* 퀴즈 엔진 */
+function quiz(o){
+  let i=0,score=0;const marks=[];
+  function show(){
+    const q=o.qs[i];
+    app.innerHTML=hdr(o.title)+`<div class="card">
+      <div class="qprog">${o.qs.map((_,k)=>`<i class="${marks[k]===true?"ok":marks[k]===false?"no":k===i?"now":""}"></i>`).join("")}</div>
+      <div class="prompt">${q.prompt}</div>
+      ${q.say?`<button class="say" id="sayb" type="button">🔊 다시 듣기</button>`:""}
+      <div class="opts">${q.opts.map((x,k)=>`<button class="opt" type="button" data-k="${k}">${x}</button>`).join("")}</div>
+      <div id="fb"></div></div>`;
+    bindBack();
+    if(q.say){say(q.say);$("#sayb").onclick=()=>say(q.say)}
+    app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+      const k=+b.dataset.k,ok=k===q.ans;marks[i]=ok;if(ok)score++;
+      app.querySelectorAll(".opt").forEach(x=>{x.disabled=true;const kk=+x.dataset.k;if(kk===q.ans)x.classList.add("ok");else if(kk===k)x.classList.add("no")});
+      if(o.onAnswer)o.onAnswer(q,ok);
+      const head=ok?(o.mascot?"딩동댕! 맞았어!":"정답!"):(o.mascot?"아쉽다! 정답은 "+q.opts[q.ans]+"!":"정답은 "+q.opts[q.ans]);
+      $("#fb").innerHTML=`<div class="fb">${o.mascot?`<div class="ava">선애</div>`:""}<div class="bubble"><b style="color:var(${ok?"--good":"--bad"})">${head}</b>${q.exp?`<p>${q.exp}</p>`:""}</div></div>
+        <button class="big" id="next" type="button" style="margin-top:12px">${i<o.qs.length-1?"다음 문제":"결과 보기"}</button>`;
+      app.querySelector(".qprog").children[i].className=ok?"ok":"no";
+      $("#next").onclick=()=>{i++;i<o.qs.length?show():end()};
+      $("#next").focus();
+    });
+  }
+  function end(){
+    const n=o.qs.length,pass=o.pass?score>=o.pass:true;
+    const st=score===n?3:score>=n*0.85?2:pass?1:0;
+    if(pass&&o.onPass)o.onPass(score);
+    app.innerHTML=hdr(o.title)+`<div class="card result">
+      ${o.mascot?`<div class="fb" style="text-align:left;width:100%"><div class="ava">선애</div><div class="bubble"><b>${NAME}, ${score>=4?"오늘 진짜 잘했어! 내일 아침에 또 만나!":"수고했어! 틀린 문제는 다음에 다시 나올 거야."}</b></div></div>`:""}
+      <div class="stars">${"★".repeat(st)}${"☆".repeat(3-st)}</div>
+      <h2>${n}문제 중 ${score}개 정답</h2>
+      ${o.pass?`<p class="muted">${pass?"퀘스트 클리어!":`${o.pass}개 이상 맞히면 클리어! 다시 도전해 볼까?`}</p>`:""}
+      <div class="btns" style="width:100%">${!pass?`<button class="big" id="retry" type="button">다시 도전</button>`:""}<button class="big ${pass?"":"alt"}" id="gohome" type="button">홈으로</button></div></div>`;
+    bindBack();$("#gohome").onclick=home;
+    if($("#retry"))$("#retry").onclick=()=>{const q=o.remake?o.remake():o.qs;quiz(Object.assign({},o,{qs:q}))};
+  }
+  show();
+}
+function lockScreen(title,h,msg){app.innerHTML=hdr(title)+`<div class="card lock"><div class="clock">${h}:00</div><h3>${msg}</h3><p class="muted">지금은 ${new Date().getHours()}시 ${new Date().getMinutes()}분이에요.</p></div>`;bindBack()}
+function doneScreen(title,msg,again){app.innerHTML=hdr(title)+`<div class="card lock"><div class="stars">★★★</div><h3>${msg}</h3><div class="btns" style="width:100%">${again?`<button class="big alt" id="again" type="button">연습 한 번 더</button>`:""}<button class="big" id="gohome" type="button">홈으로</button></div></div>`;bindBack();$("#gohome").onclick=home;if(again)$("#again").onclick=again}
+
+/* ===================== 홈 ===================== */
+function status(t){
+  if(t==="cook")return["go","언제든지"];
+  const h=t==="hist"?8:19;
+  if(doneToday(t))return["done","오늘 완료"];
+  if(!isOpen(h))return["wait",h+"시에 열려요"];
+  return["go","지금 도전!"];
+}
+function home(){
+  const lv=Math.floor(S.xp/50)+1,pct=(S.xp%50)/50*100,h=new Date().getHours();
+  const hi=h<12?"좋은 아침":h<18?"안녕":"오늘도 수고했어";
+  const T=[["cook","요리","아침 토스트 퀘스트","--cook","🍞"],["hist","한국사","선애의 아침 퀴즈 · 8시","--hist","史"],["hz","한자","8급 합격 작전 · 19시","--hanja","漢"],["en","영어","하루 10단어 · 19시","--eng","A"]];
+  const dd=dday();
+  app.innerHTML=`${S.test?`<div class="test">보호자 테스트 모드 (시간 제한 꺼짐)</div>`:""}
+  <header class="hud"><h1>${hi}, ${NAME}!</h1>
+   <div class="row"><span class="pill">Lv.${lv} · ${S.xp} XP</span><span class="pill">연속 ${streak()}일</span>${dd>=0?`<span class="pill" style="color:var(--hanja)">한자 시험 D-${dd===0?"DAY":dd}</span>`:""}</div>
+   <div class="bar"><i style="width:${pct}%"></i></div></header>
+  <div class="tiles">${T.map(([k,n,w,c,ic])=>{const[s,txt]=status(k);return `<button class="tile" type="button" data-t="${k}"><span class="ic" style="background:var(${c});${k==="hz"||k==="hist"?"font-family:var(--han)":""}">${ic}</span><h3>${n}</h3><span class="when">${w}</span><span class="chip ${s}">${txt}</span></button>`}).join("")}</div>
+  ${S.test?`<button class="big alt" id="rst" type="button">기록 전체 초기화</button><p class="foot" id="rstAsk" hidden>정말 지울까요? <button class="back" id="rstYes" type="button">네, 지워요</button></p>`:""}
+  <p class="foot" id="ver">Victoria Quest v1</p>`;
+  if(S.test){$("#rst").onclick=()=>{$("#rstAsk").hidden=false};$("#rstYes").onclick=()=>{try{localStorage.removeItem(KEY)}catch(e){}location.reload()}}
+  app.querySelectorAll(".tile").forEach(b=>b.onclick=()=>({cook,hist,hz,en})[b.dataset.t]());
+  let taps=0,tm;$("#ver").onclick=()=>{taps++;clearTimeout(tm);tm=setTimeout(()=>taps=0,1500);if(taps>=5){S.test=!S.test;save();home()}};
+  window.scrollTo(0,0);
+}
+
+/* ===================== 한국사 ===================== */
+function histQs(){
+  const n=S.hist.n,ids=[];
+  if(n<20){for(let k=0;k<5;k++)ids.push(n*5+k);
+  }else{const w=pick(S.hist.wrong,3);ids.push(...w);ids.push(...pick(HIST.map((_,k)=>k),5-w.length,w))}
+  return ids.map(id=>{const h=HIST[id];return mkQ(esc(h[0]),h[1],h[2],esc(h[3]),{id})});
+}
+function hist(){
+  const T="선애의 한국사 퀴즈";
+  if(!isOpen(8))return lockScreen(T,8,"선애가 아침 8시에 퀴즈를 들고 와요!");
+  if(doneToday("hist"))return doneScreen(T,"오늘 퀴즈 완료! 내일 아침 8시에 선애가 또 와요.",()=>startHist(true));
+  app.innerHTML=hdr(T)+`<div class="card"><div class="fb"><div class="ava">선애</div><div class="bubble"><b>${NAME}, 좋은 아침!</b><p>${S.hist.n<20?`오늘은 ${S.hist.n+1}일째 퀴즈야. 5문제 같이 풀어 보자!`:"오늘은 지난번에 틀린 문제도 섞여 있어. 다시 도전!"}</p></div></div>
+   <button class="big" id="start" type="button">퀴즈 시작</button></div>`;
+  bindBack();$("#start").onclick=()=>startHist(false);
+}
+function startHist(practice){
+  quiz({title:"선애의 한국사 퀴즈",qs:histQs(),mascot:true,
+    onAnswer:(q,ok)=>{const w=S.hist.wrong;if(!ok&&!w.includes(q.id))w.push(q.id);if(ok&&S.hist.n>=20){const i=w.indexOf(q.id);if(i>=0)w.splice(i,1)}save()},
+    onPass:()=>{if(!practice&&!doneToday("hist")){S.hist.n++;S.hist.last=today();addXP(15)}}});
+}
+
+/* ===================== 한자 ===================== */
+const hun=i=>HZ[i][1]+" "+HZ[i][2];
+const hzSpan=c=>`<span class="hz">${c}</span>`;
+function hzQ(type,i,learned){
+  const all=HZ.map((_,k)=>k);
+  if(type==="A"){const w=pick(all,3,[i]);return mkQ(hzSpan(HZ[i][0])+"이 한자의 뜻과 소리는?",hun(i),w.map(hun),`${HZ[i][0]} = ${hun(i)}${HZTIP[HZ[i][0]]?" · "+HZTIP[HZ[i][0]]:""}`)}
+  if(type==="B"){const w=pick(all,3,[i]);return mkQ(`<span class="word">${hun(i)}</span>알맞은 한자는?`,hzSpan(HZ[i][0]),w.map(k=>hzSpan(HZ[k][0])),`${hun(i)} = ${HZ[i][0]}`)}
+  if(type==="C"){const ok=HZWORD.filter(w=>[...w[0]].every(c=>learned.includes(c)));if(!ok.length)return null;const w=ok[Math.floor(Math.random()*ok.length)];
+    const wr=pick(HZWORD.map(x=>x[1]).filter(r=>r!==w[1]),3);return mkQ(`<span class="hz" style="font-size:3.6rem">${w[0]}</span>어떻게 읽을까요?`,w[1],wr,`${w[0]} = ${w[1]} (${w[2]})`)}
+  if(type==="D"){const ok=YOIL.filter(y=>learned.includes(y[1]));if(!ok.length)return null;const y=ok[Math.floor(Math.random()*ok.length)];
+    const wr=pick(YOIL.map(x=>x[1]),3,[y[1]]);return mkQ(`<span class="word">${y[0]}</span>의 '${y[0][0]}'은 어떤 한자?`,hzSpan(y[1]),wr.map(hzSpan),`${y[0]} = ${y[1]}요일`)}
+}
+function hzLearnedChars(n){return HZDAYS.slice(0,n).flat().map(i=>HZ[i][0])}
+function hzDayQs(d){
+  const F=HZDAYS[d],L=hzLearnedChars(d+1),prev=HZDAYS.slice(0,d).flat();const qs=[];
+  F.forEach(i=>{qs.push(hzQ("A",i,L));qs.push(hzQ("B",i,L))});
+  const extra=[hzQ("C",0,L),hzQ("D",0,L)].filter(Boolean);
+  prev.length&&extra.push(hzQ("A",prev[Math.floor(Math.random()*prev.length)],L));
+  while(qs.length<8){const e=extra.shift();if(e)qs.push(e);else qs.push(hzQ(Math.random()<.5?"A":"B",F[Math.floor(Math.random()*3)],L))}
+  return shuffle(qs);
+}
+function hzMixQs(n){const L=HZ.map(h=>h[0]),qs=[];const plan=n===25?["A","A","A","A","A","A","A","A","B","B","B","B","B","B","B","B","C","C","C","C","C","C","D","D","D"]:["A","A","A","B","B","B","C","C","D","A"];
+  const idx=shuffle(HZ.map((_,k)=>k));let p=0;plan.forEach(t=>{qs.push(hzQ(t,idx[p++%30],L))});return shuffle(qs)}
+function hz(){
+  const T="한자 8급 합격 작전";const n=S.hz.n,dd=dday();
+  if(!isOpen(19))return lockScreen(T,19,"태권도 다녀와서 저녁 7시에 열려요!");
+  const learning=n<10;
+  const head=`<div class="row"><span class="dday">시험 D-${dd<=0?"DAY":dd} · 11월 28일(토)</span><span class="pill">배운 한자 ${Math.min(n,10)*3} / 30</span></div><div class="bar"><i style="width:${Math.min(n,10)/10*100}%;background:var(--hanja)"></i></div>`;
+  const mock=n>=10?`<button class="big alt" id="mock" type="button">실전 모의시험 (25문제, 18개 이상 합격)${S.hz.best?` · 최고 ${S.hz.best}점`:""}</button>`:"";
+  if(doneToday("hz")){app.innerHTML=hdr(T)+`<div class="card">${head}<h3>오늘 한자 퀘스트 완료!</h3><p class="muted">내일 저녁 7시에 다음 퀘스트가 열려요.</p><div class="btns"><button class="big alt" id="rev" type="button">연습 한 번 더</button>${mock}<button class="big" id="gohome" type="button">홈으로</button></div></div>`;
+    bindBack();$("#gohome").onclick=home;$("#rev").onclick=()=>learning?hzLearn(Math.max(0,n-1),true):hzReview(true);if($("#mock"))$("#mock").onclick=hzMock;return}
+  app.innerHTML=hdr(T)+`<div class="card">${head}
+    <h3>${learning?`오늘의 퀘스트: 새 한자 3개`:`오늘의 퀘스트: 복습 10문제`}</h3>
+    <p class="muted">${learning?`${HZDAYS[n].map(i=>HZ[i][0]).join(" ")} 를 배우고 8문제 중 6개를 맞히면 클리어!`:"30자를 모두 배웠어요! 매일 복습하고 모의시험으로 실력을 확인해요."}</p>
+    <div class="btns"><button class="big" id="start" type="button">${learning?"한자 카드 보기":"복습 시작"}</button>${mock}</div></div>`;
+  bindBack();$("#start").onclick=()=>learning?hzLearn(n,false):hzReview(false);if($("#mock"))$("#mock").onclick=hzMock;
+}
+function hzLearn(d,practice){
+  const F=HZDAYS[d];let k=0;
+  function card(){const i=F[k],h=HZ[i];const ex=HZWORD.filter(w=>w[0].includes(h[0])&&[...w[0]].every(c=>hzLearnedChars(d+1).includes(c)))[0];
+    app.innerHTML=hdr("한자 카드")+`<div class="card"><div class="dots">${F.map((_,j)=>`<i class="${j===k?"on":""}"></i>`).join("")}</div>
+     <div class="flash"><span class="hz">${h[0]}</span><span class="word">${h[1]} ${h[2]}</span>${HZTIP[h[0]]?`<p class="muted">${HZTIP[h[0]]}</p>`:""}${ex?`<p class="mean">${ex[0]} = ${ex[1]} <span class="muted">(${ex[2]})</span></p>`:""}</div>
+     <p class="muted" style="text-align:center">소리 내어 "${h[1]} ${h[2]}" 세 번 말해 보세요!</p>
+     <div class="nav2"><button class="big alt" id="prev" type="button" ${k===0?"disabled":""}>이전</button><button class="big" id="nx" type="button">${k<F.length-1?"다음 카드":"퀴즈 시작!"}</button></div></div>`;
+    bindBack();$("#prev").onclick=()=>{k--;card()};$("#nx").onclick=()=>{if(k<F.length-1){k++;card()}else go()}}
+  function go(){quiz({title:"한자 퀘스트",qs:hzDayQs(d),pass:6,remake:()=>hzDayQs(d),onPass:()=>{if(!practice&&!doneToday("hz")){S.hz.n++;S.hz.last=today();addXP(20)}}})}
+  card();
+}
+function hzReview(practice){quiz({title:"한자 복습",qs:hzMixQs(10),pass:7,remake:()=>hzMixQs(10),onPass:()=>{if(!practice&&!doneToday("hz")){S.hz.n++;S.hz.last=today();addXP(20)}}})}
+function hzMock(){quiz({title:"실전 모의시험",qs:hzMixQs(25),pass:18,remake:()=>hzMixQs(25),
+  onPass:s=>{if(s>(S.hz.best||0))S.hz.best=s;addXP(10)}})}
+
+/* ===================== 영어 ===================== */
+const emSpan=e=>`<span class="em">${e}</span>`;
+function enDayQs(d){
+  const D=ENGDAYS[d];
+  if(D.abc){const L=D.abc,all=ABC.map(a=>a[0]),qs=[];
+    L.forEach((a,k)=>{const t=k%3;
+      if(t===0)qs.push(mkQ("잘 듣고, 어떤 알파벳일까요?",`<span class="word">${a[0]}</span>`,pick(all,3,[a[0]]).map(x=>`<span class="word">${x}</span>`),`${a[0]} (${a[0].toLowerCase()})`,{say:a[0]}));
+      if(t===1)qs.push(mkQ(`<span class="word">${a[0]}</span>짝이 되는 소문자는?`,`<span class="word">${a[0].toLowerCase()}</span>`,pick(all,3,[a[0]]).map(x=>`<span class="word">${x.toLowerCase()}</span>`),`${a[0]} 의 소문자는 ${a[0].toLowerCase()}`));
+      if(t===2)qs.push(mkQ(`${emSpan(a[2])}${a[1]} 는 어떤 글자로 시작할까요?`,`<span class="word">${a[1][0].toUpperCase()}</span>`,pick(all,3,[a[1][0].toUpperCase()]).map(x=>`<span class="word">${x}</span>`),`${a[1]} = ${a[3]}`,{say:a[1]}))});
+    while(qs.length<10){const a=L[Math.floor(Math.random()*L.length)];qs.push(mkQ("잘 듣고, 어떤 알파벳일까요?",`<span class="word">${a[0]}</span>`,pick(all,3,[a[0]]).map(x=>`<span class="word">${x}</span>`),a[0],{say:a[0]}))}
+    return shuffle(qs).slice(0,10)}
+  const W=D.words,pool=THEMES.flatMap(t=>t[1]);
+  return shuffle(W.map((w,k)=>{const others=pick(W.filter(x=>x!==w),3);const t=k%3;
+    if(t===0)return mkQ(`${emSpan(w[1])}영어로 뭘까요?`,`${w[0]}`,others.map(x=>x[0]),`${w[0]} = ${w[2]}`,{say:null});
+    if(t===1)return mkQ("잘 듣고, 알맞은 그림을 고르세요",emSpan(w[1]),others.map(x=>emSpan(x[1])),`${w[0]} = ${w[2]}`,{say:w[0]});
+    return mkQ(`<span class="word">${w[0]}</span>무슨 뜻일까요?`,w[2],others.map(x=>x[2]),`${w[0]} = ${w[2]}`,{say:w[0]});
+  }));
+}
+function enReviewQs(){const pool=THEMES.flatMap(t=>t[1]);const ws=[];shuffle(pool).forEach(w=>{if(ws.length<10&&!ws.some(x=>x[0]===w[0]))ws.push(w)});
+  return ws.map((w,k)=>{const o=pick(pool.filter(x=>x[0]!==w[0]&&x[2]!==w[2]&&x[1]!==w[1]),3);return k%2?mkQ(`${emSpan(w[1])}영어로 뭘까요?`,w[0],o.map(x=>x[0]),`${w[0]} = ${w[2]}`):mkQ("잘 듣고, 알맞은 뜻을 고르세요",w[2],o.map(x=>x[2]),`${w[0]} = ${w[2]}`,{say:w[0]})})}
+function en(){
+  const T="영어 단어 퀘스트",n=S.en.n,total=ENGDAYS.length;
+  if(!isOpen(19))return lockScreen(T,19,"태권도 다녀와서 저녁 7시에 열려요!");
+  const head=`<div class="row"><span class="pill">Day ${Math.min(n+1,total)} / ${total}</span><span class="pill">${n<3?"알파벳 단계":"단어 단계"}</span></div><div class="bar"><i style="width:${Math.min(n,total)/total*100}%;background:var(--eng)"></i></div>`;
+  if(doneToday("en")){app.innerHTML=hdr(T)+`<div class="card">${head}<h3>오늘 영어 퀘스트 완료!</h3><p class="muted">내일 저녁 7시에 새 단어 10개가 열려요.</p><div class="btns"><button class="big alt" id="rev" type="button">오늘 카드 다시 보기</button><button class="big" id="gohome" type="button">홈으로</button></div></div>`;
+    bindBack();$("#gohome").onclick=home;$("#rev").onclick=()=>enLearn(Math.min(n-1,total-1),true);return}
+  const D=ENGDAYS[Math.min(n,total-1)];
+  const desc=n>=total?"모든 단어를 배웠어요! 랜덤 복습 10문제":D.abc?`알파벳 ${D.abc[0][0]}부터 ${D.abc[D.abc.length-1][0]}까지`:`오늘의 주제: ${D.title} (단어 10개)`;
+  app.innerHTML=hdr(T)+`<div class="card">${head}<h3>${desc}</h3><p class="muted">카드를 보고 듣고 따라 말한 뒤, 10문제 중 8개를 맞히면 클리어!</p>
+   <button class="big" id="start" type="button">${n>=total?"복습 시작":"단어 카드 보기"}</button></div>`;
+  bindBack();$("#start").onclick=()=>n>=total?quiz({title:"영어 복습",qs:enReviewQs(),pass:8,remake:enReviewQs,onPass:()=>{if(!doneToday("en")){S.en.n++;S.en.last=today();addXP(20)}}}):enLearn(n,false);
+}
+function enLearn(d,practice){
+  const D=ENGDAYS[d],items=D.abc?D.abc.map(a=>({big:`${a[0]} ${a[0].toLowerCase()}`,em:a[2],word:a[1],mean:a[3],speak:a[0]+". "+a[1],note:a[0]==="V"?"V는 Victoria의 V!":""})):D.words.map(w=>({em:w[1],word:w[0],mean:w[2],speak:w[0]}));
+  let k=0;
+  function card(){const it=items[k];
+    app.innerHTML=hdr(D.abc?"알파벳 카드":"단어 카드")+`<div class="card"><div class="dots">${items.map((_,j)=>`<i class="${j===k?"on":""}"></i>`).join("")}</div>
+     <div class="flash">${it.big?`<span class="word" style="font-size:4rem;color:var(--eng)">${it.big}</span>`:""}<span class="em" style="${/^[가-힣]$/.test(it.em)?"font-family:var(--display);color:var(--eng)":""}">${it.em}</span><span class="word">${esc(it.word)}</span><span class="mean">${it.mean}</span>${it.note?`<p class="muted">${it.note}</p>`:""}</div>
+     <button class="say" id="sp" type="button">🔊 들어 보기</button>
+     <p class="muted" style="text-align:center">듣고 큰 소리로 세 번 따라 말해 보세요!</p>
+     <div class="nav2"><button class="big alt" id="prev" type="button" ${k===0?"disabled":""}>이전</button><button class="big" id="nx" type="button">${k<items.length-1?"다음":"퀴즈 시작!"}</button></div></div>`;
+    bindBack();say(it.speak);$("#sp").onclick=()=>say(it.speak);$("#prev").onclick=()=>{k--;card()};$("#nx").onclick=()=>{if(k<items.length-1){k++;card()}else go()}}
+  function go(){quiz({title:"영어 퀘스트",qs:enDayQs(d),pass:8,remake:()=>enDayQs(d),onPass:()=>{if(!practice&&!doneToday("en")){S.en.n++;S.en.last=today();addXP(20)}}})}
+  card();
+}
+
+/* ===================== 요리 ===================== */
+function toastSvg(l){
+  const fill=l.bread==="white"?"#FBEBC6":l.bread==="wheat"?"#C98E4F":"url(#half)";
+  let g=`<svg viewBox="0 0 120 120" role="img" aria-label="토스트 그림"><defs><linearGradient id="half" x1="0" x2="1"><stop offset=".5" stop-color="#FBEBC6"/><stop offset=".5" stop-color="#C98E4F"/></linearGradient></defs>
+  <path d="M22 108 V48 C10 44 10 14 34 12 C46 4 74 4 86 12 C110 14 110 44 98 48 V108 Z" fill="#A9661F"/>
+  <path d="M29 102 V45 C19 41 20 20 37 19 C48 12 72 12 83 19 C100 20 101 41 91 45 V102 Z" fill="${fill}"/>`;
+  if(l.egg)g+=`<ellipse cx="60" cy="62" rx="22" ry="20" fill="#FFF3D1"/><ellipse cx="60" cy="62" rx="15" ry="13" fill="#FFB938"/>`;
+  if(l.cheese)g+=`<path d="M34 34 H86 V78 C86 82 80 82 80 78 V70 C80 66 74 66 74 70 V84 C74 88 68 88 68 84 V78 H34 Z" fill="#FFB627" opacity=".95"/>`;
+  if(l.butter)g+=`<rect x="50" y="${l.cheese?44:52}" width="20" height="14" rx="3" fill="#FFE27A" stroke="#E8B923" stroke-width="2"/>`;
+  if(l.fruit)g+=`<circle cx="96" cy="96" r="14" fill="#E2445C"/><path d="M96 82 c2 -6 8 -8 12 -6 c-2 5 -7 7 -12 6z" fill="#3BB273"/>`;
+  return g+"</svg>";
+}
+function watchSvg(m){return `<svg viewBox="0 0 120 150" role="img" aria-label="워치 타이머 ${m}분"><rect x="38" y="0" width="44" height="30" rx="8" fill="#8A94A8"/><rect x="38" y="120" width="44" height="30" rx="8" fill="#8A94A8"/><rect x="14" y="20" width="92" height="110" rx="26" fill="#2A2F3A"/><rect x="104" y="48" width="8" height="18" rx="3" fill="#8A94A8"/><rect x="22" y="28" width="76" height="94" rx="20" fill="#05070B"/><circle cx="60" cy="75" r="30" fill="none" stroke="#3A2A12" stroke-width="6"/><circle cx="60" cy="75" r="30" fill="none" stroke="#FF9F1C" stroke-width="6" stroke-linecap="round" stroke-dasharray="150 189" transform="rotate(-90 60 75)"/><text x="60" y="81" text-anchor="middle" font-family="Jua,sans-serif" font-size="20" fill="#FFFFFF">${m}:00</text></svg>`}
+const cOpen=id=>id===1||(S.cook[id-1]&&S.cook[id-1].clear);
+function cook(){
+  const cur=S.cookCur,l=LEVELS.find(x=>x.id===cur),s=S.cook[cur]||{};
+  const safe=SAFE_BASE.concat(SAFE_EXTRA[cur]||[]);
+  const preset=[1,3,5,10,15,30].includes(l.timer);
+  app.innerHTML=hdr("토스트 퀘스트")+`
+  <nav class="map" aria-label="레벨 선택">${LEVELS.map(x=>{const st=S.cook[x.id];return `<button class="lv${cOpen(x.id)?"":" locked"}" type="button" data-id="${x.id}" aria-current="${x.id===cur}" ${cOpen(x.id)?"":"disabled"}>${toastSvg(x.layers)}<span>Lv.${x.id}</span><span class="st">${st&&st.clear?"★".repeat(st.stars||0):cOpen(x.id)?"":"잠김"}</span></button>`}).join("")}</nav>
+  <div class="card">
+   <div class="qhead">${toastSvg(l.layers)}<div><span class="pill" style="color:var(--accent)">LEVEL ${l.id}${s.clear?" · 클리어":""}</span><h2>${l.name}</h2><p class="muted">${l.sub}</p></div></div>
+   <h3>준비물</h3><ul class="chips">${l.ing.map(i=>`<li>${i}</li>`).join("")}</ul>
+   <h3>만드는 순서</h3><ol class="steps">${l.steps.map((t,i)=>`<li><b>${i+1}</b><span>${t}</span></li>`).join("")}</ol>
+   <h3>워치 타이머 ${l.timer}분</h3>
+   <div class="timer">${watchSvg(l.timer)}<div><p><b>말로 하기:</b> 디지털 크라운을 꾹 누른 채 "타이머 ${l.timer}분"</p>
+    <p><b>눌러서 하기:</b> ${preset?`주황색 타이머 앱에서 <b>${l.timer}</b> 누르기`:`처음 한 번은 타이머 앱 맨 아래 '사용자화'에서 ${l.timer}분. 다음부터는 맨 위 최근 항목의 <b>${l.timer}분</b> 누르기`}</p>
+    <p class="muted">손목이 부르르 떨리면 오븐장갑 끼고 토스터로!</p></div></div>
+   <h3>안전 체크 (모두 체크해야 시작!)</h3><div class="safe">${safe.map((t,i)=>`<label><input type="checkbox" id="safe-${cur}-${i}"><span>${t}</span></label>`).join("")}</div>
+   <button class="big" id="go" type="button" disabled>완성했어요!</button>
+   <div id="rate" ${s.clear&&cur!==1?"":"hidden"}><h3>맛 평가</h3><div class="rate">${[1,2,3].map(n=>`<button type="button" data-n="${n}" class="${(s.stars||0)>=n?"on":""}" aria-label="별 ${n}개">★</button>`).join("")}</div></div>
+   <p id="msg" class="pill" style="color:var(--good)"></p>
+  </div>`;
+  bindBack();
+  app.querySelectorAll(".lv").forEach(b=>b.onclick=()=>{S.cookCur=+b.dataset.id;save();cook()});
+  const boxes=[...app.querySelectorAll(".safe input")],go=$("#go");
+  boxes.forEach(b=>b.onchange=()=>{go.disabled=!boxes.every(x=>x.checked)});
+  go.onclick=()=>{const st=S.cook[cur]=S.cook[cur]||{};st.cook=(st.cook||0)+1;const first=!st.clear;st.clear=true;addXP(10);
+    $("#rate").hidden=false;$("#msg").textContent=first&&cur<5?`레벨 ${cur} 클리어! 레벨 ${cur+1}이 열렸어요.`:`${st.cook}번째 요리 완료! +10 XP`;go.disabled=true;
+    app.querySelectorAll(".lv").forEach(b=>{const id=+b.dataset.id;if(cOpen(id)){b.disabled=false;b.classList.remove("locked")}})};
+  app.querySelectorAll(".rate button").forEach(b=>b.onclick=()=>{const st=S.cook[cur]=S.cook[cur]||{};st.stars=+b.dataset.n;save();app.querySelectorAll(".rate button").forEach(x=>x.classList.toggle("on",+x.dataset.n<=st.stars))});
+}
+
+home();
+if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js").catch(()=>{})}
+document.addEventListener("visibilitychange",()=>{if(!document.hidden&&document.querySelector("#ver"))home()});
+</script>
+</body>
+</html>
