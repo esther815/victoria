@@ -363,7 +363,7 @@ function doneScreen(title,msg,again){app.innerHTML=hdr(title)+`<div class="card 
 /* ===================== 홈 ===================== */
 function status(t){
   if(t==="cook")return["go","언제든지"];
-  const h=t==="hist"?8:19;
+  const h=t==="hist"?8:t==="hz"?15:19;
   if(doneToday(t))return["done","오늘 완료"];
   if(!isOpen(h))return["wait",h+"시에 열려요"];
   return["go","지금 도전!"];
@@ -371,7 +371,7 @@ function status(t){
 function home(){
   const lv=Math.floor(S.xp/50)+1,pct=(S.xp%50)/50*100,h=new Date().getHours();
   const hi=h<12?"좋은 아침":h<18?"안녕":"오늘도 수고했어";
-  const T=[["cook","요리","아침 토스트 퀘스트","--cook","🍞"],["hist","한국사","선애의 아침 퀴즈 · 8시","--hist","史"],["hz","한자","8급 합격 작전 · 19시","--hanja","漢"],["en","영어","하루 10단어 · 19시","--eng","A"]];
+  const T=[["cook","요리","아침 토스트 퀘스트","--cook","🍞"],["hist","한국사","선애의 아침 퀴즈 · 8시","--hist","史"],["hz","한자","8급 합격 작전 · 15시","--hanja","漢"],["en","영어","하루 10단어 · 19시","--eng","A"]];
   const dd=dday();
   app.innerHTML=`${S.test?`<div class="test">보호자 테스트 모드 (시간 제한 꺼짐)</div>`:""}
   <header class="hud"><h1>${hi}, ${NAME}!</h1>
@@ -432,11 +432,11 @@ function hzMixQs(n){const L=HZ.map(h=>h[0]),qs=[];const plan=n===25?["A","A","A"
   const idx=shuffle(HZ.map((_,k)=>k));let p=0;plan.forEach(t=>{qs.push(hzQ(t,idx[p++%30],L))});return shuffle(qs)}
 function hz(){
   const T="한자 8급 합격 작전";const n=S.hz.n,dd=dday();
-  if(!isOpen(19))return lockScreen(T,19,"태권도 다녀와서 저녁 7시에 열려요!");
+  if(!isOpen(15))return lockScreen(T,15,"오후 3시에 열려요!");
   const learning=n<10;
   const head=`<div class="row"><span class="dday">시험 D-${dd<=0?"DAY":dd} · 11월 28일(토)</span><span class="pill">배운 한자 ${Math.min(n,10)*3} / 30</span></div><div class="bar"><i style="width:${Math.min(n,10)/10*100}%;background:var(--hanja)"></i></div>`;
   const mock=n>=10?`<button class="big alt" id="mock" type="button">실전 모의시험 (25문제, 18개 이상 합격)${S.hz.best?` · 최고 ${S.hz.best}점`:""}</button>`:"";
-  if(doneToday("hz")){app.innerHTML=hdr(T)+`<div class="card">${head}<h3>오늘 한자 퀘스트 완료!</h3><p class="muted">내일 저녁 7시에 다음 퀘스트가 열려요.</p><div class="btns"><button class="big alt" id="rev" type="button">연습 한 번 더</button>${mock}<button class="big" id="gohome" type="button">홈으로</button></div></div>`;
+  if(doneToday("hz")){app.innerHTML=hdr(T)+`<div class="card">${head}<h3>오늘 한자 퀘스트 완료!</h3><p class="muted">내일 오후 3시에 다음 퀘스트가 열려요.</p><div class="btns"><button class="big alt" id="rev" type="button">연습 한 번 더</button>${mock}<button class="big" id="gohome" type="button">홈으로</button></div></div>`;
     bindBack();$("#gohome").onclick=home;$("#rev").onclick=()=>learning?hzLearn(Math.max(0,n-1),true):hzReview(true);if($("#mock"))$("#mock").onclick=hzMock;return}
   app.innerHTML=hdr(T)+`<div class="card">${head}
     <h3>${learning?`오늘의 퀘스트: 새 한자 3개`:`오늘의 퀘스트: 복습 10문제`}</h3>
