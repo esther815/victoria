@@ -312,7 +312,13 @@ const app=$("#app");
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const pick=(arr,n,ex=[])=>shuffle(arr.filter(x=>!ex.includes(x))).slice(0,n);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-function say(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="en-US";u.rate=.75;speechSynthesis.speak(u)}catch(e){}}
+let VOICE=null;
+function pickVoice(){try{const vs=speechSynthesis.getVoices();VOICE=vs.find(v=>v.lang==="en-US"&&/Samantha|Alex|Ava|Allison|Susan/i.test(v.name))||vs.find(v=>v.lang==="en-US")||vs.find(v=>/^en/i.test(v.lang))||null}catch(e){}}
+try{pickVoice();speechSynthesis.onvoiceschanged=pickVoice}catch(e){}
+let ttsReady=false;
+function unlockTTS(){if(ttsReady)return;try{const u=new SpeechSynthesisUtterance(" ");u.volume=0;speechSynthesis.speak(u);ttsReady=true}catch(e){}}
+document.addEventListener("touchend",unlockTTS,{passive:true});document.addEventListener("click",unlockTTS);
+function say(t){try{const ss=speechSynthesis;if(!VOICE)pickVoice();if(ss.speaking||ss.pending)ss.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="en-US";if(VOICE)u.voice=VOICE;u.rate=.8;u.volume=1;ss.speak(u);if(ss.paused)ss.resume()}catch(e){}}
 function hdr(title){return `<div class="top"><button class="back" id="back" type="button">← 홈</button><h2>${title}</h2></div>`}
 function bindBack(){const b=$("#back");if(b)b.onclick=home}
 function mkQ(prompt,right,wrongs,exp,extra={}){const o=shuffle([right,...wrongs]);return Object.assign({prompt,opts:o,ans:o.indexOf(right),exp},extra)}
@@ -498,7 +504,7 @@ function enLearn(d,practice){
     app.innerHTML=hdr(D.abc?"알파벳 카드":"단어 카드")+`<div class="card"><div class="dots">${items.map((_,j)=>`<i class="${j===k?"on":""}"></i>`).join("")}</div>
      <div class="flash">${it.big?`<span class="word" style="font-size:4rem;color:var(--eng)">${it.big}</span>`:""}<span class="em" style="${/^[가-힣]$/.test(it.em)?"font-family:var(--display);color:var(--eng)":""}">${it.em}</span><span class="word">${esc(it.word)}</span><span class="mean">${it.mean}</span>${it.note?`<p class="muted">${it.note}</p>`:""}</div>
      <button class="say" id="sp" type="button">🔊 들어 보기</button>
-     <p class="muted" style="text-align:center">듣고 큰 소리로 세 번 따라 말해 보세요!</p>
+     <p class="muted" style="text-align:center">듣고 큰 소리로 세 번 따라 말해 보세요!<br><small>소리가 안 나면 아이폰 옆 무음 스위치를 끄고 볼륨을 올려요.</small></p>
      <div class="nav2"><button class="big alt" id="prev" type="button" ${k===0?"disabled":""}>이전</button><button class="big" id="nx" type="button">${k<items.length-1?"다음":"퀴즈 시작!"}</button></div></div>`;
     bindBack();say(it.speak);$("#sp").onclick=()=>say(it.speak);$("#prev").onclick=()=>{k--;card()};$("#nx").onclick=()=>{if(k<items.length-1){k++;card()}else go()}}
   function go(){quiz({title:"영어 퀘스트",qs:enDayQs(d),pass:8,remake:()=>enDayQs(d),onPass:()=>{if(!practice&&!doneToday("en")){S.en.n++;S.en.last=today();addXP(20)}}})}
