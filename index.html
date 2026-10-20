@@ -363,7 +363,7 @@ function doneScreen(title,msg,again){app.innerHTML=hdr(title)+`<div class="card 
 /* ===================== 홈 ===================== */
 function status(t){
   if(t==="cook")return["go","언제든지"];
-  const h=t==="hist"?8:t==="hz"?15:19;
+  const h=t==="hist"?8:15;
   if(doneToday(t))return["done","오늘 완료"];
   if(!isOpen(h))return["wait",h+"시에 열려요"];
   return["go","지금 도전!"];
@@ -371,7 +371,7 @@ function status(t){
 function home(){
   const lv=Math.floor(S.xp/50)+1,pct=(S.xp%50)/50*100,h=new Date().getHours();
   const hi=h<12?"좋은 아침":h<18?"안녕":"오늘도 수고했어";
-  const T=[["cook","요리","아침 토스트 퀘스트","--cook","🍞"],["hist","한국사","선애의 아침 퀴즈 · 8시","--hist","史"],["hz","한자","8급 합격 작전 · 15시","--hanja","漢"],["en","영어","하루 10단어 · 19시","--eng","A"]];
+  const T=[["cook","요리","아침 토스트 퀘스트","--cook","🍞"],["hist","한국사","선애의 아침 퀴즈 · 8시","--hist","史"],["hz","한자","8급 합격 작전 · 15시","--hanja","漢"],["en","영어","하루 10단어 · 15시","--eng","A"]];
   const dd=dday();
   app.innerHTML=`${S.test?`<div class="test">보호자 테스트 모드 (시간 제한 꺼짐)</div>`:""}
   <header class="hud"><h1>${hi}, ${NAME}!</h1>
@@ -481,9 +481,9 @@ function enReviewQs(){const pool=THEMES.flatMap(t=>t[1]);const ws=[];shuffle(poo
   return ws.map((w,k)=>{const o=pick(pool.filter(x=>x[0]!==w[0]&&x[2]!==w[2]&&x[1]!==w[1]),3);return k%2?mkQ(`${emSpan(w[1])}영어로 뭘까요?`,w[0],o.map(x=>x[0]),`${w[0]} = ${w[2]}`):mkQ("잘 듣고, 알맞은 뜻을 고르세요",w[2],o.map(x=>x[2]),`${w[0]} = ${w[2]}`,{say:w[0]})})}
 function en(){
   const T="영어 단어 퀘스트",n=S.en.n,total=ENGDAYS.length;
-  if(!isOpen(19))return lockScreen(T,19,"태권도 다녀와서 저녁 7시에 열려요!");
+  if(!isOpen(15))return lockScreen(T,15,"오후 3시에 열려요!");
   const head=`<div class="row"><span class="pill">Day ${Math.min(n+1,total)} / ${total}</span><span class="pill">${n<3?"알파벳 단계":"단어 단계"}</span></div><div class="bar"><i style="width:${Math.min(n,total)/total*100}%;background:var(--eng)"></i></div>`;
-  if(doneToday("en")){app.innerHTML=hdr(T)+`<div class="card">${head}<h3>오늘 영어 퀘스트 완료!</h3><p class="muted">내일 저녁 7시에 새 단어 10개가 열려요.</p><div class="btns"><button class="big alt" id="rev" type="button">오늘 카드 다시 보기</button><button class="big" id="gohome" type="button">홈으로</button></div></div>`;
+  if(doneToday("en")){app.innerHTML=hdr(T)+`<div class="card">${head}<h3>오늘 영어 퀘스트 완료!</h3><p class="muted">내일 오후 3시에 새 단어 10개가 열려요.</p><div class="btns"><button class="big alt" id="rev" type="button">오늘 카드 다시 보기</button><button class="big" id="gohome" type="button">홈으로</button></div></div>`;
     bindBack();$("#gohome").onclick=home;$("#rev").onclick=()=>enLearn(Math.min(n-1,total-1),true);return}
   const D=ENGDAYS[Math.min(n,total-1)];
   const desc=n>=total?"모든 단어를 배웠어요! 랜덤 복습 10문제":D.abc?`알파벳 ${D.abc[0][0]}부터 ${D.abc[D.abc.length-1][0]}까지`:`오늘의 주제: ${D.title} (단어 10개)`;
