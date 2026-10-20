@@ -543,8 +543,10 @@ function cook(){
   const boxes=[...app.querySelectorAll(".safe input")],go=$("#go");
   boxes.forEach(b=>b.onchange=()=>{go.disabled=!boxes.every(x=>x.checked)});
   go.onclick=()=>{const st=S.cook[cur]=S.cook[cur]||{};st.cook=(st.cook||0)+1;const first=!st.clear;st.clear=true;addXP(10);
-    $("#rate").hidden=false;$("#msg").textContent=first&&cur<5?`레벨 ${cur} 클리어! 레벨 ${cur+1}이 열렸어요.`:`${st.cook}번째 요리 완료! +10 XP`;go.disabled=true;
-    app.querySelectorAll(".lv").forEach(b=>{const id=+b.dataset.id;if(cOpen(id)){b.disabled=false;b.classList.remove("locked")}})};
+    $("#rate").hidden=false;$("#msg").textContent=first&&cur<5?`레벨 ${cur} 클리어! 레벨 ${cur+1}이 열렸어요.`:`${st.cook}번째 요리 완료! +10 XP`;app.querySelectorAll(".lv").forEach(b=>{const id=+b.dataset.id;if(cOpen(id)){b.disabled=false;b.classList.remove("locked")}});
+    const nx=cur<LEVELS.length?cur+1:null;
+    go.disabled=false;go.textContent=nx?`다음 퀘스트로 → Lv.${nx}`:"홈으로";
+    go.onclick=()=>{if(nx){S.cookCur=nx;save();cook();window.scrollTo(0,0)}else home()}};
   app.querySelectorAll(".rate button").forEach(b=>b.onclick=()=>{const st=S.cook[cur]=S.cook[cur]||{};st.stars=+b.dataset.n;save();app.querySelectorAll(".rate button").forEach(x=>x.classList.toggle("on",+x.dataset.n<=st.stars))});
 }
 
