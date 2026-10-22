@@ -11,7 +11,7 @@
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="apple-touch-icon" href="./icon-180.png?v=cat">
 <link rel="icon" href="./icon-192.png?v=cat">
-<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;-webkit-tap-highlight-color:transparent}</style>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;-webkit-tap-highlight-color:transparent}[hidden]{display:none!important}*{box-sizing:border-box}img{max-width:100%}</style>
 <title>Victoria Quest</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&family=Noto+Serif+KR:wght@700&display=swap">
@@ -53,6 +53,7 @@ button:focus-visible,label:focus-within{outline:3px solid var(--accent);outline-
 .tile .ic{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;font-family:var(--display);font-size:1.6rem;color:#fff}
 .tile h3{font-size:1.3rem}
 .tile .when{font-size:.95rem;color:var(--muted)}
+.tile{position:relative}.heart{position:absolute;top:8px;right:10px;width:30px;height:30px;border-radius:50%;background:#FF4F8B;color:#fff;display:grid;place-items:center;font-size:1rem;box-shadow:0 2px 6px rgba(0,0,0,.2);animation:beat 1.2s ease-in-out infinite}@keyframes beat{50%{transform:scale(1.15)}}@media (prefers-reduced-motion:reduce){.heart{animation:none}}
 .chip{align-self:flex-start;border-radius:99px;padding:2px 12px;font-family:var(--display);font-size:.95rem;background:var(--soft)}
 .chip.go{background:var(--good);color:#fff}
 .chip.done{background:var(--butter);color:#3A2A00}
@@ -118,6 +119,17 @@ button:focus-visible,label:focus-within{outline:3px solid var(--accent);outline-
 .rate{display:flex;gap:6px}
 .rate button{appearance:none;border:0;background:none;font-size:2.3rem;line-height:1;cursor:pointer;color:var(--lock);padding:2px}
 .rate button.on{color:var(--cheese)}
+.chef{display:flex;gap:10px;align-items:center}.chefav{flex:none;width:64px;height:64px}.bubble2{position:relative;background:var(--soft);border-radius:16px;padding:10px 14px;font-family:var(--display);font-size:1.1rem;min-width:0}
+.tapchips{display:flex;flex-wrap:wrap;gap:8px}.tc{appearance:none;border:3px solid var(--line);background:var(--card);border-radius:99px;padding:8px 14px;font-family:var(--display);font-size:1.05rem;cursor:pointer}.tc.on{border-color:var(--good);background:var(--good);color:#fff}
+.gauge{height:14px;border-radius:99px;background:var(--line);overflow:hidden}.gauge>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#FFC93C,#FF4F8B);border-radius:99px;transition:width .4s}
+.csteps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}.cs{appearance:none;width:100%;display:grid;grid-template-columns:40px 1fr 28px;gap:10px;align-items:center;text-align:left;border:3px solid var(--line);background:var(--card);border-radius:16px;padding:10px 12px;cursor:pointer;font:inherit;color:var(--ink)}
+.cs b{font-family:var(--display);font-weight:400;font-size:1.5rem;color:var(--crust);text-align:center}.cs span{min-width:0;display:flex;flex-direction:column}.cs em{font-style:normal;font-size:1.4rem;color:transparent}.cs small.wt{color:var(--muted);font-size:.9rem}
+.cs:disabled{opacity:.45;cursor:default}.cs:not(:disabled):not(.ok){border-color:var(--accent);animation:pulse 1.4s ease-in-out infinite}.cs.ok{opacity:1;border-color:var(--good);background:color-mix(in srgb,var(--good) 12%,var(--card))}.cs.ok em{color:var(--good)}
+@keyframes pulse{50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--accent) 25%,transparent)}}
+.stamp{font-family:var(--display);font-size:1.4rem;line-height:1.2;color:#FF4F8B;border:4px solid #FF4F8B;border-radius:50%;width:130px;height:130px;display:grid;place-items:center;text-align:center;transform:rotate(-12deg);animation:stamp .5s ease-out}
+@keyframes stamp{from{transform:scale(2.2) rotate(-12deg);opacity:0}to{transform:scale(1) rotate(-12deg);opacity:1}}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden}.confetti i{position:absolute;top:-12px;width:10px;height:14px;border-radius:3px;animation:fall 2.6s ease-in forwards}@keyframes fall{to{top:105%;transform:rotate(720deg)}}
+@media (prefers-reduced-motion:reduce){.cs:not(:disabled):not(.ok){animation:none}.stamp{animation:none}.gauge>i{transition:none}}
 .foot{text-align:center;font-size:.85rem;color:var(--muted);user-select:none;cursor:default}
 .test{background:var(--bad);color:#fff;border-radius:12px;padding:6px 12px;text-align:center;font-family:var(--display)}
 @media (max-width:480px){h1{font-size:1.7rem}.qhead{grid-template-columns:88px 1fr}.timer{grid-template-columns:72px 1fr}.tile h3{font-size:1.15rem}.tile .ic{width:46px;height:46px}}
@@ -301,7 +313,9 @@ const pad=n=>String(n).padStart(2,"0");
 function today(){const d=new Date();return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
 function hourNow(){const d=new Date();return d.getHours()+d.getMinutes()/60}
 function isOpen(h){return S.test||hourNow()>=h}
-function doneToday(t){return S[t].last===today()&&!S.test}
+const DAILY=2;
+function doneToday(t){return S[t].last===today()&&(S[t].cnt||1)>=DAILY&&!S.test}
+function markDone(t){const d=today();if(S[t].last===d)S[t].cnt=(S[t].cnt||1)+1;else S[t].cnt=1;S[t].last=d;S[t].n++}
 function addXP(n){S.xp+=n;const t=today();if(!S.days.includes(t))S.days.push(t);if(S.days.length>60)S.days=S.days.slice(-60);save()}
 function streak(){let c=0;const d=new Date();for(;;){const s=d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());if(S.days.includes(s)){c++;d.setDate(d.getDate()-1)}else{if(c===0&&s===today()){d.setDate(d.getDate()-1);if(S.days.includes(d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())))continue}break}}return c}
 function dday(){const t=new Date();t.setHours(0,0,0,0);return Math.round((EXAM-t)/864e5)}
@@ -318,7 +332,13 @@ try{pickVoice();speechSynthesis.onvoiceschanged=pickVoice}catch(e){}
 let ttsReady=false;
 function unlockTTS(){if(ttsReady)return;try{const u=new SpeechSynthesisUtterance(" ");u.volume=0;speechSynthesis.speak(u);ttsReady=true}catch(e){}}
 document.addEventListener("touchend",unlockTTS,{passive:true});document.addEventListener("click",unlockTTS);
-function say(t){try{const ss=speechSynthesis;if(!VOICE)pickVoice();if(ss.speaking||ss.pending)ss.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="en-US";if(VOICE)u.voice=VOICE;u.rate=.8;u.volume=1;ss.speak(u);if(ss.paused)ss.resume()}catch(e){}}
+const SIL=new Audio("data:audio/wav;base64,UklGRmQGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YUAGAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA");SIL.setAttribute("playsinline","");
+function say(t){try{SIL.currentTime=0;const pp=SIL.play();if(pp)pp.catch(()=>{})}catch(e){}
+  try{const ss=speechSynthesis;if(!VOICE)pickVoice();if(ss.speaking||ss.pending)ss.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="en-US";if(VOICE&&VOICE.localService!==false)u.voice=VOICE;u.rate=.8;u.volume=1;
+  let started=false;u.onstart=()=>{started=true;const m=document.querySelector("#sndmsg");if(m)m.hidden=true};
+  ss.speak(u);if(ss.paused)ss.resume();
+  setTimeout(()=>{if(!started){const m=document.querySelector("#sndmsg");if(m)m.hidden=false}},2500)}catch(e){const m=document.querySelector("#sndmsg");if(m)m.hidden=false}}
+function sayOld(t){try{const ss=speechSynthesis;if(!VOICE)pickVoice();if(ss.speaking||ss.pending)ss.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="en-US";if(VOICE)u.voice=VOICE;u.rate=.8;u.volume=1;ss.speak(u);if(ss.paused)ss.resume()}catch(e){}}
 function hdr(title){return `<div class="top"><button class="back" id="back" type="button">← 홈</button><h2>${title}</h2></div>`}
 function bindBack(){const b=$("#back");if(b)b.onclick=home}
 function mkQ(prompt,right,wrongs,exp,extra={}){const o=shuffle([right,...wrongs]);return Object.assign({prompt,opts:o,ans:o.indexOf(right),exp},extra)}
@@ -371,9 +391,12 @@ function status(t){
   if(t==="cook")return["go","언제든지"];
   const h=t==="hist"?8:15;
   if(doneToday(t))return["done","오늘 완료"];
+  if(S[t].last===today()&&(S[t].cnt||1)<DAILY&&isOpen(h))return["go","한 개 더!"];
   if(!isOpen(h))return["wait",h+"시에 열려요"];
   return["go","지금 도전!"];
 }
+function updBadge(){try{const n=["hist","hz","en"].filter(t=>status(t)[0]==="go").length;if("setAppBadge" in navigator){n?navigator.setAppBadge(n).catch(()=>{}):navigator.clearAppBadge().catch(()=>{})}}catch(e){}}
+setInterval(()=>{updBadge();if(document.querySelector("#ver")&&!document.hidden)home()},60000);
 function home(){
   const lv=Math.floor(S.xp/50)+1,pct=(S.xp%50)/50*100,h=new Date().getHours();
   const hi=h<12?"좋은 아침":h<18?"안녕":"오늘도 수고했어";
@@ -383,11 +406,15 @@ function home(){
   <header class="hud"><h1>${hi}, ${NAME}!</h1>
    <div class="row"><span class="pill">Lv.${lv} · ${S.xp} XP</span><span class="pill">연속 ${streak()}일</span>${dd>=0?`<span class="pill" style="color:var(--hanja)">한자 시험 D-${dd===0?"DAY":dd}</span>`:""}</div>
    <div class="bar"><i style="width:${pct}%"></i></div></header>
-  <div class="tiles">${T.map(([k,n,w,c,ic])=>{const[s,txt]=status(k);return `<button class="tile" type="button" data-t="${k}"><span class="ic" style="background:var(${c});${k==="hz"||k==="hist"?"font-family:var(--han)":""}">${ic}</span><h3>${n}</h3><span class="when">${w}</span><span class="chip ${s}">${txt}</span></button>`}).join("")}</div>
+  <div class="tiles">${T.map(([k,n,w,c,ic])=>{const[s,txt]=status(k);return `<button class="tile" type="button" data-t="${k}"><span class="ic" style="background:var(${c});${k==="hz"||k==="hist"?"font-family:var(--han)":""}">${ic}</span><h3>${n}</h3><span class="when">${w}</span><span class="chip ${s}">${txt}</span>${s==="go"&&k!=="cook"?`<span class="heart" aria-label="새 퀘스트">♥</span>`:""}</button>`}).join("")}</div>
+  ${("Notification" in window)&&Notification.permission!=="granted"&&("setAppBadge" in navigator)?`<button class="big alt" id="badgeOn" type="button">♥ 새 퀘스트 알림 켜기</button>`:""}
   ${S.test?`<button class="big alt" id="rst" type="button">기록 전체 초기화</button><p class="foot" id="rstAsk" hidden>정말 지울까요? <button class="back" id="rstYes" type="button">네, 지워요</button></p>`:""}
+  ${shopHTML(nextCook())}
   <p class="foot" id="ver">Victoria Quest v1</p>`;
   if(S.test){$("#rst").onclick=()=>{$("#rstAsk").hidden=false};$("#rstYes").onclick=()=>{try{localStorage.removeItem(KEY)}catch(e){}location.reload()}}
   app.querySelectorAll(".tile").forEach(b=>b.onclick=()=>({cook,hist,hz,en})[b.dataset.t]());
+  updBadge();
+  if($("#badgeOn"))$("#badgeOn").onclick=async()=>{try{await Notification.requestPermission()}catch(e){}updBadge();home()};
   let taps=0,tm;$("#ver").onclick=()=>{taps++;clearTimeout(tm);tm=setTimeout(()=>taps=0,1500);if(taps>=5){S.test=!S.test;save();home()}};
   window.scrollTo(0,0);
 }
@@ -399,7 +426,7 @@ function histQs(){
   }else{const w=pick(S.hist.wrong,3);ids.push(...w);ids.push(...pick(HIST.map((_,k)=>k),5-w.length,w))}
   return ids.map(id=>{const h=HIST[id];return mkQ(esc(h[0]),h[1],h[2],esc(h[3]),{id})});
 }
-function hist(){
+function histMain(){
   const T="선애의 한국사 퀴즈";
   if(!isOpen(8))return lockScreen(T,8,"선애가 아침 8시에 퀴즈를 들고 와요!");
   if(doneToday("hist"))return doneScreen(T,"오늘 퀴즈 완료! 내일 아침 8시에 선애가 또 와요.",()=>startHist(true));
@@ -410,7 +437,7 @@ function hist(){
 function startHist(practice){
   quiz({title:"선애의 한국사 퀴즈",qs:histQs(),mascot:true,
     onAnswer:(q,ok)=>{const w=S.hist.wrong;if(!ok&&!w.includes(q.id))w.push(q.id);if(ok&&S.hist.n>=20){const i=w.indexOf(q.id);if(i>=0)w.splice(i,1)}save()},
-    onPass:()=>{if(!practice&&!doneToday("hist")){S.hist.n++;S.hist.last=today();addXP(15)}}});
+    onPass:()=>{if(!practice&&!doneToday("hist")){markDone("hist");addXP(15)}}});
 }
 
 /* ===================== 한자 ===================== */
@@ -436,7 +463,7 @@ function hzDayQs(d){
 }
 function hzMixQs(n){const L=HZ.map(h=>h[0]),qs=[];const plan=n===25?["A","A","A","A","A","A","A","A","B","B","B","B","B","B","B","B","C","C","C","C","C","C","D","D","D"]:["A","A","A","B","B","B","C","C","D","A"];
   const idx=shuffle(HZ.map((_,k)=>k));let p=0;plan.forEach(t=>{qs.push(hzQ(t,idx[p++%30],L))});return shuffle(qs)}
-function hz(){
+function hzMain(){
   const T="한자 8급 합격 작전";const n=S.hz.n,dd=dday();
   if(!isOpen(15))return lockScreen(T,15,"오후 3시에 열려요!");
   const learning=n<10;
@@ -458,10 +485,10 @@ function hzLearn(d,practice){
      <p class="muted" style="text-align:center">소리 내어 "${h[1]} ${h[2]}" 세 번 말해 보세요!</p>
      <div class="nav2"><button class="big alt" id="prev" type="button" ${k===0?"disabled":""}>이전</button><button class="big" id="nx" type="button">${k<F.length-1?"다음 카드":"퀴즈 시작!"}</button></div></div>`;
     bindBack();$("#prev").onclick=()=>{k--;card()};$("#nx").onclick=()=>{if(k<F.length-1){k++;card()}else go()}}
-  function go(){quiz({title:"한자 퀘스트",qs:hzDayQs(d),pass:6,remake:()=>hzDayQs(d),onPass:()=>{if(!practice&&!doneToday("hz")){S.hz.n++;S.hz.last=today();addXP(20)}}})}
+  function go(){quiz({title:"한자 퀘스트",qs:hzDayQs(d),pass:6,remake:()=>hzDayQs(d),onPass:()=>{if(!practice&&!doneToday("hz")){markDone("hz");addXP(20)}}})}
   card();
 }
-function hzReview(practice){quiz({title:"한자 복습",qs:hzMixQs(10),pass:7,remake:()=>hzMixQs(10),onPass:()=>{if(!practice&&!doneToday("hz")){S.hz.n++;S.hz.last=today();addXP(20)}}})}
+function hzReview(practice){quiz({title:"한자 복습",qs:hzMixQs(10),pass:7,remake:()=>hzMixQs(10),onPass:()=>{if(!practice&&!doneToday("hz")){markDone("hz");addXP(20)}}})}
 function hzMock(){quiz({title:"실전 모의시험",qs:hzMixQs(25),pass:18,remake:()=>hzMixQs(25),
   onPass:s=>{if(s>(S.hz.best||0))S.hz.best=s;addXP(10)}})}
 
@@ -485,7 +512,7 @@ function enDayQs(d){
 }
 function enReviewQs(){const pool=THEMES.flatMap(t=>t[1]);const ws=[];shuffle(pool).forEach(w=>{if(ws.length<10&&!ws.some(x=>x[0]===w[0]))ws.push(w)});
   return ws.map((w,k)=>{const o=pick(pool.filter(x=>x[0]!==w[0]&&x[2]!==w[2]&&x[1]!==w[1]),3);return k%2?mkQ(`${emSpan(w[1])}영어로 뭘까요?`,w[0],o.map(x=>x[0]),`${w[0]} = ${w[2]}`):mkQ("잘 듣고, 알맞은 뜻을 고르세요",w[2],o.map(x=>x[2]),`${w[0]} = ${w[2]}`,{say:w[0]})})}
-function en(){
+function enMain(){
   const T="영어 단어 퀘스트",n=S.en.n,total=ENGDAYS.length;
   if(!isOpen(15))return lockScreen(T,15,"오후 3시에 열려요!");
   const head=`<div class="row"><span class="pill">Day ${Math.min(n+1,total)} / ${total}</span><span class="pill">${n<3?"알파벳 단계":"단어 단계"}</span></div><div class="bar"><i style="width:${Math.min(n,total)/total*100}%;background:var(--eng)"></i></div>`;
@@ -495,7 +522,7 @@ function en(){
   const desc=n>=total?"모든 단어를 배웠어요! 랜덤 복습 10문제":D.abc?`알파벳 ${D.abc[0][0]}부터 ${D.abc[D.abc.length-1][0]}까지`:`오늘의 주제: ${D.title} (단어 10개)`;
   app.innerHTML=hdr(T)+`<div class="card">${head}<h3>${desc}</h3><p class="muted">카드를 보고 듣고 따라 말한 뒤, 10문제 중 8개를 맞히면 클리어!</p>
    <button class="big" id="start" type="button">${n>=total?"복습 시작":"단어 카드 보기"}</button></div>`;
-  bindBack();$("#start").onclick=()=>n>=total?quiz({title:"영어 복습",qs:enReviewQs(),pass:8,remake:enReviewQs,onPass:()=>{if(!doneToday("en")){S.en.n++;S.en.last=today();addXP(20)}}}):enLearn(n,false);
+  bindBack();$("#start").onclick=()=>n>=total?quiz({title:"영어 복습",qs:enReviewQs(),pass:8,remake:enReviewQs,onPass:()=>{if(!doneToday("en")){markDone("en");addXP(20)}}}):enLearn(n,false);
 }
 function enLearn(d,practice){
   const D=ENGDAYS[d],items=D.abc?D.abc.map(a=>({big:`${a[0]} ${a[0].toLowerCase()}`,em:a[2],word:a[1],mean:a[3],speak:a[0]+". "+a[1],note:a[0]==="V"?"V는 Victoria의 V!":""})):D.words.map(w=>({em:w[1],word:w[0],mean:w[2],speak:w[0]}));
@@ -504,10 +531,10 @@ function enLearn(d,practice){
     app.innerHTML=hdr(D.abc?"알파벳 카드":"단어 카드")+`<div class="card"><div class="dots">${items.map((_,j)=>`<i class="${j===k?"on":""}"></i>`).join("")}</div>
      <div class="flash">${it.big?`<span class="word" style="font-size:4rem;color:var(--eng)">${it.big}</span>`:""}<span class="em" style="${/^[가-힣]$/.test(it.em)?"font-family:var(--display);color:var(--eng)":""}">${it.em}</span><span class="word">${esc(it.word)}</span><span class="mean">${it.mean}</span>${it.note?`<p class="muted">${it.note}</p>`:""}</div>
      <button class="say" id="sp" type="button">🔊 들어 보기</button>
-     <p class="muted" style="text-align:center">듣고 큰 소리로 세 번 따라 말해 보세요!<br><small>소리가 안 나면 아이폰 옆 무음 스위치를 끄고 볼륨을 올려요.</small></p>
+     <p class="muted" style="text-align:center">듣고 큰 소리로 세 번 따라 말해 보세요!</p><p class="muted" id="sndmsg" hidden style="text-align:center;color:var(--bad)">소리가 안 나요! 무음 모드를 끄고 볼륨을 올린 뒤 다시 눌러요.</p>
      <div class="nav2"><button class="big alt" id="prev" type="button" ${k===0?"disabled":""}>이전</button><button class="big" id="nx" type="button">${k<items.length-1?"다음":"퀴즈 시작!"}</button></div></div>`;
     bindBack();say(it.speak);$("#sp").onclick=()=>say(it.speak);$("#prev").onclick=()=>{k--;card()};$("#nx").onclick=()=>{if(k<items.length-1){k++;card()}else go()}}
-  function go(){quiz({title:"영어 퀘스트",qs:enDayQs(d),pass:8,remake:()=>enDayQs(d),onPass:()=>{if(!practice&&!doneToday("en")){S.en.n++;S.en.last=today();addXP(20)}}})}
+  function go(){quiz({title:"영어 퀘스트",qs:enDayQs(d),pass:8,remake:()=>enDayQs(d),onPass:()=>{if(!practice&&!doneToday("en")){markDone("en");addXP(20)}}})}
   card();
 }
 
@@ -524,35 +551,68 @@ function toastSvg(l){
   return g+"</svg>";
 }
 function watchSvg(m){return `<svg viewBox="0 0 120 150" role="img" aria-label="워치 타이머 ${m}분"><rect x="38" y="0" width="44" height="30" rx="8" fill="#8A94A8"/><rect x="38" y="120" width="44" height="30" rx="8" fill="#8A94A8"/><rect x="14" y="20" width="92" height="110" rx="26" fill="#2A2F3A"/><rect x="104" y="48" width="8" height="18" rx="3" fill="#8A94A8"/><rect x="22" y="28" width="76" height="94" rx="20" fill="#05070B"/><circle cx="60" cy="75" r="30" fill="none" stroke="#3A2A12" stroke-width="6"/><circle cx="60" cy="75" r="30" fill="none" stroke="#FF9F1C" stroke-width="6" stroke-linecap="round" stroke-dasharray="150 189" transform="rotate(-90 60 75)"/><text x="60" y="81" text-anchor="middle" font-family="Jua,sans-serif" font-size="20" fill="#FFFFFF">${m}:00</text></svg>`}
+function chefSvg(){return `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M30 34 C18 34 16 16 30 16 C32 6 50 4 54 12 C62 4 80 8 76 22 C88 24 86 40 72 38 Z" fill="#FFFFFF" stroke="#E9A0C2" stroke-width="3"/><rect x="30" y="32" width="42" height="10" rx="3" fill="#FFFFFF" stroke="#E9A0C2" stroke-width="3"/><path d="M22 52 L26 34 L40 44 Z M78 52 L74 34 L60 44 Z" fill="#FFFFFF" stroke="#E9A0C2" stroke-width="3" stroke-linejoin="round"/><ellipse cx="50" cy="64" rx="32" ry="27" fill="#FFFFFF" stroke="#E9A0C2" stroke-width="3"/><ellipse cx="39" cy="62" rx="4.5" ry="6" fill="#3A2A3F"/><ellipse cx="61" cy="62" rx="4.5" ry="6" fill="#3A2A3F"/><ellipse cx="31" cy="72" rx="5" ry="3" fill="#FFB3D4"/><ellipse cx="69" cy="72" rx="5" ry="3" fill="#FFB3D4"/><path d="M47 70 h6 l-3 4z" fill="#F06AA6"/><path d="M50 74 q-3 5 -7 3 M50 74 q3 5 7 3" fill="none" stroke="#3A2A3F" stroke-width="2" stroke-linecap="round"/></svg>`}
+const CHEER=["좋아, 시작이야!","오, 손이 빠른데?","거의 다 왔어!","셰프 Victoria 최고!","냄새 좋다~"];
+function confetti(){if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;const box=document.createElement("div");box.className="confetti";const cs=["#FF4F8B","#FFC93C","#7FD3FF","#3BB273","#B78CFF"];for(let i=0;i<46;i++){const s=document.createElement("i");s.style.left=Math.random()*100+"%";s.style.background=cs[i%5];s.style.animationDelay=Math.random()*.5+"s";s.style.transform=`rotate(${Math.random()*360}deg)`;box.appendChild(s)}document.body.appendChild(box);setTimeout(()=>box.remove(),3200)}
+
+function pastHTML(t){const cap=t==="hist"?20:t==="hz"?10:ENGDAYS.length;const n=Math.min(S[t].n,cap);if(!n)return "";
+  const lab=d=>t==="hz"?HZDAYS[d].map(i=>HZ[i][0]).join(""):t==="en"?(ENGDAYS[d].abc?`ABC ${d+1}`:ENGDAYS[d].title):`${d+1}일차`;
+  return `<div class="card"><h3>지난 퀘스트 다시 하기</h3><p class="muted">언제든 다시 할 수 있어요. 복습용이라 진도는 그대로예요.</p><div class="tapchips">${Array.from({length:n},(_,d)=>`<button type="button" class="tc past" data-t="${t}" data-d="${d}" ${t==="hz"?'style="font-family:var(--han)"':""}>${lab(d)}</button>`).join("")}</div></div>`}
+function withPast(t){app.insertAdjacentHTML("beforeend",pastHTML(t));app.querySelectorAll(".past").forEach(b=>b.onclick=()=>{const d=+b.dataset.d;if(t==="hist")histDay(d);else if(t==="hz")hzLearn(d,true);else enLearn(d,true)})}
+function hist(){histMain();withPast("hist")}
+function hz(){hzMain();withPast("hz")}
+function en(){enMain();withPast("en")}
+function histDay(d){quiz({title:"선애의 한국사 퀴즈 (복습)",mascot:true,qs:[0,1,2,3,4].map(k=>{const id=d*5+k,h=HIST[id];return mkQ(esc(h[0]),h[1],h[2],esc(h[3]),{id})}),
+  onAnswer:(q,ok)=>{const w=S.hist.wrong;if(!ok&&!w.includes(q.id))w.push(q.id);save()}})}
+function nextCook(){return LEVELS.find(l=>!(S.cook[l.id]&&S.cook[l.id].clear))||null}
+function shopHTML(lv){if(!lv)return "";return `<div class="card shop"><h3>🛒 다음 요리 준비물</h3><p class="muted">Lv.${lv.id} ${lv.name} · 하루 전에 미리 사 두세요</p><ul class="chips">${lv.ing.map(i=>`<li>${i}</li>`).join("")}</ul></div>`}
 const cOpen=id=>id===1||(S.cook[id-1]&&S.cook[id-1].clear);
 function cook(){
   const cur=S.cookCur,l=LEVELS.find(x=>x.id===cur),s=S.cook[cur]||{};
-  const safe=SAFE_BASE.concat(SAFE_EXTRA[cur]||[]);
   const preset=[1,3,5,10,15,30].includes(l.timer);
+  const safe=["🧤 장갑","🥢 집게","⌚ 타이머"].concat(cur===4?["🧼 손 씻기"]:[]);
+  const steps=l.steps.concat(["토스터 끄고, 맛있게 먹기!"]);
+  const tIdx=steps.findIndex(t=>t.includes("타이머"));
   app.innerHTML=hdr("토스트 퀘스트")+`
-  <nav class="map" aria-label="레벨 선택">${LEVELS.map(x=>{const st=S.cook[x.id];return `<button class="lv${cOpen(x.id)?"":" locked"}" type="button" data-id="${x.id}" aria-current="${x.id===cur}" ${cOpen(x.id)?"":"disabled"}>${toastSvg(x.layers)}<span>Lv.${x.id}</span><span class="st">${st&&st.clear?"★".repeat(st.stars||0):cOpen(x.id)?"":"잠김"}</span></button>`}).join("")}</nav>
+  <nav class="map" aria-label="레벨 선택">${LEVELS.map(x=>{const st=S.cook[x.id];return `<button class="lv${cOpen(x.id)?"":" locked"}" type="button" data-id="${x.id}" aria-current="${x.id===cur}" ${cOpen(x.id)?"":"disabled"}>${toastSvg(x.layers)}<span>Lv.${x.id}</span><span class="st">${st&&st.clear?"★".repeat(st.stars||1):cOpen(x.id)?"":"잠김"}</span></button>`}).join("")}</nav>
   <div class="card">
-   <div class="qhead">${toastSvg(l.layers)}<div><span class="pill" style="color:var(--accent)">LEVEL ${l.id}${s.clear?" · 클리어":""}</span><h2>${l.name}</h2><p class="muted">${l.sub}</p></div></div>
-   <h3>준비물</h3><ul class="chips">${l.ing.map(i=>`<li>${i}</li>`).join("")}</ul>
-   <h3>만드는 순서</h3><ol class="steps">${l.steps.map((t,i)=>`<li><b>${i+1}</b><span>${t}</span></li>`).join("")}</ol>
-   <h3>워치 타이머 ${l.timer}분</h3>
-   <div class="timer">${watchSvg(l.timer)}<div><p><b>말로 하기:</b> 디지털 크라운을 꾹 누른 채 "타이머 ${l.timer}분"</p>
-    <p><b>눌러서 하기:</b> ${preset?`주황색 타이머 앱에서 <b>${l.timer}</b> 누르기`:`처음 한 번은 타이머 앱 맨 아래 '사용자화'에서 ${l.timer}분. 다음부터는 맨 위 최근 항목의 <b>${l.timer}분</b> 누르기`}</p>
-    <p class="muted">손목이 부르르 떨리면 오븐장갑 끼고 토스터로!</p></div></div>
-   <h3>안전 체크 (모두 체크해야 시작!)</h3><div class="safe">${safe.map((t,i)=>`<label><input type="checkbox" id="safe-${cur}-${i}"><span>${t}</span></label>`).join("")}</div>
-   <button class="big" id="go" type="button" disabled>완성했어요!</button>
-   <div id="rate" ${s.clear&&cur!==1?"":"hidden"}><h3>맛 평가</h3><div class="rate">${[1,2,3].map(n=>`<button type="button" data-n="${n}" class="${(s.stars||0)>=n?"on":""}" aria-label="별 ${n}개">★</button>`).join("")}</div></div>
-   <p id="msg" class="pill" style="color:var(--good)"></p>
+   <div class="qhead">${toastSvg(l.layers)}<div><span class="pill" style="color:var(--accent)">LEVEL ${l.id}${s.cook?` · ${s.cook}번 요리함`:""}</span><h2>${l.name}</h2><p class="muted">${l.sub}</p></div></div>
+   <div class="chef"><div class="chefav">${chefSvg()}</div><div class="bubble2" id="cheer">셰프 냥이야! 준비물부터 챙겨 볼까?</div></div>
+   <h3>1. 준비물 챙기기</h3><div class="tapchips" id="ing">${l.ing.map((t,i)=>`<button type="button" class="tc" data-i="${i}">${t}</button>`).join("")}</div>
+   <h3>2. 안전 장비 착용</h3><div class="tapchips" id="safe">${safe.map((t,i)=>`<button type="button" class="tc" data-i="${i}">${t}</button>`).join("")}</div>
+   <h3>3. 요리 시작! <span class="muted" style="font-size:.95rem">순서대로 눌러요</span></h3>
+   <div class="gauge"><i id="gauge"></i></div>
+   <ol class="csteps" id="steps">${steps.map((t,i)=>`<li><button type="button" class="cs" data-i="${i}" disabled><b>${i+1}</b><span>${t}${i===tIdx?`<small class="wt">⌚ 크라운을 꾹 누르고 "타이머 ${l.timer}분" ${preset?"":"(또는 타이머 앱 최근 항목)"}</small>`:""}</span><em>✓</em></button></li>`).join("")}</ol>
+   <button class="big" id="go" type="button" disabled>완성!</button>
+   <div id="after" hidden class="result">
+     <div class="stamp">VICTORIA<br>CHEF ✓</div>
+     <p class="pill" id="msg" style="color:var(--good)"></p>
+     <h3>맛은 어땠어?</h3>
+     <div class="rate">${[1,2,3].map(n=>`<button type="button" data-n="${n}" aria-label="별 ${n}개">★</button>`).join("")}</div>
+     <div id="nextshop" style="width:100%;text-align:left"></div><button class="big" id="nextq" type="button"></button>
+   </div>
   </div>`;
   bindBack();
   app.querySelectorAll(".lv").forEach(b=>b.onclick=()=>{S.cookCur=+b.dataset.id;save();cook()});
-  const boxes=[...app.querySelectorAll(".safe input")],go=$("#go");
-  boxes.forEach(b=>b.onchange=()=>{go.disabled=!boxes.every(x=>x.checked)});
-  go.onclick=()=>{const st=S.cook[cur]=S.cook[cur]||{};st.cook=(st.cook||0)+1;const first=!st.clear;st.clear=true;addXP(10);
-    $("#rate").hidden=false;$("#msg").textContent=first&&cur<5?`레벨 ${cur} 클리어! 레벨 ${cur+1}이 열렸어요.`:`${st.cook}번째 요리 완료! +10 XP`;app.querySelectorAll(".lv").forEach(b=>{const id=+b.dataset.id;if(cOpen(id)){b.disabled=false;b.classList.remove("locked")}});
-    const nx=cur<LEVELS.length?cur+1:null;
-    go.disabled=false;go.textContent=nx?`다음 퀘스트로 → Lv.${nx}`:"홈으로";
-    go.onclick=()=>{if(nx){S.cookCur=nx;save();cook();window.scrollTo(0,0)}else home()}};
+  const cheer=t=>{$("#cheer").textContent=t};
+  const ingB=[...app.querySelectorAll("#ing .tc")],safeB=[...app.querySelectorAll("#safe .tc")],stepB=[...app.querySelectorAll("#steps .cs")];
+  let done=0;
+  function ready(){return ingB.every(b=>b.classList.contains("on"))&&safeB.every(b=>b.classList.contains("on"))}
+  function refresh(){const r=ready();stepB.forEach((b,i)=>b.disabled=!r||i!==done);if(r&&done===0)cheer("준비 완벽해! 1번부터 눌러 봐.");$("#gauge").style.width=(done/steps.length*100)+"%";$("#go").disabled=done<steps.length}
+  ingB.forEach(b=>b.onclick=()=>{b.classList.toggle("on");if(ingB.every(x=>x.classList.contains("on"))&&!ready())cheer("준비물 완료! 이제 안전 장비!");refresh()});
+  safeB.forEach(b=>b.onclick=()=>{b.classList.toggle("on");refresh()});
+  stepB.forEach((b,i)=>b.onclick=()=>{if(i!==done)return;b.classList.add("ok");done++;cheer(done===steps.length?"다 됐다! 완성 버튼 눌러 줘!":i===tIdx?"알람이 울릴 때까지 기다려~ 손목이 떨리면 다음!":CHEER[i%CHEER.length]);refresh()});
+  refresh();
+  $("#go").onclick=()=>{
+    const st=S.cook[cur]=S.cook[cur]||{};st.cook=(st.cook||0)+1;const first=!st.clear;st.clear=true;addXP(10);
+    $("#go").hidden=true;$("#after").hidden=false;confetti();cheer(first?`Lv.${cur} 클리어! 너 진짜 셰프다!`:"또 성공! 실력이 늘고 있어!");
+    $("#msg").textContent=`+10 XP · ${st.cook}번째 요리${first&&cur<5?` · Lv.${cur+1} 열림!`:""}`;
+    app.querySelectorAll(".lv").forEach(b=>{const id=+b.dataset.id;if(cOpen(id)){b.disabled=false;b.classList.remove("locked")}});
+    const nx=cur<LEVELS.length?cur+1:null,nb=$("#nextq");nb.textContent=nx?`다음 퀘스트로 → Lv.${nx}`:"홈으로";
+    const ns=nextCook();$("#nextshop").innerHTML=ns&&ns.id!==cur?shopHTML(ns).replace("card shop","shop"):"";
+    nb.onclick=()=>{if(nx){S.cookCur=nx;save();cook();window.scrollTo(0,0)}else home()};
+    $("#after").scrollIntoView({behavior:"smooth",block:"center"});
+  };
   app.querySelectorAll(".rate button").forEach(b=>b.onclick=()=>{const st=S.cook[cur]=S.cook[cur]||{};st.stars=+b.dataset.n;save();app.querySelectorAll(".rate button").forEach(x=>x.classList.toggle("on",+x.dataset.n<=st.stars))});
 }
 
