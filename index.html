@@ -412,7 +412,7 @@ function home(){
   ${shopHTML(nextCook())}
   <p class="foot" id="ver">Victoria Quest v1</p>`;
   if(S.test){$("#rst").onclick=()=>{$("#rstAsk").hidden=false};$("#rstYes").onclick=()=>{try{localStorage.removeItem(KEY)}catch(e){}location.reload()}}
-  app.querySelectorAll(".tile").forEach(b=>b.onclick=()=>({cook,hist,hz,en})[b.dataset.t]());
+  app.querySelectorAll(".tile").forEach(b=>b.onclick=()=>({cook:cookStart,hist,hz,en})[b.dataset.t]());
   updBadge();
   if($("#badgeOn"))$("#badgeOn").onclick=async()=>{try{await Notification.requestPermission()}catch(e){}updBadge();home()};
   let taps=0,tm;$("#ver").onclick=()=>{taps++;clearTimeout(tm);tm=setTimeout(()=>taps=0,1500);if(taps>=5){S.test=!S.test;save();home()}};
@@ -566,6 +566,7 @@ function histDay(d){quiz({title:"선애의 한국사 퀴즈 (복습)",mascot:tru
   onAnswer:(q,ok)=>{const w=S.hist.wrong;if(!ok&&!w.includes(q.id))w.push(q.id);save()}})}
 function nextCook(){return LEVELS.find(l=>!(S.cook[l.id]&&S.cook[l.id].clear))||null}
 function shopHTML(lv){if(!lv)return "";return `<div class="card shop"><h3>🛒 다음 요리 준비물</h3><p class="muted">Lv.${lv.id} ${lv.name} · 하루 전에 미리 사 두세요</p><ul class="chips">${lv.ing.map(i=>`<li>${i}</li>`).join("")}</ul></div>`}
+function cookStart(){const n=nextCook();S.cookCur=n?n.id:LEVELS.length;save();cook()}
 const cOpen=id=>id===1||(S.cook[id-1]&&S.cook[id-1].clear);
 function cook(){
   const cur=S.cookCur,l=LEVELS.find(x=>x.id===cur),s=S.cook[cur]||{};
