@@ -147,6 +147,8 @@ button:focus-visible,label:focus-within{outline:3px solid var(--accent);outline-
 .cats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.catc{display:flex;flex-direction:column;align-items:center;font-family:var(--display);font-size:.9rem}.catc svg{width:100%;max-width:70px;height:auto}.catc.lock{color:var(--lock)}
 .rw{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}.rw li{display:grid;grid-template-columns:64px 1fr auto;gap:8px;align-items:center;background:var(--soft);border-radius:14px;padding:10px 12px}.rw b{font-family:var(--display);font-weight:400}.rw em{font-style:normal;font-size:.9rem;color:var(--muted)}.rw li.ok{background:color-mix(in srgb,var(--good) 16%,var(--card))}.rw li.ok em{color:var(--good)}
 .dbl{font-family:var(--display);color:#FF4F8B;font-size:1.2rem}
+.rules{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;text-align:left;width:100%}.rules li{display:grid;grid-template-columns:110px 1fr;gap:8px;align-items:center;background:var(--soft);border-radius:14px;padding:8px 10px}.rules b{font-family:var(--display);font-weight:400}.rules span{min-width:0;font-size:.98rem}
+.pop-card{max-height:90vh;overflow-y:auto}.rulesb{appearance:none;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:99px;padding:4px 14px;font-family:var(--display);font-size:1rem;cursor:pointer;align-self:flex-start}
 .foot{text-align:center;font-size:.85rem;color:var(--muted);user-select:none;cursor:default}
 .test{background:var(--bad);color:#fff;border-radius:12px;padding:6px 12px;text-align:center;font-family:var(--display)}
 @media (max-width:480px){h1{font-size:1.7rem}.qhead{grid-template-columns:88px 1fr}.timer{grid-template-columns:72px 1fr}.tile h3{font-size:1.15rem}.tile .ic{width:46px;height:46px}}
@@ -446,7 +448,8 @@ function home(){
   app.innerHTML=`${S.test?`<div class="test">보호자 테스트 모드 (시간 제한 꺼짐)</div>`:""}
   <header class="hud"><button class="gem" id="gem" type="button" aria-label="보석함">💎 ${S.gems||0}</button><h1>${hi}, ${NAME}!</h1><span class="ttl">${title()}</span>
    <div class="row"><span class="pill">Lv.${lv} · ${S.xp} XP</span><span class="pill">연속 ${streak()}일</span>${dd>=0?`<span class="pill" style="color:var(--hanja)">한자 시험 D-${dd===0?"DAY":dd}</span>`:""}</div>
-   <div class="bar"><i style="width:${pct}%"></i></div></header>
+   <div class="bar"><i style="width:${pct}%"></i></div>
+   <button class="rulesb" id="rulesb" type="button">📖 보석 규칙 보기</button></header>
   <div class="tiles">${T.map(([k,n,w,c,ic])=>{const[s,txt]=status(k);return `<button class="tile" type="button" data-t="${k}"><span class="ic" style="background:var(${c});${k==="hz"||k==="hist"?"font-family:var(--han)":""}">${ic}</span><h3>${n}</h3><span class="when">${w}</span><span class="chip ${s}">${txt}</span>${s==="go"&&k!=="cook"?`<span class="heart" aria-label="새 퀘스트">♥</span>`:""}</button>`}).join("")}</div>
   ${("Notification" in window)&&Notification.permission!=="granted"&&("setAppBadge" in navigator)?`<button class="big alt" id="badgeOn" type="button">♥ 새 퀘스트 알림 켜기</button>`:""}
   ${S.test?`<button class="big alt" id="rst" type="button">기록 전체 초기화</button><p class="foot" id="rstAsk" hidden>정말 지울까요? <button class="back" id="rstYes" type="button">네, 지워요</button></p>`:""}
@@ -457,6 +460,8 @@ function home(){
   app.querySelectorAll(".tile").forEach(b=>b.onclick=()=>({cook:cookStart,hist,hz,en})[b.dataset.t]());
   updBadge();
   $("#gem").onclick=gemRoom;
+  $("#rulesb").onclick=showRules;
+  if(!S.rulesSeen&&!document.querySelector(".pop-ov"))showRules();
   if($("#rep"))$("#rep").onclick=sendReport;
   if($("#badgeOn"))$("#badgeOn").onclick=async()=>{try{await Notification.requestPermission()}catch(e){}updBadge();home()};
   let taps=0,tm;$("#ver").onclick=()=>{taps++;clearTimeout(tm);tm=setTimeout(()=>taps=0,1500);if(taps>=5){S.test=!S.test;save();home()}};
@@ -664,12 +669,25 @@ function checkGem(){const td=today();if(S.gemDay===td)return;
 function gemRoom(){const g=S.gems||0,st=streak(),wk=weekGems();
   app.innerHTML=hdr("💎 보석함")+`
   <div class="card"><div class="row"><h2>💎 ${g}개</h2><span class="pill">${title()}</span></div>
+   <button class="rulesb" id="rulesb2" type="button">📖 보석 규칙 보기</button>
    <p class="muted">요리·한국사·한자·영어 4개를 하루에 모두 끝내면 보석 1개! 만점이면 포인트가 두 배!</p>
    <h3>이번 주 보석 ${wk}/5</h3><div class="wk">${[0,1,2,3,4].map(k=>`<i class="${k<wk?"on":""}">💎</i>`).join("")}</div>${wk>=5?`<p class="pill" style="color:#FF4F8B">👑 이번 주 왕관 달성!</p>`:`<p class="muted">한 주에 5개 모으면 왕관!</p>`}</div>
   <div class="card"><h3>🐱 고양이 친구 도감 ${Math.min(g,CATS.length)}/${CATS.length}</h3><div class="cats">${CATS.map((c,i)=>`<div class="catc ${i<g?"":"lock"}">${catFace(i<g?c[1]:"#D5DBE6",i)}<span>${i<g?c[0]:"?"}</span></div>`).join("")}</div></div>
   <div class="card"><h3>🎁 보석으로 받는 선물</h3><ul class="rw">${REWARDS.map(([n,t])=>`<li class="${g>=n?"ok":""}"><b>💎 ${n}</b><span>${t}</span><em>${g>=n?"받을 수 있어!":`${n-g}개 남음`}</em></li>`).join("")}</ul><p class="muted">선물은 엄마와 함께 정해요.</p></div>
   <div class="card"><h3>🏅 연속 배지 (지금 ${st}일)</h3><div class="tapchips">${STREAK_BADGE.map(([n,t])=>`<span class="tc ${st>=n||(S.bestStreak||0)>=n?"on":""}">${t}</span>`).join("")}</div></div>`;
-  bindBack();if((S.bestStreak||0)<st){S.bestStreak=st;save()}}
+  bindBack();$("#rulesb2").onclick=showRules;if((S.bestStreak||0)<st){S.bestStreak=st;save()}}
+
+function rulesHTML(){return `<h2>💎 보석 모으는 법</h2>
+<ol class="rules">
+<li><b>💎 보석 1개</b><span>하루에 요리·한국사·한자·영어 4개를 모두 끝내면!</span></li>
+<li><b>🐱 고양이 친구</b><span>보석을 받을 때마다 고양이 친구가 한 마리씩 와요 (12마리)</span></li>
+<li><b>🎉 더블 포인트</b><span>퀴즈를 하나도 안 틀리면 XP가 두 배!</span></li>
+<li><b>👑 왕관</b><span>한 주에 보석 5개를 모으면 이번 주 왕관</span></li>
+<li><b>🔥 연속 배지</b><span>3일, 7일, 14일, 30일 연속으로 하면 배지</span></li>
+<li><b>🎁 선물</b><span>보석 3개, 7개, 12개, 20개가 되면 엄마와 정한 선물</span></li>
+</ol>
+<p class="muted" style="text-align:left">⏰ 퀘스트는 매일 아침 7시에 열리고, 하루에 2개까지 할 수 있어요. 💡 모르면 힌트를 눌러 봐요!</p>`}
+function showRules(){const o=document.createElement("div");o.className="pop-ov";o.innerHTML=`<div class="pop-card">${rulesHTML()}<button class="big" type="button">알겠어!</button></div>`;document.body.appendChild(o);o.querySelector("button").onclick=()=>{o.remove();if(!S.rulesSeen){S.rulesSeen=true;save()}}}
 function cookStart(){const n=nextCook();S.cookCur=n?n.id:LEVELS.length;save();cook()}
 const cOpen=id=>id===1||(S.cook[id-1]&&S.cook[id-1].clear);
 function cook(){
