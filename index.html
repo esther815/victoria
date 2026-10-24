@@ -139,6 +139,14 @@ button:focus-visible,label:focus-within{outline:3px solid var(--accent);outline-
 @keyframes pop{40%{transform:scale(1.08)}}@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
 @media (prefers-reduced-motion:reduce){.opt.pop,.opt.shake{animation:none}}
 .art{width:100%;max-width:120px;height:auto}
+.hud{position:relative}.gem{position:absolute;top:0;right:0;appearance:none;border:3px solid #9ED8FF;background:var(--card);border-radius:99px;padding:4px 14px;font-family:var(--display);font-size:1.25rem;cursor:pointer;color:var(--ink)}
+.hud h1{padding-right:96px}.ttl{font-family:var(--display);color:#FF4F8B}
+.pop-ov{position:fixed;inset:0;background:rgba(20,25,40,.55);display:grid;place-items:center;z-index:60;padding:16px}.pop-card{background:var(--card);color:var(--ink);border-radius:24px;padding:22px;max-width:340px;width:100%;text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center;animation:pop .4s ease-out}
+.bigem{font-size:4rem;line-height:1;animation:beat 1.2s ease-in-out infinite}.newcat{width:110px;height:110px}.newcat svg{width:100%;height:100%}
+.wk{display:flex;gap:8px;font-size:1.8rem}.wk i{font-style:normal;opacity:.2;filter:grayscale(1)}.wk i.on{opacity:1;filter:none}
+.cats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.catc{display:flex;flex-direction:column;align-items:center;font-family:var(--display);font-size:.9rem}.catc svg{width:100%;max-width:70px;height:auto}.catc.lock{color:var(--lock)}
+.rw{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}.rw li{display:grid;grid-template-columns:64px 1fr auto;gap:8px;align-items:center;background:var(--soft);border-radius:14px;padding:10px 12px}.rw b{font-family:var(--display);font-weight:400}.rw em{font-style:normal;font-size:.9rem;color:var(--muted)}.rw li.ok{background:color-mix(in srgb,var(--good) 16%,var(--card))}.rw li.ok em{color:var(--good)}
+.dbl{font-family:var(--display);color:#FF4F8B;font-size:1.2rem}
 .foot{text-align:center;font-size:.85rem;color:var(--muted);user-select:none;cursor:default}
 .test{background:var(--bad);color:#fff;border-radius:12px;padding:6px 12px;text-align:center;font-family:var(--display)}
 @media (max-width:480px){h1{font-size:1.7rem}.qhead{grid-template-columns:88px 1fr}.timer{grid-template-columns:72px 1fr}.tile h3{font-size:1.15rem}.tile .ic{width:46px;height:46px}}
@@ -342,7 +350,7 @@ function hourNow(){const d=new Date();return d.getHours()+d.getMinutes()/60}
 function isOpen(h){return S.test||hourNow()>=h}
 const DAILY=2;
 function doneToday(t){return S[t].last===today()&&(S[t].cnt||1)>=DAILY&&!S.test}
-function markDone(t){const d=today();if(S[t].last===d)S[t].cnt=(S[t].cnt||1)+1;else S[t].cnt=1;S[t].last=d;S[t].n++}
+function markDone(t){const d=today();if(S[t].last===d)S[t].cnt=(S[t].cnt||1)+1;else S[t].cnt=1;S[t].last=d;S[t].n++;checkGem()}
 function addXP(n){S.xp+=n;const t=today();if(!S.days.includes(t))S.days.push(t);if(S.days.length>60)S.days=S.days.slice(-60);save()}
 function streak(){let c=0;const d=new Date();for(;;){const s=d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());if(S.days.includes(s)){c++;d.setDate(d.getDate()-1)}else{if(c===0&&s===today()){d.setDate(d.getDate()-1);if(S.days.includes(d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())))continue}break}}return c}
 function dday(){const t=new Date();t.setHours(0,0,0,0);return Math.round((EXAM-t)/864e5)}
@@ -403,11 +411,11 @@ function quiz(o){
   function end(){
     const n=o.qs.length,pass=o.pass?score>=o.pass:true;
     const st=score===n?3:score>=n*0.85?2:pass?1:0;
-    if(pass&&o.onPass)o.onPass(score);
+    const xp0=S.xp;if(pass&&o.onPass)o.onPass(score);const gained=S.xp-xp0,dbl=score===n&&gained>0;if(dbl)addXP(gained);
     try{const td=today();if(!S.log||S.log.d!==td)S.log={d:td,r:[]};S.log.r.push([o.title,score,n,pass?1:0]);if(S.log.r.length>30)S.log.r.shift();save()}catch(e){}
     app.innerHTML=hdr(o.title)+`<div class="card result">
       ${o.mascot?`<div class="fb" style="text-align:left;width:100%"><div class="ava">선애</div><div class="bubble"><b>${NAME}, ${score>=4?"오늘 진짜 잘했어! 내일 아침에 또 만나!":"수고했어! 틀린 문제는 다음에 다시 나올 거야."}</b></div></div>`:""}
-      <div class="stars">${"★".repeat(st)}${"☆".repeat(3-st)}</div>
+      <div class="stars">${"★".repeat(st)}${"☆".repeat(3-st)}</div>${dbl?`<p class="dbl">🎉 만점! 더블 포인트 +${gained*2} XP</p>`:gained>0?`<p class="muted">+${gained} XP</p>`:""}
       <h2>${n}문제 중 ${score}개 정답</h2>
       ${o.pass?`<p class="muted">${pass?"퀘스트 클리어!":`${o.pass}개 이상 맞히면 클리어! 다시 도전해 볼까?`}</p>`:""}
       <div class="btns" style="width:100%">${!pass?`<button class="big" id="retry" type="button">다시 도전</button>`:""}<button class="big ${pass?"":"alt"}" id="gohome" type="button">홈으로</button></div></div>`;
@@ -436,18 +444,19 @@ function home(){
   const T=[["cook","요리","아침 토스트 퀘스트","--cook","🍞"],["hist","한국사","선애의 아침 퀴즈 · 7시","--hist","史"],["hz","한자","8급 합격 작전 · 7시","--hanja","漢"],["en","영어","하루 10단어 · 7시","--eng","A"]];
   const dd=dday();
   app.innerHTML=`${S.test?`<div class="test">보호자 테스트 모드 (시간 제한 꺼짐)</div>`:""}
-  <header class="hud"><h1>${hi}, ${NAME}!</h1>
+  <header class="hud"><button class="gem" id="gem" type="button" aria-label="보석함">💎 ${S.gems||0}</button><h1>${hi}, ${NAME}!</h1><span class="ttl">${title()}</span>
    <div class="row"><span class="pill">Lv.${lv} · ${S.xp} XP</span><span class="pill">연속 ${streak()}일</span>${dd>=0?`<span class="pill" style="color:var(--hanja)">한자 시험 D-${dd===0?"DAY":dd}</span>`:""}</div>
    <div class="bar"><i style="width:${pct}%"></i></div></header>
   <div class="tiles">${T.map(([k,n,w,c,ic])=>{const[s,txt]=status(k);return `<button class="tile" type="button" data-t="${k}"><span class="ic" style="background:var(${c});${k==="hz"||k==="hist"?"font-family:var(--han)":""}">${ic}</span><h3>${n}</h3><span class="when">${w}</span><span class="chip ${s}">${txt}</span>${s==="go"&&k!=="cook"?`<span class="heart" aria-label="새 퀘스트">♥</span>`:""}</button>`}).join("")}</div>
   ${("Notification" in window)&&Notification.permission!=="granted"&&("setAppBadge" in navigator)?`<button class="big alt" id="badgeOn" type="button">♥ 새 퀘스트 알림 켜기</button>`:""}
   ${S.test?`<button class="big alt" id="rst" type="button">기록 전체 초기화</button><p class="foot" id="rstAsk" hidden>정말 지울까요? <button class="back" id="rstYes" type="button">네, 지워요</button></p>`:""}
-  <div class="card rep"><h3>📨 엄마에게 오늘 보고하기${S.reportLast===today()?" ✓":""}</h3><p class="muted">${S.reportLast===today()?"오늘 보고 완료! 내일 저녁에도 보내 줘.":"저녁에 버튼을 누르고 카톡으로 엄마에게 보내면 +5 XP!"}</p><button class="big ${S.reportLast===today()?"alt":""}" id="rep" type="button">보고서 보내기</button><p class="muted" id="repmsg" hidden style="white-space:pre-line"></p></div>
+  <div class="card rep"><h3>💌 엄마에게 오늘 자랑하기${S.reportLast===today()?" ✓":""}</h3><p class="muted">${S.reportLast===today()?"오늘 자랑 완료! 내일도 들려줘.":"오늘 한 퀘스트를 카톡으로 엄마에게 자랑하면 +5 XP!"}</p><button class="big ${S.reportLast===today()?"alt":""}" id="rep" type="button">자랑 보내기</button><p class="muted" id="repmsg" hidden style="white-space:pre-line"></p></div>
   ${shopHTML(nextCook())}
   <p class="foot" id="ver">Victoria Quest v1</p>`;
   if(S.test){$("#rst").onclick=()=>{$("#rstAsk").hidden=false};$("#rstYes").onclick=()=>{try{localStorage.removeItem(KEY)}catch(e){}location.reload()}}
   app.querySelectorAll(".tile").forEach(b=>b.onclick=()=>({cook:cookStart,hist,hz,en})[b.dataset.t]());
   updBadge();
+  $("#gem").onclick=gemRoom;
   if($("#rep"))$("#rep").onclick=sendReport;
   if($("#badgeOn"))$("#badgeOn").onclick=async()=>{try{await Notification.requestPermission()}catch(e){}updBadge();home()};
   let taps=0,tm;$("#ver").onclick=()=>{taps++;clearTimeout(tm);tm=setTimeout(()=>taps=0,1500);if(taps>=5){S.test=!S.test;save();home()}};
@@ -628,7 +637,7 @@ function shopHTML(lv){if(!lv)return "";return `<div class="card shop"><h3>🛒 �
 function reportText(){const d=new Date(),td=today(),c=t=>S[t].last===td?(S[t].cnt||1):0;
   const ck=S.cookDay&&S.cookDay.d===td?S.cookDay.c:0;const lv=(nextCook()||{id:LEVELS.length+1}).id-1;
   const days="일월화수목금토"[d.getDay()];
-  return `[Victoria 오늘의 보고] ${d.getMonth()+1}/${d.getDate()}(${days})
+  return `[Victoria 오늘의 자랑 💌] ${d.getMonth()+1}/${d.getDate()}(${days})
 🍞 요리: 오늘 ${ck}번 · Lv.${lv}까지 클리어
 📜 한국사: 오늘 ${c("hist")}개 · ${Math.min(S.hist.n,20)}/20일차${S.hist.wrong.length?` · 다시 볼 문제 ${S.hist.wrong.length}개`:""}
 漢 한자: 오늘 ${c("hz")}개 · ${Math.min(S.hz.n,10)*3}/30자${S.hz.best?` · 모의시험 최고 ${S.hz.best}/25`:""} · 시험 D-${Math.max(dday(),0)}
@@ -636,9 +645,31 @@ function reportText(){const d=new Date(),td=today(),c=t=>S[t].last===td?(S[t].cn
 ⭐ Lv.${Math.floor(S.xp/50)+1} · ${S.xp} XP · 연속 ${streak()}일
 📝 오늘 결과${S.log&&S.log.d===td&&S.log.r.length?S.log.r.map(r=>`\n· ${r[0]} ${r[1]}/${r[2]} ${r[3]?"✓":"(재도전)"}`).join(""):" 없음"}`}
 async function sendReport(){const t=reportText();let ok=false;
-  try{if(navigator.share){await navigator.share({title:"Victoria 오늘의 보고",text:t});ok=true}}catch(e){if(e&&e.name==="AbortError")return}
+  try{if(navigator.share){await navigator.share({title:"Victoria 오늘의 자랑",text:t});ok=true}}catch(e){if(e&&e.name==="AbortError")return}
   if(!ok){try{await navigator.clipboard.writeText(t);ok=true;const m=$("#repmsg");if(m){m.hidden=false;m.textContent="복사했어요! 카톡에 붙여넣어 엄마에게 보내요."}}catch(e){const m=$("#repmsg");if(m){m.hidden=false;m.textContent=t}}}
   if(ok&&S.reportLast!==today()){S.reportLast=today();addXP(5);home()}}
+const CATS=[["치즈냥","#FFB547"],["우유냥","#FFFFFF"],["초코냥","#9B6A43"],["회색냥","#A7AEBB"],["까망냥","#3A3A46"],["핑크냥","#FFA8CB"],["하늘냥","#9ED8FF"],["보라냥","#C3A6FF"],["민트냥","#9EE8CF"],["딸기냥","#FF7A8A"],["별빛냥","#FFE27A"],["여왕냥","#FFD54A"]];
+function catFace(c,i){const dark=["#3A3A46","#9B6A43"].includes(c),eye=dark?"#FFFFFF":"#3A2A3F";
+  return `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M18 50 L24 14 L44 32 Z M82 50 L76 14 L56 32 Z" fill="${c}" stroke="#E2A6C4" stroke-width="3" stroke-linejoin="round"/><ellipse cx="50" cy="58" rx="36" ry="31" fill="${c}" stroke="#E2A6C4" stroke-width="3"/><ellipse cx="37" cy="56" rx="5" ry="7" fill="${eye}"/><ellipse cx="63" cy="56" rx="5" ry="7" fill="${eye}"/><ellipse cx="28" cy="68" rx="6" ry="3.5" fill="#FF9EC4" opacity=".8"/><ellipse cx="72" cy="68" rx="6" ry="3.5" fill="#FF9EC4" opacity=".8"/><path d="M47 64 h6 l-3 4z" fill="#F06AA6"/>${i===10?'<path d="M50 6 l4 9 10 1 -8 6 3 10 -9 -6 -9 6 3 -10 -8 -6 10 -1z" fill="#FFF3A0"/>':""}${i===11?'<path d="M32 26 L36 10 L44 20 L50 6 L56 20 L64 10 L68 26 Z" fill="#FFD54A" stroke="#C98A1E" stroke-width="2"/>':""}</svg>`}
+const REWARDS=[[3,"주말 아침 메뉴 내가 정하기"],[7,"엄마랑 고양이 카페 데이트"],[12,"원하는 책 한 권 고르기"],[20,"엄마와 정한 특별 선물"]];
+const STREAK_BADGE=[[3,"🔥 3일 연속"],[7,"🌈 7일 연속"],[14,"🏅 14일 연속"],[30,"👑 30일 연속"]];
+function title(){const lv=Math.floor(S.xp/50)+1;return lv>=12?"Queen Victoria":lv>=8?"지식의 기사":lv>=5?"한자 탐험가":lv>=3?"꼬마 셰프":"새싹 탐험가"}
+function weekGems(){const now=new Date(),day=(now.getDay()+6)%7,mon=new Date(now.getFullYear(),now.getMonth(),now.getDate()-day);return (S.gemDays||[]).filter(d=>{const [y,m,dd]=d.split("-").map(Number);return new Date(y,m-1,dd)>=mon}).length}
+function popup(html){const o=document.createElement("div");o.className="pop-ov";o.innerHTML=`<div class="pop-card">${html}<button class="big" type="button">좋아!</button></div>`;document.body.appendChild(o);o.querySelector("button").onclick=()=>{o.remove();if(document.querySelector("#ver"))home()};try{confetti()}catch(e){}}
+function checkGem(){const td=today();if(S.gemDay===td)return;
+  const all=(S.cookDay&&S.cookDay.d===td)&&["hist","hz","en"].every(t=>S[t].last===td);
+  if(!all)return;S.gems=(S.gems||0)+1;S.gemDay=td;S.gemDays=(S.gemDays||[]).concat(td).slice(-60);save();
+  const i=Math.min(S.gems,CATS.length)-1;
+  setTimeout(()=>popup(`<div class="bigem">💎</div><h2>오늘의 보석 획득!</h2><p>4개 퀘스트를 모두 끝냈어!</p>${S.gems<=CATS.length?`<div class="newcat">${catFace(CATS[i][1],i)}</div><p><b>${CATS[i][0]}</b>가 도감에 들어왔어!</p>`:""}`),400)}
+function gemRoom(){const g=S.gems||0,st=streak(),wk=weekGems();
+  app.innerHTML=hdr("💎 보석함")+`
+  <div class="card"><div class="row"><h2>💎 ${g}개</h2><span class="pill">${title()}</span></div>
+   <p class="muted">요리·한국사·한자·영어 4개를 하루에 모두 끝내면 보석 1개! 만점이면 포인트가 두 배!</p>
+   <h3>이번 주 보석 ${wk}/5</h3><div class="wk">${[0,1,2,3,4].map(k=>`<i class="${k<wk?"on":""}">💎</i>`).join("")}</div>${wk>=5?`<p class="pill" style="color:#FF4F8B">👑 이번 주 왕관 달성!</p>`:`<p class="muted">한 주에 5개 모으면 왕관!</p>`}</div>
+  <div class="card"><h3>🐱 고양이 친구 도감 ${Math.min(g,CATS.length)}/${CATS.length}</h3><div class="cats">${CATS.map((c,i)=>`<div class="catc ${i<g?"":"lock"}">${catFace(i<g?c[1]:"#D5DBE6",i)}<span>${i<g?c[0]:"?"}</span></div>`).join("")}</div></div>
+  <div class="card"><h3>🎁 보석으로 받는 선물</h3><ul class="rw">${REWARDS.map(([n,t])=>`<li class="${g>=n?"ok":""}"><b>💎 ${n}</b><span>${t}</span><em>${g>=n?"받을 수 있어!":`${n-g}개 남음`}</em></li>`).join("")}</ul><p class="muted">선물은 엄마와 함께 정해요.</p></div>
+  <div class="card"><h3>🏅 연속 배지 (지금 ${st}일)</h3><div class="tapchips">${STREAK_BADGE.map(([n,t])=>`<span class="tc ${st>=n||(S.bestStreak||0)>=n?"on":""}">${t}</span>`).join("")}</div></div>`;
+  bindBack();if((S.bestStreak||0)<st){S.bestStreak=st;save()}}
 function cookStart(){const n=nextCook();S.cookCur=n?n.id:LEVELS.length;save();cook()}
 const cOpen=id=>id===1||(S.cook[id-1]&&S.cook[id-1].clear);
 function cook(){
@@ -678,7 +709,7 @@ function cook(){
   stepB.forEach((b,i)=>b.onclick=()=>{if(i!==done)return;b.classList.add("ok");done++;cheer(done===steps.length?"다 됐다! 완성 버튼 눌러 줘!":i===tIdx?"알람이 울릴 때까지 기다려~ 손목이 떨리면 다음!":CHEER[i%CHEER.length]);refresh()});
   refresh();
   $("#go").onclick=()=>{
-    const st=S.cook[cur]=S.cook[cur]||{};st.cook=(st.cook||0)+1;const first=!st.clear;st.clear=true;const td0=today();S.cookDay=S.cookDay&&S.cookDay.d===td0?{d:td0,c:S.cookDay.c+1}:{d:td0,c:1};addXP(10);
+    const st=S.cook[cur]=S.cook[cur]||{};st.cook=(st.cook||0)+1;const first=!st.clear;st.clear=true;const td0=today();S.cookDay=S.cookDay&&S.cookDay.d===td0?{d:td0,c:S.cookDay.c+1}:{d:td0,c:1};addXP(10);checkGem();
     $("#go").hidden=true;$("#after").hidden=false;confetti();cheer(first?`Lv.${cur} 클리어! 너 진짜 셰프다!`:"또 성공! 실력이 늘고 있어!");
     $("#msg").textContent=`+10 XP · ${st.cook}번째 요리${first&&cur<LEVELS.length?` · Lv.${cur+1} 열림!`:""}`;
     app.querySelectorAll(".lv").forEach(b=>{const id=+b.dataset.id;if(cOpen(id)){b.disabled=false;b.classList.remove("locked")}});
