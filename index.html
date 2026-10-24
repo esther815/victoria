@@ -521,14 +521,15 @@ function hzDayQs(d){
   while(qs.length<8){const e=extra.shift();if(e)qs.push(e);else{const pool=F.concat(prev);qs.push(hzQ(Math.random()<.5?"A":"B",pool[Math.floor(Math.random()*pool.length)],L))}}
   return shuffle(qs);
 }
-function hzMixQs(n){const L=HZ.map(h=>h[0]),qs=[];const plan=n===25?["A","A","A","A","A","A","A","A","B","B","B","B","B","B","B","B","C","C","C","C","C","C","D","D","D"]:["A","A","A","B","B","B","C","C","D","A"];
-  const idx=shuffle(HZ.map((_,k)=>k));let p=0;plan.forEach(t=>{qs.push(hzQ(t,idx[p++%HZ.length],L))});return shuffle(qs)}
+const EXAM30="九金南男女東六母木門父北四三西水十五月二人日一子弟七土八兄火";
+function hzMixQs(n){const mock=n===25,L=mock?[...EXAM30]:HZ.map(h=>h[0]),qs=[];const plan=n===25?["A","A","A","A","A","A","A","A","B","B","B","B","B","B","B","B","C","C","C","C","C","C","D","D","D"]:["A","A","A","B","B","B","C","C","D","A"];
+  const idx=shuffle(HZ.map((_,k)=>k).filter(k=>!mock||EXAM30.includes(HZ[k][0])));let p=0;plan.forEach(t=>{qs.push(hzQ(t,idx[p++%idx.length],L))});return shuffle(qs)}
 function hzMain(){
   const T="한자 8급 합격 작전";const n=S.hz.n,dd=dday();
   if(!isOpen(7))return lockScreen(T,7,"아침 7시에 열려요!");
   const U=HZDAYS.length,learning=n<U,isRev=learning&&HZDAYS[n].length===0,known=hzLearnedChars(Math.min(n,U)).length;
   const head=`<div class="row"><span class="dday">시험 D-${dd<=0?"DAY":dd} · 11월 28일(토)</span><span class="pill">배운 한자 ${known} / ${HZ.length} · ${Math.min(n,U)}/${U}과</span></div><div class="bar"><i style="width:${Math.min(n,U)/U*100}%;background:var(--hanja)"></i></div>`;
-  const mock=n>=U?`<button class="big alt" id="mock" type="button">실전 모의시험 (25문제, 18개 이상 합격)${S.hz.best?` · 최고 ${S.hz.best}점`:""}</button>`:"";
+  const mock=n>=U?`<button class="big alt" id="mock" type="button">대한검정회 8급 모의시험 (30자 범위, 25문제, 18개 이상 합격)${S.hz.best?` · 최고 ${S.hz.best}점`:""}</button>`:"";
   if(doneToday("hz")){app.innerHTML=hdr(T)+`<div class="card">${head}<h3>오늘 한자 퀘스트 완료!</h3><p class="muted">내일 아침 7시에 다음 퀘스트가 열려요.</p><div class="btns"><button class="big alt" id="rev" type="button">연습 한 번 더</button>${mock}<button class="big" id="gohome" type="button">홈으로</button></div></div>`;
     bindBack();$("#gohome").onclick=home;$("#rev").onclick=()=>learning?hzLearn(Math.max(0,n-1),true):hzReview(true);if($("#mock"))$("#mock").onclick=hzMock;return}
   app.innerHTML=hdr(T)+`<div class="card">${head}
