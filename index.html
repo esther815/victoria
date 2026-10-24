@@ -404,6 +404,7 @@ function quiz(o){
     const n=o.qs.length,pass=o.pass?score>=o.pass:true;
     const st=score===n?3:score>=n*0.85?2:pass?1:0;
     if(pass&&o.onPass)o.onPass(score);
+    try{const td=today();if(!S.log||S.log.d!==td)S.log={d:td,r:[]};S.log.r.push([o.title,score,n,pass?1:0]);if(S.log.r.length>30)S.log.r.shift();save()}catch(e){}
     app.innerHTML=hdr(o.title)+`<div class="card result">
       ${o.mascot?`<div class="fb" style="text-align:left;width:100%"><div class="ava">선애</div><div class="bubble"><b>${NAME}, ${score>=4?"오늘 진짜 잘했어! 내일 아침에 또 만나!":"수고했어! 틀린 문제는 다음에 다시 나올 거야."}</b></div></div>`:""}
       <div class="stars">${"★".repeat(st)}${"☆".repeat(3-st)}</div>
@@ -441,11 +442,13 @@ function home(){
   <div class="tiles">${T.map(([k,n,w,c,ic])=>{const[s,txt]=status(k);return `<button class="tile" type="button" data-t="${k}"><span class="ic" style="background:var(${c});${k==="hz"||k==="hist"?"font-family:var(--han)":""}">${ic}</span><h3>${n}</h3><span class="when">${w}</span><span class="chip ${s}">${txt}</span>${s==="go"&&k!=="cook"?`<span class="heart" aria-label="새 퀘스트">♥</span>`:""}</button>`}).join("")}</div>
   ${("Notification" in window)&&Notification.permission!=="granted"&&("setAppBadge" in navigator)?`<button class="big alt" id="badgeOn" type="button">♥ 새 퀘스트 알림 켜기</button>`:""}
   ${S.test?`<button class="big alt" id="rst" type="button">기록 전체 초기화</button><p class="foot" id="rstAsk" hidden>정말 지울까요? <button class="back" id="rstYes" type="button">네, 지워요</button></p>`:""}
+  <div class="card rep"><h3>📨 엄마에게 오늘 보고하기${S.reportLast===today()?" ✓":""}</h3><p class="muted">${S.reportLast===today()?"오늘 보고 완료! 내일 저녁에도 보내 줘.":"저녁에 버튼을 누르고 카톡으로 엄마에게 보내면 +5 XP!"}</p><button class="big ${S.reportLast===today()?"alt":""}" id="rep" type="button">보고서 보내기</button><p class="muted" id="repmsg" hidden style="white-space:pre-line"></p></div>
   ${shopHTML(nextCook())}
   <p class="foot" id="ver">Victoria Quest v1</p>`;
   if(S.test){$("#rst").onclick=()=>{$("#rstAsk").hidden=false};$("#rstYes").onclick=()=>{try{localStorage.removeItem(KEY)}catch(e){}location.reload()}}
   app.querySelectorAll(".tile").forEach(b=>b.onclick=()=>({cook:cookStart,hist,hz,en})[b.dataset.t]());
   updBadge();
+  if($("#rep"))$("#rep").onclick=sendReport;
   if($("#badgeOn"))$("#badgeOn").onclick=async()=>{try{await Notification.requestPermission()}catch(e){}updBadge();home()};
   let taps=0,tm;$("#ver").onclick=()=>{taps++;clearTimeout(tm);tm=setTimeout(()=>taps=0,1500);if(taps>=5){S.test=!S.test;save();home()}};
   window.scrollTo(0,0);
@@ -621,6 +624,21 @@ function histDay(d){quiz({title:"선애의 한국사 퀴즈 (복습)",mascot:tru
   onAnswer:(q,ok)=>{const w=S.hist.wrong;if(!ok&&!w.includes(q.id))w.push(q.id);save()}})}
 function nextCook(){return LEVELS.find(l=>!(S.cook[l.id]&&S.cook[l.id].clear))||null}
 function shopHTML(lv){if(!lv)return "";return `<div class="card shop"><h3>🛒 다음 요리 준비물</h3><p class="muted">Lv.${lv.id} ${lv.name} · 하루 전에 미리 사 두세요</p><ul class="chips">${lv.ing.map(i=>`<li>${i}</li>`).join("")}</ul></div>`}
+
+function reportText(){const d=new Date(),td=today(),c=t=>S[t].last===td?(S[t].cnt||1):0;
+  const ck=S.cookDay&&S.cookDay.d===td?S.cookDay.c:0;const lv=(nextCook()||{id:LEVELS.length+1}).id-1;
+  const days="일월화수목금토"[d.getDay()];
+  return `[Victoria 오늘의 보고] ${d.getMonth()+1}/${d.getDate()}(${days})
+🍞 요리: 오늘 ${ck}번 · Lv.${lv}까지 클리어
+📜 한국사: 오늘 ${c("hist")}개 · ${Math.min(S.hist.n,20)}/20일차${S.hist.wrong.length?` · 다시 볼 문제 ${S.hist.wrong.length}개`:""}
+漢 한자: 오늘 ${c("hz")}개 · ${Math.min(S.hz.n,10)*3}/30자${S.hz.best?` · 모의시험 최고 ${S.hz.best}/25`:""} · 시험 D-${Math.max(dday(),0)}
+🔤 영어: 오늘 ${c("en")}개 · Day ${Math.min(S.en.n,ENGDAYS.length)}/${ENGDAYS.length}
+⭐ Lv.${Math.floor(S.xp/50)+1} · ${S.xp} XP · 연속 ${streak()}일
+📝 오늘 결과${S.log&&S.log.d===td&&S.log.r.length?S.log.r.map(r=>`\n· ${r[0]} ${r[1]}/${r[2]} ${r[3]?"✓":"(재도전)"}`).join(""):" 없음"}`}
+async function sendReport(){const t=reportText();let ok=false;
+  try{if(navigator.share){await navigator.share({title:"Victoria 오늘의 보고",text:t});ok=true}}catch(e){if(e&&e.name==="AbortError")return}
+  if(!ok){try{await navigator.clipboard.writeText(t);ok=true;const m=$("#repmsg");if(m){m.hidden=false;m.textContent="복사했어요! 카톡에 붙여넣어 엄마에게 보내요."}}catch(e){const m=$("#repmsg");if(m){m.hidden=false;m.textContent=t}}}
+  if(ok&&S.reportLast!==today()){S.reportLast=today();addXP(5);home()}}
 function cookStart(){const n=nextCook();S.cookCur=n?n.id:LEVELS.length;save();cook()}
 const cOpen=id=>id===1||(S.cook[id-1]&&S.cook[id-1].clear);
 function cook(){
@@ -660,7 +678,7 @@ function cook(){
   stepB.forEach((b,i)=>b.onclick=()=>{if(i!==done)return;b.classList.add("ok");done++;cheer(done===steps.length?"다 됐다! 완성 버튼 눌러 줘!":i===tIdx?"알람이 울릴 때까지 기다려~ 손목이 떨리면 다음!":CHEER[i%CHEER.length]);refresh()});
   refresh();
   $("#go").onclick=()=>{
-    const st=S.cook[cur]=S.cook[cur]||{};st.cook=(st.cook||0)+1;const first=!st.clear;st.clear=true;addXP(10);
+    const st=S.cook[cur]=S.cook[cur]||{};st.cook=(st.cook||0)+1;const first=!st.clear;st.clear=true;const td0=today();S.cookDay=S.cookDay&&S.cookDay.d===td0?{d:td0,c:S.cookDay.c+1}:{d:td0,c:1};addXP(10);
     $("#go").hidden=true;$("#after").hidden=false;confetti();cheer(first?`Lv.${cur} 클리어! 너 진짜 셰프다!`:"또 성공! 실력이 늘고 있어!");
     $("#msg").textContent=`+10 XP · ${st.cook}번째 요리${first&&cur<LEVELS.length?` · Lv.${cur+1} 열림!`:""}`;
     app.querySelectorAll(".lv").forEach(b=>{const id=+b.dataset.id;if(cOpen(id)){b.disabled=false;b.classList.remove("locked")}});
