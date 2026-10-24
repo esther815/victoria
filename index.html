@@ -163,14 +163,21 @@ button:focus-visible,label:focus-within{outline:3px solid var(--accent);outline-
 const NAME="Victoria";
 const EXAM=new Date(2026,10,28); // 2026-11-28(토) 대한검정회 한자급수자격검정 제113회
 
-// 대한검정회 8급 선정한자 30자 [한자, 훈, 음]
-const HZ=[["一","한","일"],["二","두","이"],["三","석","삼"],["四","넉","사"],["五","다섯","오"],["六","여섯","륙"],["七","일곱","칠"],["八","여덟","팔"],["九","아홉","구"],["十","열","십"],
-["日","날","일"],["月","달","월"],["火","불","화"],["水","물","수"],["木","나무","목"],["金","쇠","금"],["土","흙","토"],["人","사람","인"],["父","아버지","부"],["母","어머니","모"],
-["子","아들","자"],["男","사내","남"],["女","여자","녀"],["兄","맏","형"],["弟","아우","제"],["門","문","문"],["東","동녘","동"],["西","서녘","서"],["南","남녘","남"],["北","북녘","북"]];
-const HZTIP={"六":"'육'으로도 읽어요. 六月은 '유월'!","女":"단어 맨 앞에서는 '여'로 읽어요. 女子 = 여자","十":"十月은 '시월'!","兄":"'맏'은 첫째라는 뜻이에요.","三":"'석'은 셋이라는 뜻이에요.","四":"'넉'은 넷이라는 뜻이에요."};
-const HZWORD=[["父母","부모","아버지와 어머니"],["兄弟","형제","형과 아우"],["男女","남녀","남자와 여자"],["子女","자녀","아들과 딸"],["父子","부자","아버지와 아들"],["母子","모자","어머니와 아들"],["母女","모녀","어머니와 딸"],["女子","여자","여자"],["男子","남자","남자"],["東西","동서","동쪽과 서쪽"],["南北","남북","남쪽과 북쪽"],["日月","일월","해와 달"],["水門","수문","물을 막거나 흘려보내는 문"],["土木","토목","흙과 나무로 하는 공사"],["東門","동문","동쪽 문"],["南門","남문","남쪽 문"],["西門","서문","서쪽 문"],["北門","북문","북쪽 문"],["三月","삼월","3월"],["五月","오월","5월"],["六月","유월","6월"],["十月","시월","10월"],["八月","팔월","8월"],["九月","구월","9월"],["人子","인자","사람의 아들"]].filter(w=>w[0]!=="人子");
+// 한자 [한자, 훈, 음]
+// 한자 52자 = 한국어문회 8급 50자(바빠 초등 8급 한자 순서) + 대한검정회 8급에만 있는 男·子
+const HZ=[["日","날","일"],["月","달","월"],["火","불","화"],["水","물","수"],["木","나무","목"],["金","쇠","금"],["土","흙","토"],["外","바깥","외"],["寸","마디","촌"],["長","긴","장"],
+["一","한","일"],["二","두","이"],["三","석","삼"],["四","넉","사"],["五","다섯","오"],["六","여섯","륙"],["七","일곱","칠"],["八","여덟","팔"],["九","아홉","구"],["十","열","십"],
+["東","동녘","동"],["西","서녘","서"],["南","남녘","남"],["北","북녘","북"],["小","작을","소"],["門","문","문"],["山","메","산"],["中","가운데","중"],["靑","푸를","청"],["白","흰","백"],
+["父","아비","부"],["母","어미","모"],["兄","형","형"],["弟","아우","제"],["先","먼저","선"],["生","날","생"],["學","배울","학"],["校","학교","교"],["敎","가르칠","교"],["室","집","실"],
+["大","큰","대"],["韓","한국","한"],["民","백성","민"],["國","나라","국"],["軍","군사","군"],["人","사람","인"],["萬","일만","만"],["年","해","년"],["女","여자","녀"],["王","임금","왕"],
+["男","사내","남"],["子","아들","자"]];
+const HZTIP={"六":"'육'으로도 읽어요. 六月은 '유월'!","女":"낱말 맨 앞에서는 '여'로 읽어요. 女王 = 여왕","十":"十月은 '시월'!","三":"'석'은 셋이라는 뜻이에요.","四":"'넉'은 넷이라는 뜻이에요.","年":"낱말 맨 앞에서는 '연'으로 읽어요. 年中 = 연중","長":"'긴'은 길다는 뜻이에요.","山":"'메'는 산의 옛말이에요.","父":"'아비'는 아버지라는 뜻이에요.","母":"'어미'는 어머니라는 뜻이에요.","男":"대한검정회 8급에 나오는 글자예요.","子":"대한검정회 8급에 나오는 글자예요."};
+const HZWORD=[["日月","일월","해와 달"],["火山","화산","불을 뿜는 산"],["山水","산수","산과 물, 경치"],["土木","토목","흙과 나무로 하는 공사"],["水門","수문","물을 막거나 흘려보내는 문"],["三寸","삼촌","아버지의 형제"],["外三寸","외삼촌","어머니의 남자 형제"],["三月","삼월","3월"],["五月","오월","5월"],["六月","유월","6월"],["十月","시월","10월"],["八月","팔월","8월"],["九月","구월","9월"],["東西","동서","동쪽과 서쪽"],["南北","남북","남쪽과 북쪽"],["大門","대문","큰 문"],["東門","동문","동쪽 문"],["南門","남문","남쪽 문"],["中國","중국","나라 이름"],["外國","외국","다른 나라"],["靑年","청년","젊은 사람"],["白人","백인","피부가 흰 사람"],["父母","부모","아버지와 어머니"],["兄弟","형제","형과 아우"],["先生","선생","가르치는 분"],["學生","학생","배우는 사람"],["生日","생일","태어난 날"],["學校","학교","배우는 곳"],["校門","교문","학교의 문"],["敎室","교실","공부하는 방"],["韓國","한국","우리나라"],["國民","국민","나라의 백성"],["王國","왕국","왕이 다스리는 나라"],["軍人","군인","나라를 지키는 사람"],["女王","여왕","여자 임금"],["萬年","만년","아주 오랜 세월"],["年長","연장","나이가 많음"],["長女","장녀","맏딸"],["男女","남녀","남자와 여자"],["子女","자녀","아들과 딸"],["父子","부자","아버지와 아들"],["母女","모녀","어머니와 딸"]];
 const YOIL=[["월요일","月"],["화요일","火"],["수요일","水"],["목요일","木"],["금요일","金"],["토요일","土"],["일요일","日"]];
-const HZDAYS=[[0,1,2],[3,4,5],[6,7,8],[9,10,11],[12,13,14],[15,16,17],[18,19,20],[21,22,23],[24,25,26],[27,28,29]];
+const ix=c=>HZ.findIndex(h=>h[0]===c);
+const HZU=[["日","月"],["火","水"],["木","金"],["土","外"],["寸","長"],[],["一","二"],["三","四"],["五","六"],["七","八"],["九","十"],[],["東","西"],["南","北"],["小","門"],["山","中"],["靑","白"],[],["父","母"],["兄","弟"],["先","生"],["學","校"],["敎","室"],[],["大","韓"],["民","國"],["軍","人"],["萬","年"],["女","王"],[],["男","子"]];
+const HZDAYS=HZU.map(u=>u.map(ix));
+const HZREVOF=d=>HZDAYS.slice(Math.max(0,d-5),d).flat();
 
 // 한국사 100문제 [질문, 정답, 오답3, 선애 설명]
 const HIST=[
@@ -356,7 +363,7 @@ let S={};
 try{S=JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){S={}}
 S.xp=S.xp||0; S.days=S.days||[]; S.test=!!S.test;
 if(!S.cookV2){S.cook={};S.cookCur=1;S.cookV2=true} S.cook=S.cook||{}; S.cookCur=S.cookCur||1;
-S.hist=S.hist||{n:0,last:"",wrong:[]}; S.hz=S.hz||{n:0,last:"",best:0}; S.en=S.en||{n:0,last:""};
+S.hist=S.hist||{n:0,last:"",wrong:[]}; if(!S.hzV2){S.hz={n:0,last:"",best:0};S.hzV2=true} S.hz=S.hz||{n:0,last:"",best:0}; S.en=S.en||{n:0,last:""};
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 const pad=n=>String(n).padStart(2,"0");
 function today(){const d=new Date();return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
@@ -505,32 +512,34 @@ function startHist(practice){
 const hun=i=>HZ[i][1]+" "+HZ[i][2];
 const hzSpan=c=>`<span class="hz">${c}</span>`;
 function hzLearnedChars(n){return HZDAYS.slice(0,n).flat().map(i=>HZ[i][0])}
+function hzRevQs(d){const R=HZREVOF(d),L=hzLearnedChars(d+1),qs=[];shuffle(R).forEach((i,k)=>qs.push(hzQ(k%2?"B":"A",i,L)));const c=hzQ("C",0,L);if(c)qs.push(c);return shuffle(qs).slice(0,10)}
 function hzDayQs(d){
   const F=HZDAYS[d],L=hzLearnedChars(d+1),prev=HZDAYS.slice(0,d).flat();const qs=[];
   F.forEach(i=>{qs.push(hzQ("A",i,L));qs.push(hzQ("B",i,L))});
   const extra=[hzQ("C",0,L),hzQ("D",0,L)].filter(Boolean);
   prev.length&&extra.push(hzQ("A",prev[Math.floor(Math.random()*prev.length)],L));
-  while(qs.length<8){const e=extra.shift();if(e)qs.push(e);else qs.push(hzQ(Math.random()<.5?"A":"B",F[Math.floor(Math.random()*3)],L))}
+  while(qs.length<8){const e=extra.shift();if(e)qs.push(e);else{const pool=F.concat(prev);qs.push(hzQ(Math.random()<.5?"A":"B",pool[Math.floor(Math.random()*pool.length)],L))}}
   return shuffle(qs);
 }
 function hzMixQs(n){const L=HZ.map(h=>h[0]),qs=[];const plan=n===25?["A","A","A","A","A","A","A","A","B","B","B","B","B","B","B","B","C","C","C","C","C","C","D","D","D"]:["A","A","A","B","B","B","C","C","D","A"];
-  const idx=shuffle(HZ.map((_,k)=>k));let p=0;plan.forEach(t=>{qs.push(hzQ(t,idx[p++%30],L))});return shuffle(qs)}
+  const idx=shuffle(HZ.map((_,k)=>k));let p=0;plan.forEach(t=>{qs.push(hzQ(t,idx[p++%HZ.length],L))});return shuffle(qs)}
 function hzMain(){
   const T="한자 8급 합격 작전";const n=S.hz.n,dd=dday();
   if(!isOpen(7))return lockScreen(T,7,"아침 7시에 열려요!");
-  const learning=n<10;
-  const head=`<div class="row"><span class="dday">시험 D-${dd<=0?"DAY":dd} · 11월 28일(토)</span><span class="pill">배운 한자 ${Math.min(n,10)*3} / 30</span></div><div class="bar"><i style="width:${Math.min(n,10)/10*100}%;background:var(--hanja)"></i></div>`;
-  const mock=n>=10?`<button class="big alt" id="mock" type="button">실전 모의시험 (25문제, 18개 이상 합격)${S.hz.best?` · 최고 ${S.hz.best}점`:""}</button>`:"";
+  const U=HZDAYS.length,learning=n<U,isRev=learning&&HZDAYS[n].length===0,known=hzLearnedChars(Math.min(n,U)).length;
+  const head=`<div class="row"><span class="dday">시험 D-${dd<=0?"DAY":dd} · 11월 28일(토)</span><span class="pill">배운 한자 ${known} / ${HZ.length} · ${Math.min(n,U)}/${U}과</span></div><div class="bar"><i style="width:${Math.min(n,U)/U*100}%;background:var(--hanja)"></i></div>`;
+  const mock=n>=U?`<button class="big alt" id="mock" type="button">실전 모의시험 (25문제, 18개 이상 합격)${S.hz.best?` · 최고 ${S.hz.best}점`:""}</button>`:"";
   if(doneToday("hz")){app.innerHTML=hdr(T)+`<div class="card">${head}<h3>오늘 한자 퀘스트 완료!</h3><p class="muted">내일 아침 7시에 다음 퀘스트가 열려요.</p><div class="btns"><button class="big alt" id="rev" type="button">연습 한 번 더</button>${mock}<button class="big" id="gohome" type="button">홈으로</button></div></div>`;
     bindBack();$("#gohome").onclick=home;$("#rev").onclick=()=>learning?hzLearn(Math.max(0,n-1),true):hzReview(true);if($("#mock"))$("#mock").onclick=hzMock;return}
   app.innerHTML=hdr(T)+`<div class="card">${head}
-    <h3>${learning?`오늘의 퀘스트: 새 한자 3개`:`오늘의 퀘스트: 복습 10문제`}</h3>
-    <p class="muted">${learning?`${HZDAYS[n].map(i=>HZ[i][0]).join(" ")} 를 배우고 8문제 중 6개를 맞히면 클리어!`:"30자를 모두 배웠어요! 매일 복습하고 모의시험으로 실력을 확인해요."}</p>
-    <div class="btns"><button class="big" id="start" type="button">${learning?"한자 카드 보기":"복습 시작"}</button>${mock}</div></div>`;
+    <h3>${!learning?`오늘의 퀘스트: 복습 10문제`:isRev?`${n+1}과: 앞 5과 복습`:`${n+1}과: 새 한자 ${HZDAYS[n].length}개`}</h3>
+    <p class="muted">${!learning?`${HZ.length}자를 모두 배웠어요! 매일 복습하고 모의시험으로 실력을 확인해요.`:isRev?`${HZREVOF(n).map(i=>HZ[i][0]).join(" ")} 를 10문제로 복습해요. 7개 이상 맞히면 클리어!`:`${HZDAYS[n].map(i=>HZ[i][0]).join(" ")} 를 배우고 8문제 중 6개를 맞히면 클리어!`}</p>
+    <div class="btns"><button class="big" id="start" type="button">${learning&&!isRev?"한자 카드 보기":"복습 시작"}</button>${mock}</div></div>`;
   bindBack();$("#start").onclick=()=>learning?hzLearn(n,false):hzReview(false);if($("#mock"))$("#mock").onclick=hzMock;
 }
 function hzLearn(d,practice){
   const F=HZDAYS[d];let k=0;
+  if(!F.length){quiz({title:"한자 복습 퀘스트",qs:hzRevQs(d),pass:7,remake:()=>hzRevQs(d),onPass:()=>{if(!practice&&!doneToday("hz")){markDone("hz");addXP(20)}}});return}
   function card(){const i=F[k],h=HZ[i];const ex=HZWORD.filter(w=>w[0].includes(h[0])&&[...w[0]].every(c=>hzLearnedChars(d+1).includes(c)))[0];
     app.innerHTML=hdr("한자 카드")+`<div class="card"><div class="dots">${F.map((_,j)=>`<i class="${j===k?"on":""}"></i>`).join("")}</div>
      <div class="flash"><span class="hz">${h[0]}</span><span class="word">${h[1]} ${h[2]}</span>${HZTIP[h[0]]?`<p class="muted">${HZTIP[h[0]]}</p>`:""}${ex?`<p class="mean">${ex[0]} = ${ex[1]} <span class="muted">(${ex[2]})</span></p>`:""}</div>
@@ -551,6 +560,7 @@ const HZHINT={"一":"막대기가 몇 개인지 세어 봐!","二":"막대기가
 "父":"엄마의 짝꿍, 우리 집 어른 한 분이야.","母":"女 안에 점 두 개가 들어 있어. 나를 낳아 주신 분!","子":"포대기에 싸인 아기 모양을 떠올려 봐.","男":"위는 밭(田), 아래는 힘(力)! 밭에서 힘쓰는 사람을 떠올려 봐.","女":"男의 짝이 되는 글자야.","兄":"위에 口(입)가 있어. 동생들에게 말하는 첫째를 떠올려 봐.","弟":"兄의 반대쪽! 형제 중 뒤에 태어난 사람.","門":"학교 정문처럼 양쪽으로 여닫는 것을 떠올려 봐.",
 "東":"나무(木) 사이로 해(日)가 떠오르는 쪽을 떠올려 봐.","西":"해가 지는 쪽! 東의 반대야.","南":"따뜻한 쪽, 제주도가 있는 방향이야.","北":"두 사람이 등을 돌리고 있는 모양. 南의 반대야."};
 const YOHINT={"月":"밤하늘에 뜨는 것","火":"뜨거운 것","水":"마시는 것","木":"숲에 많은 것","金":"반짝이는 단단한 것","土":"땅에 있는 것","日":"낮에 뜨는 것"};
+Object.assign(HZHINT,{"外":"안의 반대쪽! 집 밖을 떠올려 봐.","寸":"손목에 손가락 한 마디를 댄 모양. 아주 짧은 길이야.","長":"머리카락을 길게 늘어뜨린 어른 모양이야.","小":"가운데 갈고리 양옆에 작은 점 두 개. 大의 반대!","山":"봉우리 세 개가 솟은 모양이야.","中":"네모 한가운데를 꿰뚫은 막대를 떠올려 봐.","靑":"봄날 새싹과 맑은 하늘의 색을 떠올려 봐.","白":"눈 내린 들판, 우유의 색을 떠올려 봐.","先":"남보다 앞으로 먼저 내딛는 발을 떠올려 봐.","生":"땅에서 쏙 돋아나는 새싹 모양이야.","學":"지붕 아래에서 아이(子)가 무언가를 익히는 모습이야.","校":"나무(木)로 지은, 친구들과 사귀는 곳을 떠올려 봐.","敎":"오른쪽은 손에 막대를 든 모양. 선생님이 하시는 일!","室":"지붕(宀) 아래, 사람이 머무는 방을 떠올려 봐.","大":"팔다리를 활짝 편 사람. 小의 반대!","韓":"해가 떠오르는 동쪽의 나라, 바로 우리나라!","民":"나라를 이루는 수많은 보통 사람들을 떠올려 봐.","國":"울타리(口) 안에서 창을 들고 지키는 땅이야.","軍":"수레(車)를 둘러싸고 나라를 지키는 사람들이야.","萬":"아주아주 큰 수. 천의 열 배!","年":"생일이 다시 돌아올 때까지 걸리는 시간이야.","王":"하늘·땅·사람(三)을 하나로 꿰뚫은 사람이래.","父":"엄마의 짝꿍, 우리 집 어른 한 분이야.","母":"女 안에 점 두 개가 들어 있어. 나를 낳아 주신 분!","兄":"위에 口(입)가 있어. 동생들에게 말하는 첫째를 떠올려 봐."});
 function cho(s){const C="ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ";return [...s].map(c=>{const k=c.charCodeAt(0)-0xAC00;return k>=0&&k<11172?C[Math.floor(k/588)]:c}).join("")}
 const tagH=t=>`<span class="qtag">${t}</span>`;
 function hzQ(type,i,learned){
@@ -647,8 +657,8 @@ function chefSvg(){return `<svg viewBox="0 0 100 100" aria-hidden="true"><path d
 const CHEER=["좋아, 시작이야!","오, 손이 빠른데?","거의 다 왔어!","셰프 Victoria 최고!","냄새 좋다~"];
 function confetti(){if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;const box=document.createElement("div");box.className="confetti";const cs=["#FF4F8B","#FFC93C","#7FD3FF","#3BB273","#B78CFF"];for(let i=0;i<46;i++){const s=document.createElement("i");s.style.left=Math.random()*100+"%";s.style.background=cs[i%5];s.style.animationDelay=Math.random()*.5+"s";s.style.transform=`rotate(${Math.random()*360}deg)`;box.appendChild(s)}document.body.appendChild(box);setTimeout(()=>box.remove(),3200)}
 
-function pastHTML(t){const cap=t==="hist"?20:t==="hz"?10:ENGDAYS.length;const n=Math.min(S[t].n,cap);if(!n)return "";
-  const lab=d=>t==="hz"?HZDAYS[d].map(i=>HZ[i][0]).join(""):t==="en"?(ENGDAYS[d].abc?`ABC ${d+1}`:ENGDAYS[d].title):`${d+1}일차`;
+function pastHTML(t){const cap=t==="hist"?20:t==="hz"?HZDAYS.length:ENGDAYS.length;const n=Math.min(S[t].n,cap);if(!n)return "";
+  const lab=d=>t==="hz"?(HZDAYS[d].length?HZDAYS[d].map(i=>HZ[i][0]).join(""):`${d+1}과 복습`):t==="en"?(ENGDAYS[d].abc?`ABC ${d+1}`:ENGDAYS[d].title):`${d+1}일차`;
   return `<div class="card"><h3>지난 퀘스트 다시 하기</h3><p class="muted">언제든 다시 할 수 있어요. 복습용이라 진도는 그대로예요.</p><div class="tapchips">${Array.from({length:n},(_,d)=>`<button type="button" class="tc past" data-t="${t}" data-d="${d}" ${t==="hz"?'style="font-family:var(--han)"':""}>${lab(d)}</button>`).join("")}</div></div>`}
 function withPast(t){app.insertAdjacentHTML("beforeend",pastHTML(t));app.querySelectorAll(".past").forEach(b=>b.onclick=()=>{const d=+b.dataset.d;if(t==="hist")histDay(d);else if(t==="hz")hzLearn(d,true);else enLearn(d,true)})}
 function hist(){histMain();withPast("hist")}
@@ -665,7 +675,7 @@ function reportText(){const d=new Date(),td=today(),c=t=>S[t].last===td?(S[t].cn
   return `[Victoria 오늘의 자랑 💌] ${d.getMonth()+1}/${d.getDate()}(${days})
 🍞 요리: 오늘 ${ck}번 · Lv.${lv}까지 클리어
 📜 한국사: 오늘 ${c("hist")}개 · ${Math.min(S.hist.n,20)}/20일차${S.hist.wrong.length?` · 다시 볼 문제 ${S.hist.wrong.length}개`:""}
-漢 한자: 오늘 ${c("hz")}개 · ${Math.min(S.hz.n,10)*3}/30자${S.hz.best?` · 모의시험 최고 ${S.hz.best}/25`:""} · 시험 D-${Math.max(dday(),0)}
+漢 한자: 오늘 ${c("hz")}개 · ${hzLearnedChars(Math.min(S.hz.n,HZDAYS.length)).length}/${HZ.length}자 (${Math.min(S.hz.n,HZDAYS.length)}/${HZDAYS.length}과)${S.hz.best?` · 모의시험 최고 ${S.hz.best}/25`:""} · 시험 D-${Math.max(dday(),0)}
 🔤 영어: 오늘 ${c("en")}개 · Day ${Math.min(S.en.n,ENGDAYS.length)}/${ENGDAYS.length}
 ⭐ Lv.${Math.floor(S.xp/50)+1} · ${S.xp} XP · 연속 ${streak()}일
 📝 오늘 결과${S.log&&S.log.d===td&&S.log.r.length?S.log.r.map(r=>`\n· ${r[0]} ${r[1]}/${r[2]} ${r[3]?"✓":"(재도전)"}`).join(""):" 없음"}`}
