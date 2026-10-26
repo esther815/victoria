@@ -20,7 +20,7 @@
 :root{
   --bg:#E6F1FA; --card:#FFFFFF; --soft:#F1F6FB; --ink:#1E2940; --muted:#5B6782; --line:#C9D8E8; --lock:#AEB9CC;
   --accent:#2F6FEB; --good:#2E9E62; --bad:#D9485F;
-  --cook:#F2A516; --hist:#E8664A; --hanja:#B8323F; --eng:#2F6FEB;
+  --cook:#F2A516; --ko:#7C6CF0; --hist:#E8664A; --hanja:#B8323F; --eng:#2F6FEB;
   --butter:#FFC93C; --crust:#C9822B; --cheese:#FFB627;
   --display:"Jua","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   --body:"Gowun Dodum","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
@@ -167,6 +167,7 @@ button:focus-visible,label:focus-within{outline:3px solid var(--accent);outline-
 .petlink{display:flex;gap:12px;align-items:center;width:100%;border:0;text-align:left;font:inherit;color:var(--ink)}.petlink h3,.petlink p{margin:0}
 .pinput{width:100%;font:inherit;font-size:1.1rem;padding:10px;border-radius:12px;border:2px solid #FFB3D1;text-align:center}
 .ptoast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#3A2A3F;color:#fff;padding:12px 18px;border-radius:16px;z-index:70;max-width:90%;text-align:center;animation:pop .3s ease-out}
+.kwrite{width:100%;font:inherit;font-size:1.05rem;padding:12px;border-radius:14px;border:2px solid #CFC7FF;margin:8px 0;box-sizing:border-box}.kshow{background:#F3F0FF;border-radius:14px;padding:12px;text-align:left;width:100%;box-sizing:border-box}.pnum{width:90px;font:inherit;font-size:1.05rem;padding:6px;border-radius:10px;border:2px solid #FFB3D1}.pform li{grid-template-columns:7.5rem 1fr}
 .recap{margin:6px 0 0;padding-left:1.1em;font-size:.95rem;line-height:1.6}.recap li{margin:3px 0}
 .qtag{display:table;margin-left:auto;margin-right:auto;font-family:var(--display);font-size:.95rem;background:var(--soft);color:var(--accent);border-radius:99px;padding:2px 12px;margin-bottom:6px}
 .hintb{appearance:none;align-self:center;border:2px dashed var(--cheese);background:transparent;color:var(--ink);border-radius:99px;padding:6px 18px;font-family:var(--display);font-size:1.05rem;cursor:pointer}
@@ -486,7 +487,9 @@ try{S=JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){S={}}
 S.xp=S.xp||0; S.days=S.days||[]; S.test=!!S.test;
 if(!S.cookV2){S.cook={};S.cookCur=1;S.cookV2=true} S.cook=S.cook||{}; S.cookCur=S.cookCur||1;
 S.hist=S.hist||{n:0,last:"",wrong:[]}; if(!S.gemV2){S.gems=(S.gems||0)*10;if(S.gemDay)S.gemToday={d:S.gemDay,n:10};S.gemV2=true} if(!S.histV2){S.hist.n=Math.min((S.hist.n||0)*2,40);S.histV2=true} if(!S.hzV2){S.hz={n:0,last:"",best:0};S.hzV2=true} S.hz=S.hz||{n:0,last:"",best:0}; if(!S.enV2){S.en={n:0,last:""};S.enV2=true} S.en=S.en||{n:0,last:""}; S.mem=S.mem||{lv:{corsi:3,back:2,nb:1},log:[],last:""};
+S.ko=S.ko||{n:0,last:"",cnt:0,wrong:[],writes:[]};
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
 const pad=n=>String(n).padStart(2,"0");
 function today(){const d=new Date();return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
 function hourNow(){const d=new Date();return d.getHours()+d.getMinutes()/60}
@@ -578,7 +581,7 @@ function quiz(o){
       <p class="muted">점수는 처음 고른 답으로만 매겨요.</p>
       ${o.pass?`<p class="muted">${pass?"퀘스트 클리어!":`${o.pass}개 이상 한 번에 맞히면 클리어! 다시 도전해 볼까?`}</p>`:""}
       <div class="btns" style="width:100%">${o.story!=null?`<button class="big alt" id="restory" type="button">📜 이야기 다시 보기</button>`:""}${!pass?`<button class="big" id="retry" type="button">다시 도전</button>`:""}<button class="big ${pass?"":"alt"}" id="gohome" type="button">홈으로</button></div></div>`;
-    bindBack();$("#gohome").onclick=home;if($("#restory"))$("#restory").onclick=()=>histLesson(o.story,true);
+    bindBack();$("#gohome").onclick=o.after||home;if(o.after)$("#gohome").textContent="다음: 생각 한 줄 ✏️";if($("#restory"))$("#restory").onclick=()=>histLesson(o.story,true);
     if($("#retry"))$("#retry").onclick=()=>{const q=o.remake?o.remake():o.qs;quiz(Object.assign({},o,{qs:q}))};
   }
   show();
@@ -595,12 +598,12 @@ function status(t){
   if(!isOpen(h))return["wait",h+"시에 열려요"];
   return["go","지금 도전!"];
 }
-function updBadge(){try{const n=["hist","hz","en","mem"].filter(t=>status(t)[0]==="go").length;if("setAppBadge" in navigator){n?navigator.setAppBadge(n).catch(()=>{}):navigator.clearAppBadge().catch(()=>{})}}catch(e){}}
+function updBadge(){try{const n=["hist","hz","en","ko","mem"].filter(t=>status(t)[0]==="go").length;if("setAppBadge" in navigator){n?navigator.setAppBadge(n).catch(()=>{}):navigator.clearAppBadge().catch(()=>{})}}catch(e){}}
 setInterval(()=>{updBadge();if(document.querySelector("#ver")&&!document.hidden)home()},60000);
 function home(){
   const lv=Math.floor(S.xp/50)+1,pct=(S.xp%50)/50*100,h=new Date().getHours();
   const hi=h<12?"좋은 아침":h<18?"안녕":"오늘도 수고했어";
-  const T=[["cook","요리","10분 아침 요리","--cook","🍳"],["hist","한국사","선애의 이야기 · 7시","--hist","史"],["hz","한자","8급 합격 작전 · 7시","--hanja","漢"],["en","영어","파닉스 · 장면 영어 · 7시","--eng","A"],["mem","기억 탐험","작업 기억 게임 · 7시","--accent","🧠"]];
+  const T=[["cook","요리","10분 아침 요리","--cook","🍳"],["hist","한국사","선애의 이야기 · 7시","--hist","史"],["hz","한자","8급 합격 작전 · 7시","--hanja","漢"],["en","영어","파닉스 · 장면 영어 · 7시","--eng","A"],["ko","국어","글냥이와 탐험 · 7시","--ko","가"],["mem","기억 탐험","작업 기억 게임 · 7시","--accent","🧠"]];
   const dd=dday();
   app.innerHTML=`${S.test?`<div class="test">보호자 테스트 모드 (시간 제한 꺼짐)</div>`:""}
   <header class="hud"><button class="gem" id="gem" type="button" aria-label="보석함">💎 ${S.gems||0}</button><h1>${hi}, ${NAME}!</h1><span class="ttl">${title()}</span>
@@ -609,13 +612,13 @@ function home(){
    <button class="rulesb" id="rulesb" type="button">📖 보석 규칙 보기</button></header>
   <div class="tiles">${T.map(([k,n,w,c,ic])=>{const[s,txt]=status(k);return `<button class="tile" type="button" data-t="${k}"><span class="ic" style="background:var(${c});${k==="hz"||k==="hist"?"font-family:var(--han)":""}">${ic}</span><h3>${n}</h3><span class="when">${w}</span><span class="chip ${s}">${txt}</span>${s==="go"&&k!=="cook"?`<span class="heart" aria-label="새 퀘스트">♥</span>`:""}</button>`}).join("")}</div>
   ${("Notification" in window)&&Notification.permission!=="granted"&&("setAppBadge" in navigator)?`<button class="big alt" id="badgeOn" type="button">♥ 새 퀘스트 알림 켜기</button>`:""}
-  ${S.test?`<button class="big alt" id="rst" type="button">기록 전체 초기화</button><p class="foot" id="rstAsk" hidden>정말 지울까요? <button class="back" id="rstYes" type="button">네, 지워요</button></p>`:""}
+  ${S.test?`<button class="big" id="parent" type="button">🔧 보호자 설정 (진도·펫·백업)</button><button class="big alt" id="rst" type="button">기록 전체 초기화</button><p class="foot" id="rstAsk" hidden>정말 지울까요? <button class="back" id="rstYes" type="button">네, 지워요</button></p>`:""}
   <div class="card rep"><h3>💌 엄마에게 오늘 자랑하기${S.reportLast===today()?" ✓":""}</h3><p class="muted">${S.reportLast===today()?"오늘 자랑 완료! 내일도 들려줘.":"오늘 한 퀘스트를 카톡으로 엄마에게 자랑하면 +5 XP!"}</p><button class="big ${S.reportLast===today()?"alt":""}" id="rep" type="button">자랑 보내기</button><p class="muted" id="repmsg" hidden style="white-space:pre-line"></p></div>
   ${petCardHome()}
   ${shopHTML(nextCook())}
-  <p class="foot" id="ver">Victoria Quest v1.5</p>`;
-  if(S.test){$("#rst").onclick=()=>{$("#rstAsk").hidden=false};$("#rstYes").onclick=()=>{try{localStorage.removeItem(KEY)}catch(e){}location.reload()}}
-  app.querySelectorAll(".tile").forEach(b=>b.onclick=()=>({cook:cookStart,hist,hz,en,mem})[b.dataset.t]());
+  <p class="foot" id="ver">Victoria Quest v1.6</p>`;
+  if(S.test){$("#parent").onclick=parentPanel;$("#rst").onclick=()=>{$("#rstAsk").hidden=false};$("#rstYes").onclick=()=>{try{localStorage.removeItem(KEY)}catch(e){}location.reload()}}
+  app.querySelectorAll(".tile").forEach(b=>b.onclick=()=>({cook:cookStart,hist,hz,en,mem,ko})[b.dataset.t]());
   updBadge();
   $("#gem").onclick=gemRoom;$("#petgo").onclick=houseView;
   $("#rulesb").onclick=showRules;
@@ -1004,10 +1007,10 @@ function chefSvg(){return `<svg viewBox="0 0 100 100" aria-hidden="true"><path d
 const CHEER=["좋아, 시작이야!","오, 손이 빠른데?","거의 다 왔어!","셰프 Victoria 최고!","냄새 좋다~"];
 function confetti(){if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;const box=document.createElement("div");box.className="confetti";const cs=["#FF4F8B","#FFC93C","#7FD3FF","#3BB273","#B78CFF"];for(let i=0;i<46;i++){const s=document.createElement("i");s.style.left=Math.random()*100+"%";s.style.background=cs[i%5];s.style.animationDelay=Math.random()*.5+"s";s.style.transform=`rotate(${Math.random()*360}deg)`;box.appendChild(s)}document.body.appendChild(box);setTimeout(()=>box.remove(),3200)}
 
-function pastHTML(t){const cap=t==="hist"?HSTORY.length:t==="hz"?HZDAYS.length:ENGDAYS.length;const n=Math.min(S[t].n,cap);if(!n)return "";
-  const lab=d=>t==="hz"?(HZDAYS[d].length?HZDAYS[d].map(i=>HZ[i][0]).join(""):`${d+1}과 복습`):t==="en"?(ENGDAYS[d].abc?`ABC ${d+1}`:ENGDAYS[d].title):`${d+1}. ${HSTORY[d].t}`;
+function pastHTML(t){const cap=t==="ko"?KO.length:t==="hist"?HSTORY.length:t==="hz"?HZDAYS.length:ENGDAYS.length;const n=Math.min(S[t].n,cap);if(!n)return "";
+  const lab=d=>t==="hz"?(HZDAYS[d].length?HZDAYS[d].map(i=>HZ[i][0]).join(""):`${d+1}과 복습`):t==="en"?(ENGDAYS[d].abc?`ABC ${d+1}`:ENGDAYS[d].title):t==="ko"?`${d+1}. ${KO[d].t}`:`${d+1}. ${HSTORY[d].t}`;
   return `<div class="card"><h3>지난 퀘스트 다시 하기</h3><p class="muted">언제든 다시 할 수 있어요. 복습용이라 진도는 그대로예요.</p><div class="tapchips">${Array.from({length:n},(_,d)=>`<button type="button" class="tc past" data-t="${t}" data-d="${d}" ${t==="hz"?'style="font-family:var(--han)"':""}>${lab(d)}</button>`).join("")}</div></div>`}
-function withPast(t){app.insertAdjacentHTML("beforeend",pastHTML(t));app.querySelectorAll(".past").forEach(b=>b.onclick=()=>{const d=+b.dataset.d;if(t==="hist")histLesson(d,true);else if(t==="hz")hzLearn(d,true);else enLearn(d,true)})}
+function withPast(t){app.insertAdjacentHTML("beforeend",pastHTML(t));app.querySelectorAll(".past").forEach(b=>b.onclick=()=>{const d=+b.dataset.d;if(t==="hist")histLesson(d,true);else if(t==="ko")koLesson(d,true);else if(t==="hz")hzLearn(d,true);else enLearn(d,true)})}
 function hist(){histMain();withPast("hist")}
 function hz(){hzMain();withPast("hz")}
 function en(){enMain();withPast("en")}
@@ -1024,6 +1027,7 @@ function reportText(){const d=new Date(),td=today(),c=t=>S[t].last===td?(S[t].cn
 📜 한국사: 오늘 ${c("hist")}개 · ${Math.min(S.hist.n,HSTORY.length)}/${HSTORY.length}편${S.hist.wrong.length?` · 다시 볼 문제 ${S.hist.wrong.length}개`:""}
 漢 한자: 오늘 ${c("hz")}개 · ${hzLearnedChars(Math.min(S.hz.n,HZDAYS.length)).length}/${HZ.length}자 (${Math.min(S.hz.n,HZDAYS.length)}/${HZDAYS.length}과)${S.hz.best?` · 모의시험 최고 ${S.hz.best}/25`:""} · 시험 D-${Math.max(dday(),0)}
 🔤 영어: 오늘 ${c("en")}개 · Day ${Math.min(S.en.n,ENGDAYS.length)}/${ENGDAYS.length}
+📘 국어: 오늘 ${c("ko")}개 · ${Math.min(S.ko.n,KO.length)}/${KO.length}과${S.ko.writes.length&&S.ko.writes.at(-1).d===td?`\n   ✏️ 생각 한 줄: “${S.ko.writes.at(-1).a}”`:""}
 🧠 기억 탐험: ${S.mem&&S.mem.last===td?`오늘 완료 · 발자국 최고 ${(S.mem.log.at(-1)||{}).corsi||0}개`:"오늘 안 함"}
 ⭐ Lv.${Math.floor(S.xp/50)+1} · ${S.xp} XP · 연속 ${streak()}일
 💎 보석 ${S.gems||0}개${S.gemToday&&S.gemToday.d===td?` (오늘 +${S.gemToday.n})`:` · 남은 퀘스트: ${questsLeft().join(", ")}`}${(S.pets||[]).length?`\n🐾 ${S.pets.map(p=>petOf(p.k)[2]+" "+p.name+" 친밀도 "+p.love+" · 재주 "+TRICK_AT.filter(x=>p.skill>=x).length+"개").join(" / ")}`:""}
@@ -1042,7 +1046,7 @@ function weekGems(){const now=new Date(),day=(now.getDay()+6)%7,mon=new Date(now
 function popup(html){const o=document.createElement("div");o.className="pop-ov";o.innerHTML=`<div class="pop-card">${html}<button class="big" type="button">좋아!</button></div>`;document.body.appendChild(o);o.querySelector("button").onclick=()=>{o.remove();if(document.querySelector("#ver"))home()};try{confetti()}catch(e){}}
 function gemTarget(){const td=today(),c=t=>S[t]&&S[t].last===td?Math.min(S[t].cnt||1,DAILY):0,ck=S.cookDay&&S.cookDay.d===td?Math.min(S.cookDay.c||1,DAILY):0,mm=S.mem&&S.mem.last===td?Math.min(S.mem.cnt||1,DAILY):0;
   if(!(ck&&c("hist")&&c("hz")&&c("en")&&mm))return null;
-  return {base:10,extra:(c("hist")+c("hz")+c("en")+ck+mm-5)*2,pf:S.perf&&S.perf.d===td?Math.min(S.perf.n,5):0}}
+  return {base:10,extra:(c("hist")+c("hz")+c("en")+ck+mm-5+c("ko"))*2,pf:S.perf&&S.perf.d===td?Math.min(S.perf.n,5):0}}
 function questsLeft(){const td=today(),l=[];if(!(S.cookDay&&S.cookDay.d===td))l.push("요리");[["hist","한국사"],["hz","한자"],["en","영어"]].forEach(([t,n])=>{if(S[t].last!==td)l.push(n)});if(!(S.mem&&S.mem.last===td))l.push("기억 탐험");return l}
 function checkGem(){const td=today(),g=gemTarget();if(!g)return;const tot=g.base+g.extra+g.pf,prev=S.gemToday&&S.gemToday.d===td?S.gemToday.n:0;if(tot<=prev)return;
   S.gems=(S.gems||0)+tot-prev;S.gemToday={d:td,n:tot};const first=S.gemDay!==td;if(first){S.gemDay=td;S.gemDays=(S.gemDays||[]).concat(td).slice(-60)}save();
@@ -1084,7 +1088,7 @@ const petOf=k=>PETS.find(p=>p[0]===k);
 function petInit(){S.pets=S.pets||[];S.inv=S.inv||{};S.coupons=S.coupons||[];S.care=S.care&&S.care.d===today()?S.care:{d:today(),used:0};return S}
 function careHearts(){const td=today(),c=t=>S[t]&&S[t].last===td?Math.min(S[t].cnt||1,DAILY):0;
   const ck=S.cookDay&&S.cookDay.d===td?Math.min(S.cookDay.c||1,DAILY):0,mm=S.mem&&S.mem.last===td?Math.min(S.mem.cnt||1,DAILY):0;
-  return Math.max(0,c("hist")+c("hz")+c("en")+ck+mm-petInit().care.used)}
+  return Math.max(0,c("hist")+c("hz")+c("en")+c("ko")+ck+mm-petInit().care.used)}
 function daysBetween(a,b){const f=s=>{const[y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};return Math.round((f(b)-f(a))/864e5)}
 function petDecay(p){const td=today();if(p.seen===td)return;const miss=p.fed?Math.max(0,daysBetween(p.fed,td)-1):0;if(miss>0&&p.seen)p.love=Math.max(0,p.love-3*Math.min(miss,daysBetween(p.seen,td)));p.seen=td}
 const loveName=l=>l>=80?"우리 가족 💞":l>=50?"단짝 친구":l>=20?"친해지는 중":"아직 낯가림";
@@ -1448,6 +1452,192 @@ function decorView(){hInit();const H=S.house;
   let pickF=null;app.querySelectorAll("[data-floor]").forEach(x=>x.onclick=()=>{pickF=x.dataset.floor;$("#flroom").hidden=false});
   app.querySelectorAll("[data-bf]").forEach(x=>{if(!x.dataset.bf)return;x.onclick=()=>{const f=FLOORS.find(y=>y[0]===x.dataset.bf);if(x.dataset.sure){if(!spend(f[3]))return;H.own.floors.push(f[0]);save();decorView()}else{x.dataset.sure=1;x.querySelector("small").textContent="한 번 더 누르면 사요"}}});
   app.querySelectorAll("[data-fr]").forEach(x=>x.onclick=()=>{if(!pickF)return;H.floors[x.dataset.fr]=pickF;save();decorView()})}
+
+/* ===================== 국어 (2022 개정 교육과정 5~6학년군) ===================== */
+// 과: {c:성취기준, a:영역, t:제목, cards:[[그림,설명]], qs:[[문제,정답,[오답3],힌트,풀이]], w:생각 쓰기}
+const KO=[
+{c:"6국04-04",a:"문법",t:"문장의 뼈대 찾기",cards:[["🦴","문장에는 뼈대가 있어요. <b>누가(무엇이)</b> = 주어, <b>어찌하다·어떠하다·무엇이다</b> = 서술어."],["🎯","‘무엇을’에 해당하는 말은 <b>목적어</b>예요.<br>예) <u>동생이</u>(주어) <u>사과를</u>(목적어) <u>먹었다</u>(서술어)."],["🔍","찾는 요령: 문장 끝의 서술어부터 찾고, “누가?” “무엇을?” 하고 물어보면 나머지가 보여요."]],
+ qs:[["“고양이가 생선을 먹었다.”에서 <b>서술어</b>는?","먹었다",["고양이가","생선을","고양이"],"문장 맨 끝에서 ‘어찌하다’에 해당하는 말을 찾아봐.","‘먹었다’가 고양이가 한 일을 나타내는 서술어야."],
+ ["“하늘이 정말 파랗다.”에서 <b>주어</b>는?","하늘이",["정말","파랗다","주어가 없다"],"“무엇이 파랗지?” 하고 물어봐.","파란 것은 ‘하늘이’ → 주어야."],
+ ["“Victoria는 동생에게 책을 주었다.”에서 <b>목적어</b>는?","책을",["Victoria는","동생에게","주었다"],"“무엇을 주었지?” 하고 물어봐.","준 것은 ‘책을’ → 목적어. ‘동생에게’는 누구에게 주었는지 알려 주는 말이야."],
+ ["꼭 필요한 문장 성분이 <b>빠진</b> 문장은?","민수가 샀다.",["꽃이 피었다.","아기가 웃는다.","나는 학생이다."],"“무엇을?” 하고 물었을 때 대답이 없어서 답답한 문장을 찾아봐.","‘샀다’는 무엇을 샀는지(목적어)가 있어야 뜻이 완성돼."]],
+ w:"오늘 내가 한 일을 주어·목적어·서술어가 모두 들어간 문장 하나로 써 봐."},
+{c:"6국04-04",a:"문법",t:"주어와 서술어 짝 맞추기",cards:[["🧩","주어와 서술어는 짝이 맞아야 해요. 이것을 <b>호응</b>이라고 해요."],["⚠️","“내 꿈은 선생님이 되고 싶다.” → 어색해요!<br>‘꿈은’에 어울리는 끝은 “…<b>되는 것이다</b>.”"],["👵","높일 사람이 주어면 서술어도 높여요.<br>“할머니께서 오<b>셨</b>다.”"]],
+ qs:[["“내 꿈은 선생님이 되고 싶다.”를 바르게 고친 것은?","내 꿈은 선생님이 되는 것이다.",["내 꿈은 선생님이 되고 싶었다.","내 꿈은 선생님이 되겠다.","내 꿈은 선생님이 됩니다."],"주어 ‘꿈은’과 짝이 맞는 끝말을 찾아봐. 꿈은 ‘무엇’이지?","‘꿈은 ~것이다’처럼 주어와 서술어가 짝을 이뤄야 해."],
+ ["호응이 <b>바른</b> 문장은?","이 책의 장점은 그림이 예쁘다는 것이다.",["이 책의 장점은 그림이 예쁘다.","이 책의 장점은 그림이 예뻤다.","이 책의 장점은 그림을 예쁘다."],"‘장점은’ 뒤에는 ‘무엇이다’가 와야 자연스러워.","‘장점은 ~라는 것이다’가 짝이 맞아."],
+ ["“할머니께서 집에 ____.” 빈칸에 알맞은 말은?","오셨다",["왔다","온다","왔어"],"‘께서’가 붙은 사람을 높여야 해.","주어를 높였으니 서술어도 ‘오셨다’로 높여."],
+ ["호응이 <b>어색한</b> 문장은?","내가 하고 싶은 말은 고맙다.",["내가 하고 싶은 말은 고맙다는 것이다.","선생님께서 웃으셨다.","내 취미는 그림 그리기이다."],"‘말은’ 다음에 무엇이 와야 할지 생각해 봐.","‘말은 고맙다는 것이다’로 고쳐야 짝이 맞아."]],
+ w:"“내 꿈은 ~”으로 시작하는 문장을 짝이 맞게 써 봐."},
+{c:"6국04-04",a:"문법",t:"짝꿍 말 (부사어 호응)",cards:[["👫","어떤 말은 늘 함께 다니는 짝꿍이 있어요."],["📌","결코 → <b>~않다</b> · 만약 → <b>~면</b> · 왜냐하면 → <b>~때문이다</b> · 비록 → <b>~지만</b>"],["💡","짝꿍이 안 맞으면 뜻은 통해도 어색한 문장이 돼요."]],
+ qs:[["“나는 결코 포기____.”","하지 않겠다",["하겠다","할 것이다","했다"],"‘결코’는 어떤 말과 짝꿍일까?","‘결코’는 ‘~않다, ~없다’ 같은 부정하는 말과 함께 써."],
+ ["“만약 비가 오____ 소풍을 미루자.”","면",["서","고","지만"],"‘만약’은 조건을 말할 때 써.","‘만약 ~면’이 짝꿍이야."],
+ ["짝이 <b>바른</b> 문장은?","왜냐하면 늦잠을 잤기 때문이다.",["왜냐하면 늦잠을 잤다.","왜냐하면 늦잠을 잘 것이다.","왜냐하면 늦잠을 자면 좋겠다."],"‘왜냐하면’은 이유를 말해. 이유를 마무리하는 말은?","‘왜냐하면 ~때문이다’가 짝꿍이야."],
+ ["“비록 키는 작____ 힘은 세다.”","지만",["아서","니까","으면"],"앞과 뒤의 내용이 서로 반대야.","‘비록 ~지만’이 짝꿍이야."]],
+ w:"‘만약 ~면’을 넣어 내가 상상하는 일을 한 문장으로 써 봐."},
+{c:"6국04-05",a:"문법",t:"어제·오늘·내일 (시간 표현)",cards:[["⏰","문장은 일이 <b>언제</b> 일어났는지 알려 줘요."],["📅","지난 일 → <b>-었-/-았-</b> (먹었다)<br>지금 일 → <b>-ㄴ다/-는다, -고 있다</b> (먹는다)<br>앞으로 일 → <b>-겠-, -ㄹ 것이다</b> (먹겠다)"],["🧭","‘어제, 내일, 지금’ 같은 말과 끝말이 서로 맞아야 해요."]],
+ qs:[["“어제 나는 도서관에 ____.”","갔다",["간다","갈 것이다","가겠다"],"‘어제’는 이미 지난날이야.","지난 일이니까 ‘갔다’."],
+ ["“내일은 비가 ____.”","오겠다",["왔다","왔었다","오던"],"‘내일’은 아직 오지 않은 날이야.","앞으로의 일이니까 ‘오겠다’."],
+ ["시간 표현이 <b>어색한</b> 문장은?","나는 지난주에 영화를 본다.",["지금 동생이 자고 있다.","다음 달에 이사할 것이다.","아까 엄마가 전화하셨다."],"‘지난주’와 끝말이 맞는지 하나씩 살펴봐.","‘지난주에’는 지난 일이라 ‘보았다’가 맞아."],
+ ["“-고 있다”는 언제 일어나는 일을 나타낼까?","지금 하고 있는 일",["이미 끝난 일","앞으로 할 일","하지 않은 일"],"“동생이 자고 있다.”를 떠올려 봐.","‘-고 있다’는 지금 계속되는 일을 나타내."]],
+ w:"어제 한 일, 지금 하는 일, 내일 할 일을 한 문장씩 써 봐."},
+{c:"6국04-06",a:"문법",t:"띄어쓰기 탐정",cards:[["🔎","우리말은 <b>단어마다 띄어 써요.</b> 그런데 ‘은, 는, 이, 가, 을, 를, 에’ 같은 <b>조사</b>는 앞말에 붙여 써요."],["📏","‘수, 것, 데’처럼 혼자 못 쓰는 말도 단어라서 띄어 써요.<br>먹을 <b>수</b> 있다 · 할 <b>것</b>이다"],["🍰","잘못 띄우면 뜻이 바뀌기도 해요. “아버지가 방에 들어가신다.” vs “아버지 가방에 들어가신다.”"]],
+ qs:[["띄어쓰기가 <b>바른</b> 것은?","먹을 수 있다",["먹을수 있다","먹을 수있다","먹을수있다"],"‘수’도 하나의 단어야.","‘먹을 / 수 / 있다’ 세 단어로 띄어 써."],
+ ["띄어쓰기가 <b>바른</b> 것은?","나는 학교에 간다.",["나 는 학교 에 간다.","나는학교에 간다.","나는 학교에간다."],"‘는, 에’는 조사야. 조사는 앞말에 붙여.","조사는 붙이고 단어끼리는 띄어."],
+ ["띄어쓰기가 <b>바른</b> 것은?","내일 할 것이다.",["내일 할것이다.","내일할 것이다.","내일 할 것 이다."],"‘것’은 띄우고, ‘이다’는 앞말에 붙여 써.","‘할 / 것이다’로 써. ‘이다’는 앞말에 붙여."],
+ ["“아버지가방에들어가신다”를 아버지가 <b>방에</b> 들어가시도록 바르게 띄운 것은?","아버지가 방에 들어가신다.",["아버지 가방에 들어가신다.","아버지가방에 들어가신다.","아버지 가 방 에 들어가신다."],"‘가’를 어디에 붙여야 아버지가 방으로 갈까?","‘아버지가 / 방에’로 띄워야 방에 들어가는 뜻이 돼."]],
+ w:"띄어쓰기를 잘못하면 뜻이 바뀌는 문장을 하나 생각해서 써 봐."},
+{c:"6국04-06",a:"문법",t:"헷갈리는 말 바로잡기",cards:[["🔁","<b>되/돼</b>: ‘되어’로 바꿔서 말이 되면 ‘돼’! (가도 돼 = 가도 되어)"],["🙅","<b>안/않</b>: ‘안’은 말 앞에(안 먹다), ‘않’은 ‘-지 않다’로(먹지 않다)."],["🎯","<b>맞히다</b>: 정답을 맞히다 · <b>맞추다</b>: 퍼즐을 맞추다, 답을 서로 비교하다<br><b>바라다</b>: 건강하길 바라(○) 바래(×)"]],
+ qs:[["“이제 집에 가도 ____?”","돼",["되","대","되요"],"‘되어’를 넣어 봐. “가도 되어?” 말이 되지?","‘되어’가 줄면 ‘돼’야."],
+ ["“나는 숙제를 ____ 했다.”","안",["않","않는","안는"],"말 앞에 붙는 짧은 말이야.","‘안 하다’ — ‘안’은 서술어 앞에 써."],
+ ["“퀴즈 정답을 모두 ____.”","맞혔다",["맞췄다","마쳤다","맞었다"],"정답을 ‘알아낸’ 것이야.","정답을 알아내는 건 ‘맞히다’야."],
+ ["“할머니가 건강하시길 ____.”","바라",["바래","바레","바뤠"],"기본형이 ‘바라다’야.","‘바라다’ → ‘바라’. ‘바래다’는 색이 변한다는 뜻이야."]],
+ w:"오늘 배운 헷갈리는 말 하나를 넣어 문장을 써 봐."},
+{c:"6국04-03",a:"문법",t:"우리 고유어",cards:[["🌱","<b>고유어</b>는 원래부터 우리말에 있던 말이에요. 하늘, 바다, 마음, 나이, 집…"],["🏛️","<b>한자어</b>는 한자로 만든 말이에요. 학교(學校), 공책(空冊), 연령(年齡)…"],["💗","고유어에는 우리 겨레가 오래 써 온 생각과 느낌이 담겨 있어요."]],
+ qs:[["다음 중 <b>고유어</b>는?","하늘",["학교","공책","도서관"],"한자로 쓸 수 있는 말을 하나씩 빼 봐.","학교·공책·도서관은 한자어, ‘하늘’은 고유어야."],
+ ["‘연령’을 고유어로 바꾸면?","나이",["연세","세월","시간"],"“몇 살이야?” 할 때 쓰는 말이야.","‘연령’과 같은 뜻의 고유어는 ‘나이’."],
+ ["‘가옥’을 고유어로 바꾸면?","집",["주택","건물","가정"],"우리가 사는 곳을 가리키는 가장 쉬운 말.","‘가옥’은 한자어, 같은 뜻의 고유어는 ‘집’."],
+ ["고유어를 아껴 써야 하는 까닭으로 알맞은 것은?","우리 겨레의 생각과 느낌이 담겨 있어서",["한자어보다 항상 짧아서","외국어보다 어려워서","시험에 많이 나와서"],"고유어가 오래 이어져 온 말이라는 점을 떠올려 봐.","고유어에는 우리 문화와 정서가 담겨 있어."]],
+ w:"내가 좋아하는 고유어 하나와 그 까닭을 써 봐."},
+{c:"6국04-03",a:"문법",t:"관용 표현",cards:[["🧠","<b>관용 표현</b>은 두 단어 이상이 합쳐져 원래 뜻과 다른 새 뜻으로 굳어진 말이에요."],["👂","“귀가 얇다” = 귀가 정말 얇은 게 아니라 <b>남의 말을 쉽게 믿는다</b>는 뜻!"],["✨","상황에 맞게 쓰면 말이 생생하고 짧아져요."]],
+ qs:[["“우리 이모는 <b>발이 넓다</b>.”의 뜻은?","아는 사람이 많다",["발이 크다","걸음이 빠르다","여행을 자주 간다"],"발 크기 이야기가 아니야. 사람 사이를 떠올려 봐.","‘발이 넓다’는 사귀어 아는 사람이 많다는 뜻."],
+ ["“할머니는 <b>손이 크셔서</b> 음식을 잔뜩 하신다.”의 뜻은?","씀씀이가 넉넉하다",["손바닥이 크다","힘이 세다","요리를 잘한다"],"음식을 ‘잔뜩’ 하신다는 말에서 힌트를 찾아봐.","‘손이 크다’는 무엇을 넉넉하게 쓰거나 만든다는 뜻."],
+ ["비밀을 잘 지키는 친구에게 어울리는 말은?","입이 무겁다",["입이 짧다","귀가 얇다","발이 넓다"],"말을 쉽게 옮기지 않는 모습이야.","‘입이 무겁다’는 말을 함부로 옮기지 않는다는 뜻."],
+ ["시험 기간에 숙제까지 겹친 상황에 어울리는 말은?","눈코 뜰 새 없다",["손이 크다","입이 짧다","발이 넓다"],"아주아주 바쁜 상황이야.","‘눈코 뜰 새 없다’는 정신없이 바쁘다는 뜻."]],
+ w:"오늘 배운 관용 표현 하나로 나에게 있었던 일을 써 봐."},
+{c:"6국04-02",a:"문법",t:"표준어와 방언",cards:[["🗺️","<b>방언</b>은 지역마다 다르게 쓰는 말이에요. 제주에서는 “혼저 옵서예!” = “어서 오세요!”"],["📺","<b>표준어</b>는 여러 지역 사람이 함께 정확히 알아듣도록 정한 말이에요. 뉴스, 교과서, 공식 자리에서 써요."],["🤝","방언은 같은 지역 사람끼리 정을 느끼게 하고, 그 지역의 문화를 담고 있어요. 둘 다 소중해요!"]],
+ qs:[["제주 방언 “혼저 옵서예”의 뜻은?","어서 오세요",["안녕히 가세요","밥 먹었니?","고맙습니다"],"손님을 맞이할 때 하는 말이야.","‘혼저 옵서예’는 ‘어서 오세요’라는 제주 방언."],
+ ["<b>표준어</b>를 쓰는 것이 더 알맞은 상황은?","전국에 나가는 뉴스를 진행할 때",["고향 친구와 전화할 때","할머니 댁에서 이야기할 때","같은 동네 친구와 놀 때"],"여러 지역 사람이 모두 듣는 상황을 찾아봐.","여러 지역 사람이 함께 들을 때는 표준어가 정확히 통해."],
+ ["방언의 좋은 점으로 알맞은 것은?","같은 지역 사람끼리 친근감을 느끼게 한다",["모든 사람이 똑같이 알아듣는다","시험에서 꼭 써야 한다","표준어보다 항상 짧다"],"고향 말을 들으면 어떤 기분이 들까?","방언은 친근감을 주고 지역 문화를 담고 있어."],
+ ["표준어와 방언에 대한 생각으로 가장 알맞은 것은?","상황에 따라 알맞게 골라 쓴다",["방언은 틀린 말이니 쓰지 않는다","표준어는 필요 없다","방언은 어른만 쓴다"],"둘 다 하는 일이 있었지?","표준어와 방언은 각자 쓰임이 있어서 상황에 맞게 쓰면 돼."]],
+ w:"우리 가족이나 친척이 쓰는 지역 말이 있다면 써 보고, 뜻도 적어 봐."},
+{c:"6국02-01",a:"읽기",t:"글의 짜임 알아보기",cards:[["🏗️","글에는 짜임(구조)이 있어요. 짜임을 알면 내용이 한눈에 들어와요."],["⚖️","<b>비교·대조</b>: 두 대상의 같은 점과 다른 점<br><b>원인·결과</b>: 왜 그런 일이 일어났는지<br><b>문제·해결</b>: 어떤 문제와 그 해결 방법"],["📝","요약할 때는 짜임에 맞춰 중요한 내용만 남겨요."]],
+ qs:[["“고양이와 개는 모두 사람과 함께 사는 동물이다. 하지만 고양이는 혼자 있는 시간을 잘 견디고, 개는 사람과 함께 움직이기를 좋아한다.” 이 글의 짜임은?","비교·대조",["원인·결과","문제·해결","시간 순서"],"‘모두’, ‘하지만’이라는 말이 무엇을 보여 주지?","같은 점(모두)과 다른 점(하지만)을 말하니 비교·대조."],
+ ["“밤늦게까지 휴대 전화를 보았다. 그래서 아침에 일어나기 힘들었다.” 이 글의 짜임은?","원인·결과",["비교·대조","문제·해결","설명·예시"],"‘그래서’ 앞과 뒤의 관계를 생각해 봐.","앞이 까닭(원인), 뒤가 일어난 일(결과)이야."],
+ ["“교실 쓰레기통이 늘 넘친다. 그래서 우리 반은 분리배출 당번을 정하기로 했다.” 이 글의 짜임은?","문제·해결",["비교·대조","원인·결과","시간 순서"],"어떤 어려움이 있고, 어떻게 하기로 했지?","넘치는 쓰레기통(문제) → 당번 정하기(해결)."],
+ ["첫 번째 글(고양이와 개)을 가장 잘 요약한 것은?","고양이와 개는 사람과 함께 살지만 생활 습관이 다르다.",["고양이는 혼자 있는 것을 좋아한다.","개는 산책을 좋아한다.","동물은 모두 귀엽다."],"같은 점과 다른 점이 모두 들어간 문장을 골라.","요약은 짜임(같은 점+다른 점)을 살려야 해."]],
+ w:"좋아하는 두 가지(음식, 계절 등)를 비교·대조하는 글을 두 문장으로 써 봐."},
+{c:"6국02-01",a:"읽기",t:"주장 찾고 요약하기",cards:[["📣","<b>주장</b>은 글쓴이가 “이렇게 하자!” 하고 말하고 싶은 생각이에요."],["🧱","<b>근거</b>는 주장을 믿을 수 있게 받쳐 주는 까닭이에요."],["✂️","요약: 주장 한 문장 + 핵심 근거만 남기기!"]],
+ qs:[["“아침밥을 꼭 먹자. 아침을 먹으면 오전에 집중이 잘된다. 또 점심 전에 군것질을 덜 하게 된다.” 글쓴이의 <b>주장</b>은?","아침밥을 꼭 먹자.",["오전에 집중이 잘된다.","군것질을 덜 하게 된다.","점심을 많이 먹자."],"글쓴이가 ‘하자’고 하는 말을 찾아봐.","‘아침밥을 꼭 먹자’가 주장이고, 나머지는 근거야."],
+ ["위 글에서 <b>근거</b>에 해당하는 것은?","아침을 먹으면 오전에 집중이 잘된다.",["아침밥을 꼭 먹자.","아침에는 늦잠을 자자.","점심은 굶자."],"주장을 믿게 해 주는 까닭이야.","집중이 잘된다는 것은 아침을 먹어야 하는 까닭이야."],
+ ["위 글을 가장 잘 요약한 것은?","집중이 잘되고 군것질을 줄여 주니 아침밥을 먹자.",["아침밥은 맛있다.","군것질은 나쁘다.","오전에는 집중해야 한다."],"주장과 근거가 모두 들어 있는지 봐.","요약은 주장 + 핵심 근거."],
+ ["주장하는 글을 읽을 때 가장 먼저 찾아야 할 것은?","글쓴이가 말하고 싶은 주장",["글의 길이","어려운 낱말","글쓴이의 이름"],"‘무엇을 하자는 거지?’","주장을 먼저 찾아야 근거가 맞는지도 따질 수 있어."]],
+ w:"‘~하자’로 끝나는 내 주장 하나와 근거 두 개를 써 봐."},
+{c:"6국02-02",a:"읽기",t:"숨은 내용 추론하기",cards:[["🕵️","글에는 다 쓰지 않은 내용이 있어요. 앞뒤 문장을 단서로 <b>생략된 내용</b>을 알아내는 걸 <b>추론</b>이라고 해요."],["🧩","단서 + 내가 아는 것 = 추론!"],["⚠️","추론은 글에 있는 단서에 근거해야 해요. 상상만으로 정하면 안 돼요."]],
+ qs:[["“민지는 우산을 챙기지 않았다. 학교에서 돌아온 민지의 옷은 흠뻑 젖어 있었다.” 생략된 내용은?","돌아오는 길에 비가 왔다.",["민지가 수영을 했다.","민지가 우산을 잃어버렸다.","민지가 물놀이를 좋아한다."],"우산과 젖은 옷, 두 단서를 연결해 봐.","우산이 없었고 옷이 젖었으니 비가 왔다고 추론할 수 있어."],
+ ["“지호는 시험지를 받자마자 미소를 지었다. 어젯밤 공부한 문제가 그대로 나왔기 때문이다.” 지호의 마음은?","자신 있다",["걱정된다","화가 난다","지루하다"],"미소와 ‘공부한 문제가 나왔다’를 함께 봐.","아는 문제가 나와서 자신감이 생겼어."],
+ ["“할머니는 돋보기를 찾으시다가 결국 신문을 내려놓으셨다.” 생략된 내용으로 알맞은 것은?","돋보기를 찾지 못하셨다.",["신문이 재미없었다.","할머니가 주무셨다.","신문을 다 읽으셨다."],"‘결국’이라는 말에 주목해.","돋보기 없이 글씨가 안 보여 신문을 내려놓으셨다고 추론할 수 있어."],
+ ["추론할 때 가장 중요한 것은?","글 속의 단서를 근거로 삼는다",["내 마음대로 상상한다","제목만 본다","마지막 문장만 읽는다"],"추론은 아무렇게나 하는 게 아니야.","추론은 글의 단서와 내 배경지식을 연결하는 거야."]],
+ w:"오늘 있었던 일을 한 문장으로 쓰고, 그때 내 마음을 추론할 단서를 하나 넣어 봐."},
+{c:"6국02-02",a:"읽기",t:"함축된 표현 읽기",cards:[["🎁","<b>함축된 표현</b>은 말 속에 다른 뜻을 담고 있는 표현이에요."],["☁️","“엄마 얼굴에 먹구름이 끼었다.” → 진짜 구름이 아니라 <b>기분이 좋지 않다</b>는 뜻!"],["🔦","문맥(앞뒤 내용)을 살피면 숨은 뜻이 보여요."]],
+ qs:[["“엄마 얼굴에 먹구름이 끼었다.”의 뜻은?","엄마의 기분이 좋지 않다",["엄마가 밖에 계셨다","날씨가 흐렸다","엄마가 화장을 했다"],"얼굴에 진짜 구름이 낄 수 있을까?","먹구름은 어둡고 무거운 기분을 빗댄 거야."],
+ ["“발표가 끝나자 교실이 쥐 죽은 듯 조용해졌다.”의 뜻은?","교실이 매우 조용했다",["교실에 쥐가 있었다","친구들이 잠들었다","교실이 시끄러웠다"],"쥐가 정말 나온 걸까?","‘쥐 죽은 듯’은 아주 조용한 모습을 나타내."],
+ ["“친구의 사과 한마디에 꽁꽁 얼었던 마음이 녹았다.”의 뜻은?","서운했던 마음이 풀렸다",["몸이 따뜻해졌다","얼음을 먹었다","날씨가 풀렸다"],"얼었던 마음 = 어떤 마음?","‘얼었던 마음이 녹았다’는 서운함이 풀렸다는 뜻."],
+ ["함축된 표현의 뜻을 알아내는 가장 좋은 방법은?","앞뒤 문맥을 살핀다",["낱말 하나만 사전에서 찾는다","소리 내어 빨리 읽는다","그림만 본다"],"‘먹구름’도 앞뒤 상황을 보고 알았지?","문맥을 보면 표현에 담긴 뜻을 알 수 있어."]],
+ w:"내 기분을 날씨에 빗대어 한 문장으로 써 봐."},
+{c:"6국02-03",a:"읽기",t:"근거가 타당한지 따지기",cards:[["⚖️","좋은 주장은 <b>타당한 근거</b>가 받쳐 줘요."],["✅","타당한 근거: 주장과 관련 있고, 사실이거나 믿을 만한 자료"],["❌","약한 근거: “내 친구도 그랬어.”, “그냥 좋아서.”, 주장과 관계없는 이야기"]],
+ qs:[["주장: “학교 도서관을 점심시간에도 열어야 한다.” <b>타당한</b> 근거는?","점심시간에 책을 읽고 싶어 하는 학생이 많다는 조사가 있다.",["내 친구가 그러자고 했다.","도서관 건물이 예쁘다.","책은 종이로 만든다."],"주장과 관련 있고 믿을 만한 것을 골라.","조사 결과는 주장과 관련 있고 믿을 만한 근거야."],
+ ["주장: “운동을 꾸준히 하자.” <b>타당하지 않은</b> 근거는?","운동복이 멋있기 때문이다.",["몸이 튼튼해진다.","스트레스가 풀린다.","잠을 잘 자게 된다."],"운동의 좋은 점과 관계없는 것을 찾아봐.","운동복이 멋있다는 건 운동을 해야 하는 까닭으로 약해."],
+ ["“모든 학생이 이 게임을 좋아한다. 우리 반 친구 두 명이 좋아하기 때문이다.” 이 근거의 문제는?","두 명만으로 모두를 말할 수 없다",["게임은 원래 재미없다","친구 이름이 없다","문장이 너무 짧다"],"‘모든’과 ‘두 명’을 비교해 봐.","적은 예로 전체를 판단하면 타당하지 않아."],
+ ["근거를 평가할 때 던질 질문으로 알맞은 것은?","이 근거는 주장과 관련이 있을까?",["이 글은 몇 쪽일까?","글쓴이는 몇 살일까?","글씨체가 예쁠까?"],"근거가 주장을 정말 받쳐 주는지 보는 질문이야.","관련성과 믿을 만한지를 따져 봐야 해."]],
+ w:"“숙제는 ~해야 한다.”는 주장에 타당한 근거 하나를 써 봐."},
+{c:"6국01-01",a:"듣기·말하기",t:"대화 속 숨은 뜻",cards:[["💬","대화에서는 모든 말을 다 하지 않아요. 생략된 내용을 <b>추론하며 들어야</b> 해요."],["🎬","A: “오늘 같이 영화 볼래?” B: “내일 시험이야.”<br>→ B는 <b>영화를 못 본다</b>는 뜻이에요."],["👂","말한 사람의 상황과 표정, 말투도 단서가 돼요."]],
+ qs:[["A: “오늘 공원 갈래?” B: “나 다리를 다쳤어.” B의 뜻은?","공원에 가기 어렵다",["공원에 가고 싶다","다리가 튼튼하다","병원이 공원에 있다"],"다리를 다쳤다는 말이 대답이 되는 까닭은?","다쳐서 못 간다는 뜻을 돌려 말한 거야."],
+ ["엄마: “지금 몇 시니?” (밤 11시, 아직 게임 중인 나) 엄마의 뜻은?","이제 그만하고 자라",["시계가 고장 났다","시간을 몰라서 물어본다","게임을 더 해도 된다"],"밤 11시라는 상황을 생각해 봐.","시간을 묻는 말로 자야 할 시간이라는 걸 알려 주신 거야."],
+ ["A: “이 케이크 맛있다!” B: “그거 내가 만든 거야.” B의 마음은?","뿌듯하다",["속상하다","무섭다","미안하다"],"내가 만든 걸 칭찬받으면?","칭찬을 듣고 뿌듯해서 덧붙인 말이야."],
+ ["대화에서 생략된 내용을 추론하며 들으면 좋은 점은?","상대의 진짜 뜻을 알 수 있다",["말을 빨리 할 수 있다","대화가 짧아진다","대답을 안 해도 된다"],"앞의 예들을 떠올려 봐.","숨은 뜻을 알면 오해 없이 대화할 수 있어."]],
+ w:"누군가 돌려 말했던 대화를 떠올려, 그 말의 진짜 뜻을 써 봐."},
+{c:"6국01-02",a:"듣기·말하기",t:"연설을 들으며 판단하기",cards:[["🎤","연설이나 발표를 들을 때는 <b>주장</b>이 무엇인지 먼저 잡아요."],["🤔","그다음 <b>이유와 근거가 타당한지</b> 생각하며 들어요."],["🗒️","듣는 중에 메모하면 판단하기 쉬워요."]],
+ qs:[["회장 후보 연설: “제가 회장이 되면 쉬는 시간을 1시간으로 늘리겠습니다.” 이 공약의 문제는?","학생 회장이 정할 수 없는 일이다",["쉬는 시간은 좋은 것이다","문장이 짧다","목소리가 작다"],"회장이 실제로 할 수 있는 일인지 생각해 봐.","실천할 수 없는 공약은 타당하지 않아."],
+ ["“교실 화분에 물 주기 당번을 정하겠습니다. 지난달 화분 세 개가 말랐기 때문입니다.” 이 근거는?","주장과 관련 있고 실제 일이라 타당하다",["주장과 관계없다","믿을 수 없는 소문이다","너무 어렵다"],"근거가 실제로 일어난 일인지, 주장과 맞는지 봐.","실제 문제를 근거로 들어서 타당해."],
+ ["연설을 들을 때 가장 알맞은 태도는?","주장과 근거를 따져 보며 듣는다",["인기 많은 친구 말만 믿는다","끝까지 듣지 않는다","목소리 큰 사람을 고른다"],"좋은 판단을 하려면?","주장과 근거의 타당성을 따지며 들어야 해."],
+ ["근거가 <b>타당하지 않은</b> 연설은?","“저는 키가 크니까 회장이 되어야 합니다.”",["“작년 부회장으로 행사를 맡아 해 봤습니다.”","“건의함을 만들어 매주 확인하겠습니다.”","“친구들의 의견을 조사해 왔습니다.”"],"회장 일과 관련 있는 근거인지 봐.","키는 회장 역할과 관련이 없어."]],
+ w:"내가 회장 후보라면 할 수 있는 공약 하나와 그 근거를 써 봐."},
+{c:"6국05-02",a:"문학",t:"비유하는 표현",cards:[["🪞","<b>비유</b>는 어떤 것을 다른 것에 빗대어 표현하는 방법이에요."],["🍎","<b>직유</b>: ‘~처럼, ~같이, ~듯’을 써서 빗대요. “사과 같은 내 얼굴”"],["🌙","<b>은유</b>: “A는 B다”로 바로 빗대요. “내 마음은 호수요”"]],
+ qs:[["“동생 볼이 사과처럼 빨갛다.”에 쓰인 비유는?","직유",["은유","의인","과장"],"‘~처럼’이 보이지?","‘처럼’을 써서 빗대었으니 직유."],
+ ["“우리 엄마는 나의 햇살이다.”에 쓰인 비유는?","은유",["직유","반복","대조"],"‘~처럼’ 없이 ‘A는 B다’ 꼴이야.","‘A는 B다’로 바로 빗대었으니 은유."],
+ ["“눈이 솜사탕같이 내린다.”에서 눈을 솜사탕에 빗댄 까닭은?","부드럽고 포근한 느낌을 주려고",["눈이 달콤해서","눈이 분홍색이어서","눈이 빨리 녹아서"],"솜사탕을 떠올리면 어떤 느낌이야?","솜사탕의 부드러운 느낌을 눈에 옮긴 거야."],
+ ["비유하는 표현을 쓰면 좋은 점은?","대상을 생생하고 새롭게 느끼게 한다",["글이 항상 짧아진다","뜻을 숨길 수 있다","맞춤법이 쉬워진다"],"‘사과 같은 볼’을 들으면 바로 그려지지?","비유는 대상을 생생하게 떠올리게 해."]],
+ w:"우리 집 고양이(또는 좋아하는 것)를 직유나 은유로 한 문장 써 봐."},
+{c:"6국05-03",a:"문학",t:"인물·사건·배경",cards:[["🎭","이야기의 세 요소: <b>인물</b>(누가) · <b>사건</b>(무슨 일이) · <b>배경</b>(언제, 어디서)"],["📖","<i>비 오는 밤, 하윤이는 골목에서 떨고 있는 아기 고양이를 발견했다. 하윤이는 망설이다가 우산을 고양이 쪽으로 기울여 주었다. 다음 날 아침, 하윤이는 엄마와 함께 고양이를 동물병원에 데려갔다.</i>"],["🔗","배경은 사건의 분위기를 만들고, 사건은 인물의 성격을 보여 줘요."]],
+ qs:[["이야기의 <b>배경</b>은?","비 오는 밤의 골목",["동물병원 진료실","하윤이의 학교","눈 오는 아침"],"사건이 처음 일어난 때와 장소를 찾아봐.","‘비 오는 밤, 골목’이 처음 사건의 배경이야."],
+ ["이야기의 중심 <b>사건</b>은?","하윤이가 떨고 있는 아기 고양이를 돕는다",["하윤이가 우산을 잃어버린다","엄마가 병원에 간다","고양이가 집을 찾아간다"],"무슨 일이 일어났고, 하윤이는 어떻게 했지?","고양이를 발견하고 도와준 것이 중심 사건이야."],
+ ["하윤이의 성격으로 알맞은 것은?","약한 존재를 돌볼 줄 안다",["겁이 많아 아무것도 안 한다","고양이를 싫어한다","비를 좋아한다"],"‘망설이다가 우산을 기울여 주었다’를 봐.","망설였지만 결국 도운 행동에서 따뜻한 성격이 보여."],
+ ["‘비 오는 밤’이라는 배경이 하는 일은?","고양이의 어려운 처지를 더 크게 느끼게 한다",["이야기를 짧게 만든다","하윤이의 나이를 알려 준다","사건과 관계없다"],"맑은 낮이었다면 느낌이 어땠을까?","춥고 어두운 배경이 고양이의 처지를 더 안타깝게 만들어."]],
+ w:"이야기 뒤에 이어질 사건을 한두 문장으로 상상해 써 봐."},
+{c:"6국05-01",a:"문학",t:"작가의 의도",cards:[["✍️","작가는 이야기로 <b>전하고 싶은 생각</b>이 있어요. 이것을 작가의 의도라고 해요."],["🔍","찾는 요령: 인물이 무엇을 깨달았는지, 이야기 끝이 어떻게 바뀌었는지 보세요."],["📚","같은 이야기라도 읽는 사람마다 조금씩 다르게 느낄 수 있어요. 단, 글 속 근거가 있어야 해요."]],
+ qs:[["<i>토끼는 거북을 얕보고 낮잠을 자다 경주에서 졌다.</i> 작가의 의도로 알맞은 것은?","자만하지 말고 꾸준히 노력하자",["토끼는 잠이 많다","거북은 빠르다","경주는 위험하다"],"토끼가 진 까닭을 생각해 봐.","얕보고 게으름 피운 토끼가 졌으니 ‘꾸준함’을 말하고 싶은 거야."],
+ ["하윤이와 아기 고양이 이야기(앞 과)의 의도로 알맞은 것은?","작은 생명을 아끼는 마음의 소중함",["비 오는 날에는 집에 있자","동물병원은 무섭다","우산은 꼭 챙기자"],"하윤이의 행동이 무엇을 보여 줬지?","약한 생명을 돌보는 마음을 전하고 싶은 거야."],
+ ["작가의 의도를 찾을 때 가장 좋은 단서는?","인물의 변화와 이야기의 끝",["책의 쪽수","등장인물의 이름 길이","글자 크기"],"인물이 무엇을 깨달았는지 보라고 했지?","인물의 변화와 결말에 의도가 담겨 있어."],
+ ["작가의 의도를 말할 때 바른 태도는?","글 속 근거를 들어 내 생각을 말한다",["근거 없이 느낌만 말한다","작가의 나이를 맞힌다","친구 답을 그대로 따라 한다"],"생각은 달라도 되지만 꼭 필요한 것은?","의견은 달라도 글 속 근거가 있어야 해."]],
+ w:"최근 읽은 책 한 권의 작가 의도를 한 문장으로 써 봐."},
+{c:"6국06-02",a:"매체",t:"믿을 만한 뉴스 고르기",cards:[["📰","뉴스나 인터넷 글이 모두 믿을 만한 건 아니에요."],["🔎","확인할 것: <b>누가</b> 썼나(출처) · <b>언제</b> 썼나(날짜) · <b>사실</b>인가 <b>의견</b>인가 · 다른 곳에서도 같은 내용이 확인되나"],["⚠️","“충격! 무조건 공유하세요!” 같은 말은 의심부터!"]],
+ qs:[["다음 중 <b>사실</b>인 문장은?","서울의 오늘 최고 기온은 15도였다.",["오늘 날씨가 최고로 좋았다.","가을이 가장 아름다운 계절이다.","이 영화는 누구나 좋아할 것이다."],"확인할 수 있는 내용인지 생각해 봐.","기온은 재서 확인할 수 있는 사실이야. 나머지는 의견."],
+ ["믿을 만한 정보인지 확인하는 방법으로 알맞은 것은?","출처와 날짜를 확인하고 다른 자료와 비교한다",["조회 수가 많으면 믿는다","제목이 재미있으면 믿는다","친구가 보내 주면 믿는다"],"누가, 언제 썼는지 기억나?","출처·날짜를 보고 여러 자료로 확인해야 해."],
+ ["“충격! 이 음식 먹으면 하루 만에 키 10cm! 무조건 공유!” 이 글을 보고 할 행동은?","출처를 확인하고 바로 공유하지 않는다",["바로 친구들에게 공유한다","그 음식을 많이 먹는다","댓글로 고맙다고 쓴다"],"너무 놀라운 말일수록 어떻게 해야 할까?","과장된 정보는 출처부터 확인하고 퍼뜨리지 않아야 해."],
+ ["다음 중 <b>의견</b>인 문장은?","우리 동네 도서관은 정말 멋지다.",["우리 동네 도서관은 오전 9시에 문을 연다.","도서관에는 책이 약 3만 권 있다.","도서관은 2015년에 지어졌다."],"사람마다 생각이 다를 수 있는 문장을 찾아봐.","‘멋지다’는 생각에 따라 다른 의견이야."]],
+ w:"오늘 들은 이야기 중 ‘사실’ 하나와 ‘의견’ 하나를 나누어 써 봐."},
+{c:"6국03-02",a:"쓰기",t:"주장하는 글과 출처",cards:[["✍️","주장하는 글 = <b>주장</b> + <b>근거</b> + 마무리"],["📎","다른 사람의 자료를 쓸 때는 <b>출처</b>를 밝혀요. “○○ 조사(2025)에 따르면…”"],["🙅","출처 없이 남의 글을 내 것처럼 쓰면 안 돼요."]],
+ qs:[["주장하는 글에 꼭 들어가야 하는 것은?","주장과 그것을 받쳐 주는 근거",["재미있는 그림","등장인물의 대화","시간 순서의 일기"],"주장하는 글의 뼈대를 떠올려 봐.","주장 + 근거가 핵심이야."],
+ ["자료를 인용할 때 바른 방법은?","누가, 언제 낸 자료인지 밝힌다",["자료 내용을 내가 생각한 것처럼 쓴다","출처는 비밀로 한다","숫자를 마음대로 바꾼다"],"읽는 사람이 자료를 확인할 수 있어야 해.","출처를 밝혀야 읽는 사람이 믿고 확인할 수 있어."],
+ ["출처를 밝혀야 하는 까닭으로 알맞지 <b>않은</b> 것은?","글이 길어 보이게 하려고",["자료를 만든 사람을 존중하려고","내 근거를 믿을 수 있게 하려고","읽는 사람이 확인할 수 있게 하려고"],"세 가지는 모두 중요한 까닭이야. 하나만 엉뚱해.","출처는 존중·신뢰·확인을 위해 밝혀."],
+ ["주장하는 글의 마무리로 가장 알맞은 것은?","주장을 한 번 더 강조하며 함께하자고 말한다",["새로운 주장을 시작한다","근거 없이 끝낸다","주장과 반대로 말한다"],"글의 끝에서 무엇을 해야 할까?","마무리는 주장을 다시 강조해."]],
+ w:"“우리 집에서 ~하자.” 주장 하나와 근거 하나를 써 봐."},
+{c:"6국04-01",a:"문법",t:"말과 글의 차이",cards:[["🗣️","<b>음성 언어</b>(말): 목소리 크기, 빠르기, 억양으로 느낌을 전해요. 바로 반응을 주고받아요."],["📝","<b>문자 언어</b>(글): 오래 남고, 다시 읽을 수 있어요. 문장 부호와 띄어쓰기가 중요해요."],["📱","영상·메신저 같은 매체는 말과 글, 그림을 함께 써서 효과를 내요."]],
+ qs:[["<b>음성 언어</b>의 특징은?","목소리 크기와 억양으로 느낌을 전한다",["오래 보관하기 쉽다","문장 부호가 중요하다","다시 읽을 수 있다"],"말할 때만 쓸 수 있는 것을 떠올려 봐.","말은 목소리의 높낮이와 크기로 감정을 전해."],
+ ["<b>문자 언어</b>의 장점은?","기록으로 오래 남길 수 있다",["상대의 표정을 볼 수 있다","바로 대답을 들을 수 있다","목소리로 감정을 전한다"],"글은 종이나 화면에 남지?","글은 오래 남고 다시 볼 수 있어."],
+ ["메신저에 “괜찮아.”라고만 보냈을 때 생길 수 있는 문제는?","말투가 안 보여 화난 것처럼 오해할 수 있다",["글자가 너무 크다","소리가 너무 크다","보관이 안 된다"],"말로 했을 때와 무엇이 다를까?","글에는 목소리와 표정이 없어서 오해가 생길 수 있어."],
+ ["말과 글, 그림을 함께 써서 정보를 전하는 것은?","영상 광고",["손 편지","전화 통화","일기장"],"여러 가지 표현 방법을 함께 쓰는 매체야.","영상은 말·글·그림·소리를 함께 써."]],
+ w:"친구에게 고마운 마음을 글로 전한다면, 오해 없게 어떻게 쓸지 한 문장 써 봐."}
+];
+function koInit(){S.ko=S.ko||{n:0,last:"",cnt:0,wrong:[],writes:[]};return S.ko}
+function ko(){koInit();koMain();withPast("ko")}
+function koMain(){const T="국어 탐험",k=S.ko;
+  if(!isOpen(7))return lockScreen(T,7,"아침 7시에 열려요!");
+  if(doneToday("ko"))return doneScreen(T,"오늘 국어 탐험 완료! 내일 또 만나요.",()=>koLesson(Math.max(0,Math.min(k.n,KO.length)-1),true));
+  if(k.n>=KO.length){app.innerHTML=hdr(T)+`<div class="card"><h3>22과를 모두 마쳤어! 대단해!</h3><p class="muted">이제 헷갈렸던 문제를 다시 풀어 보자.</p><button class="big" id="start" type="button">복습 시작</button></div>`;bindBack();$("#start").onclick=koReview;return}
+  const L=KO[k.n];
+  app.innerHTML=hdr(T)+`<div class="card"><div class="row"><span class="pill">${k.n+1} / ${KO.length}과</span><span class="pill">${L.a}</span></div><div class="bar"><i style="width:${k.n/KO.length*100}%;background:#7C6CF0"></i></div>
+   <div class="fb"><div class="ava" style="background:#7C6CF0">글냥</div><div class="bubble"><b>오늘의 탐험: 「${L.t}」</b><p>먼저 짧게 알아보고, 퀴즈 4문제를 풀고, 생각 한 줄을 써 보자!</p></div></div>
+   <p class="muted">2022 개정 교육과정 [${L.c}]</p><button class="big" id="start" type="button">탐험 시작</button></div>`;
+  bindBack();$("#start").onclick=()=>koLesson(k.n,false)}
+function koLesson(n,practice){const L=KO[n];let i=0;
+  const card=()=>{const[em,tx]=L.cards[i];app.innerHTML=hdr("📘 "+L.t)+`<div class="card"><div class="dots">${L.cards.map((_,j)=>`<i class="${j===i?"on":""}"></i>`).join("")}</div><div class="hstory"><span class="hem">${em}</span></div>
+     <div class="fb"><div class="ava" style="background:#7C6CF0">글냥</div><div class="bubble"><p style="font-size:1.12rem;line-height:1.75">${tx}</p></div></div>
+     <div class="nav2"><button class="big alt" id="prev" type="button" ${i===0?"disabled":""}>이전</button><button class="big" id="nx" type="button">${i<L.cards.length-1?"다음":"퀴즈 풀기!"}</button></div></div>`;
+    bindBack();$("#prev").onclick=()=>{i--;card()};$("#nx").onclick=()=>{if(i<L.cards.length-1){i++;card()}else go()}};
+  const go=()=>quiz({title:"국어 탐험 · "+L.t,qs:L.qs.map((q,j)=>mkQ(q[0],q[1],q[2],q[4],{hint:q[3],id:n*10+j})),
+    onAnswer:(q,ok)=>{const w=S.ko.wrong;if(!ok&&!w.includes(q.id))w.push(q.id);save()},
+    onPass:()=>{if(!practice&&!doneToday("ko")&&S.ko.n===n){markDone("ko");addXP(15)}},after:()=>koWrite(n,practice)});
+  card()}
+function koWrite(n,practice){const L=KO[n];
+  app.innerHTML=hdr("✏️ 생각 한 줄")+`<div class="card"><div class="fb"><div class="ava" style="background:#7C6CF0">글냥</div><div class="bubble"><b>마지막 미션!</b><p>${L.w}</p></div></div>
+   <textarea id="kw" class="kwrite" rows="4" maxlength="300" placeholder="여기에 써 봐. 맞고 틀린 답은 없어!"></textarea><p class="muted" id="kmsg">한 문장 이상 쓰면 +5 XP. 엄마에게 자랑할 때 함께 보내져요.</p>
+   <div class="btns"><button class="big" id="ksave" type="button">다 썼어!</button><button class="big alt" id="kskip" type="button">다음에 쓸래</button></div></div>`;bindBack();
+  $("#kskip").onclick=home;$("#ksave").onclick=()=>{const v=$("#kw").value.trim();if(v.length<8){$("#kmsg").textContent="조금만 더 써 볼까? 한 문장이면 돼!";return}
+    S.ko.writes.push({d:today(),t:L.t,q:L.w,a:v});if(S.ko.writes.length>60)S.ko.writes.shift();if(!practice)addXP(5);save();
+    app.innerHTML=hdr("✏️ 생각 한 줄")+`<div class="card result"><div class="stars">✨📝✨</div><h2>멋진 문장이야!</h2><p class="kshow">${esc(v)}</p><button class="big" id="gohome" type="button">홈으로</button></div>`;bindBack();$("#gohome").onclick=home;try{confetti()}catch(e){}}}
+function koReview(){const ids=pick(S.ko.wrong,4);const all=KO.flatMap((L,n)=>L.qs.map((q,j)=>n*10+j));ids.push(...pick(all,4-ids.length,ids));
+  quiz({title:"국어 복습",qs:ids.map(id=>{const q=KO[Math.floor(id/10)].qs[id%10];return mkQ(q[0],q[1],q[2],q[4],{hint:q[3],id})}),
+    onAnswer:(q,ok)=>{const w=S.ko.wrong;if(ok){const i=w.indexOf(q.id);if(i>=0)w.splice(i,1)}else if(!w.includes(q.id))w.push(q.id);save()},
+    onPass:()=>{if(!doneToday("ko")){markDone("ko");addXP(15)}}})}
+
+/* 보호자: 진도 되살리기 · 백업 */
+function parentPanel(){hInit();koInit();const cl=LEVELS.filter(l=>S.cook[l.id]&&S.cook[l.id].clear).length;
+  const row=(id,label,val,max,unit)=>`<li><span>${label}</span><div><input class="pnum" type="number" inputmode="numeric" id="${id}" min="0" max="${max}" value="${val}"><small>${unit} (최대 ${max})</small></div></li>`;
+  app.innerHTML=hdr("🔧 보호자 설정")+`<div class="card"><h3>📋 진도 되살리기</h3><p class="muted">아이가 마지막으로 끝낸 곳을 숫자로 넣으면 그다음부터 이어서 해요.</p>
+   <ul class="mkt pform">${row("p_cook","🍳 요리 클리어",cl,LEVELS.length,"레벨")}${row("p_hist","📜 한국사",S.hist.n,HSTORY.length,"편")}${row("p_hz","漢 한자",S.hz.n,HZDAYS.length,"과")}${row("p_en","🔤 영어",S.en.n,ENGDAYS.length,"Day")}${row("p_ko","📘 국어",S.ko.n,KO.length,"과")}${row("p_gem","💎 보석",S.gems||0,9999,"개")}</ul>
+   <button class="big" id="psave" type="button">진도 저장</button><p class="muted" id="pmsg"></p></div>
+  <div class="card"><h3>🐾 잃어버린 펫 되찾기</h3><p class="muted">사 두었던 펫이 사라졌다면 골라서 다시 데려와요. (보석은 들지 않아요.)</p>
+   <select id="ppet" class="pinput">${PETS.map(P=>`<option value="${P[0]}">${P[2]} ${P[4]?P[4]+" ":""}${P[1]}</option>`).join("")}</select><input id="pname2" class="pinput" maxlength="10" placeholder="펫 이름"><button class="big alt" id="ppetb" type="button">펫 되찾기</button></div>
+  <div class="card"><h3>💾 기록 백업</h3><p class="muted">휴대폰을 바꾸거나 앱을 다시 설치할 때 이 코드를 붙여 넣으면 기록이 그대로 돌아와요. 카톡 ‘나에게 보내기’에 저장해 두세요.</p>
+   <button class="big alt" id="pexp" type="button">백업 코드 복사</button><textarea id="pimp" class="kwrite" rows="3" placeholder="백업 코드를 붙여 넣으세요"></textarea><button class="big alt" id="pimpb" type="button">백업 코드로 되살리기</button><p class="muted" id="pmsg2"></p></div>`;
+  bindBack();
+  $("#psave").onclick=()=>{const v=id=>Math.max(0,parseInt($("#"+id).value||"0",10)||0);
+    const c=Math.min(v("p_cook"),LEVELS.length);LEVELS.forEach(l=>{if(l.id<=c){S.cook[l.id]=S.cook[l.id]||{};S.cook[l.id].clear=true}});S.cookCur=Math.min(c+1,LEVELS.length);
+    S.hist.n=Math.min(v("p_hist"),HSTORY.length);S.hz.n=Math.min(v("p_hz"),HZDAYS.length);S.en.n=Math.min(v("p_en"),ENGDAYS.length);S.ko.n=Math.min(v("p_ko"),KO.length);S.gems=v("p_gem");save();$("#pmsg").textContent="저장했어요! 이어서 할 수 있어요."};
+  $("#ppetb").onclick=()=>{const k=$("#ppet").value,P=petOf(k),n=$("#pname2").value.trim()||P[1];S.inv[k+"_0"]=1;S.inv[k+"_1"]=(S.inv[k+"_1"]||0)+3;if(!S.pets.some(p=>p.k===k))S.pets.push({k,name:n,love:10,skill:0,fed:"",seen:today(),day:"",did:[]});save();toast(`${P[2]} ${esc(n)}가 돌아왔어요!`)};
+  $("#pexp").onclick=async()=>{const code="VQ1:"+btoa(unescape(encodeURIComponent(JSON.stringify(S))));try{await navigator.clipboard.writeText(code);$("#pmsg2").textContent="복사했어요! 카톡 ‘나에게 보내기’에 붙여 넣어 보관하세요."}catch(e){$("#pimp").value=code;$("#pmsg2").textContent="아래 코드를 길게 눌러 복사해 보관하세요."}};
+  $("#pimpb").onclick=()=>{try{const t=$("#pimp").value.trim().replace(/^VQ1:/,"");const o=JSON.parse(decodeURIComponent(escape(atob(t))));if(!o||typeof o!=="object"||!("xp" in o))throw 0;S=o;save();$("#pmsg2").textContent="되살렸어요! 잠시 후 홈으로 가요.";setTimeout(()=>location.reload(),900)}catch(e){$("#pmsg2").textContent="코드가 올바르지 않아요. 처음부터 끝까지 다 붙여 넣었는지 확인해 주세요."}}}
 
 function rulesHTML(){return `<h2>💎 보석 모으는 법</h2>
 <ol class="rules">
