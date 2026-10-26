@@ -169,6 +169,8 @@ button:focus-visible,label:focus-within{outline:3px solid var(--accent);outline-
 .ptoast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#3A2A3F;color:#fff;padding:12px 18px;border-radius:16px;z-index:70;max-width:90%;text-align:center;animation:pop .3s ease-out}
 .kwrite{width:100%;font:inherit;font-size:1.05rem;padding:12px;border-radius:14px;border:2px solid #CFC7FF;margin:8px 0;box-sizing:border-box}.kshow{background:#F3F0FF;border-radius:14px;padding:12px;text-align:left;width:100%;box-sizing:border-box}.pnum{width:90px;font:inherit;font-size:1.05rem;padding:6px;border-radius:10px;border:2px solid #FFB3D1}.pform li{grid-template-columns:7.5rem 1fr}
 .btns2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kwd{border-bottom:2px dotted #7C6CF0;color:#5B4BD6;cursor:pointer}.kwcard{background:#F3F0FF;border-radius:16px;padding:14px;text-align:left;width:100%;box-sizing:border-box}.kwterm{font-family:var(--display);font-size:1.6rem;color:#5B4BD6}.kwterm.big1{text-align:center;font-size:2.4rem;margin:18px 0}.kwhan{font-family:var(--han);color:#7C6CF0;margin:2px 0 6px}.kwmean{font-size:1.08rem;line-height:1.6;margin:4px 0}.kwex{color:var(--muted);margin:4px 0}.kwq{display:block;margin-top:6px;font-size:1rem;color:var(--ink)}
+.kexample{background:#FFF7E0;border-radius:14px;padding:10px 12px;margin:10px 0 2px}.kexample p{margin:4px 0;font-size:1.05rem}.kexample small{color:var(--muted)}
 .recap{margin:6px 0 0;padding-left:1.1em;font-size:.95rem;line-height:1.6}.recap li{margin:3px 0}
 .qtag{display:table;margin-left:auto;margin-right:auto;font-family:var(--display);font-size:.95rem;background:var(--soft);color:var(--accent);border-radius:99px;padding:2px 12px;margin-bottom:6px}
 .hintb{appearance:none;align-self:center;border:2px dashed var(--cheese);background:transparent;color:var(--ink);border-radius:99px;padding:6px 18px;font-family:var(--display);font-size:1.05rem;cursor:pointer}
@@ -582,7 +584,7 @@ function quiz(o){
       <p class="muted">점수는 처음 고른 답으로만 매겨요.</p>
       ${o.pass?`<p class="muted">${pass?"퀘스트 클리어!":`${o.pass}개 이상 한 번에 맞히면 클리어! 다시 도전해 볼까?`}</p>`:""}
       <div class="btns" style="width:100%">${o.story!=null?`<button class="big alt" id="restory" type="button">📜 이야기 다시 보기</button>`:""}${!pass?`<button class="big" id="retry" type="button">다시 도전</button>`:""}<button class="big ${pass?"":"alt"}" id="gohome" type="button">홈으로</button></div></div>`;
-    bindBack();$("#gohome").onclick=o.after||home;if(o.after)$("#gohome").textContent="다음: 생각 한 줄 ✏️";if($("#restory"))$("#restory").onclick=()=>histLesson(o.story,true);
+    bindBack();$("#gohome").onclick=o.after||home;if(o.after)$("#gohome").textContent=o.afterLabel||"다음 ▶";if($("#restory"))$("#restory").onclick=()=>histLesson(o.story,true);
     if($("#retry"))$("#retry").onclick=()=>{const q=o.remake?o.remake():o.qs;quiz(Object.assign({},o,{qs:q}))};
   }
   show();
@@ -617,7 +619,7 @@ function home(){
   <div class="card rep"><h3>💌 엄마에게 오늘 자랑하기${S.reportLast===today()?" ✓":""}</h3><p class="muted">${S.reportLast===today()?"오늘 자랑 완료! 내일도 들려줘.":"오늘 한 퀘스트를 카톡으로 엄마에게 자랑하면 +5 XP!"}</p><div class="btns2"><button class="big ${S.reportLast===today()?"alt":""}" id="rep" type="button">💌 자랑 보내기</button><button class="big alt" id="req" type="button">📮 요청 보내기</button></div><p class="muted" style="margin:4px 0 0">앱에 바라는 게 있으면 까닭과 함께 엄마에게 요청해요.</p><p class="muted" id="repmsg" hidden style="white-space:pre-line"></p></div>
   ${petCardHome()}
   ${shopHTML(nextCook())}
-  <p class="foot" id="ver">Victoria Quest v1.7</p>`;
+  <p class="foot" id="ver">Victoria Quest v1.8</p>`;
   if(S.test){$("#parent").onclick=parentPanel;$("#rst").onclick=()=>{$("#rstAsk").hidden=false};$("#rstYes").onclick=()=>{try{localStorage.removeItem(KEY)}catch(e){}location.reload()}}
   app.querySelectorAll(".tile").forEach(b=>b.onclick=()=>({cook:cookStart,hist,hz,en,mem,ko})[b.dataset.t]());
   updBadge();
@@ -1028,7 +1030,7 @@ function reportText(){const d=new Date(),td=today(),c=t=>S[t].last===td?(S[t].cn
 📜 한국사: 오늘 ${c("hist")}개 · ${Math.min(S.hist.n,HSTORY.length)}/${HSTORY.length}편${S.hist.wrong.length?` · 다시 볼 문제 ${S.hist.wrong.length}개`:""}
 漢 한자: 오늘 ${c("hz")}개 · ${hzLearnedChars(Math.min(S.hz.n,HZDAYS.length)).length}/${HZ.length}자 (${Math.min(S.hz.n,HZDAYS.length)}/${HZDAYS.length}과)${S.hz.best?` · 모의시험 최고 ${S.hz.best}/25`:""} · 시험 D-${Math.max(dday(),0)}
 🔤 영어: 오늘 ${c("en")}개 · Day ${Math.min(S.en.n,ENGDAYS.length)}/${ENGDAYS.length}
-📘 국어: 오늘 ${c("ko")}개 · ${Math.min(S.ko.n,KO.length)}/${KO.length}과${S.ko.writes.length&&S.ko.writes.at(-1).d===td?`\n   ✏️ 생각 한 줄: “${S.ko.writes.at(-1).a}”`:""}
+📘 국어: 오늘 ${c("ko")}개 · ${Math.min(S.ko.n,KO.length)}/${KO.length}과 · 개념어 마스터 ${kwCount()}/${KW.length}${(()=>{kwInit();const u=Object.entries(S.kw.w).filter(([t,v])=>v.unk&&!kwMastered(t)).map(([t])=>t);return u.length?`\n   🔸 아직 익히는 개념어: ${u.slice(0,8).join(", ")}`:""})()}${S.ko.writes.length&&S.ko.writes.at(-1).d===td?`\n   ✏️ 생각 한 줄: “${S.ko.writes.at(-1).a}”`:""}
 🧠 기억 탐험: ${S.mem&&S.mem.last===td?`오늘 완료 · 발자국 최고 ${(S.mem.log.at(-1)||{}).corsi||0}개`:"오늘 안 함"}
 ⭐ Lv.${Math.floor(S.xp/50)+1} · ${S.xp} XP · 연속 ${streak()}일
 💎 보석 ${S.gems||0}개${S.gemToday&&S.gemToday.d===td?` (오늘 +${S.gemToday.n})`:` · 남은 퀘스트: ${questsLeft().join(", ")}`}${(S.pets||[]).length?`\n🐾 ${S.pets.map(p=>petOf(p.k)[2]+" "+p.name+" 친밀도 "+p.love+" · 재주 "+TRICK_AT.filter(x=>p.skill>=x).length+"개").join(" / ")}`:""}
@@ -1491,7 +1493,7 @@ function decorView(){hInit();const H=S.house;
 /* ===================== 국어 (2022 개정 교육과정 5~6학년군) ===================== */
 // 과: {c:성취기준, a:영역, t:제목, cards:[[그림,설명]], qs:[[문제,정답,[오답3],힌트,풀이]], w:생각 쓰기}
 const KO=[
-{c:"6국04-04",a:"문법",t:"문장의 뼈대 찾기",cards:[["🦴","문장에는 뼈대가 있어요. <b>누가(무엇이)</b> = 주어, <b>어찌하다·어떠하다·무엇이다</b> = 서술어."],["🎯","‘무엇을’에 해당하는 말은 <b>목적어</b>예요.<br>예) <u>동생이</u>(주어) <u>사과를</u>(목적어) <u>먹었다</u>(서술어)."],["🔍","찾는 요령: 문장 끝의 서술어부터 찾고, “누가?” “무엇을?” 하고 물어보면 나머지가 보여요."]],
+{c:"6국04-04",a:"문법",t:"문장의 뼈대 찾기",cards:[["🦴","문장에는 뼈대가 있어요. <b>누가(무엇이)</b>에 해당하는 말이 주어예요.<br>주(主)는 ‘주인’, 어(語)는 ‘말’ → <b>문장의 주인이 되는 말</b>!"],["📣","<b>서술어</b>는 서(敍, 펼치다)+술(述, 펼치다)+어(語, 말).<br>→ 주어가 <b>어찌하는지·어떠한지·무엇인지 펼쳐서 말해 주는 말</b>이에요. 주로 문장 맨 끝에 와요.<br>예) 동생이 <u>웃는다</u> · 하늘이 <u>파랗다</u> · 나는 <u>학생이다</u>"],["🎯","‘무엇을’에 해당하는 말은 <b>목적어</b>예요.<br>예) <u>동생이</u>(주어) <u>사과를</u>(목적어) <u>먹었다</u>(서술어)."],["🔍","찾는 요령: 문장 끝의 서술어부터 찾고, “누가?” “무엇을?” 하고 물어보면 나머지가 보여요."]],
  qs:[["“고양이가 생선을 먹었다.”에서 <b>서술어</b>는?","먹었다",["고양이가","생선을","고양이"],"문장 맨 끝에서 ‘어찌하다’에 해당하는 말을 찾아봐.","‘먹었다’가 고양이가 한 일을 나타내는 서술어야."],
  ["“하늘이 정말 파랗다.”에서 <b>주어</b>는?","하늘이",["정말","파랗다","주어가 없다"],"“무엇이 파랗지?” 하고 물어봐.","파란 것은 ‘하늘이’ → 주어야."],
  ["“Victoria는 동생에게 책을 주었다.”에서 <b>목적어</b>는?","책을",["Victoria는","동생에게","주었다"],"“무엇을 주었지?” 하고 물어봐.","준 것은 ‘책을’ → 목적어. ‘동생에게’는 누구에게 주었는지 알려 주는 말이야."],
@@ -1624,28 +1626,138 @@ const KO=[
  ["말과 글, 그림을 함께 써서 정보를 전하는 것은?","영상 광고",["손 편지","전화 통화","일기장"],"여러 가지 표현 방법을 함께 쓰는 매체야.","영상은 말·글·그림·소리를 함께 써."]],
  w:"친구에게 고마운 마음을 글로 전한다면, 오해 없게 어떻게 쓸지 한 문장 써 봐."}
 ];
+const KO_EX=["나는(주어) 아침에 달걀을(목적어) 먹었다(서술어).","내 꿈은 고양이를 돌보는 수의사가 되는 것이다.","만약 내일 눈이 오면 동생과 눈사람을 만들 것이다.","어제는 태권도장에 갔다. 지금은 숙제를 하고 있다. 내일은 도서관에 갈 것이다.","“나물 좀 주세요.”를 “나 물 좀 주세요.”로 띄우면 뜻이 달라진다.","숙제를 다 해서 이제 놀아도 돼.","나는 ‘마음’이라는 고유어가 좋다. 보이지 않지만 따뜻한 느낌이 들기 때문이다.","엄마는 손이 커서 김밥을 스무 줄이나 싸셨다.","외할머니는 “밥 뭇나?”라고 물으시는데, ‘밥 먹었니?’라는 뜻이다.","여름은 덥지만 해가 길고, 겨울은 춥지만 눈을 볼 수 있다.","주말에 가족과 산책하자. 몸이 튼튼해지고 이야기를 많이 나눌 수 있기 때문이다.","시험지를 받자마자 웃음이 났다. 어제 연습한 문제가 그대로 나왔기 때문이다.","오늘 내 기분은 소나기 뒤에 뜬 무지개 같다.","숙제는 저녁 먹기 전에 끝내야 한다. 그래야 밤에 충분히 잘 수 있기 때문이다.","친구가 “나 오늘 우산 없는데….”라고 한 말은 우산을 같이 쓰자는 뜻이었다.","교실에 우산꽂이를 두겠습니다. 비 오는 날 젖은 우산 때문에 바닥이 미끄러웠기 때문입니다.","우리 고양이는 작은 난로다. 안고 있으면 온몸이 따뜻해진다.","하윤이는 고양이에게 ‘구름’이라는 이름을 지어 주고 매일 아침 밥을 챙겨 주었다.","『토끼와 거북』은 꾸준히 노력하는 사람이 결국 이긴다는 것을 알려 주려고 쓴 이야기 같다.","사실: 오늘 급식에 미역국이 나왔다. / 의견: 오늘 급식이 이번 주에서 가장 맛있었다.","우리 집 저녁 식사 시간에는 휴대 전화를 내려놓자. 가족끼리 이야기할 시간이 늘어나기 때문이다.","고마워! 네가 빌려준 연필 덕분에 시험을 잘 봤어. 정말 고마워 😊"];
+/* ===================== 개념어 마스터 ===================== */
+// [낱말, 한자 풀이, 쉬운 뜻, 예시, 학년(참고)]
+const KW=[
+["낱말","","뜻을 가지고 혼자 쓸 수 있는 말의 단위예요. ‘단어’와 같은 말이에요.","‘고양이’, ‘달리다’는 각각 하나의 낱말이에요.","3-4"],
+["문장","文(글월 문)+章(글 장)","생각이나 느낌을 완전하게 나타내는 말의 단위예요. 끝에 마침표·물음표·느낌표가 와요.","“고양이가 잔다.”는 하나의 문장이에요.","3-4"],
+["문단","文(글월 문)+段(층계 단)","하나의 중심 생각으로 묶인 문장들의 덩어리예요. 글의 층계 한 칸!","새 문단은 줄을 바꾸고 한 칸 들여 써요.","3-4"],
+["중심 문장","中(가운데 중)+心(마음 심)","문단에서 가장 중요한 생각을 담은 문장이에요.","“고양이는 깨끗한 동물이다.”가 중심 문장이면, 나머지는 그걸 받쳐 줘요.","3-4"],
+["뒷받침 문장","","중심 문장을 자세히 설명하거나 예를 들어 받쳐 주는 문장이에요.","“고양이는 혀로 털을 자주 고른다.”","3-4"],
+["높임 표현","","듣는 사람이나 말하는 대상을 높여 예의를 나타내는 표현이에요.","“할머니께서 진지를 드신다.”","3-4"],
+["감각적 표현","感(느낄 감)+覺(깨달을 각)","보고, 듣고, 맛보고, 냄새 맡고, 만지는 느낌을 생생하게 나타낸 표현이에요.","“바삭바삭한 과자”, “새콤한 귤 향기”","3-4"],
+["의인법","擬(비길 의)+人(사람 인)+法(법 법)","사람이 아닌 것을 사람처럼 표현하는 방법이에요.","“꽃들이 방긋 웃는다.”","3-4"],
+["주어","主(주인 주)+語(말씀 어)","문장의 주인이 되는 말이에요. ‘누가’, ‘무엇이’에 해당해요.","<u>동생이</u> 웃는다.","5-6"],
+["서술어","敍(펼 서)+述(펼 술)+語(말씀 어)","주어가 ‘어찌하는지, 어떠한지, 무엇인지’를 펼쳐서 말해 주는 말이에요. 주로 문장 끝에 와요.","동생이 <u>웃는다</u>. 하늘이 <u>파랗다</u>.","5-6"],
+["목적어","目(눈 목)+的(과녁 적)+語(말씀 어)","행동이 향하는 과녁이 되는 말이에요. ‘무엇을’, ‘누구를’에 해당해요.","나는 <u>사과를</u> 먹었다.","5-6"],
+["문장 성분","成(이룰 성)+分(나눌 분)","문장을 이루는 부분들이에요. 주어, 서술어, 목적어 같은 것!","“동생이 사과를 먹었다.”는 성분 세 개로 이루어져요.","5-6"],
+["호응","呼(부를 호)+應(응할 응)","앞말이 부르면 뒷말이 알맞게 대답하듯, 짝이 맞게 이어지는 것이에요.","‘결코’ → ‘~않다’, ‘만약’ → ‘~면’","5-6"],
+["조사","助(도울 조)+詞(말 사)","낱말 뒤에 붙어 다른 말과의 관계를 도와주는 말이에요. 앞말에 붙여 써요.","나<u>는</u> 학교<u>에</u> 간다.","5-6"],
+["시간 표현","","일이 일어난 때(지난 일·지금 일·앞으로 일)를 나타내는 표현이에요.","먹<u>었</u>다(지난) · 먹<u>는</u>다(지금) · 먹<u>겠</u>다(앞으로)","5-6"],
+["띄어쓰기","","글을 쓸 때 낱말과 낱말 사이를 띄우는 규칙이에요. 조사는 붙여 써요.","“아버지가 방에 들어가신다.”","5-6"],
+["고유어","固(굳을 고)+有(있을 유)+語(말씀 어)","원래부터 우리말에 굳게 있던 말이에요.","하늘, 바다, 마음, 나이","5-6"],
+["한자어","漢(한나라 한)+字(글자 자)+語(말씀 어)","한자를 바탕으로 만들어진 말이에요.","학교(學校), 연령(年齡)","5-6"],
+["관용 표현","慣(익숙할 관)+用(쓸 용)","두 낱말 이상이 합쳐져 익숙하게 쓰이면서 새로운 뜻이 굳어진 표현이에요.","“발이 넓다” = 아는 사람이 많다","5-6"],
+["표준어","標(표할 표)+準(준할 준)+語(말씀 어)","여러 지역 사람이 함께 기준으로 삼아 쓰도록 정한 말이에요.","뉴스, 교과서에서 쓰는 말","5-6"],
+["방언","方(모 방)+言(말씀 언)","한 지역에서만 쓰는 말이에요. ‘사투리’라고도 해요.","제주 방언 “혼저 옵서예” = 어서 오세요","5-6"],
+["음성 언어","音(소리 음)+聲(소리 성)","소리로 전하는 말이에요. 목소리 크기와 억양으로 느낌을 전해요.","전화 통화, 발표","5-6"],
+["문자 언어","文(글월 문)+字(글자 자)","글자로 적어 전하는 말이에요. 오래 남고 다시 읽을 수 있어요.","편지, 신문, 메시지","5-6"],
+["구조","構(얽을 구)+造(지을 조)","여러 부분이 얽혀 하나를 이루는 짜임이에요. 글에도 구조가 있어요.","비교·대조 구조, 원인·결과 구조","5-6"],
+["비교","比(견줄 비)+較(견줄 교)","둘 이상을 견주어 같은 점을 찾는 것이에요.","“고양이와 개는 모두 사람과 산다.”","5-6"],
+["대조","對(대할 대)+照(비출 조)","둘을 마주 대어 비추며 다른 점을 찾는 것이에요.","“고양이는 혼자 잘 있고, 개는 함께 있기를 좋아한다.”","5-6"],
+["원인","原(근원 원)+因(인할 인)","어떤 일이 일어나게 한 근원, 까닭이에요.","늦잠을 잔 것(원인) → 지각(결과)","5-6"],
+["결과","結(맺을 결)+果(실과 과)","어떤 까닭으로 맺어진 열매, 일어난 일이에요.","공부를 꾸준히 했더니 시험을 잘 봤다.","5-6"],
+["요약","要(요긴할 요)+約(맺을 약)","글에서 요긴한 것만 골라 짧게 맺어 정리하는 것이에요.","긴 글을 주장과 근거만 남겨 한두 문장으로!","5-6"],
+["주제","主(주인 주)+題(제목 제)","글쓴이가 글에서 가장 중심으로 말하려는 생각이에요.","이 이야기의 주제는 ‘생명을 아끼는 마음’이다.","5-6"],
+["주장","主(주인 주)+張(베풀 장)","자기 생각을 내세워 펼치는 것, 또는 그 생각이에요.","“아침밥을 꼭 먹자.”","5-6"],
+["근거","根(뿌리 근)+據(의거할 거)","주장이 기대는 뿌리, 즉 주장을 믿게 해 주는 까닭이나 자료예요.","“아침을 먹으면 집중이 잘된다는 조사가 있다.”","5-6"],
+["타당성","妥(온당할 타)+當(마땅 당)+性(성품 성)","이치에 맞고 마땅한 정도예요. 근거가 주장에 맞는지 따질 때 써요.","“친구가 그랬다”는 근거는 타당성이 낮아요.","5-6"],
+["추론","推(밀 추)+論(논할 론)","아는 단서를 밀고 나가 모르는 것을 짐작해 내는 것이에요.","젖은 옷 + 우산 없음 → 비가 왔구나!","5-6"],
+["생략","省(덜 생)+略(간략할 략)","말이나 글의 일부를 덜어서 빼는 것이에요.","“영화 볼래?” “내일 시험이야.”(못 본다는 말이 생략됨)","5-6"],
+["문맥","文(글월 문)+脈(줄기 맥)","글의 앞뒤로 이어지는 흐름, 글의 줄기예요.","같은 말도 문맥에 따라 뜻이 달라져요.","5-6"],
+["함축","含(머금을 함)+蓄(모을 축)","말 속에 다른 뜻을 머금고 모아 둔 것이에요.","“얼굴에 먹구름이 끼었다.” = 기분이 나쁘다","5-6"],
+["비유","比(견줄 비)+喩(깨우칠 유)","어떤 것을 다른 것에 견주어 알기 쉽게 깨우쳐 주는 표현이에요.","“사과 같은 볼”","5-6"],
+["직유","直(곧을 직)+喩(깨우칠 유)","‘~처럼, ~같이, ~듯’을 써서 곧바로 드러나게 견주는 비유예요.","“솜사탕처럼 부드러운 눈”","5-6"],
+["은유","隱(숨을 은)+喩(깨우칠 유)","‘처럼’을 숨기고 “A는 B다”로 견주는 비유예요.","“엄마는 나의 햇살이다.”","5-6"],
+["인물","人(사람 인)+物(물건 물)","이야기에 나와 일을 겪거나 행동하는 사람이나 존재예요.","하윤이, 아기 고양이","5-6"],
+["사건","事(일 사)+件(물건 건)","이야기 속에서 일어나는 일이에요.","하윤이가 고양이를 구한다.","5-6"],
+["배경","背(등 배)+景(볕 경)","인물의 등 뒤에 펼쳐진 풍경처럼, 이야기가 일어나는 때와 곳이에요.","비 오는 밤의 골목","5-6"],
+["갈등","葛(칡 갈)+藤(등나무 등)","칡과 등나무가 서로 얽히듯, 인물의 생각이나 처지가 부딪치는 것이에요.","돕고 싶은 마음과 무서운 마음 사이의 갈등","5-6"],
+["작가의 의도","意(뜻 의)+圖(꾀할 도)","작가가 작품으로 전하려고 마음먹은 생각이에요.","토끼와 거북 → 꾸준히 노력하자","5-6"],
+["사실","事(일 사)+實(열매 실)","실제로 있었던 일, 확인할 수 있는 내용이에요.","“오늘 최고 기온은 15도였다.”","5-6"],
+["의견","意(뜻 의)+見(볼 견)","어떤 일에 대해 내가 보고 생각한 것이에요. 사람마다 다를 수 있어요.","“오늘 날씨가 최고로 좋다.”","5-6"],
+["출처","出(날 출)+處(곳 처)","자료나 말이 나온 곳이에요.","“○○ 조사(2025)에 따르면…”","5-6"],
+["인용","引(끌 인)+用(쓸 용)","남의 말이나 글을 끌어와 쓰는 것이에요. 출처를 꼭 밝혀요.","“세종대왕은 백성을 위해 한글을 만들었다고 한다.”","5-6"],
+["매체","媒(중매 매)+體(몸 체)","정보를 사람과 사람 사이에 이어 주는 수단이에요.","신문, 텔레비전, 인터넷, 휴대 전화","5-6"],
+["신뢰성","信(믿을 신)+賴(의뢰할 뢰)+性(성품 성)","믿고 기댈 수 있는 정도예요.","출처와 날짜가 분명한 뉴스는 신뢰성이 높아요.","5-6"],
+["토의","討(칠 토)+議(의논할 의)","여럿이 함께 문제를 해결할 방법을 의논하는 것이에요.","학급 회의에서 청소 방법을 정한다.","5-6"],
+["토론","討(칠 토)+論(논할 론)","찬성과 반대로 나뉘어 근거를 들어 논쟁하는 것이에요.","“휴대 전화를 학교에 가져와도 될까?”","5-6"],
+["면담","面(낯 면)+談(말씀 담)","얼굴을 마주하고 이야기를 나누며 알고 싶은 것을 묻는 것이에요.","도서관 사서 선생님과 면담하기","5-6"],
+["수필","隨(따를 수)+筆(붓 필)","붓 가는 대로 겪은 일과 생각을 자유롭게 쓴 글이에요.","나의 첫 요리 이야기","5-6"],
+["품사","品(물건 품)+詞(말 사)","낱말을 성질에 따라 나눈 갈래예요.","명사, 동사, 형용사…","중1"],
+["명사","名(이름 명)+詞(말 사)","사람이나 사물의 이름을 나타내는 낱말이에요.","고양이, 학교, 사랑","중1"],
+["동사","動(움직일 동)+詞(말 사)","움직임이나 작용을 나타내는 낱말이에요.","달리다, 먹다, 읽다","중1"],
+["형용사","形(모양 형)+容(얼굴 용)+詞(말 사)","성질이나 상태를 나타내는 낱말이에요.","예쁘다, 차갑다, 크다","중1"],
+["운율","韻(운 운)+律(법칙 률)","시에서 느껴지는 말의 가락, 리듬이에요.","같은 말이나 글자 수를 되풀이하면 운율이 생겨요.","중1"],
+["상징","象(본뜰 상)+徵(부를 징)","눈에 보이지 않는 생각을 구체적인 사물로 나타내는 것이에요.","비둘기 → 평화","중1"]];
+const KWT=KW.map(x=>x[0]).sort((a,b)=>b.length-a.length);
+const KWI=Object.fromEntries(KW.map((x,i)=>[x[0],i]));
+const KW_DAYS=[0,1,3,7,14];
+function kwInit(){S.kw=S.kw||{w:{},log:[]};return S.kw}
+function kwSt(t){const k=kwInit();return k.w[t]||(k.w[t]={b:0,next:"",ok:0,days:[],taps:0,unk:false})}
+function addDays(d,n){const[y,m,dd]=d.split("-").map(Number),x=new Date(y,m-1,dd+n);return x.getFullYear()+"-"+pad(x.getMonth()+1)+"-"+pad(x.getDate())}
+function kwMastered(t){const s=(kwInit().w[t]);return !!s&&s.days.length>=3&&s.b>=3}
+function kwSeen(t){return !!kwInit().w[t]}
+function kwDue(){const td=today();return KW.map(x=>x[0]).filter(t=>{const s=kwInit().w[t];return s&&!kwMastered(t)&&(!s.next||s.next<=td)})}
+function kwMark(t,ok){const s=kwSt(t),td=today();if(ok){if(!s.days.includes(td)){s.days.push(td);s.b=Math.min(4,s.b+1)}s.ok++}else{s.b=0;s.unk=true}s.next=addDays(td,KW_DAYS[s.b]||1);save()}
+function kwCount(){return KW.filter(x=>kwMastered(x[0])).length}
+// 글 속 개념어를 눌러 볼 수 있게
+function kwLink(html){const used=new Set(["조사"]);return html.split(/(<[^>]+>)/).map(part=>{if(part.startsWith("<"))return part;let out="",i=0;while(i<part.length){let hit=null;for(const t of KWT){if(part.startsWith(t,i)){hit=t;break}}if(hit&&used.has(hit)){out+=hit;i+=hit.length;continue}if(hit){used.add(hit);out+=`<span class="kwd" data-kw="${hit}">${hit}</span>`;i+=hit.length}else{out+=part[i];i++}}return out}).join("")}
+function bindKw(root){(root||app).querySelectorAll(".kwd").forEach(x=>x.onclick=e=>{e.stopPropagation();kwPop(x.dataset.kw,true)})}
+function kwCardHTML(t){const w=KW[KWI[t]];return `<div class="kwcard"><div class="kwterm">${t}</div>${w[1]?`<div class="kwhan">${w[1]}</div>`:""}<p class="kwmean">${w[2]}</p><p class="kwex">예) ${w[3]}</p></div>`}
+function kwPop(t,tap){const s=kwSt(t);if(tap){s.taps++;s.unk=true;if(!kwMastered(t)){s.b=Math.min(s.b,1);s.next=addDays(today(),1)}save()}
+  const o=document.createElement("div");o.className="pop-ov";o.innerHTML=`<div class="pop-card">${kwCardHTML(t)}<p class="muted">${kwMastered(t)?"⭐ 마스터한 개념어!":"내일 복습에 다시 나와요."}</p><button class="big" type="button">알겠어!</button></div>`;document.body.appendChild(o);o.querySelector("button").onclick=()=>o.remove()}
+function kwOpts(t){const others=shuffle(KW.filter(x=>x[0]!==t)).slice(0,3);return others}
+function kwQs(list){return list.map(t=>{const w=KW[KWI[t]],o=kwOpts(t);return Math.random()<.5?mkQ(`이 뜻을 가진 개념어는?<br><span class="kwq">${w[2]}</span>`,t,o.map(x=>x[0]),`${t}${w[1]?` — ${w[1]}`:""}: ${w[2]}`,{kw:t,hint:w[1]?`한자 힌트: ${w[1]}`:`예) ${w[3]}`})
+    :mkQ(`<b>‘${t}’</b>의 뜻은?${w[1]?`<br><small class="muted">${w[1]}</small>`:""}`,w[2],o.map(x=>x[2]),`예) ${w[3]}`,{kw:t,hint:"한자 하나하나의 뜻을 이어서 생각해 봐."})})}
+// 진단: 모르는 개념어 찾기
+function kwDiag(){const pool=KW.map(x=>x[0]).filter(t=>!kwSeen(t)).slice(0,8);if(!pool.length)return kwDict();let i=0;
+  const step=()=>{if(i>=pool.length)return kwDiagEnd(pool);const t=pool[i];
+    app.innerHTML=hdr("🔍 개념어 진단")+`<div class="card"><div class="row"><span class="pill">${i+1}/${pool.length}</span><span class="pill">${KW[KWI[t]][4]==="중1"?"중학교 미리 보기":KW[KWI[t]][4]+"학년"}</span></div>
+     <div class="kwterm big1">${t}</div><p class="prompt">이 낱말의 뜻을 알아?</p>
+     <div class="btns"><button class="big" data-r="2" type="button">알아! 확인해 볼래</button><button class="big alt" data-r="1" type="button">들어는 봤어</button><button class="big alt" data-r="0" type="button">처음 봐</button></div></div>`;bindBack();
+    app.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{const r=+b.dataset.r;if(r===2)return check(t);kwMark(t,false);teach(t)})};
+  const teach=t=>{app.innerHTML=hdr("🔍 개념어 진단")+`<div class="card">${kwCardHTML(t)}<p class="muted">괜찮아! 지금 알았으니 내일 다시 만나자.</p><button class="big" id="nx" type="button">다음</button></div>`;bindBack();$("#nx").onclick=()=>{i++;step()}};
+  const check=t=>{const q=kwQs([t])[0];app.innerHTML=hdr("🔍 확인 문제")+`<div class="card"><p class="prompt">${q.prompt}</p><div class="tiles2">${q.opts.map((x,j)=>`<button class="opt" type="button" data-j="${j}" style="font-size:.95rem">${x}</button>`).join("")}</div><p class="prompt" id="fb"></p></div>`;bindBack();
+    app.querySelectorAll("[data-j]").forEach(b=>b.onclick=()=>{const ok=+b.dataset.j===q.ans;kwMark(t,ok);if(ok){$("#fb").textContent="정확해! ✨";setTimeout(()=>{i++;step()},900)}else teach(t)})};
+  step()}
+function kwDiagEnd(pool){const unk=pool.filter(t=>kwInit().w[t].unk);app.innerHTML=hdr("🔍 개념어 진단")+`<div class="card result"><div class="stars">🔍✨</div><h2>진단 끝!</h2><p>${pool.length}개 중 ${pool.length-unk.length}개를 알고 있었어.</p>${unk.length?`<p class="muted">새로 알게 된 말: ${unk.join(", ")}<br>이 말들은 며칠 간격으로 다시 나와서 꼭 내 것으로 만들어 줄게!</p>`:""}<div class="btns" style="width:100%"><button class="big" id="more" type="button">더 진단하기</button><button class="big alt" id="gohome" type="button">국어로</button></div></div>`;bindBack();$("#more").onclick=kwDiag;$("#gohome").onclick=ko}
+function kwReview(next){const due=kwDue().slice(0,4);if(!due.length)return next?next():kwDict();
+  quiz({title:"개념어 복습",qs:kwQs(due),onAnswer:(q,ok)=>kwMark(q.kw,ok),after:next||null})}
+function kwDict(){kwInit();const groups=[["3-4","3~4학년"],["5-6","5~6학년"],["중1","중학교 미리 보기"]];
+  app.innerHTML=hdr("📗 개념어 사전")+`<div class="card"><h3>⭐ 개념어 마스터 ${kwCount()} / ${KW.length}</h3><div class="bar"><i style="width:${kwCount()/KW.length*100}%;background:#7C6CF0"></i></div><p class="muted">세 번, 서로 다른 날에 맞히면 ‘마스터’! 낱말을 누르면 뜻이 나와요.</p>
+   <div class="btns2"><button class="big" id="kwr" type="button">복습 ${kwDue().length}개</button><button class="big alt" id="kwd" type="button">🔍 진단</button></div></div>`+
+   groups.map(([g,n])=>`<div class="card"><h3>${n}</h3><div class="tapchips">${KW.filter(x=>x[4]===g).map(x=>{const t=x[0],s=kwInit().w[t];return `<button type="button" class="tc kwchip ${kwMastered(t)?"on":""}" data-t="${t}">${kwMastered(t)?"⭐":s?(s.unk?"🔸":"·"):"○"} ${t}</button>`}).join("")}</div></div>`).join("")+
+   `<p class="muted" style="text-align:center">⭐ 마스터 · 🔸 몰랐던 말(복습 중) · ○ 아직 안 만남</p>`;
+  bindBack();$("#kwr").onclick=()=>kwReview(kwDict);$("#kwd").onclick=kwDiag;app.querySelectorAll(".kwchip").forEach(b=>b.onclick=()=>kwPop(b.dataset.t,false))}
+
 function koInit(){S.ko=S.ko||{n:0,last:"",cnt:0,wrong:[],writes:[]};return S.ko}
 function ko(){koInit();koMain();withPast("ko")}
 function koMain(){const T="국어 탐험",k=S.ko;
   if(!isOpen(7))return lockScreen(T,7,"아침 7시에 열려요!");
-  if(doneToday("ko"))return doneScreen(T,"오늘 국어 탐험 완료! 내일 또 만나요.",()=>koLesson(Math.max(0,Math.min(k.n,KO.length)-1),true));
+  if(doneToday("ko")){doneScreen(T,"오늘 국어 탐험 완료! 개념어 복습은 언제든 할 수 있어요.",()=>koLesson(Math.max(0,Math.min(k.n,KO.length)-1),true));app.insertAdjacentHTML("beforeend",kwBox());bindKwBox();return}
   if(k.n>=KO.length){app.innerHTML=hdr(T)+`<div class="card"><h3>22과를 모두 마쳤어! 대단해!</h3><p class="muted">이제 헷갈렸던 문제를 다시 풀어 보자.</p><button class="big" id="start" type="button">복습 시작</button></div>`;bindBack();$("#start").onclick=koReview;return}
   const L=KO[k.n];
   app.innerHTML=hdr(T)+`<div class="card"><div class="row"><span class="pill">${k.n+1} / ${KO.length}과</span><span class="pill">${L.a}</span></div><div class="bar"><i style="width:${k.n/KO.length*100}%;background:#7C6CF0"></i></div>
    <div class="fb"><div class="ava" style="background:#7C6CF0">글냥</div><div class="bubble"><b>오늘의 탐험: 「${L.t}」</b><p>먼저 짧게 알아보고, 퀴즈 4문제를 풀고, 생각 한 줄을 써 보자!</p></div></div>
-   <p class="muted">2022 개정 교육과정 [${L.c}]</p><button class="big" id="start" type="button">탐험 시작</button></div>`;
-  bindBack();$("#start").onclick=()=>koLesson(k.n,false)}
+   <p class="muted">2022 개정 교육과정 [${L.c}]</p><button class="big" id="start" type="button">탐험 시작</button></div>${kwBox()}`;
+  bindBack();$("#start").onclick=()=>koLesson(k.n,false);bindKwBox()}
+function kwBox(){kwInit();const seen=Object.keys(S.kw.w).length;return `<div class="card"><h3>📗 개념어 마스터 ${kwCount()} / ${KW.length}</h3><div class="bar"><i style="width:${kwCount()/KW.length*100}%;background:#7C6CF0"></i></div><p class="muted">국어 공부의 열쇠는 개념어! 서로 다른 날 세 번 맞히면 마스터. ${seen?`오늘 복습할 말 ${kwDue().length}개`:"먼저 진단으로 모르는 말을 찾아보자."}</p><div class="btns2"><button class="big alt" id="kwgo" type="button">${seen&&kwDue().length?"개념어 복습":"🔍 개념어 진단"}</button><button class="big alt" id="kwdict" type="button">📗 개념어 사전</button></div></div>`}
+function bindKwBox(){if($("#kwgo"))$("#kwgo").onclick=()=>Object.keys(S.kw.w).length&&kwDue().length?kwReview(ko):kwDiag();if($("#kwdict"))$("#kwdict").onclick=kwDict}
 function koLesson(n,practice){const L=KO[n];let i=0;
-  const card=()=>{const[em,tx]=L.cards[i];app.innerHTML=hdr("📘 "+L.t)+`<div class="card"><div class="dots">${L.cards.map((_,j)=>`<i class="${j===i?"on":""}"></i>`).join("")}</div><div class="hstory"><span class="hem">${em}</span></div>
+  const card=()=>{const em=L.cards[i][0],tx=kwLink(L.cards[i][1]);app.innerHTML=hdr("📘 "+L.t)+`<div class="card"><div class="dots">${L.cards.map((_,j)=>`<i class="${j===i?"on":""}"></i>`).join("")}</div><div class="hstory"><span class="hem">${em}</span></div>
      <div class="fb"><div class="ava" style="background:#7C6CF0">글냥</div><div class="bubble"><p style="font-size:1.12rem;line-height:1.75">${tx}</p></div></div>
      <div class="nav2"><button class="big alt" id="prev" type="button" ${i===0?"disabled":""}>이전</button><button class="big" id="nx" type="button">${i<L.cards.length-1?"다음":"퀴즈 풀기!"}</button></div></div>`;
-    bindBack();$("#prev").onclick=()=>{i--;card()};$("#nx").onclick=()=>{if(i<L.cards.length-1){i++;card()}else go()}};
+    bindBack();bindKw();$("#prev").onclick=()=>{i--;card()};$("#nx").onclick=()=>{if(i<L.cards.length-1){i++;card()}else go()}};
+  const terms=[...new Set(L.cards.flatMap(c=>KWT.filter(t=>c[1].includes(t))))];terms.forEach(t=>{if(!kwSeen(t)){const st=kwSt(t);st.next=today()}});save();
   const go=()=>quiz({title:"국어 탐험 · "+L.t,qs:L.qs.map((q,j)=>mkQ(q[0],q[1],q[2],q[4],{hint:q[3],id:n*10+j})),
     onAnswer:(q,ok)=>{const w=S.ko.wrong;if(!ok&&!w.includes(q.id))w.push(q.id);save()},
-    onPass:()=>{if(!practice&&!doneToday("ko")&&S.ko.n===n){markDone("ko");addXP(15)}},after:()=>koWrite(n,practice)});
-  card()}
+    onPass:()=>{if(!practice&&!doneToday("ko")&&S.ko.n===n){markDone("ko");addXP(15)}},after:()=>koWrite(n,practice),afterLabel:"다음: 생각 한 줄 ✏️"});
+  const due=kwDue().filter(t=>!terms.includes(t)).slice(0,3);if(due.length){app.innerHTML=hdr("📗 개념어 워밍업")+`<div class="card"><div class="fb"><div class="ava" style="background:#7C6CF0">글냥</div><div class="bubble"><b>탐험 전에 개념어 ${due.length}개만 복습!</b><p>${due.join(" · ")}</p></div></div><button class="big" id="wu" type="button">복습하고 시작</button><button class="big alt" id="wus" type="button">바로 시작</button></div>`;bindBack();$("#wu").onclick=()=>quiz({title:"개념어 워밍업",qs:kwQs(due),onAnswer:(q,ok)=>kwMark(q.kw,ok),after:card});$("#wus").onclick=card}else card()}
 function koWrite(n,practice){const L=KO[n];
   app.innerHTML=hdr("✏️ 생각 한 줄")+`<div class="card"><div class="fb"><div class="ava" style="background:#7C6CF0">글냥</div><div class="bubble"><b>마지막 미션!</b><p>${L.w}</p></div></div>
+   <div class="kexample"><b>✏️ 예시 문장</b><p>${KO_EX[n]||""}</p><small>예시를 그대로 따라 쓰지 말고, 내 이야기로 바꿔 써 봐!</small></div>
    <textarea id="kw" class="kwrite" rows="4" maxlength="300" placeholder="여기에 써 봐. 맞고 틀린 답은 없어!"></textarea><p class="muted" id="kmsg">한 문장 이상 쓰면 +5 XP. 엄마에게 자랑할 때 함께 보내져요.</p>
    <div class="btns"><button class="big" id="ksave" type="button">다 썼어!</button><button class="big alt" id="kskip" type="button">다음에 쓸래</button></div></div>`;bindBack();
   $("#kskip").onclick=home;$("#ksave").onclick=()=>{const v=$("#kw").value.trim();if(v.length<8){$("#kmsg").textContent="조금만 더 써 볼까? 한 문장이면 돼!";return}
