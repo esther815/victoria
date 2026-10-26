@@ -168,6 +168,7 @@ button:focus-visible,label:focus-within{outline:3px solid var(--accent);outline-
 .pinput{width:100%;font:inherit;font-size:1.1rem;padding:10px;border-radius:12px;border:2px solid #FFB3D1;text-align:center}
 .ptoast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#3A2A3F;color:#fff;padding:12px 18px;border-radius:16px;z-index:70;max-width:90%;text-align:center;animation:pop .3s ease-out}
 .kwrite{width:100%;font:inherit;font-size:1.05rem;padding:12px;border-radius:14px;border:2px solid #CFC7FF;margin:8px 0;box-sizing:border-box}.kshow{background:#F3F0FF;border-radius:14px;padding:12px;text-align:left;width:100%;box-sizing:border-box}.pnum{width:90px;font:inherit;font-size:1.05rem;padding:6px;border-radius:10px;border:2px solid #FFB3D1}.pform li{grid-template-columns:7.5rem 1fr}
+.btns2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .recap{margin:6px 0 0;padding-left:1.1em;font-size:.95rem;line-height:1.6}.recap li{margin:3px 0}
 .qtag{display:table;margin-left:auto;margin-right:auto;font-family:var(--display);font-size:.95rem;background:var(--soft);color:var(--accent);border-radius:99px;padding:2px 12px;margin-bottom:6px}
 .hintb{appearance:none;align-self:center;border:2px dashed var(--cheese);background:transparent;color:var(--ink);border-radius:99px;padding:6px 18px;font-family:var(--display);font-size:1.05rem;cursor:pointer}
@@ -613,17 +614,17 @@ function home(){
   <div class="tiles">${T.map(([k,n,w,c,ic])=>{const[s,txt]=status(k);return `<button class="tile" type="button" data-t="${k}"><span class="ic" style="background:var(${c});${k==="hz"||k==="hist"?"font-family:var(--han)":""}">${ic}</span><h3>${n}</h3><span class="when">${w}</span><span class="chip ${s}">${txt}</span>${s==="go"&&k!=="cook"?`<span class="heart" aria-label="새 퀘스트">♥</span>`:""}</button>`}).join("")}</div>
   ${("Notification" in window)&&Notification.permission!=="granted"&&("setAppBadge" in navigator)?`<button class="big alt" id="badgeOn" type="button">♥ 새 퀘스트 알림 켜기</button>`:""}
   ${S.test?`<button class="big" id="parent" type="button">🔧 보호자 설정 (진도·펫·백업)</button><button class="big alt" id="rst" type="button">기록 전체 초기화</button><p class="foot" id="rstAsk" hidden>정말 지울까요? <button class="back" id="rstYes" type="button">네, 지워요</button></p>`:""}
-  <div class="card rep"><h3>💌 엄마에게 오늘 자랑하기${S.reportLast===today()?" ✓":""}</h3><p class="muted">${S.reportLast===today()?"오늘 자랑 완료! 내일도 들려줘.":"오늘 한 퀘스트를 카톡으로 엄마에게 자랑하면 +5 XP!"}</p><button class="big ${S.reportLast===today()?"alt":""}" id="rep" type="button">자랑 보내기</button><p class="muted" id="repmsg" hidden style="white-space:pre-line"></p></div>
+  <div class="card rep"><h3>💌 엄마에게 오늘 자랑하기${S.reportLast===today()?" ✓":""}</h3><p class="muted">${S.reportLast===today()?"오늘 자랑 완료! 내일도 들려줘.":"오늘 한 퀘스트를 카톡으로 엄마에게 자랑하면 +5 XP!"}</p><div class="btns2"><button class="big ${S.reportLast===today()?"alt":""}" id="rep" type="button">💌 자랑 보내기</button><button class="big alt" id="req" type="button">📮 요청 보내기</button></div><p class="muted" style="margin:4px 0 0">앱에 바라는 게 있으면 까닭과 함께 엄마에게 요청해요.</p><p class="muted" id="repmsg" hidden style="white-space:pre-line"></p></div>
   ${petCardHome()}
   ${shopHTML(nextCook())}
-  <p class="foot" id="ver">Victoria Quest v1.6</p>`;
+  <p class="foot" id="ver">Victoria Quest v1.7</p>`;
   if(S.test){$("#parent").onclick=parentPanel;$("#rst").onclick=()=>{$("#rstAsk").hidden=false};$("#rstYes").onclick=()=>{try{localStorage.removeItem(KEY)}catch(e){}location.reload()}}
   app.querySelectorAll(".tile").forEach(b=>b.onclick=()=>({cook:cookStart,hist,hz,en,mem,ko})[b.dataset.t]());
   updBadge();
   $("#gem").onclick=gemRoom;$("#petgo").onclick=houseView;
   $("#rulesb").onclick=showRules;
   if(!S.rulesSeen&&!document.querySelector(".pop-ov"))showRules();
-  if($("#rep"))$("#rep").onclick=sendReport;
+  if($("#rep"))$("#rep").onclick=sendReport;if($("#req"))$("#req").onclick=reqView;
   if($("#badgeOn"))$("#badgeOn").onclick=async()=>{try{await Notification.requestPermission()}catch(e){}updBadge();home()};
   let taps=0,tm;$("#ver").onclick=()=>{taps++;clearTimeout(tm);tm=setTimeout(()=>taps=0,1500);if(taps>=5){S.test=!S.test;save();home()}};
   window.scrollTo(0,0);
@@ -1172,16 +1173,17 @@ const BABY_ITEMS=[
 ["diaper","기저귀 10장","🧷",8,"c10","기저귀 갈기"],["formula","분유 7번분","🍼",10,"c7","6개월 전까지 먹어요"],["puree","이유식 7번분","🥣",12,"c7","6개월부터 먹어요"],
 ["rattle","딸랑이","🪇",15,"p","놀아 주기"],["picbook","첫 그림책","📖",15,"p","그림책 읽어 주기"],
 ["mat","놀이매트","🟪",25,"p","뒤집기 단계에 필요 · 아기방에 깔려요"],["chair","아기 의자 & 그릇","🪑",35,"p","이유식 단계에 필요"],["gate","안전문","🚧",30,"p","기기 단계에 필요"],
-["dol","돌상 & 돌잡이 세트","🎂",60,"p","돌잔치에 필요"],["books","낱말 그림책 세트","📚",30,"p","18개월 단계에 필요"],["daycare","어린이집 가방","🎒",25,"p","두 돌 단계에 필요"]];
+["dol","돌상 & 돌잡이 세트","🎂",60,"p","돌잔치에 필요"],["books","낱말 그림책 세트","📚",30,"p","18개월 단계에 필요"],["daycare","어린이집 가방","🎒",25,"p","두 돌 단계에 필요"],["bath","아기 욕조 & 비누","🛁",25,"p","목욕시키기"],["carrier","아기띠","🎽",30,"p","교회 같이 가기 (주일)"]];
 const bItem=id=>BABY_ITEMS.find(x=>x[0]===id);
 function hInit(){petInit();S.house=S.house||{wall:"cream",floors:{},own:{walls:["cream"],floors:["wood"]},decor:[]};S.binv=S.binv||{};return S.house}
 function hasB(id){return id==="crib"?(S.house.decor.includes("crib")||S.binv.crib):id==="mat"?(S.house.decor.includes("mat")||S.binv.mat):!!S.binv[id]}
-function babyAge(){const b=S.baby;return b?Math.floor(b.careDays/3):0}
+function babyAge(){const b=S.baby;return b?Math.floor(b.careDays/((b.speed)||3)):0}
 function babyStage(){const m=babyAge();let k=0;BABY_STAGES.forEach((s,i)=>{if(m>=s[0])k=i});return k}
-function babyGate(){const b=S.baby;if(!b)return null;for(const s of BABY_STAGES){if(s[3]&&!hasB(s[3])){if(b.careDays+1>=s[0]*3)return s}}return null}
+function babyGate(){const b=S.baby;if(!b)return null;for(const s of BABY_STAGES){if(s[3]&&!hasB(s[3])){if(b.careDays+1>=s[0]*((b.speed)||3))return s}}return null}
 function babyLooks(){const m=babyAge();return m>=24?"🧒":"👶"}
 function learnedWords(){const w=[];ENGDAYS.slice(0,Math.max(S.en.n,0)).forEach(d=>{if(d.ph)d.ph.words.forEach(x=>w.push([x[0],x[1],"영어"]));if(d.sc)d.sc.words.forEach(x=>w.push([x[0],x[1],"영어"]))});
   hzLearnedChars(Math.min(S.hz.n,HZDAYS.length)).forEach(c=>{const h=HZ.find(x=>x[0]===c);w.push([`${h[1]} ${h[2]}`,c,"한자"])});
+  KO.slice(0,Math.min(S.ko.n,KO.length)).forEach(L=>w.push([L.t,"📘","국어"]));
   if(!w.length)[["엄마","💗","우리말"],["Victoria","👑","우리말"],["mom","💗","영어"],["cat","🐱","영어"]].forEach(x=>w.push(x));return w}
 /* ---------- 빅토리아 하우스 3D (three.js) ---------- */
 let T3P=null,H3=null,AZ=36,DIST=24;
@@ -1392,45 +1394,78 @@ function houseView(){hInit();S.pets.forEach(petDecay);save();const h=careHearts(
    ${S.pets.map(p=>`<li><span>${petOf(p.k)[2]}</span><div><b>${esc(p.name)}</b><small>${REPTILE.includes(p.k)?"온실":"펫룸"} · ${loveName(p.love)}${p.fed!==today()?" · 🍚 배고파요":""}</small></div><button class="buy" type="button" data-go="pets">돌보기</button></li>`).join("")}</ul></div>`;
   bindBack();bindHTabs();bind3D();app.querySelectorAll("[data-go]").forEach(x=>x.onclick=()=>({baby:babyView,pets:petHome})[x.dataset.go]());window.scrollTo(0,0)}
 /* ---------- 아기 ---------- */
-function babyView(){hInit();const h=careHearts(),b=S.baby;
-  if(!b){const need=["crib","outfit","diaper","formula"],ok=need.every(id=>id==="diaper"||id==="formula"?(S.binv[id]||0)>0:hasB(id));
-    app.innerHTML=hdr("👶 아기 맞이 준비")+hTabs("baby")+`<div class="card"><div class="bigem" style="text-align:center">🍼</div><h3>아기를 맞을 준비를 해요</h3><p class="muted">네 가지를 모두 준비하면 빅토리아 하우스에 아기가 와요.</p>
-     <ul class="mkt">${need.map(id=>{const it=bItem(id),have=id==="diaper"||id==="formula"?(S.binv[id]||0)>0:hasB(id);return `<li><span>${it[2]}</span><div><b>${it[1]}</b><small>${it[5]}</small></div>${have?`<span class="pill">준비 완료 ✓</span>`:buyBtn("b:"+id,it[3])}</li>`}).join("")}</ul>
-     ${ok?`<button class="big" id="arrive" type="button">👶 아기 맞이하기</button>`:`<p class="muted">💎 ${S.gems||0}개 · 준비물을 더 모아 봐요!</p>`}</div>`;
-    bindBack();bindHTabs();bindBuy(buyBaby);if($("#arrive"))$("#arrive").onclick=arriveBaby;window.scrollTo(0,0);return}
-  const td=today();if(b.day!==td){b.day=td;b.did=[]}const m=babyAge(),st=babyStage(),gate=babyGate(),food=m>=6?"puree":"formula",fItem=bItem(food);
-  const can=a=>!b.did.includes(a),act=(a,ic,txt,need,ok)=>`<button type="button" class="pact ${b.did.includes(a)?"done":""}" data-a="${a}" ${!ok||!can(a)?"disabled":""}><b>${ic}</b>${b.did.includes(a)?"오늘 했어요":txt}<small>${need}</small></button>`;
-  const credit=b.credit===td;
-  app.innerHTML=hdr("👶 "+esc(b.name))+hTabs("baby")+`<div class="card pet"><div class="pethead"><span class="petem">${babyLooks()}</span><div><h2>${esc(b.name)}</h2><p class="muted">${b.sex} 아기 · ${m}개월 · ${BABY_STAGES[st][1]}</p></div></div>
-   <div class="bar"><i style="width:${Math.min(100,(b.careDays%3)/3*100)}%;background:#FFC93C"></i></div><p class="muted">돌봄 ${b.careDays}일 · 3일 돌보면 한 달 자라요 ${credit?"· 오늘 돌봄 완료 ✓":"· 오늘: 먹이기 + 기저귀 + 하트 돌봄 1번"}</p>
-   ${gate?`<div class="gatebox">🚪 <b>${gate[1]}</b> 단계로 자라려면 <b>${bItem(gate[3])[1]}</b>이 필요해요. ${buyBtn("b:"+gate[3],bItem(gate[3])[3])}</div>`:""}
-   <div class="pacts">${act("feed",fItem[2],m>=6?"이유식 먹이기":"분유 먹이기",`${fItem[1].split(" ")[0]} ${S.binv[food]||0}번 남음`,(S.binv[food]||0)>0&&(m<6||hasB("chair")))}${act("diaper","🧷","기저귀 갈기",`기저귀 ${S.binv.diaper||0}장`,(S.binv.diaper||0)>0)}
-   ${act("sleep","😴","재우기","하트 1개",h>0)}${act("play","🪇","놀아 주기",hasB("rattle")?"하트 1개":"딸랑이 필요",hasB("rattle")&&h>0)}
-   ${act("read","📖","그림책 읽어 주기",hasB("picbook")?"하트 1개":"그림책 필요",hasB("picbook")&&h>0)}${act("teach","🗣️","말 가르치기","하트 1개",h>0)}
-   ${S.pets.some(p=>p.skill>=TRICK_AT[0])?act("show","🐾","펫 재주 보여 주기","하트 없이",true):""}</div>
-   <h3>🗣️ 가르친 말 ${b.taught.length}개</h3><p class="muted">${b.taught.length?b.taught.slice(-8).map(t=>`${t[1]} ${esc(t[0])}`).join(" · "):"오늘 배운 영어 단어나 한자를 아기에게 가르쳐 줘요."}${m<12&&b.taught.length?" · 돌이 되면 따라 말해요!":""}</p></div>
-  <div class="card"><h3>🌱 성장 기록</h3><ul class="tricks">${BABY_STAGES.map((s,i)=>`<li class="${i<=st?"ok":""}">${i<=st?"⭐":"🔒"} ${s[0]}개월 · ${s[1]}${i<=st?`<br><small>${s[2]}</small>`:""}</li>`).join("")}</ul></div>`;
-  bindBack();bindHTabs();bindBuy(buyBaby);app.querySelectorAll(".pact").forEach(x=>x.onclick=()=>babyAct(x.dataset.a));window.scrollTo(0,0)}
 function buyBaby(id,price){const k=id.split(":")[1],it=bItem(k);if(!spend(price))return;
   if(it[4][0]==="c")S.binv[k]=(S.binv[k]||0)+Number(it[4].slice(1));else{S.binv[k]=1;if(k==="crib"&&!S.house.decor.includes("crib"))S.house.decor.push("crib");if(k==="mat"&&!S.house.decor.includes("mat"))S.house.decor.push("mat")}
   save();toast(`${it[2]} ${it[1]} 샀어요!`);if(document.querySelector(".mktpage"))market();else babyView()}
 function arriveBaby(){const o=document.createElement("div");o.className="pop-ov";
   o.innerHTML=`<div class="pop-card"><div class="bigem">👶</div><h2>아기가 왔어요!</h2><div class="sexp"><button type="button" data-s="여자" class="on">👧 여자 아기</button><button type="button" data-s="남자">👦 남자 아기</button></div><input id="bname" class="pinput" maxlength="10" placeholder="아기 이름 (10글자까지)"><button class="big" type="button" id="bok">이름 정하기</button></div>`;
   document.body.appendChild(o);let sex="여자";o.querySelectorAll("[data-s]").forEach(x=>x.onclick=()=>{sex=x.dataset.s;o.querySelectorAll("[data-s]").forEach(y=>y.classList.toggle("on",y===x))});try{confetti()}catch(e){}
-  o.querySelector("#bok").onclick=()=>{const n=o.querySelector("#bname").value.trim()||"아기";S.baby={name:n,sex,born:today(),careDays:0,stage:0,day:"",did:[],credit:"",taught:[],read:0};save();o.remove();babyView();
+  o.querySelector("#bok").onclick=()=>{const n=o.querySelector("#bname").value.trim()||"아기";S.baby={name:n,sex,born:today(),careDays:0,speed:3,stage:0,day:"",did:[],credit:"",taught:[],read:0};save();o.remove();babyView();
     setTimeout(()=>popup(`<div class="bigem">🌱</div><h2>${esc(n)}의 첫날</h2><p>${BABY_STAGES[0][2]}</p>`),300)}}
-function babyAct(a){const b=S.baby,td=today(),m=babyAge();if(b.did.includes(a))return;let msg="";
+const BABY_FOOD=[[6,"쌀미음",["🍚 쌀","💧 물"],["🍯 꿀","🧂 소금"],"쌀을 곱게 갈아 물을 넣고 묽게 끓여요. 처음 이유식은 보통 쌀미음으로 시작해요."],
+[8,"소고기 채소죽",["🍚 쌀","🥩 소고기","🥕 당근"],["🍯 꿀","🌶️ 고춧가루"],"고기와 채소를 잘게 다져 죽으로 끓여요."],
+[10,"진밥과 달걀찜",["🍚 진밥","🥚 달걀","💧 물"],["🍯 꿀","🍬 사탕"],"밥을 질게 짓고, 달걀은 물을 넣고 부드럽게 쪄요."],
+[12,"아기 주먹밥",["🍚 밥","🥦 브로콜리","🧀 아기 치즈"],["🌶️ 고춧가루","🍬 사탕"],"작게 뭉쳐서 아기가 손으로 집어 먹게 해요."]];
+const DAYW="일월화수목금토";
+function babySpeed(){return (S.baby&&S.baby.speed)||3}
+function babyNeedsToday(b){const td=today();if(b.day!==td){b.day=td;b.did=[];b.poop=true;b.poopDone=false}}
+function babyView(){hInit();const h=careHearts(),b=S.baby;
+  if(!b){const need=["crib","outfit","diaper","formula"],ok=need.every(id=>id==="diaper"||id==="formula"?(S.binv[id]||0)>0:hasB(id));
+    app.innerHTML=hdr("👶 아기 맞이 준비")+hTabs("baby")+`<div class="card"><div class="bigem" style="text-align:center">🍼</div><h3>아기를 맞을 준비를 해요</h3><p class="muted">네 가지를 모두 준비하면 빅토리아 하우스에 아기가 와요. 아기가 오면 이름과 성별을 내가 정해요!</p>
+     <ul class="mkt">${need.map(id=>{const it=bItem(id),have=id==="diaper"||id==="formula"?(S.binv[id]||0)>0:hasB(id);return `<li><span>${it[2]}</span><div><b>${it[1]}</b><small>${it[5]}</small></div>${have?`<span class="pill">준비 완료 ✓</span>`:buyBtn("b:"+id,it[3])}</li>`}).join("")}</ul>
+     ${ok?`<button class="big" id="arrive" type="button">👶 아기 맞이하기</button>`:`<p class="muted">💎 ${S.gems||0}개 · 준비물을 더 모아 봐요!</p>`}</div>`;
+    bindBack();bindHTabs();bindBuy(buyBaby);if($("#arrive"))$("#arrive").onclick=arriveBaby;window.scrollTo(0,0);return}
+  babyNeedsToday(b);save();const m=babyAge(),st=babyStage(),gate=babyGate(),food=m>=6?"puree":"formula",fItem=bItem(food),sun=new Date().getDay()===0,sp=babySpeed();
+  const did=a=>b.did.includes(a),act=(a,ic,txt,need,ok,cls="")=>`<button type="button" class="pact ${did(a)?"done":""} ${cls}" data-a="${a}" ${!ok||did(a)?"disabled":""}><b>${ic}</b>${did(a)?"오늘 했어요":txt}<small>${need}</small></button>`;
+  const moodE=b.poop&&!b.poopDone?"😣":["🙂","😊","😊","😄","😄","🥰"][Math.min(5,b.did.length)];
+  app.innerHTML=hdr("👶 "+esc(b.name))+hTabs("baby")+`<div class="card pet"><div class="pethead"><span class="petem">${babyLooks()}</span><div><h2>${esc(b.name)} <small style="font-size:.9rem">${b.sex==="남자"?"👦":"👧"}</small></h2><p class="muted">${b.sex} 아기 · ${m}개월 · ${BABY_STAGES[st][1]}</p></div><span class="petem" style="margin-left:auto;font-size:2.2rem">${moodE}</span></div>
+   <div class="bar"><i style="width:${Math.min(100,(b.careDays%sp)/sp*100)}%;background:#FFC93C"></i></div><p class="muted">${b.credit===today()?"오늘 돌봄 완료 ✓ ":""}돌봄 ${b.careDays}일 · ${sp}일 돌보면 한 달 자라요 · 하루 돌봄 = 먹이기 + ${b.poop&&!b.poopDone?"응가 치우기 + ":""}하트 돌봄 1번</p>
+   ${b.poop&&!b.poopDone?`<div class="gatebox" style="background:#FFE9D6">💩 <b>${esc(b.name)}가 응가했어요!</b> 기저귀를 갈아 줘요.</div>`:""}
+   ${gate?`<div class="gatebox">🚪 <b>${gate[1]}</b> 단계로 자라려면 <b>${bItem(gate[3])[1]}</b>이 필요해요. ${buyBtn("b:"+gate[3],bItem(gate[3])[3])}</div>`:""}
+   <h3>🍼 꼭 해야 할 일 <small class="muted">(하트 필요 없음)</small></h3><div class="pacts">${act("feed",fItem[2],m>=6?"이유식 먹이기":"분유 먹이기",`${fItem[1].split(" ")[0]} ${S.binv[food]||0}번 남음`,(S.binv[food]||0)>0&&(m<6||hasB("chair")))}${b.poop?act("poop","💩","응가 치우기",`기저귀 ${S.binv.diaper||0}장`,(S.binv.diaper||0)>0&&!b.poopDone):""}</div>
+   <h3>💖 함께하기 <small class="muted">(하트 ${h}개)</small></h3><div class="pacts">
+   ${act("cookb","🍳","음식 만들어 주기",m<6?"6개월부터":(hasB("chair")?"하트 1개 · 먹이기도 돼요":"아기 의자 필요"),m>=6&&hasB("chair")&&h>0)}
+   ${act("teach","🗣️","가르쳐 주기","하트 1개",h>0)}${act("play","🪇","놀아 주기",hasB("rattle")?"하트 1개":"딸랑이 필요",hasB("rattle")&&h>0)}
+   ${act("bath","🛁","목욕시키기",hasB("bath")?"하트 1개":"아기 욕조 필요",hasB("bath")&&h>0)}${act("read","📖","그림책 읽어 주기",hasB("picbook")?"하트 1개":"그림책 필요",hasB("picbook")&&h>0)}
+   ${act("sleep","😴","재우기","하트 1개",h>0)}${act("church","⛪","교회 같이 가기",sun?(hasB("carrier")?"주일 · 하트 없이":"아기띠 필요"):`주일(일요일)에 열려요`,sun&&hasB("carrier"))}
+   ${S.pets.some(p=>p.skill>=TRICK_AT[0])?act("show","🐾","펫 재주 보여 주기","하트 없이",true):""}</div>
+   <h3>🗣️ 가르친 말 ${b.taught.length}개</h3><p class="muted">${b.taught.length?b.taught.slice(-8).map(t=>`${t[1]} ${esc(t[0])}`).join(" · "):"오늘 배운 영어 단어·한자·국어 낱말을 아기에게 가르쳐 줘요."}${m<12&&b.taught.length?" · 돌이 되면 따라 말해요!":""}</p></div>
+  <div class="card"><h3>🌱 성장 기록</h3><ul class="tricks">${BABY_STAGES.map((s,i)=>`<li class="${i<=st?"ok":""}">${i<=st?"⭐":"🔒"} ${s[0]}개월 · ${s[1]}${i<=st?`<br><small>${s[2]}</small>`:""}</li>`).join("")}</ul></div>
+  <div class="card"><h3>⚙️ 아기 설정</h3><p class="muted">이름</p><div class="row"><input id="bn2" class="pinput" maxlength="10" value="${esc(b.name)}" style="flex:1"><button class="buy" id="bnsave" type="button">바꾸기</button></div>
+   <p class="muted">성별</p><div class="sexp"><button type="button" data-s="여자" class="${b.sex==="여자"?"on":""}">👧 여자 아기</button><button type="button" data-s="남자" class="${b.sex==="남자"?"on":""}">👦 남자 아기</button></div>
+   <p class="muted">자라는 속도 (돌봄 며칠에 한 달?)</p><div class="tapchips">${[[1,"아주 빠르게"],[2,"빠르게"],[3,"보통"],[5,"천천히"],[7,"아주 천천히"]].map(([d,t])=>`<button type="button" class="tc ${sp===d?"on":""}" data-sp="${d}">${t} · ${d}일</button>`).join("")}</div><p class="muted">지금 속도면 돌까지 돌봄 약 ${Math.max(0,12*sp-b.careDays)}일 남았어요.</p></div>`;
+  bindBack();bindHTabs();bindBuy(buyBaby);app.querySelectorAll(".pact").forEach(x=>x.onclick=()=>babyAct(x.dataset.a));
+  $("#bnsave").onclick=()=>{const v=$("#bn2").value.trim();if(!v)return;b.name=v;save();toast(`이름을 ‘${esc(v)}’(으)로 바꿨어요`);babyView()};
+  app.querySelectorAll("[data-s]").forEach(x=>x.onclick=()=>{b.sex=x.dataset.s;save();babyView()});
+  app.querySelectorAll("[data-sp]").forEach(x=>x.onclick=()=>{const nw=+x.dataset.sp,old=babySpeed();b.careDays=Math.round(b.careDays/old*nw);b.speed=nw;save();toast(`자라는 속도: 돌봄 ${nw}일에 한 달`);babyView()});
+  window.scrollTo(0,0)}
+function babyAct(a){const b=S.baby,m=babyAge();babyNeedsToday(b);if(b.did.includes(a))return;let msg="";
   if(a==="feed"){const f=m>=6?"puree":"formula";if(!(S.binv[f]>0))return;S.binv[f]--;msg=`${babyLooks()} 냠냠, 배불러요!`}
-  else if(a==="diaper"){if(!(S.binv.diaper>0))return;S.binv.diaper--;msg="🧷 보송보송해졌어요!"}
-  else if(a==="show"){msg="🐾 펫이 재주를 보여 줬어요. 아기가 깔깔 웃어요!"}
+  else if(a==="poop"){if(!(S.binv.diaper>0))return;S.binv.diaper--;b.poopDone=true;msg="🧷 깨끗이 닦고 새 기저귀! 보송보송해요."}
+  else if(a==="show")msg="🐾 펫이 재주를 보여 줬어요. 아기가 깔깔 웃어요!";
+  else if(a==="church")msg="⛪ 주일 예배에 함께 다녀왔어요. 아기가 찬양 소리에 방긋 웃어요.";
   else if(a==="teach"){if(careHearts()<1)return;return teachPick()}
-  else{if(careHearts()<1)return;S.care.used++;if(a==="read")b.read=(b.read||0)+1;msg=a==="sleep"?"😴 새근새근 잠들었어요.":a==="play"?"🪇 딸랑딸랑! 아기가 웃어요.":"📖 그림책을 읽어 줬어요. 아기가 그림을 뚫어지게 봐요."}
+  else if(a==="cookb"){if(careHearts()<1)return;return babyCook()}
+  else{if(careHearts()<1)return;S.care.used++;if(a==="read")b.read=(b.read||0)+1;
+    msg={sleep:"😴 토닥토닥, 새근새근 잠들었어요.",play:"🪇 딸랑딸랑! 아기가 까르르 웃어요.",read:"📖 그림책을 읽어 줬어요. 아기가 그림을 뚫어지게 봐요.",bath:"🛁 첨벙첨벙! 뽀송뽀송 좋은 냄새가 나요."}[a]}
   b.did.push(a);babyCredit();save();babyView();toast(msg)}
-function babyCredit(){const b=S.baby,td=today();if(b.credit===td)return;const care=["sleep","play","read","teach"].some(x=>b.did.includes(x));
-  if(!(b.did.includes("feed")&&b.did.includes("diaper")&&care))return;if(babyGate())return toast("🚪 다음 성장에 필요한 용품을 먼저 준비해요!");
+function babyCredit(){const b=S.baby,td=today();if(b.credit===td)return;const care=["sleep","play","read","teach","bath","cookb","church"].some(x=>b.did.includes(x));
+  if(!((b.did.includes("feed")||b.did.includes("cookb"))&&(!b.poop||b.poopDone)&&care))return;if(babyGate())return toast("🚪 다음 성장에 필요한 용품을 먼저 준비해요!");
   const st0=babyStage();b.credit=td;b.careDays++;const st=babyStage();save();
   if(st>st0){const s=BABY_STAGES[st];setTimeout(()=>{popup(`<div class="bigem">${s[0]===12?"🎂":"🌱"}</div><h2>${esc(b.name)} ${s[0]}개월 · ${s[1]}!</h2><p style="text-align:left">${s[2]}</p>`);if(s[0]===12)setTimeout(doljabi,600)},500)}
   else setTimeout(()=>toast(`🌱 오늘 돌봄 완료! (${b.careDays}일)`),2700)}
+function babyCook(){const m=babyAge(),opts=BABY_FOOD.filter(f=>m>=f[0]),R=opts[opts.length-1],all=shuffle(R[2].concat(R[3])),picked=new Set();
+  const o=document.createElement("div");o.className="pop-ov";
+  const draw=()=>{o.innerHTML=`<div class="pop-card"><div class="bigem">🍳</div><h2>${R[1]} 만들기</h2><p class="muted">${m}개월 아기에게 맞는 재료를 모두 골라 봐! (${R[2].length}가지)</p>
+    <div class="tapchips">${all.map((x,i)=>`<button type="button" class="tc ${picked.has(i)?"on":""}" data-i="${i}">${x}</button>`).join("")}</div><p class="muted" id="cmsg"></p><button class="big" id="cgo" type="button">요리 완성!</button><button class="big alt" id="cx" type="button">다음에</button></div>`;
+    o.querySelectorAll("[data-i]").forEach(x=>x.onclick=()=>{const i=+x.dataset.i;picked.has(i)?picked.delete(i):picked.add(i);draw()});
+    o.querySelector("#cx").onclick=()=>o.remove();
+    o.querySelector("#cgo").onclick=()=>{const sel=[...picked].map(i=>all[i]),bad=sel.filter(x=>R[3].includes(x)),miss=R[2].filter(x=>!sel.includes(x));
+      if(bad.length){o.querySelector("#cmsg").innerHTML=bad.some(x=>x.includes("꿀"))?"🍯 잠깐! 돌 전 아기에게 꿀은 주면 안 돼요. (아기에게 위험한 균이 있을 수 있어요)":`${bad.join(", ")}은(는) 아기에게 맞지 않아요. 다시 골라 봐!`;return}
+      if(miss.length){o.querySelector("#cmsg").textContent=`재료가 하나 더 필요해요! (${R[2].length}가지)`;return}
+      const b=S.baby;S.care.used++;b.did.push("cookb");babyCredit();save();o.remove();babyView();try{confetti()}catch(e){}popup(`<div class="bigem">🥣</div><h2>${R[1]} 완성!</h2><p>${R[4]}</p><p>${esc(b.name)}가 맛있게 먹었어요. 오늘 먹이기도 함께 끝!</p>`)}};
+  draw();document.body.appendChild(o)}
+
 function teachPick(){const w=learnedWords(),pick=shuffle(w).slice(0,3),o=document.createElement("div");o.className="pop-ov";
   o.innerHTML=`<div class="pop-card"><div class="bigem">🗣️</div><h2>어떤 말을 가르쳐 줄까?</h2><p class="muted">내가 배운 말을 아기에게 또박또박 알려 줘요.</p>${pick.map((x,i)=>`<button class="big alt" type="button" data-w="${i}">${x[1]} ${esc(x[0])} <small>(${x[2]})</small></button>`).join("")}</div>`;
   document.body.appendChild(o);o.querySelectorAll("[data-w]").forEach(x=>x.onclick=()=>{const t=pick[+x.dataset.w],b=S.baby;S.care.used++;b.taught.push(t);if(b.taught.length>60)b.taught.shift();b.did.push("teach");try{if(t[2]==="영어")say(t[0])}catch(e){}babyCredit();save();o.remove();babyView();toast(babyAge()>=12?`${babyLooks()} “${esc(t[0])}!” 아기가 따라 말해요!`:`${babyLooks()} 아기가 “${esc(t[0])}” 소리에 귀 기울여요.`)})}
@@ -1638,6 +1673,26 @@ function parentPanel(){hInit();koInit();const cl=LEVELS.filter(l=>S.cook[l.id]&&
   $("#ppetb").onclick=()=>{const k=$("#ppet").value,P=petOf(k),n=$("#pname2").value.trim()||P[1];S.inv[k+"_0"]=1;S.inv[k+"_1"]=(S.inv[k+"_1"]||0)+3;if(!S.pets.some(p=>p.k===k))S.pets.push({k,name:n,love:10,skill:0,fed:"",seen:today(),day:"",did:[]});save();toast(`${P[2]} ${esc(n)}가 돌아왔어요!`)};
   $("#pexp").onclick=async()=>{const code="VQ1:"+btoa(unescape(encodeURIComponent(JSON.stringify(S))));try{await navigator.clipboard.writeText(code);$("#pmsg2").textContent="복사했어요! 카톡 ‘나에게 보내기’에 붙여 넣어 보관하세요."}catch(e){$("#pimp").value=code;$("#pmsg2").textContent="아래 코드를 길게 눌러 복사해 보관하세요."}};
   $("#pimpb").onclick=()=>{try{const t=$("#pimp").value.trim().replace(/^VQ1:/,"");const o=JSON.parse(decodeURIComponent(escape(atob(t))));if(!o||typeof o!=="object"||!("xp" in o))throw 0;S=o;save();$("#pmsg2").textContent="되살렸어요! 잠시 후 홈으로 가요.";setTimeout(()=>location.reload(),900)}catch(e){$("#pmsg2").textContent="코드가 올바르지 않아요. 처음부터 끝까지 다 붙여 넣었는지 확인해 주세요."}}}
+
+/* 요청 보내기: 원하는 것을 이유와 함께 엄마에게 */
+const REQ_KIND=[["🎁","갖고 싶은 아이템"],["🎮","새 게임·퀘스트"],["😵","어려운 점·고칠 점"],["💡","기타 아이디어"]];
+function reqView(){S.reqs=S.reqs||[];let kind=0;
+  const draw=()=>{app.innerHTML=hdr("📮 요청 보내기")+`<div class="card"><div class="fb"><div class="ava" style="background:#7C6CF0">글냥</div><div class="bubble"><b>앱에 바라는 게 있어?</b><p>엄마는 이유가 분명한 요청을 들어주기 쉬워. 세 칸을 채워 보자!</p></div></div>
+   <p class="muted">어떤 요청이야?</p><div class="tapchips">${REQ_KIND.map((k,i)=>`<button type="button" class="tc ${i===kind?"on":""}" data-k="${i}">${k[0]} ${k[1]}</button>`).join("")}</div>
+   <p class="muted">① 무엇을 바라?</p><textarea id="r1" class="kwrite" rows="2" maxlength="150" placeholder="예) 아기에게 입힐 한복이 있었으면 좋겠어"></textarea>
+   <p class="muted">② 왜 필요해? (까닭)</p><textarea id="r2" class="kwrite" rows="2" maxlength="200" placeholder="예) 아기 돌잔치에 입히고 싶어서"></textarea>
+   <p class="muted">③ 생기면 무엇이 좋아질까?</p><textarea id="r3" class="kwrite" rows="2" maxlength="200" placeholder="예) 우리 전통 옷도 배우고 돌잔치가 더 멋져져"></textarea>
+   <p class="muted" id="rmsg"></p><button class="big" id="rsend" type="button">엄마에게 보내기</button></div>
+   ${S.reqs.length?`<div class="card"><h3>내가 보낸 요청</h3><ul class="tricks">${S.reqs.slice(-6).reverse().map(r=>`<li class="ok">${r.k} ${esc(r.a)}<br><small>${r.d} · 까닭: ${esc(r.b)}</small></li>`).join("")}</ul></div>`:""}`;
+    bindBack();app.querySelectorAll("[data-k]").forEach(x=>x.onclick=()=>{const v=[1,2,3].map(i=>$("#r"+i).value);kind=+x.dataset.k;draw();[1,2,3].forEach((i,j)=>$("#r"+i).value=v[j])});
+    $("#rsend").onclick=async()=>{const a=$("#r1").value.trim(),b=$("#r2").value.trim(),c=$("#r3").value.trim();
+      if(a.length<2){$("#rmsg").textContent="① 무엇을 바라는지 먼저 써 줘!";return}if(b.length<4){$("#rmsg").textContent="② 까닭을 써야 엄마가 이해할 수 있어. 한 문장만!";return}
+      const K=REQ_KIND[kind],t=`[Victoria 요청 📮] ${K[0]} ${K[1]}\n① 바라는 것: ${a}\n② 까닭: ${b}${c?`\n③ 좋아지는 점: ${c}`:""}`;let ok=false;
+      try{if(navigator.share){await navigator.share({title:"Victoria 요청",text:t});ok=true}}catch(e){if(e&&e.name==="AbortError")return}
+      if(!ok){try{await navigator.clipboard.writeText(t);ok=true}catch(e){}}
+      S.reqs.push({d:today(),k:K[0],a,b,c});if(S.reqs.length>40)S.reqs.shift();const first=S.reqLast!==today();S.reqLast=today();if(first&&c)addXP(5);save();
+      app.innerHTML=hdr("📮 요청 보내기")+`<div class="card result"><div class="stars">📮✨</div><h2>${ok?"요청을 보냈어!":"요청을 저장했어!"}</h2><p class="kshow" style="white-space:pre-line">${esc(t)}</p><p class="muted">${ok?"카톡에서 엄마에게 보내거나, 복사된 글을 붙여 넣어 줘.":"아래 글을 길게 눌러 복사해서 엄마에게 보내 줘."}${first&&c?" 이유까지 잘 썼으니 +5 XP!":""}</p><button class="big" id="gohome" type="button">홈으로</button></div>`;bindBack();$("#gohome").onclick=home}};
+  draw()}
 
 function rulesHTML(){return `<h2>💎 보석 모으는 법</h2>
 <ol class="rules">
