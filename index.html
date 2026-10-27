@@ -151,7 +151,7 @@ button:focus-visible,label:focus-within{outline:3px solid var(--accent);outline-
 .flat{width:56px;height:56px;border-radius:10px;opacity:.9}.flat.round{border-radius:50%}
 .bb{font-size:30px;line-height:1;transform-origin:50% 100%;white-space:nowrap;text-align:center;display:flex;flex-direction:column;align-items:center;pointer-events:none}
 .bb.vic{font-size:34px}.bb.petb small{font-size:12px}.say{font-size:11px;background:#fff;border-radius:10px;padding:2px 6px;margin-bottom:2px;font-family:var(--display);color:#E0457F;box-shadow:0 1px 3px rgba(0,0,0,.15)}
-.hint3d{position:absolute;bottom:6px;left:0;right:0;text-align:center;font-size:.75rem;color:var(--muted);margin:0}
+.hint3d{position:absolute;bottom:6px;left:0;right:0;text-align:center;font-size:.75rem;color:var(--muted);margin:0;pointer-events:none}.s3talk{pointer-events:none}.tlabel{position:absolute;left:0;top:0;z-index:3;border:0;background:rgba(255,255,255,.92);border-radius:12px;padding:4px 8px;font:inherit;font-size:.78rem;font-family:var(--display);color:#5B4BD6;box-shadow:0 2px 6px rgba(0,0,0,.15);white-space:nowrap}
 .gatebox{background:#FFF4D6;border-radius:14px;padding:10px;margin:8px 0;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .sw{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.swb{border:2px solid transparent;border-radius:14px;background:var(--soft);padding:8px 4px;font:inherit;font-size:.8rem;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--ink)}.swb i{width:36px;height:36px;border-radius:10px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1)}.swb small{color:var(--muted);font-size:.7rem}.swb.on{border-color:#FF7AB0}.swb:disabled{opacity:.5}
 .sexp{display:flex;gap:8px;width:100%}.sexp button{flex:1;border:2px solid #FFB3D1;border-radius:14px;background:#fff;padding:10px;font:inherit}.sexp .on{background:#FFE3EF;border-color:#FF4F8B}
@@ -176,7 +176,7 @@ button:focus-visible,label:focus-within{outline:3px solid var(--accent);outline-
 .mpic{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:6px 0}.prompt svg,.opt svg{max-width:100%;height:auto}.prompt .fbar{display:block;margin:6px auto}
 .skipb{display:block;width:100%;margin-top:10px;border:2px dashed #FFC93C;background:#FFF9E6;border-radius:14px;padding:10px;font:inherit;color:#B07A00}.gqhead{background:#FFF4D6;border-radius:14px;padding:10px;text-align:center;margin-bottom:8px}.gembox{font-size:4rem;text-align:center;cursor:pointer;animation:pop .5s}.gembox.open{font-size:2.6rem}
 .opt.sel{outline:4px solid #7C6CF0;background:#F3F0FF;transform:scale(1.03)}.cfmbar{display:grid;grid-template-columns:2fr 1fr;gap:8px;margin-top:10px}.cfmbar button{white-space:nowrap;padding-left:6px;padding-right:6px}
-.vbub{position:absolute;left:0;top:0;z-index:4;background:#fff;color:#E0457F;font-family:var(--display);font-size:.9rem;padding:6px 12px;border-radius:16px;box-shadow:0 3px 10px rgba(0,0,0,.15);white-space:nowrap;pointer-events:none;transition:opacity .3s}.vbub::after{content:"";position:absolute;left:50%;bottom:-7px;margin-left:-7px;border:7px solid transparent;border-top-color:#fff;border-bottom:0}
+.vbub{position:absolute;left:0;top:0;z-index:4;background:#fff;color:#E0457F;font-family:var(--display);font-size:.9rem;padding:6px 12px;border-radius:16px;box-shadow:0 3px 10px rgba(0,0,0,.15);white-space:normal;max-width:200px;width:max-content;text-align:center;pointer-events:none;transition:opacity .3s}.vbub::after{content:"";position:absolute;left:50%;bottom:-7px;margin-left:-7px;border:7px solid transparent;border-top-color:#fff;border-bottom:0}
 .vmenu{position:absolute;left:8px;right:8px;bottom:34px;background:rgba(255,255,255,.96);border-radius:18px;padding:10px;box-shadow:0 6px 18px rgba(0,0,0,.18);z-index:5;font-size:.9rem}.vgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px}.vgrid button{border:0;border-radius:12px;background:#FFE3EF;padding:8px 4px;font:inherit;font-size:.82rem}.vgrid button:disabled{opacity:.5}
 .mlist{padding-left:1.2em;margin:4px 0}.mlist li{display:flex;align-items:center;gap:8px;margin:6px 0}.mlist li span{flex:1}.mlist em{color:var(--muted);font-style:normal;font-size:.85rem}
 .wgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.wcell{border:2px solid transparent;border-radius:14px;background:var(--soft);padding:6px 4px;font:inherit;font-size:.75rem;display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--ink)}.wcell.on{border-color:#FF7AB0;background:#FFF0F6}.wsw{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:1.4rem;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}.wcell small{color:var(--muted)}
@@ -640,7 +640,7 @@ function home(){
   ${wrongCard()}
   ${petCardHome()}
   ${shopHTML(nextCook())}
-  <p class="foot" id="ver">Victoria Quest v2.9</p>`;
+  <p class="foot" id="ver">Victoria Quest v3.0</p>`;
   if(S.test){$("#parent").onclick=parentPanel;$("#rst").onclick=()=>{$("#rstAsk").hidden=false};$("#rstYes").onclick=()=>{try{localStorage.removeItem(KEY)}catch(e){}location.reload()}}
   app.querySelectorAll(".tile").forEach(b=>b.onclick=()=>({cook:cookStart,hist,hz,en,mem,ko,ma,sci})[b.dataset.t]());
   updBadge();
@@ -1452,9 +1452,9 @@ function bindWalk(B,cam,cv,st){const ray=new THREE.Raycaster(),pl=new THREE.Plan
   function hideMenu(){menu.hidden=true}
   function showMenu(){const hasStroller=S.baby&&S.binv&&S.binv.stroller,g=gardenInit(),wat=g.last===today();
     menu.innerHTML=`<b>👑 Victoria, 어디로 갈까?</b><div class="vgrid">${[["L","🛋️ 거실"],["B","👶 아기방"],["P","🐾 펫룸"],["G","🌿 온실"],["oL","🌷 꽃밭"],["oS","🎠 그네"],["oF","⛲ 분수"],["oB2","🪑 벤치"]].map(([k,t])=>`<button type="button" data-go="${k}">${t}</button>`).join("")}</div>
-     <div class="vgrid"><button type="button" data-a="water" ${wat?"disabled":""}>🚿 꽃에 물 주기${wat?" ✓":""}</button><button type="button" data-a="walk">🚼 유모차 산책${hasStroller?"":" 🔒"}</button><button type="button" data-a="music">🎵 뮤직박스</button><button type="button" data-a="x">닫기</button></div>`;menu.hidden=false;
+     <div class="vgrid"><button type="button" data-a="water" ${wat?"disabled":""}>🚿 꽃에 물 주기${wat?" ✓":""}</button><button type="button" data-a="walk">🚼 유모차 산책${hasStroller?"":" 🔒"}</button><button type="button" data-a="music">🎵 뮤직박스</button><button type="button" data-a="town">🗺️ 마을로 나가기</button><button type="button" data-a="x">닫기</button></div>`;menu.hidden=false;
     menu.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>{const k=b.dataset.go,p=WN[k];if(k==="oS")return go(5.4,-4.4,()=>{W.swing=4;say("슝~ 하늘까지! 🎠",3500)});if(k==="oF")return go(5.0,3.3,()=>say("소원을 빌어 볼까? ⛲✨",3200));go(p[0]+(Math.random()-.5)*.4,p[1]+(Math.random()-.5)*.4)});
-    menu.querySelector('[data-a="x"]').onclick=hideMenu;
+    menu.querySelector('[data-a="x"]').onclick=hideMenu;menu.querySelector('[data-a="town"]').onclick=()=>go(5.6,5.6,()=>{say("마을로 출발~ 🗺️",1500);setTimeout(()=>{H3MODE="town";houseView()},700)},"대문으로 가자!");
     menu.querySelector('[data-a="music"]').onclick=()=>go(-2.3,1.3,()=>musicBox(),"뮤직박스 들으러 가자 🎵");
     menu.querySelector('[data-a="water"]').onclick=()=>go(-2.2,5.0,water,"꽃에 물 주러 가자 🚿");
     menu.querySelector('[data-a="walk"]').onclick=()=>{if(!S.baby)return toast("먼저 아기를 맞이해요! (👶 아기 탭)");if(!hasStroller)return toast("🚼 시장에서 유모차를 사면 산책할 수 있어요 (💎40)");strollWalk()}}
@@ -1468,7 +1468,7 @@ function bindWalk(B,cam,cv,st){const ray=new THREE.Raycaster(),pl=new THREE.Plan
   cv.addEventListener("pointerup",e=>{if(!tap)return;const moved=Math.hypot(e.clientX-tap.x,e.clientY-tap.y),dt=Date.now()-tap.t;tap=null;if(moved>8||dt>400)return;const h=hit(e.clientX,e.clientY);if(!h)return;
     if(h.t==="vic"){say("어디로 갈까? 골라 줘!",2500);return menu.hidden?showMenu():hideMenu()}if(h.t==="mbox")return go(-2.3,1.3,()=>musicBox());if(h.t==="flw")return go(-2.2,5.0,water);
     if(Math.abs(h.x)<6.3&&Math.abs(h.z)<6.3)go(h.x,h.z)});
-  const pv=new THREE.Vector3();const placeBub=()=>{pv.copy(B.vic.position);pv.y+=2.15;pv.project(cam);const x=Math.max(80,Math.min(st.clientWidth-80,(pv.x*.5+.5)*st.clientWidth)),y=(-pv.y*.5+.5)*st.clientHeight;bub.style.transform=`translate(${x}px,${y}px) translate(-50%,-100%)`;
+  const pv=new THREE.Vector3();const placeBub=()=>{pv.copy(B.vic.position);pv.y+=2.15;pv.project(cam);const x=Math.max(108,Math.min(st.clientWidth-108,(pv.x*.5+.5)*st.clientWidth)),y=(-pv.y*.5+.5)*st.clientHeight;bub.style.transform=`translate(${x}px,${y}px) translate(-50%,-100%)`;
     const now=performance.now();if(now>bubUntil){idle+=1;if(idle>240){idle=0;say(IDLE[Math.floor(Math.random()*IDLE.length)],3500)}else bub.style.opacity=0}if(now<=bubUntil)bub.style.opacity=1};
   return dt=>{placeBub();const v=B.vic.position;if(W.path.length){const n=W.path[0],dx=n.x-v.x,dz=n.z-v.z,d=Math.hypot(dx,dz),sp=(W.stroller?1.6:2.4)*dt;B.vic.rotation.y=Math.atan2(dx,dz);if(d<=sp){v.x=n.x;v.z=n.z;W.path.shift();if(!W.path.length&&W.cb){const c=W.cb;W.cb=null;c()}}else{v.x+=dx/d*sp;v.z+=dz/d*sp}
       if(W.stroller){const a=B.vic.rotation.y;W.stroller.position.set(v.x+Math.sin(a)*.75,.07,v.z+Math.cos(a)*.75);W.stroller.rotation.y=a+Math.PI}return true}
@@ -1502,18 +1502,60 @@ function musicBox(){S.music=S.music||{plays:{},mine:[]};const M=S.music;
     $("#madd").onclick=()=>{const t=$("#mt").value.trim(),u=$("#mu").value.trim();if(!t)return;M.mine.push({t,u,n:0});save();draw()}};
   musicRefresh=()=>{if(document.querySelector(".mlist")||app.textContent.includes("빅토리아 뮤직박스"))draw()};draw()}
 
-function house3D(){return `<div class="stage3" id="stage"><canvas id="h3d"></canvas><div class="s3load" id="s3load">🏠 집을 짓는 중…</div>${S.baby&&babyAge()>=12&&S.baby.taught.length?`<div class="s3talk">${babyLooks()} “${esc(S.baby.taught[S.baby.taught.length-1][0])}!”</div>`:""}<p class="hint3d">👆 Victoria를 눌러 봐! · 바닥을 누르면 걸어가요 · ↔ 밀어서 돌려 보기</p></div>`}
+/* ===================== 마을: 시장 · 교회 · 펫샵 · 도서관 · 공원 ===================== */
+let H3MODE="house";
+const TOWN={home:{n:"🏠 우리 집",p:[-5.2,5.2],door:[-4,4]},market:{n:"🛒 시장",p:[5.2,5.2],door:[4,4]},church:{n:"⛪ 교회",p:[0,-6.2],door:[0,-4.4]},pet:{n:"🐾 펫샵",p:[-6,-1.2],door:[-4.4,-1.2]},lib:{n:"📚 도서관",p:[6,-1.2],door:[4.4,-1.2]},park:{n:"🌳 공원",p:[0,1.2],door:[0,2.6]}};
+function buildTown(){const sc=new THREE.Scene();sc.add(new THREE.HemisphereLight("#FFF8F0","#F5D9C8",.66));const sun=new THREE.DirectionalLight("#FFF3E0",.72);sun.position.set(6,11,7);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);const c2=sun.shadow.camera;c2.left=-11;c2.right=11;c2.top=11;c2.bottom=-11;sc.add(sun);
+  sc.add(at(rb(19,.7,19,"#9FDB7F",.4),0,-.55,0));sc.add(at(rb(18.4,1.1,18.4,"#D4A274",.4),0,-1.35,0));
+  sc.add(at(rb(2.2,.06,17,"#F3E6D6",.03),0,-.17,0));sc.add(at(rb(17,.06,2.2,"#F3E6D6",.03),0,-.17,1.2));sc.add(at(cyl(2.4,2.4,.07,"#EADBC8",32),0,-.16,1.2));
+  const house=(c,roof)=>grp(at(rb(2.6,1.8,2.2,c,.08),0,.9,0),at(msh(new THREE.ConeGeometry(2.1,1.3,4),roof).rotateY(Math.PI/4),0,2.45,0),at(rb(.6,1,.06,"#E9B98C",.03),0,.5,1.12),at(rb(.6,.5,.06,"#CFEFFF",.03),-.8,1.2,1.12),at(rb(.6,.5,.06,"#CFEFFF",.03),.8,1.2,1.12));
+  const B={};const put=(k,g,ry=0)=>{g.name="b_"+k;g.position.set(TOWN[k].p[0],-.15,TOWN[k].p[1]);g.rotation.y=ry;sc.add(g);B[k]=g};
+  put("home",house("#FFE3EF","#FF7AB0"),Math.PI/4);
+  const mk=grp(at(rb(3,.9,1.2,"#E9B98C",.06),0,.45,0),...[-1,0,1].map(i=>at(cyl(.06,.06,2.2,"#FFFFFF",8),i*1.4,1.1,-.5)),...[0,1,2,3,4,5].map(i=>at(rb(.5,.1,1.4,i%2?"#FFFFFF":"#FF7AB0",.03),-1.25+i*.5,2.2,0).rotateX(-.3)),...["#FF6B6B","#FFC93C","#7ED36A","#FF9A6B","#B78CFF"].map((c,i)=>at(sph(.14,c),-1+i*.5,1,.2)));put("market",mk,-Math.PI/4);
+  const ch=grp(at(rb(2.6,2.2,3,"#FFFFFF",.06),0,1.1,0),at(msh(new THREE.ConeGeometry(2,1.2,4),"#7C6CF0").rotateY(Math.PI/4),0,2.8,0),at(rb(.9,1.6,.9,"#FFFFFF",.05),0,3.4,.6),at(cone(.6,1.4,"#7C6CF0",4).rotateY(Math.PI/4),0,4.9,.6),at(rb(.1,.8,.1,"#FFD54A",.02),0,6,.6),at(rb(.5,.1,.1,"#FFD54A",.02),0,6.1,.6),at(rb(.8,1.2,.06,"#C98B52",.03),0,.6,1.52),at(cyl(.3,.3,.05,"#BFE6FF",20).rotateX(Math.PI/2),0,1.7,1.53));put("church",ch);
+  const ps=grp(house("#FFF3C2","#FFC93C"),at(rb(1.2,.6,.08,"#FF7AB0",.04),0,2,1.15),at(sph(.12,"#FFFFFF"),0,2,1.22));put("pet",ps,Math.PI/2);
+  const lb=grp(at(rb(3,2,2.4,"#E89B7A",.06),0,1,0),at(rb(3.4,.3,2.8,"#FFFFFF",.06),0,2.1,0),...[-1,-.35,.35,1].map(x=>at(cyl(.12,.12,1.8,"#FFFFFF",10),x,.9,1.3)),at(rb(.7,1.1,.06,"#7A5A44",.03),0,.55,1.22));put("lib",lb,-Math.PI/2);
+  const pk=grp(at(cyl(.7,.8,.3,"#E6EEF5",20),0,.15,0),at(cyl(.55,.55,.04,"#8FD3F5",20),0,.31,0),at(cyl(.07,.09,.6,"#E6EEF5",10),0,.55,0),...[[-1.8,-.6],[1.8,-.6],[-1.6,1.4],[1.6,1.4]].map(([x,z])=>at(grp(at(cyl(.12,.15,.9,"#B5814A",8),0,.45,0),at(sph(.6,"#7ED36A"),0,1.2,0)),x,0,z)));put("park",pk);
+  [[-8,-8],[8,-8],[-8,8],[8,8],[-8,0],[8,4],[-3,-8],[3,8]].forEach(([x,z],i)=>sc.add(at(grp(at(cyl(.14,.18,1,"#B5814A",10),0,.5,0),at(sph(.7,i%2?"#7ED36A":"#93DE7F"),0,1.35,0)),x,-.2,z)));
+  for(let i=0;i<40;i++){const x=(Math.random()-.5)*17,z=(Math.random()-.5)*17;if(Math.abs(x)<1.4||Math.abs(z-1.2)<1.4)continue;sc.add(at(sph(.08,["#FF7AB0","#FFC93C","#FFFFFF","#B78CFF"][i%4]),x,-.15,z))}
+  const clouds=[];for(let i=0;i<4;i++){const c=grp(sph(.8,"#FFFFFF"),at(sph(.6,"#FFFFFF"),.8,-.1,0));c.position.set(-12+i*7,8,-10+i*3);sc.add(c);clouds.push(c)}
+  const vic=chibi({dress:"#FF7AB0",top:"#FFFFFF",hair:"#7A4A2E",tails:true,ribbon:"#FF4F8B",crown:true,shoe:"#FF4F8B"});vic.position.set(-3.6,.07,3.6);vic.scale.setScalar(1.1);sc.add(vic);
+  const mbx=new THREE.Group();return{sc,vic,baby:null,pets:[],clouds,mbx,town:B}}
+function churchVisit(){const sun=new Date().getDay()===0,b=S.baby;S.church=S.church||{prayers:[]};
+  app.innerHTML=hdr("⛪ 교회")+`<div class="card"><div class="hstory"><span class="hem">⛪</span></div><div class="fb"><div class="ava" style="background:#7C6CF0">우주냥</div><div class="bubble"><p style="font-size:1.12rem;line-height:1.75">${sun?"오늘은 주일! 교회에 왔어요. 조용히 마음을 모아 볼까?":"교회에 왔어요. 주일이 아니어도 조용히 기도하고 감사를 적을 수 있어요."}</p></div></div>
+   <div class="btns2"><button class="big alt" id="hymn" type="button">🎵 찬송 오르골 듣기</button><button class="big alt" id="pray" type="button">🙏 감사 기도 쓰기</button></div>
+   ${b?`<button class="big" id="bchurch" type="button" ${sun&&hasB("carrier")?"":"disabled"}>👶 ${esc(b.name)}와 함께 예배드리기 ${sun?(hasB("carrier")?"":"(아기띠 필요)"):"(주일에 열려요)"}</button>`:""}</div>
+   ${S.church.prayers.length?`<div class="card"><h3>📖 나의 감사 노트</h3><ul class="tricks">${S.church.prayers.slice(-5).reverse().map(x=>`<li class="ok">${esc(x.t)}<br><small>${x.d}</small></li>`).join("")}</ul></div>`:""}`;
+  bindBack();$("#back").textContent="← 마을";$("#back").onclick=()=>{H3MODE="town";houseView()};
+  $("#hymn").onclick=()=>{playSong("grace");toast("🎵 Amazing Grace(나 같은 죄인 살리신)")};
+  $("#pray").onclick=()=>{app.insertAdjacentHTML("beforeend",`<div class="card" id="pcard"><div class="kexample"><b>✏️ 예시</b><p>오늘 맛있는 아침을 먹고 동생과 웃을 수 있어서 감사합니다.</p></div><textarea id="pt" class="kwrite" rows="3" maxlength="200" placeholder="오늘 감사한 일을 써 봐"></textarea><button class="big" id="psave" type="button">감사 기도 남기기</button></div>`);$("#pray").disabled=true;
+    $("#psave").onclick=()=>{const v=$("#pt").value.trim();if(v.length<5)return toast("한 문장만 써 볼까?");S.church.prayers.push({d:today(),t:v});const first=S.church.last!==today();S.church.last=today();if(first)addXP(5);save();toast("🙏 감사 노트에 담았어요"+(first?" +5 XP":""));churchVisit()}};
+  if($("#bchurch"))$("#bchurch").onclick=()=>{babyNeedsToday(b);if(b.did.includes("church"))return toast("오늘은 이미 함께 예배드렸어요");b.did.push("church");babyCredit();save();toast(`⛪ ${esc(b.name)}와 함께 예배드렸어요. 아기가 찬양 소리에 방긋 웃어요.`);churchVisit()}}
+function townAction(k){if(k==="home"){H3MODE="house";return houseView()}if(k==="market")return market();if(k==="pet")return petShop();if(k==="lib")return kwDict();if(k==="church")return churchVisit();if(k==="park")return H3&&H3.walk&&H3.walk.say("공원 바람이 시원해~ 🌳",3000)}
+function bindTown(B,cam,cv,st){const ray=new THREE.Raycaster(),pl=new THREE.Plane(new THREE.Vector3(0,1,0),-.07);B.vic.name="vic";const W={path:[],cb:null};H3.walk=W;
+  const bub=document.createElement("div");bub.className="vbub";st.appendChild(bub);let until=0;const say=(t,ms=2600)=>{bub.textContent=t;until=performance.now()+ms};W.say=say;say("마을에 나왔어! 가고 싶은 곳을 눌러 봐 👆",4500);
+  const labels={};Object.entries(TOWN).forEach(([k,v])=>{const d=document.createElement("button");d.type="button";d.className="tlabel";d.textContent=v.n;d.onclick=()=>go(k);st.appendChild(d);labels[k]=d});
+  const go=k=>{const d=TOWN[k].door;W.path=[new THREE.Vector3(d[0],.07,d[1])];W.cb=()=>{say(TOWN[k].n+" 도착!",1500);setTimeout(()=>townAction(k),600)};say(TOWN[k].n+"에 가자!",1800)};
+  let tap=null;cv.addEventListener("pointerdown",e=>{tap={x:e.clientX,y:e.clientY,t:Date.now()}});
+  cv.addEventListener("pointerup",e=>{if(!tap)return;const mv=Math.hypot(e.clientX-tap.x,e.clientY-tap.y),dt=Date.now()-tap.t;tap=null;if(mv>12||dt>500)return;const r=cv.getBoundingClientRect(),m=new THREE.Vector2((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(m,cam);
+    for(const h of ray.intersectObjects(B.sc.children,true)){let o=h.object;while(o){if(o.name&&o.name.startsWith("b_"))return go(o.name.slice(2));if(o.name==="vic")return say("어디로 갈까? 건물을 눌러 봐!",2500);o=o.parent}}const p=new THREE.Vector3();if(ray.ray.intersectPlane(pl,p)&&Math.abs(p.x)<9&&Math.abs(p.z)<9){W.path=[p.setY(.07)];W.cb=null;say("산책 중~ 🎶",1500)}});
+  const pv=new THREE.Vector3();
+  return dt=>{pv.copy(B.vic.position);pv.y+=2.15;pv.project(cam);bub.style.transform=`translate(${Math.max(108,Math.min(st.clientWidth-108,(pv.x*.5+.5)*st.clientWidth))}px,${(-pv.y*.5+.5)*st.clientHeight}px) translate(-50%,-100%)`;bub.style.opacity=performance.now()<until?1:0;
+    Object.entries(labels).forEach(([k,d])=>{const g=B.town[k];pv.set(g.position.x,k==="church"?6.6:3.2,g.position.z);pv.project(cam);d.style.transform=`translate(${(pv.x*.5+.5)*st.clientWidth}px,${(-pv.y*.5+.5)*st.clientHeight}px) translate(-50%,-100%)`});
+    const v=B.vic.position;if(!W.path.length)return false;const n=W.path[0],dx=n.x-v.x,dz=n.z-v.z,d=Math.hypot(dx,dz),sp=2.6*dt;B.vic.rotation.y=Math.atan2(dx,dz);if(d<=sp){v.x=n.x;v.z=n.z;W.path.shift();if(!W.path.length&&W.cb){const c=W.cb;W.cb=null;c()}}else{v.x+=dx/d*sp;v.z+=dz/d*sp}return true}}
+
+function house3D(){return `<div class="stage3" id="stage"><canvas id="h3d"></canvas><div class="s3load" id="s3load">🏠 집을 짓는 중…</div>${S.baby&&babyAge()>=12&&S.baby.taught.length?`<div class="s3talk">${babyLooks()} “${esc(S.baby.taught[S.baby.taught.length-1][0])}!”</div>`:""}<p class="hint3d">${H3MODE==="town"?"👆 가고 싶은 건물을 눌러 봐!":"👆 Victoria를 눌러 봐! · 바닥을 누르면 걸어가요"} · ↔ 밀어서 돌려 보기</p></div>`}
 function bind3D(){const st=$("#stage"),cv=$("#h3d");if(!st)return;if(H3){cancelAnimationFrame(H3.raf);try{H3.r.dispose()}catch(e){}H3=null}
   ensureThree().then(()=>{if(!document.body.contains(cv))return;const ld=$("#s3load");if(ld)ld.remove();
     const W=st.clientWidth,Hh=st.clientHeight,r=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});r.setPixelRatio(Math.min(devicePixelRatio||1,2));r.setSize(W,Hh,false);r.shadowMap.enabled=true;r.shadowMap.type=THREE.PCFSoftShadowMap;
-    const cam=new THREE.PerspectiveCamera(30,W/Hh,.1,100),B=buildHouse(),tgt=new THREE.Vector3(0,.4,0);
+    const cam=new THREE.PerspectiveCamera(30,W/Hh,.1,100),B=H3MODE==="town"?buildTown():buildHouse(),tgt=new THREE.Vector3(0,.4,0);
     const place=()=>{const el=.62,a=AZ*Math.PI/180;cam.position.set(DIST*Math.cos(el)*Math.sin(a),DIST*Math.sin(el)+.4,DIST*Math.cos(el)*Math.cos(a));cam.lookAt(tgt)};place();
     let sx=null,a0=0,pd=0,d0=0;const pts=new Map();
     cv.addEventListener("pointerdown",e=>{pts.set(e.pointerId,e.clientX+","+e.clientY);cv.setPointerCapture(e.pointerId);if(pts.size===1){sx=e.clientX;a0=AZ}else{const v=[...pts.values()].map(s=>s.split(",").map(Number));pd=Math.hypot(v[0][0]-v[1][0],v[0][1]-v[1][1]);d0=DIST}});
-    cv.addEventListener("pointermove",e=>{if(!pts.has(e.pointerId))return;pts.set(e.pointerId,e.clientX+","+e.clientY);if(pts.size===1&&sx!==null){AZ=Math.max(-5,Math.min(95,a0-(e.clientX-sx)*.4));place()}else if(pts.size===2&&pd){const v=[...pts.values()].map(s=>s.split(",").map(Number));DIST=Math.max(12,Math.min(28,d0*pd/Math.hypot(v[0][0]-v[1][0],v[0][1]-v[1][1])));place()}});
+    cv.addEventListener("pointermove",e=>{if(!pts.has(e.pointerId))return;pts.set(e.pointerId,e.clientX+","+e.clientY);if(pts.size===1&&sx!==null){AZ=Math.max(-5,Math.min(95,a0-(e.clientX-sx)*.4));place()}else if(pts.size===2&&pd){const v=[...pts.values()].map(s=>s.split(",").map(Number));DIST=Math.max(12,Math.min(H3MODE==="town"?44:28,d0*pd/Math.hypot(v[0][0]-v[1][0],v[0][1]-v[1][1])));place()}});
     const up=e=>{pts.delete(e.pointerId);if(pts.size===0)sx=null;pd=0};cv.addEventListener("pointerup",up);cv.addEventListener("pointercancel",up);
-    cv.addEventListener("wheel",e=>{e.preventDefault();DIST=Math.max(12,Math.min(28,DIST+e.deltaY*.01));place()},{passive:false});
-    const t0=performance.now();let tl0=t0;H3={r,raf:0};H3.B=B;const walkStep=bindWalk(B,cam,cv,st);const loop=()=>{if(!document.body.contains(cv)){r.dispose();H3=null;return}const now=performance.now(),t=(now-t0)/1000,dt=Math.min(.25,(now-tl0)/1000);tl0=now;
+    cv.addEventListener("wheel",e=>{e.preventDefault();DIST=Math.max(12,Math.min(H3MODE==="town"?44:28,DIST+e.deltaY*.01));place()},{passive:false});
+    const t0=performance.now();let tl0=t0;H3={r,raf:0};H3.B=B;if(H3MODE==="town"){DIST=36}else if(DIST>28)DIST=24;place();const walkStep=H3MODE==="town"?bindTown(B,cam,cv,st):bindWalk(B,cam,cv,st);const loop=()=>{if(!document.body.contains(cv)){r.dispose();H3=null;return}const now=performance.now(),t=(now-t0)/1000,dt=Math.min(.25,(now-tl0)/1000);tl0=now;
       const moving=walkStep(dt);B.vic.position.y=.07+Math.abs(Math.sin(t*(moving?9:2.2)))*(moving?.09:.05);if(!moving)B.vic.rotation.y=AZ*Math.PI/180+Math.sin(t*.6)*.2;const mt=B.mbx.getObjectByName("mtop");if(mt)mt.rotation.y=H3&&H3.music?t*3:0;
       if(B.baby)B.baby.rotation.z=Math.sin(t*1.6)*.06;
       B.pets.forEach((p,i)=>{p.position.y=.07+Math.max(0,Math.sin(t*2.6+i))*.06;const tl=p.getObjectByName("tail");if(tl)tl.rotation.z=Math.sin(t*5+i)*.4;const f=p.getObjectByName("fish");if(f){f.position.x=Math.sin(t*1.2)*.15;f.rotation.y=Math.cos(t*1.2)>0?0:Math.PI}});
@@ -1523,12 +1565,12 @@ function bind3D(){const st=$("#stage"),cv=$("#h3d");if(!st)return;if(H3){cancelA
 
 function hTabs(cur){return `<div class="ptabs">${[["house","🏠 집"],["baby","👶 아기"],["pets","🐾 펫"],["decor","🛋️ 꾸미기"],["market","🛒 시장"]].map(([k,t])=>`<button type="button" class="${k===cur?"on":""}" data-pt="${k}">${t}</button>`).join("")}</div>`}
 function bindHTabs(){app.querySelectorAll("[data-pt]").forEach(b=>b.onclick=()=>({house:houseView,baby:babyView,pets:petHome,decor:decorView,market:market})[b.dataset.pt]())}
-function houseView(){hInit();S.pets.forEach(petDecay);save();const h=careHearts(),b=S.baby;
-  app.innerHTML=hdr("🏠 빅토리아 하우스")+hTabs("house")+house3D()+
+function houseView(){hInit();const TM=H3MODE==="town";S.pets.forEach(petDecay);save();const h=careHearts(),b=S.baby;
+  app.innerHTML=hdr(TM?"🗺️ 빅토리아 마을":"🏠 빅토리아 하우스")+hTabs("house")+`<div class="btns2" style="margin-bottom:8px"><button class="big ${TM?"alt":""}" id="tohome" type="button">🏠 집</button><button class="big ${TM?"":"alt"}" id="totown" type="button">🗺️ 마을 (시장·교회·펫샵)</button></div>`+house3D()+
   `<div class="card"><div class="row"><h3>💖 돌봄 하트 ${h}개</h3><span class="pill">💎 ${S.gems||0}</span></div><p class="muted">퀘스트 1개 = 하트 1개. 아기와 펫이 하트를 함께 써요.</p>
    <ul class="mkt">${b?`<li><span>${babyLooks()}</span><div><b>${esc(b.name)} · ${babyAge()}개월</b><small>${BABY_STAGES[babyStage()][1]}${babyGate()?" · 다음 성장에 용품 필요":""}</small></div><button class="buy" type="button" data-go="baby">돌보기</button></li>`:`<li><span>👶</span><div><b>아기 맞이 준비</b><small>준비물을 갖추면 아기가 와요</small></div><button class="buy" type="button" data-go="baby">준비하기</button></li>`}
    ${S.pets.map(p=>`<li><span>${petOf(p.k)[2]}</span><div><b>${esc(p.name)}</b><small>${REPTILE.includes(p.k)?"온실":"펫룸"} · ${loveName(p.love)}${p.fed!==today()?" · 🍚 배고파요":""}</small></div><button class="buy" type="button" data-go="pets">돌보기</button></li>`).join("")}</ul></div>`;
-  bindBack();bindHTabs();bind3D();app.querySelectorAll("[data-go]").forEach(x=>x.onclick=()=>({baby:babyView,pets:petHome})[x.dataset.go]());window.scrollTo(0,0)}
+  bindBack();bindHTabs();bind3D();$("#tohome").onclick=()=>{H3MODE="house";houseView()};$("#totown").onclick=()=>{H3MODE="town";houseView()};app.querySelectorAll("[data-go]").forEach(x=>x.onclick=()=>({baby:babyView,pets:petHome})[x.dataset.go]());window.scrollTo(0,0)}
 /* ---------- 아기 ---------- */
 function buyBaby(id,price){const k=id.split(":")[1],it=bItem(k);if(!spend(price))return;
   if(it[4][0]==="c")S.binv[k]=(S.binv[k]||0)+Number(it[4].slice(1));else{S.binv[k]=1;if(k==="crib"&&!S.house.decor.includes("crib"))S.house.decor.push("crib");if(k==="mat"&&!S.house.decor.includes("mat"))S.house.decor.push("mat")}
