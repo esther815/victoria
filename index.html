@@ -190,7 +190,14 @@ button:focus-visible,label:focus-within{outline:3px solid var(--accent);outline-
 .ptab{width:100%;border-collapse:collapse;font-size:.85rem;margin:8px 0}.ptab th,.ptab td{border-bottom:1px solid #EEE;padding:6px 4px;text-align:left;vertical-align:top}.ptab th{color:var(--muted);font-weight:normal}.wkhot{outline:3px solid #FF7AB0;animation:pop .6s}
 .hzchips{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0}.hzc{display:flex;flex-direction:column;align-items:center;width:40px;padding:4px 0;border-radius:10px;background:var(--soft);font-family:var(--han);font-size:1.3rem}.hzc small{font-size:.5rem;color:#FF7AB0;letter-spacing:1px}.hzc.on{background:#FFF3C2}.hz.sm{font-size:1.8rem}.flipc{min-height:200px;cursor:pointer}
 .prevb{display:block;margin:0 0 8px auto;border:0;background:var(--soft);border-radius:999px;padding:6px 14px;font:inherit;font-size:.85rem;color:#6b5bd6}.rvcard{max-height:88vh;overflow:auto;text-align:left}.rvcard .prompt{font-size:1rem;margin:8px 0}.opt.rv{cursor:default;display:flex;justify-content:space-between;align-items:center;gap:6px}.opt.rv em{font-style:normal;font-size:.72rem;opacity:.8;white-space:nowrap}
+.rmtabs{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:8px 0}.rmtabs button{border:2px solid #EEE6F5;background:#fff;border-radius:14px;padding:9px 2px;font:inherit;font-size:.8rem;font-weight:700;color:#6B5E78}.rmtabs button.on{border-color:#FF7AB0;background:#FFF0F6;color:#FF4F8B}
 .btns3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.btns3 .big{padding:12px 4px;font-size:.92rem}.vrlist{display:grid;gap:8px}.vrop{display:grid;grid-template-columns:48px 1fr auto;grid-template-rows:auto auto;column-gap:10px;align-items:center;text-align:left;border:2px solid #EEE6F5;background:#fff;border-radius:16px;padding:10px;font:inherit}.vrop.on{border-color:#FF7AB0;background:#FFF5F9}.vrsw{grid-row:1/3;width:48px;height:48px;border-radius:12px;box-shadow:inset 0 0 0 2px rgba(0,0,0,.05)}.vrop small{grid-column:2;color:#8A7F96;font-size:.75rem}.vrop em{grid-row:1/3;grid-column:3;font-style:normal;font-size:.8rem;font-weight:700;color:#FF4F8B;white-space:nowrap}
+.hzpc{width:100%;background:var(--soft);border-radius:18px;padding:12px;display:flex;flex-direction:column;gap:8px;text-align:left}.hzrow{display:flex;align-items:center;justify-content:center;gap:4px}.hzf{margin:0;display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;max-width:110px}.hzf svg,.hzf .hz3{width:100%;aspect-ratio:1;background:#fff;border-radius:14px;box-shadow:0 2px 6px rgba(80,40,120,.08)}.hzf figcaption{font-size:.7rem;color:#8A7F96}.hz3{display:flex;align-items:center;justify-content:center;font-family:var(--han);font-size:3.3rem;color:var(--hanja)}.hzar{color:#C9B6E8;font-size:1rem}
+svg.old{background:#FBF4E6!important}svg.old *{fill:none;stroke:#9C5B33;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}svg.old .f{fill:#9C5B33;stroke:none}
+.hzpc.play .f1{animation:hzin .5s both}.hzpc.play .f2{animation:hzin .5s .7s both}.hzpc.play .f3{animation:hzin .5s 1.4s both}.hzpc.play svg.old path,.hzpc.play svg.old circle,.hzpc.play svg.old rect{stroke-dasharray:400;stroke-dashoffset:400;animation:hzdraw 1.2s .8s forwards}@keyframes hzin{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:none}}@keyframes hzdraw{to{stroke-dashoffset:0}}
+.hzparts{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:4px;background:#fff;border-radius:14px;padding:8px}.hzpt{display:flex;flex-direction:column;align-items:center;min-width:50px}.hzpt svg{width:38px;height:38px}.hzpt i{font-style:normal;font-family:var(--han);font-size:1.6rem;color:var(--hanja);line-height:1.1}.hzpt small{font-size:.66rem;color:#8A7F96}.hzpt.res i{color:#FF4F8B}.hzparts>b{color:#C9B6E8}
+.hzst{margin:0;font-size:.95rem;line-height:1.55}.hzbtns{display:flex;gap:6px;flex-wrap:wrap}.hzsrc{margin:0;font-size:.66rem;color:#A89FB4}.hidech .f3 .hz3{color:#C9B6E8}svg.qpic{width:120px;height:120px;background:#fff;border-radius:16px;display:block;margin:6px auto}
+.skmap{display:grid;grid-template-columns:1fr 1fr;gap:8px}.skst{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;border:2px solid #E3F4EA;background:#fff;border-radius:16px;padding:10px;font:inherit}.skst.on{border-color:#2FB673;background:#F0FBF4}.skst .skem{font-size:1.6rem}.skst small{color:#7A8F80;font-size:.72rem}.skcard .skem{font-size:2.6rem}.skm{font-size:1.05rem;line-height:1.55;margin:6px 0}.ske{color:#6B5E78;font-size:.92rem;margin:0}.skdl{list-style:none;padding:0;margin:0;display:grid;gap:8px}.skdl li{background:var(--soft);border-radius:12px;padding:8px 10px;font-size:.9rem;line-height:1.45}
 .recap{margin:6px 0 0;padding-left:1.1em;font-size:.95rem;line-height:1.6}.recap li{margin:3px 0}
 .qtag{display:table;margin-left:auto;margin-right:auto;font-family:var(--display);font-size:.95rem;background:var(--soft);color:var(--accent);border-radius:99px;padding:2px 12px;margin-bottom:6px}
 .hintb{appearance:none;align-self:center;border:2px dashed var(--cheese);background:transparent;color:var(--ink);border-radius:99px;padding:6px 18px;font-family:var(--display);font-size:1.05rem;cursor:pointer}
@@ -656,7 +663,7 @@ function home(){
   ${wrongCard()}
   ${petCardHome()}
   ${shopHTML(nextCook())}
-  <p class="foot" id="ver">Victoria Quest v3.5</p>`;
+  <p class="foot" id="ver">Victoria Quest v3.8</p>`;
   if(S.test){$("#parent").onclick=parentPanel;$("#rst").onclick=()=>{$("#rstAsk").hidden=false};$("#rstYes").onclick=()=>{try{localStorage.removeItem(KEY)}catch(e){}location.reload()}}
   app.querySelectorAll(".tile").forEach(b=>b.onclick=()=>({cook:cookStart,hist,hz,en,mem,ko,ma,sci})[b.dataset.t]());
   updBadge();
@@ -767,6 +774,100 @@ const EXAM30="九金南男女東六母木門父北四三西水十五月二人日
 function hzMixQs(n){const mock=n===25,L=mock?[...EXAM30]:HZ.map(h=>h[0]),qs=[];const plan=n===25?["A","A","A","A","A","A","A","A","B","B","B","B","B","B","B","B","C","C","C","C","C","C","D","D","D"]:["A","A","A","B","B","B","C","C","D","A"];
   const idx=shuffle(HZ.map((_,k)=>k).filter(k=>!mock||EXAM30.includes(HZ[k][0])));let p=0;plan.forEach(t=>{qs.push(hzQ(t,idx[p++%idx.length],L))});return shuffle(qs)}
 /* 모르는 한자 집중 반복 */
+/* 한자 그림 카드: [그림, 옛 글자(갑골·금문을 쉽게 그린 선)] */
+const C_=(x,y,r,f)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${f}"/>`,P_=(d,f,s,w)=>`<path d="${d}" fill="${f||"none"}" ${s?`stroke="${s}" stroke-width="${w||4}" stroke-linecap="round" stroke-linejoin="round"`:""}/>`,R_=(x,y,w,h,f,r)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r||3}" fill="${f}"/>`;
+const STK=(n,y0,gap)=>Array.from({length:n},(_,i)=>R_(14,y0+i*gap,72,9,"#C98B52",4)).join("");
+const KID=(x,y,s,c)=>`<g transform="translate(${x} ${y}) scale(${s})">${C_(0,-22,11,"#FFE3D0")}${P_("M-11 -26 Q0 -40 11 -26","#7A4A2E")}${P_("M-12 -8 L12 -8 L16 24 L-16 24 Z",c||"#FF7AB0")}</g>`;
+const HZP={
+"日":[C_(50,50,26,"#FFB830")+[0,45,90,135,180,225,270,315].map(a=>{const r=a*Math.PI/180;return P_(`M${50+Math.cos(r)*33} ${50+Math.sin(r)*33} L${50+Math.cos(r)*43} ${50+Math.sin(r)*43}`,0,"#FFB830",5)}).join("")+C_(42,46,3,"#7A4A2E")+C_(58,46,3,"#7A4A2E")+P_("M42 58 Q50 64 58 58",0,"#7A4A2E",3),
+  `<circle cx="50" cy="50" r="32"/>`+`<circle cx="50" cy="50" r="4" class="f"/>`],
+"月":[R_(0,0,100,100,"#2E3A6B",14)+P_("M62 12 A40 40 0 1 0 62 88 A30 30 0 1 1 62 12 Z","#FFE07A")+C_(80,22,2,"#FFF")+C_(84,70,2,"#FFF"),
+  P_("M62 12 Q18 50 62 88 Q42 50 62 12")+P_("M38 44 L52 44 M37 58 L51 58")],
+"火":[P_("M50 90 C20 88 18 60 32 44 C34 58 42 60 42 60 C38 40 46 22 58 12 C58 32 74 40 78 58 C82 76 70 90 50 90 Z","#FF6A3D")+P_("M50 88 C36 86 36 70 44 62 C46 72 52 72 52 72 C52 64 56 58 62 54 C64 66 68 70 66 78 C64 86 58 88 50 88 Z","#FFC93C"),
+  P_("M50 18 L50 84 M28 84 Q30 56 18 40 M72 84 Q70 56 82 40 M22 84 L78 84")],
+"水":[P_("M50 8 Q66 30 50 50 Q34 70 50 92",0,"#3FA9F5",9)+[[24,28],[30,46],[24,64],[76,28],[70,46],[76,64]].map(([x,y])=>P_(`M${x} ${y-7} Q${x+6} ${y+3} ${x} ${y+6} Q${x-6} ${y+3} ${x} ${y-7} Z`,"#7FD3FF")).join(""),
+  P_("M50 8 Q64 30 50 50 Q36 70 50 92")+P_("M26 22 L32 32 M24 48 L32 54 M28 72 L34 80 M74 22 L68 32 M76 48 L68 54 M72 72 L66 80")],
+"木":[R_(44,46,12,40,"#B5814A",4)+P_("M44 84 L30 94 M56 84 L70 94 M50 86 L50 96",0,"#B5814A",5)+C_(50,34,24,"#6CC75A")+C_(32,44,14,"#7ED36A")+C_(68,44,14,"#7ED36A"),
+  P_("M50 8 L50 92 M50 40 L24 16 M50 40 L76 16 M50 64 L24 90 M50 64 L76 90")],
+"土":[R_(8,80,84,10,"#9AD47F",4)+P_("M22 82 Q30 40 50 26 Q70 40 78 82 Z","#C98B52")+C_(42,58,4,"#A8703F")+C_(58,66,3,"#A8703F"),
+  P_("M12 86 L88 86")+P_("M50 26 Q30 56 50 76 Q70 56 50 26 Z","none")],
+"一":[STK(1,46,0),P_("M14 50 L86 50")],"二":[STK(2,34,26),P_("M22 36 L78 36 M14 64 L86 64")],"三":[STK(3,24,24),P_("M22 26 L78 26 M26 50 L74 50 M14 76 L86 76")],
+"四":[STK(4,16,22),P_("M14 18 L86 18 M14 40 L86 40 M14 62 L86 62 M14 84 L86 84")],
+"五":[STK(2,12,70)+P_("M26 26 L74 76 M74 26 L26 76",0,"#C98B52",8),P_("M14 14 L86 14 M14 86 L86 86 M26 22 L74 78 M74 22 L26 78")],
+"七":[R_(14,46,72,9,"#C98B52",4)+R_(46,14,9,72,"#C98B52",4)+P_("M60 30 L88 20 L84 34 Z","#B0B8C8"),P_("M14 50 L86 50 M50 14 L50 86")],
+"八":[KID(50,62,1.5,"#FFB3D1")+P_("M36 52 L12 34 M64 52 L88 34",0,"#FFE3D0",7),P_("M40 22 Q36 60 14 86 M60 22 Q64 60 86 86")],
+"十":[R_(45,10,10,80,"#C98B52",5)+C_(50,50,9,"#FF7AB0"),P_("M50 10 L50 90")+`<circle cx="50" cy="50" r="8" class="f"/>`],
+"小":[C_(50,30,9,"#E9C46A")+C_(28,64,9,"#E9C46A")+C_(72,64,9,"#E9C46A"),P_("M50 18 L50 82")+`<circle cx="26" cy="54" r="6" class="f"/><circle cx="74" cy="54" r="6" class="f"/>`],
+"北":[KID(32,60,1.3,"#7FC8FF")+KID(68,60,1.3,"#FF7AB0"),P_("M40 14 Q40 50 40 88 M40 48 L20 66 M60 14 Q60 50 60 88 M60 48 L80 66")],
+"門":[R_(12,12,34,80,"#C98B52",4)+R_(54,12,34,80,"#C98B52",4)+R_(18,20,22,28,"#E9B98C",3)+R_(60,20,22,28,"#E9B98C",3)+C_(40,58,3,"#FFD54A")+C_(60,58,3,"#FFD54A"),
+  P_("M14 90 L14 14 L42 14 L42 90 M14 40 L42 40 M58 90 L58 14 L86 14 L86 90 M58 40 L86 40")],
+"山":[P_("M4 90 L28 44 L42 66 L58 14 L74 58 L84 42 L96 90 Z","#6CC75A")+P_("M58 14 L50 30 L58 26 L66 30 Z","#FFFFFF"),P_("M8 86 L92 86 M8 86 L8 46 M50 86 L50 16 M92 86 L92 46")],
+"中":[P_("M50 6 L50 94",0,"#B5814A",6)+R_(26,36,48,28,"#FFE79A",6)+P_("M50 10 L78 16 L50 22 Z M50 22 L74 28 L50 34 Z","#FF4F8B"),
+  P_("M50 6 L50 94 M28 38 L72 38 L72 62 L28 62 Z M50 6 L70 12 M50 16 L70 22 M50 94 L70 88 M50 84 L70 78")],
+"人":[`<g>${C_(50,20,10,"#FFE3D0")}${P_("M50 30 L44 62 L32 92 M44 62 L56 92 M48 40 L60 58",0,"#FF7AB0",8)}</g>`,P_("M58 12 Q50 50 26 90 M50 46 Q62 66 76 90")],
+"大":[C_(50,18,10,"#FFE3D0")+P_("M50 30 L50 62 M18 40 L82 40 M50 62 L26 92 M50 62 L74 92",0,"#FF7AB0",8),P_("M50 12 L50 56 M14 38 L86 38 M50 56 L22 90 M50 56 L78 90")+`<circle cx="50" cy="16" r="2" class="f"/>`],
+"女":[C_(52,22,11,"#FFE3D0")+P_("M40 22 Q52 6 64 22","#7A4A2E")+P_("M40 36 L64 36 L70 74 L58 70 L54 86 L34 86 L36 60 Z","#FF9EC4")+P_("M38 46 L64 56 M64 46 L40 56",0,"#FFE3D0",5),
+  P_("M50 14 Q66 40 46 62 L30 88 M26 46 L76 52 M58 22 Q74 58 62 88")],
+"母":[C_(52,20,11,"#FFE3D0")+P_("M40 34 L64 34 L70 74 L58 70 L54 86 L34 86 L36 60 Z","#FFB3D1")+C_(46,50,4,"#FF7AB0")+C_(58,50,4,"#FF7AB0")+KID(76,62,.7,"#FFF3C2"),
+  P_("M50 14 Q66 40 46 62 L30 88 M26 46 L76 52 M58 22 Q74 58 62 88")+`<circle cx="42" cy="40" r="5" class="f"/><circle cx="58" cy="62" r="5" class="f"/>`],
+"子":[P_("M28 46 L72 46 L64 92 L36 92 Z","#FFF3C2")+C_(50,28,16,"#FFE3D0")+P_("M30 52 L14 40 M70 52 L86 40",0,"#FFE3D0",7)+C_(44,28,2,"#2B2233")+C_(56,28,2,"#2B2233"),
+  `<circle cx="50" cy="24" r="14"/>`+P_("M50 38 L50 90 M18 50 Q50 62 82 50")],
+"生":[R_(8,78,84,12,"#C98B52",4)+P_("M50 80 L50 34",0,"#6CC75A",6)+P_("M50 54 Q30 52 22 36 Q40 36 50 54 Z M50 46 Q68 40 78 22 Q58 26 50 46 Z","#7ED36A"),
+  P_("M50 14 L50 84 M50 52 Q36 46 26 32 M50 44 Q64 36 74 24 M14 86 L86 86")],
+"先":[KID(50,70,1.2,"#B78CFF")+P_("M38 6 Q30 22 40 30 L62 30 Q66 20 56 6 Z","#FFE3D0")+C_(40,8,3,"#FFE3D0")+C_(48,5,3,"#FFE3D0")+C_(56,6,3,"#FFE3D0"),
+  P_("M36 34 L36 12 M36 34 L68 34 M52 34 L52 20")+P_("M50 46 L28 90 M50 46 L54 88 Q64 92 80 86")],
+"長":[C_(44,22,11,"#FFE3D0")+P_("M34 18 Q26 40 22 60 M38 26 Q32 46 30 66 M50 24 Q48 44 46 60",0,"#C9C9D3",4)+P_("M40 34 L58 34 L60 86 L36 86 Z","#9ED8FF")+P_("M70 30 L74 92 M70 30 Q78 24 80 32",0,"#B5814A",5),
+  P_("M48 12 Q40 16 40 24 M30 16 L18 54 M40 20 L32 58 M48 30 L48 90 M72 40 L76 90 M48 56 L70 52")],
+"萬":[P_("M50 32 L50 74 Q50 92 68 88 Q76 84 72 76",0,"#B5674A",8)+C_(50,44,12,"#C97B5A")+P_("M40 38 Q18 30 24 14 M24 14 L16 22 M24 14 L32 18 M60 38 Q82 30 76 14 M76 14 L84 22 M76 14 L68 18",0,"#C97B5A",6)+P_("M72 76 L80 72",0,"#7A3A2A",5),
+  P_("M30 12 Q18 26 34 34 M70 12 Q82 26 66 34 M34 34 L66 34 L66 60 L34 60 Z M50 34 L50 60 M50 60 L50 82 Q58 92 70 84")],
+"年":[KID(50,72,1.2,"#9ED8FF")+P_("M50 46 L50 12 M50 14 Q66 14 72 26 M50 22 Q36 22 30 32",0,"#E9C46A",5)+C_(72,28,5,"#FFD54A")+C_(30,34,5,"#FFD54A"),
+  P_("M50 12 L50 52 M50 14 Q64 16 70 28 M50 26 L34 36 M50 52 L30 90 M50 52 L66 90")],
+"男":[R_(18,10,50,40,"#9AD47F",4)+P_("M43 10 L43 50 M18 30 L68 30",0,"#6CC75A",3)+P_("M44 56 L44 88 Q40 94 28 86 M30 66 L76 66",0,"#B5814A",6),
+  P_("M20 12 L64 12 L64 50 L20 50 Z M42 12 L42 50 M20 31 L64 31 M44 58 L44 88 Q40 94 28 86 M28 68 L74 68")],
+"寸":[P_("M28 90 L28 52 Q28 40 40 40 L66 40 Q76 40 76 50 L76 58",0,"#FFE3D0",14)+C_(46,66,6,"#FF4F8B")+P_("M46 56 Q38 66 46 76",0,"#FF4F8B",2),P_("M30 14 L30 64 Q34 84 58 80 M30 34 L66 28 M30 50 L58 46")+`<circle cx="48" cy="64" r="5" class="f"/>`],
+"六":[P_("M14 50 L50 18 L86 50 Z","#FF8A65")+R_(24,50,52,40,"#FFE3C2",3)+R_(42,64,16,26,"#C98B52",3),P_("M50 10 L50 24 M14 46 L50 24 L86 46 M34 54 L22 88 M66 54 L78 88")],
+"九":[P_("M38 14 Q40 60 18 88",0,"#FFE3D0",11)+P_("M16 40 L60 40 Q70 70 88 84",0,"#FFE3D0",11),P_("M40 14 Q40 60 18 88 M16 40 L60 40 Q68 70 86 86")],
+"西":[P_("M14 54 Q50 100 86 54 Z","#C98B52")+P_("M16 56 L84 56",0,"#A8703F",4)+P_("M36 46 Q46 26 66 30 Q74 40 62 48 Z","#7FC8FF")+C_(60,34,2,"#2B2233")+P_("M66 32 L74 30 L66 36 Z","#FFB830"),
+  P_("M18 34 Q50 96 82 34 M18 34 L82 34 M34 34 L44 62 M66 34 L56 62 M30 18 Q50 8 70 18")],
+"南":[P_("M50 6 L50 18",0,"#B5814A",5)+P_("M28 18 L72 18 L80 84 L20 84 Z","#E9C46A")+P_("M36 40 L64 40 M36 56 L64 56",0,"#B5814A",4)+C_(50,88,6,"#FFD54A"),P_("M50 6 L50 20 M30 20 L70 20 L76 86 L24 86 Z M50 40 L50 72 M36 54 L64 54")],
+"白":[C_(50,62,22,"#FFFFFF")+P_("M50 62 m-22 0 a22 22 0 1 0 44 0 a22 22 0 1 0 -44 0",0,"#E0E4EE",3)+P_("M50 8 L50 28 M32 16 L40 32 M68 16 L60 32",0,"#FFD54A",5),P_("M50 10 L50 26 M30 30 Q28 86 50 86 Q72 86 70 30 Z M32 56 L68 56")],
+"父":[P_("M30 90 L30 54 Q30 44 40 44 L60 44 Q68 44 68 52",0,"#FFE3D0",12)+P_("M64 50 L78 12",0,"#B5814A",6)+P_("M70 10 L90 16 L82 30 Z","#9AA3B5"),P_("M32 10 Q44 30 38 46 M68 10 Q56 30 62 46 M28 52 L74 92 M72 52 L26 92")],
+"弟":[R_(46,8,8,86,"#B5814A",4)+P_("M28 26 L72 26 L72 42 L28 42 L28 58 L72 58 L72 74 L30 74",0,"#FF7AB0",5),P_("M50 8 L50 92 M28 26 L72 26 L72 42 L28 42 L28 58 L72 58 M30 74 Q50 88 72 74")],
+"王":[P_("M20 72 Q50 98 80 72 L72 56 L28 56 Z","#9AA3B5")+R_(44,10,12,48,"#B5814A",4)+C_(50,10,8,"#FFD54A"),P_("M22 18 L78 18 M50 18 L50 80 M30 50 L70 50 M14 80 Q50 96 86 80")],
+"金":[P_("M10 86 L90 86 L74 58 L26 58 Z","#C98B52")+[[36,72],[56,68],[66,78],[46,80]].map(([x,y])=>P_(`M${x} ${y-6} L${x+4} ${y} L${x} ${y+6} L${x-4} ${y} Z`,"#FFD54A")).join("")+P_("M50 12 L50 30 M38 18 L44 32 M62 18 L56 32",0,"#FFD54A",4),
+  P_("M18 40 L50 12 L82 40 M30 52 L70 52 M50 40 L50 86 M22 86 L78 86")+`<circle cx="34" cy="68" r="5" class="f"/><circle cx="66" cy="68" r="5" class="f"/>`],
+"兄":[KID(50,64,1.6,"#7FC8FF")+P_("M42 44 Q50 54 58 44 Z","#C2185B"),`<rect x="28" y="12" width="44" height="30" rx="6"/>`+P_("M42 42 Q40 70 20 90 M58 42 L58 82 Q60 90 80 86")],
+"民":[[18,36,54,72,30,62].map((x,i)=>P_(`M${x} ${86} L${x} ${60-(i%3)*8}`,0,"#6CC75A",4)+C_(x,58-(i%3)*8,6,"#7ED36A")).join("")+KID(78,70,.8,"#FFB3D1")+KID(86,74,.7,"#9ED8FF"),""],
+"東":[C_(50,46,20,"#FFB830")+R_(46,40,8,52,"#B5814A",4)+C_(28,52,14,"#6CC75A")+C_(72,52,14,"#6CC75A")+R_(6,86,88,8,"#9AD47F",4),""],
+"外":[R_(0,0,100,100,"#3A3F7A",14)+P_("M30 20 A26 26 0 1 0 30 76 A20 20 0 1 1 30 20 Z","#FFE07A")+P_("M70 18 L70 86 M70 44 L88 54",0,"#E9B98C",6),""],
+"靑":[R_(10,78,80,12,"#C98B52",4)+P_("M50 80 L50 40",0,"#6CC75A",6)+P_("M50 58 Q30 56 22 40 Q40 40 50 58 Z M50 50 Q68 44 78 26 Q58 30 50 50 Z","#7ED36A")+C_(82,82,9,"#3FA9F5"),""],
+"學":[P_("M10 40 L50 12 L90 40 Z","#FF8A65")+R_(18,40,64,52,"#FFE3C2",3)+KID(50,82,.9,"#FFB3D1")+P_("M36 50 L48 62 M48 50 L36 62 M52 50 L64 62 M64 50 L52 62",0,"#B5814A",3),""],
+"校":[R_(10,60,80,8,"#B5814A",3)+[16,30,44,58,72,86].map(x=>R_(x-3,40,6,46,"#C98B52",2)).join("")+P_("M16 46 L86 80 M16 80 L86 46",0,"#B5814A",3)+KID(50,34,.8,"#FF7AB0"),""],
+"敎":[KID(30,70,1.2,"#FFB3D1")+R_(52,30,40,30,"#2F5D4A",3)+P_("M58 38 L70 52 M70 38 L58 52 M74 38 L86 52 M86 38 L74 52",0,"#FFFFFF",2)+KID(72,82,.9,"#9ED8FF"),""],
+"室":[P_("M10 42 L50 14 L90 42 Z","#FF7AB0")+R_(18,42,64,50,"#FFF3E6",3)+R_(30,56,22,16,"#CFEFFF",3)+KID(64,84,.8,"#B78CFF"),""],
+"韓":[C_(50,40,18,"#FFB830")+R_(10,58,80,34,"#FFFFFF",4)+[18,34,50,66,82].map(x=>R_(x-3,54,6,40,"#C98B52",2)).join("")+P_("M10 70 L90 70",0,"#C98B52",4),""],
+"國":[R_(8,8,84,84,"#F6EBDD",8)+P_("M8 8 L92 8 L92 92 L8 92 Z",0,"#B5814A",5)+KID(38,66,.9,"#9ED8FF")+P_("M62 26 L62 84 M54 34 L72 30",0,"#9AA3B5",4)+R_(16,80,68,6,"#9AD47F",3),""],
+"軍":[P_("M8 40 Q50 6 92 40",0,"#9AA3B5",6)+R_(30,46,40,22,"#C98B52",3)+C_(36,74,9,"#7A4A2E")+C_(64,74,9,"#7A4A2E")+C_(36,74,3,"#FFD54A")+C_(64,74,3,"#FFD54A")+KID(14,74,.6,"#6EDC9A")+KID(86,74,.6,"#6EDC9A"),""]};
+const HZPARTS={"金":[["土","흙"],["丶丶","광물 알갱이"]],"外":[["夕","저녁"],["卜","점치기"]],"寸":[["又","손"],["丶","맥 짚는 곳"]],"東":[["木","나무"],["日","해"]],"靑":[["生","새싹"],["丹","물감 돌"]],"父":[["又","손"],["丨","돌도끼"]],"兄":[["口","입"],["儿","사람"]],"學":[["宀","지붕"],["爻","셈 막대"],["臼","두 손"],["子","아이"]],"校":[["木","나무"],["交","엇갈리다"]],"敎":[["爻","셈 막대"],["子","아이"],["攵","막대 든 손"]],"室":[["宀","지붕"],["至","이르다"]],"韓":[["倝","해 돋는 모양"],["韋","에워싸다"]],"國":[["囗","울타리"],["戈","창"],["口","사람"],["一","땅"]],"軍":[["冖","둘러싸다"],["車","수레"]],"男":[["田","밭"],["力","쟁기"]],"先":[["止","발"],["儿","사람"]],"母":[["女","여자"],["丶丶","젖"]],"年":[["禾","벼"],["人","사람"]]};
+const hzSvg=(inner,cls)=>`<svg viewBox="0 0 100 100" class="${cls||""}" aria-hidden="true">${inner}</svg>`;
+const hzHard=c=>HZSTORY[c]&&HZSTORY[c][2]!=="pic"||!!HZPARTS[c];
+function hzPicCard(c,opt={}){const p=HZP[c],st=HZSTORY[c],h=HZ.find(x=>x[0]===c);if(!p)return "";const parts=HZPARTS[c];
+  return `<div class="hzpc ${opt.hide?"hidech":""}" data-c="${c}">
+   <div class="hzrow"><figure class="hzf f1">${hzSvg(p[0])}<figcaption>그림</figcaption></figure>${p[1]?`<b class="hzar">→</b><figure class="hzf f2">${hzSvg(p[1],"old")}<figcaption>옛 글자</figcaption></figure>`:""}<b class="hzar">→</b><figure class="hzf f3"><span class="hz3">${opt.hide?"?":c}</span><figcaption>${opt.hide?"어떤 한자?":"지금 글자"}</figcaption></figure></div>
+   ${parts&&!opt.hide?`<div class="hzparts">${parts.map(([pc,lb],i)=>`${i?"<b>+</b>":""}<span class="hzpt">${HZP[pc]?hzSvg(HZP[pc][0]):""}<i>${pc}</i><small>${lb}</small></span>`).join("")}<b>=</b><span class="hzpt res"><i>${c}</i><small>${h?h[1]:""}</small></span></div>`:""}
+   ${opt.hide?"":`${st?`<p class="hzst">${st[1]}</p>`:""}<div class="hzbtns"><button type="button" class="ttsb" data-say="${c}">🔊 ${hzHard(c)?"왜 이런 모양인지 들어 보기":"이야기 듣기"}</button><button type="button" class="ttsb" data-replay="1">🔁 다시 보기</button></div>`}
+   ${p[1]?`<p class="hzsrc">옛 글자는 갑골문·금문 모양을 알아보기 쉽게 단순화해 그렸어요.</p>`:`<p class="hzsrc">이 그림은 뜻을 기억하기 쉽게 돕는 그림이에요.</p>`}</div>`}
+function hzSpeak(c){const h=HZ.find(x=>x[0]===c),st=HZSTORY[c],parts=HZPARTS[c];let t=`${c}, ${h[1]} ${h[2]}. `;if(parts)t+=parts.map(p=>p[1]).join(" 더하기 ")+". ";if(st)t+=st[1].replace(/\([^)]*\)/g,"").replace(/[一-鿿]/g,"");sayKo(t)}
+function bindPicCards(root){(root||app).querySelectorAll(".hzpc").forEach(el=>{const c=el.dataset.c;const b=el.querySelector("[data-say]");if(b)b.onclick=()=>hzSpeak(c);const r=el.querySelector("[data-replay]");if(r)r.onclick=()=>{el.classList.remove("play");void el.offsetWidth;el.classList.add("play")};el.classList.add("play");
+  if(hzHard(c)&&!el.classList.contains("hidech")&&!el.dataset.spoke){el.dataset.spoke=1;setTimeout(()=>{if(document.body.contains(el))hzSpeak(c)},2200)}})}
+/* 그림 보고 한자 떠올리기 */
+function hzPicGame(){const pool=[...new Set(hzLearnedChars(Math.max(1,(S.hz&&S.hz.n)||1)).concat(Object.keys(hzF())))].filter(c=>HZP[c]);const list=shuffle(pool).slice(0,10);let i=0,ok=0;
+  const draw=()=>{if(i>=list.length){toast(`🖼️ 그림 카드 ${list.length}장 끝! 바로 떠올린 한자 ${ok}개`);if(ok>=8){S.gems=(S.gems||0)+1;save();toast("💎+1 그림 기억 왕!")}return hz()}const c=list[i],h=HZ.find(x=>x[0]===c);
+    app.innerHTML=hdr("🖼️ 그림 보고 떠올리기")+`<div class="card"><div class="row"><span class="pill">${i+1} / ${list.length}</span><span class="pill">떠올림 ${ok}</span></div>${hzPicCard(c,{hide:true})}<p class="muted" style="text-align:center">그림을 보고 한자 모양을 손가락으로 허공에 써 본 다음, 눌러서 확인해요!</p><button class="big" id="rv" type="button">정답 보기</button></div>`;bindBack();bindPicCards();
+    $("#rv").onclick=()=>{app.innerHTML=hdr("🖼️ 그림 보고 떠올리기")+`<div class="card"><div class="row"><span class="pill">${i+1} / ${list.length}</span><span class="word">${h[1]} ${h[2]}</span></div>${hzPicCard(c)}<div class="btns2"><button class="big" id="ok" type="button">⭕ 떠올렸어</button><button class="big alt" id="no" type="button">❌ 못 떠올렸어</button></div></div>`;bindBack();bindPicCards();
+      $("#ok").onclick=()=>{ok++;if(hzF()[c])hzFMark(c,true);i++;draw()};$("#no").onclick=()=>{list.push(c);i++;draw()}}};
+  if(!list.length)return toast("먼저 한자 카드를 배워요!");draw()}
+
 const HZ_FOCUS_SEED="母校南韓靑四學東小山北年外先敎弟軍室兄女王生八國民大西";
 function hzF(){S.hz.focus=S.hz.focus||{};if(!S.hz.focusSeeded){[...HZ_FOCUS_SEED].forEach(c=>{if(HZ.some(h=>h[0]===c)&&!S.hz.focus[c])S.hz.focus[c]={days:[],ok:0,miss:0}});S.hz.focusSeeded=true;save()}return S.hz.focus}
 const hzFDone=c=>{const f=hzF()[c];return f&&f.days.length>=3};
@@ -774,6 +875,7 @@ function hzFList(){return Object.keys(hzF()).filter(c=>!hzFDone(c))}
 function hzFMark(c,ok){const f=hzF()[c];if(!f)return;const td=today();if(ok){f.ok++;if(!f.days.includes(td)){f.days.push(td);if(f.days.length===3){S.gems=(S.gems||0)+1;setTimeout(()=>toast(`🎉 ${c} 완전히 외웠어! 💎+1`),400)}}}else{f.miss++;f.days=f.days.slice(0,Math.max(0,f.days.length-1))}save()}
 function hzFQs(n=10){const list=shuffle(hzFList()),pick=[];while(pick.length<Math.min(n,Math.max(list.length,1)*2)&&list.length)pick.push(list[pick.length%list.length]);
   return pick.slice(0,n).map((c,i)=>{const h=HZ.find(x=>x[0]===c),others=shuffle(HZ.filter(x=>x[0]!==c)).slice(0,3),st=HZSTORY[c];
+    if(i%3===2&&HZP[c]&&HZP[c][1])return mkQ(`<span class="qtag">🖼️ 그림 퀴즈</span>${hzSvg(HZP[c][0],"qpic")}<br>이 그림에서 온 한자는?`,`<span class="hz sm">${c}</span>`,others.map(o=>`<span class="hz sm">${o[0]}</span>`),`${c} = ${h[1]} ${h[2]}${st?" · "+st[1]:""}`,{hint:"그림의 모양이 한자 어디에 남아 있는지 찾아봐!",fc:c});
     return i%2?mkQ(`<span class="qtag">🔁 집중 반복</span>‘<b>${h[1]} ${h[2]}</b>’에 알맞은 한자는?`,`<span class="hz sm">${c}</span>`,others.map(o=>`<span class="hz sm">${o[0]}</span>`),`${c} = ${h[1]} ${h[2]}${st?" · "+st[1]:""}`,{hint:st?`${st[0]} ${st[1]}`:"모양을 떠올려 봐!",fc:c})
       :mkQ(`<span class="qtag">🔁 집중 반복</span><span class="hz">${c}</span><br>이 한자의 뜻과 소리는?`,`${h[1]} ${h[2]}`,others.map(o=>`${o[1]} ${o[2]}`),`${c} = ${h[1]} ${h[2]}${st?" · "+st[1]:""}`,{hint:st?`${st[0]} ${st[1]}`:"뜻을 먼저 떠올리고, 소리를 맞혀 봐.",fc:c})})}
 function hzFocusCard(){const all=Object.keys(hzF()),left=hzFList();if(!all.length)return "";return `<div class="card"><div class="row"><h3>🔁 모르는 한자 집중 반복</h3><span class="pill">외운 한자 ${all.length-left.length} / ${all.length}</span></div>
@@ -781,9 +883,9 @@ function hzFocusCard(){const all=Object.keys(hzF()),left=hzFList();if(!all.lengt
   <p class="muted">서로 다른 날 3번 맞히면 ⭐ 외움! (●○○) 틀리면 한 칸 뒤로. 한 글자 외울 때마다 💎+1</p>
   ${left.length?`<div class="btns2"><button class="big" id="hzf" type="button">집중 반복 10문제</button><button class="big alt" id="hzfc" type="button">🃏 카드 넘기기</button></div>`:`<p class="pill">🌟 모두 외웠어요!</p>`}</div>`}
 function hzFlip(){const list=shuffle(hzFList());let i=0,flip=false;const draw=()=>{if(i>=list.length){toast("🃏 카드 한 바퀴 끝! 이제 10문제로 확인해 봐");return hz()}const c=list[i],h=HZ.find(x=>x[0]===c),st=HZSTORY[c];
-  app.innerHTML=hdr("🃏 한자 카드")+`<div class="card"><div class="row"><span class="pill">${i+1} / ${list.length}</span></div><div class="flash flipc" id="fc"><span class="hz">${c}</span>${flip?`<span class="word">${h[1]} ${h[2]}</span>${st?`<div class="story">${st[0]} ${st[1]}</div>`:""}`:`<p class="muted">눌러서 뒤집기</p>`}</div>
-   ${flip?`<div class="btns2"><button class="big" id="ok" type="button">⭕ 알았어</button><button class="big alt" id="no" type="button">❌ 몰랐어</button></div>`:""}<button class="ttsb" id="sp" type="button">🔊 읽어 줘</button></div>`;bindBack();
-  $("#fc").onclick=()=>{flip=true;draw()};$("#sp").onclick=()=>sayKo(`${h[1]} ${h[2]}`);if(flip){$("#ok").onclick=()=>{i++;flip=false;draw()};$("#no").onclick=()=>{list.push(c);i++;flip=false;draw()}}};draw()}
+  app.innerHTML=hdr("🃏 한자 카드")+`<div class="card"><div class="row"><span class="pill">${i+1} / ${list.length}</span></div><div class="flash flipc" id="fc"><span class="hz">${c}</span>${flip?`<span class="word">${h[1]} ${h[2]}</span>${HZP[c]?hzPicCard(c):st?`<div class="story">${st[0]} ${st[1]}</div>`:""}`:`<p class="muted">눌러서 뒤집기</p>`}</div>
+   ${flip?`<div class="btns2"><button class="big" id="ok" type="button">⭕ 알았어</button><button class="big alt" id="no" type="button">❌ 몰랐어</button></div>`:""}<button class="ttsb" id="sp" type="button">🔊 읽어 줘</button></div>`;bindBack();bindPicCards();
+  $("#fc").onclick=e=>{if(e.target.closest("button"))return;flip=true;draw()};$("#sp").onclick=()=>sayKo(`${h[1]} ${h[2]}`);if(flip){$("#ok").onclick=()=>{i++;flip=false;draw()};$("#no").onclick=()=>{list.push(c);i++;flip=false;draw()}}};draw()}
 function hzFocusRun(){quiz({title:"🔁 한자 집중 반복",qs:hzFQs(10),onAnswer:(q,ok)=>hzFMark(q.fc,ok),onPass:()=>{if(!doneToday("hz")){markDone("hz");addXP(15)}},after:hz,afterLabel:"한자로 돌아가기"})}
 
 function hzMain(){
@@ -805,10 +907,10 @@ function hzLearn(d,practice){
   if(!F.length){quiz({title:"한자 복습 퀘스트",qs:hzRevQs(d),pass:7,remake:()=>hzRevQs(d),onPass:()=>{if(!practice&&!doneToday("hz")){markDone("hz");addXP(20)}}});return}
   function card(){const i=F[k],h=HZ[i];const ex=HZWORD.filter(w=>w[0].includes(h[0])&&[...w[0]].every(c=>hzLearnedChars(d+1).includes(c)))[0];
     app.innerHTML=hdr("한자 카드")+`<div class="card"><div class="dots">${F.map((_,j)=>`<i class="${j===k?"on":""}"></i>`).join("")}</div>
-     <div class="flash"><span class="hz">${h[0]}</span><span class="word">${h[1]} ${h[2]}</span>${HZSTORY[h[0]]?`<div class="story"><span class="badge">${HZSTORY[h[0]][2]==="pic"?"🖼️ 그림에서 온 글자":"📜 전해지는 이야기"}</span><div class="pic"><span>${HZSTORY[h[0]][0]}</span><span>→</span><span class="hz2">${h[0]}</span></div><p style="margin:0">${HZSTORY[h[0]][1]}</p></div>`:""}${HZTIP[h[0]]?`<p class="muted">${HZTIP[h[0]]}</p>`:""}${ex?`<p class="mean">${ex[0]} = ${ex[1]} <span class="muted">(${ex[2]})</span></p>`:""}</div>
+     <div class="flash"><span class="hz">${h[0]}</span><span class="word">${h[1]} ${h[2]}</span>${HZP[h[0]]?hzPicCard(h[0]):HZSTORY[h[0]]?`<div class="story"><span class="badge">${HZSTORY[h[0]][2]==="pic"?"🖼️ 그림에서 온 글자":"📜 전해지는 이야기"}</span><div class="pic"><span>${HZSTORY[h[0]][0]}</span><span>→</span><span class="hz2">${h[0]}</span></div><p style="margin:0">${HZSTORY[h[0]][1]}</p></div>`:""}${HZTIP[h[0]]?`<p class="muted">${HZTIP[h[0]]}</p>`:""}${ex?`<p class="mean">${ex[0]} = ${ex[1]} <span class="muted">(${ex[2]})</span></p>`:""}</div>
      <p class="muted" style="text-align:center">소리 내어 "${h[1]} ${h[2]}" 세 번 말해 보세요!</p>
      <div class="nav2"><button class="big alt" id="prev" type="button" ${k===0?"disabled":""}>이전</button><button class="big" id="nx" type="button">${k<F.length-1?"다음 카드":"퀴즈 시작!"}</button></div></div>`;
-    bindBack();$("#prev").onclick=()=>{k--;card()};$("#nx").onclick=()=>{if(k<F.length-1){k++;card()}else go()}}
+    bindBack();bindPicCards();$("#prev").onclick=()=>{k--;card()};$("#nx").onclick=()=>{if(k<F.length-1){k++;card()}else go()}}
   function go(){quiz({title:"한자 퀘스트",qs:hzDayQs(d),pass:6,remake:()=>hzDayQs(d),onPass:()=>{if(!practice&&!doneToday("hz")){markDone("hz");addXP(20)}}})}
   card();
 }
@@ -1072,7 +1174,7 @@ function pastHTML(t){const cap=t==="ma"?MA.length:t==="ko"?KO.length:t==="hist"?
   return `<div class="card"><h3>지난 퀘스트 다시 하기</h3><p class="muted">언제든 다시 할 수 있어요. 복습용이라 진도는 그대로예요.</p><div class="tapchips">${Array.from({length:n},(_,d)=>`<button type="button" class="tc past" data-t="${t}" data-d="${d}" ${t==="hz"?'style="font-family:var(--han)"':""}>${lab(d)}</button>`).join("")}</div></div>`}
 function withPast(t){app.insertAdjacentHTML("beforeend",pastHTML(t));app.querySelectorAll(".past").forEach(b=>b.onclick=()=>{const d=+b.dataset.d;if(t==="hist")histLesson(d,true);else if(t==="ko")koLesson(d,true);else if(t==="ma")maLesson(d,true);else if(t==="hz")hzLearn(d,true);else enLearn(d,true)})}
 function hist(){histMain();withPast("hist")}
-function hz(){hzMain();if(isOpen(7)){app.insertAdjacentHTML("beforeend",hzFocusCard());if($("#hzf"))$("#hzf").onclick=hzFocusRun;if($("#hzfc"))$("#hzfc").onclick=hzFlip}withPast("hz")}
+function hz(){hzMain();if(isOpen(7)){app.insertAdjacentHTML("beforeend",hzFocusCard());if($("#hzf"))$("#hzf").onclick=hzFocusRun;if($("#hzfc"))$("#hzfc").onclick=hzFlip;app.insertAdjacentHTML("beforeend",`<div class="card"><div class="row"><h3>🖼️ 그림 보고 한자 떠올리기</h3></div><p class="muted">한자가 생겨난 그림만 보고 모양을 떠올려요. 8개 이상 떠올리면 💎+1</p><button class="big" id="hzpg" type="button">그림 카드 시작</button></div>`);$("#hzpg").onclick=hzPicGame}withPast("hz")}
 function en(){enMain();withPast("en")}
 function histDay(d){quiz({title:"선애의 한국사 퀴즈 (복습)",mascot:true,qs:[0,1,2,3,4].map(k=>{const id=d*5+k,h=HIST[id];return mkQ(esc(h[0]),h[1],h[2],esc(h[3]),{id})}),
   onAnswer:(q,ok)=>{const w=S.hist.wrong;if(!ok&&!w.includes(q.id))w.push(q.id);save()}})}
@@ -1430,7 +1532,7 @@ function buildHouse(){const H=S.house,sc=new THREE.Scene(),R=2;// 방 하나 4�
     if(id==="crib"){x=-2.7;z=-3.3}if(id==="sofa"){x=-2.2;z=.75}if(id==="shelf"){x=-3.6;z=3.2;m.rotation.y=Math.PI/2}if(id==="piano"){x=-3.45;z=1.5;m.rotation.y=Math.PI/2}if(id==="rug"){x=-2;z=2.2}if(id==="mat"){x=-1.8;z=-1.6}if(id==="rocker"){x=-3.4;z=-1.2;m.rotation.y=Math.PI/2.5}if(id==="mobile"){x=-3.4;z=-3.45}if(id==="toybox"){x=-.8;z=-3.5}
     m.position.set(x,.07,z);sc.add(m)});
   // 빅토리아
-  const vic=chibi({dress:"#FF7AB0",top:"#FFFFFF",hair:"#7A4A2E",tails:true,ribbon:"#FF4F8B",crown:true,shoe:"#FF4F8B"});vic.position.set(-1.7,.07,2.5);vic.scale.setScalar(1.1);sc.add(vic);
+  const vic=chibi(vicCfg());vic.position.set(-1.7,.07,2.5);vic.scale.setScalar(1.1);sc.add(vic);
   // 아기
   let baby=null;if(S.baby){const m=babyAge(),boy=S.baby.sex==="남자";const W=wearInit(),dr=W.dress&&wItem(W.dress),bd=W.band&&wItem(W.band);baby=chibi({dress:dr?dr[5]:(boy?"#9ED8FF":"#FFE79A"),band:bd?bd[5]:null,crown:!!S.baby.queen,bonnet:m<12&&!bd?(boy?"#DDF1FF":"#FFFFFF"):null,hair:m>=12?"#7A4A2E":null,ribbon:boy?"#7FD3FF":"#FF7AB0",s:m>=24?.62:.5,mouth:true});
     const inCrib=m<5&&H.decor.includes("crib");baby.position.set(inCrib?-2.7:-1.8,inCrib?.52:.1,inCrib?-3.3:-1.6);baby.rotation.y=.4;sc.add(baby)}
@@ -1551,6 +1653,78 @@ function vrTex(kind,a,b,rx,ry){if(kind!=="stars")return c3tex(kind,a,b,rx,ry);co
   const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(rx,ry);return t}
 function vrText(txt,col,bg){const c=document.createElement("canvas");c.width=512;c.height=160;const g=c.getContext("2d");if(bg){g.fillStyle=bg;g.fillRect(0,0,512,160)}g.font="italic bold 96px Georgia,serif";g.textAlign="center";g.textBaseline="middle";g.fillStyle=col;g.fillText(txt,256,84);const t=new THREE.CanvasTexture(c);return t}
 function crownModel(gold="#F3C24A"){const g=grp(at(msh(new THREE.TorusGeometry(.17,.035,8,24),gold).rotateX(Math.PI/2),0,0,0));for(let i=0;i<5;i++){const a=i/5*Math.PI*2;g.add(at(cone(.05,.16,gold,8),Math.cos(a)*.17,.09,Math.sin(a)*.17));g.add(at(sph(.03,["#FF4F8B","#7FD3FF","#B78CFF","#6EDC9A","#FF4F8B"][i]),Math.cos(a)*.17,.19,Math.sin(a)*.17))}g.add(at(sph(.045,"#FF4F8B"),0,.02,.18));return g}
+const VR_LIST=[["bed","🛏️ 침실"],["dress","👗 드레스룸"],["study","📚 공부방"],["play","🧸 놀이방"]];
+const VDRESS=[["pink","핑크","#FF7AB0","#FF4F8B"],["lav","라벤더","#B78CFF","#8F6BF2"],["sky","하늘","#7FC8FF","#4FA8F0"],["mint","민트","#6EDC9A","#2FB673"],["gold","골드","#FFD54A","#E89A20"],["white","순백","#FFFFFF","#FF9EC4"]];
+function vicCfg(){const d=VDRESS.find(x=>x[0]===((S.vroom&&S.vroom.dress)||"pink"))||VDRESS[0];return{dress:d[2],top:"#FFFFFF",hair:"#7A4A2E",tails:true,ribbon:d[3],crown:true,shoe:d[3]}}
+function vrSign(txt,col){const c=document.createElement("canvas");c.width=512;c.height=128;const g=c.getContext("2d");g.fillStyle="#FFFFFF";g.beginPath();g.roundRect?g.roundRect(4,4,504,120,40):g.rect(4,4,504,120);g.fill();g.font="bold 64px sans-serif";g.textAlign="center";g.textBaseline="middle";g.fillStyle=col;g.fillText(txt,256,68);return new THREE.CanvasTexture(c)}
+function vrDoor(sc,T,label){const d=new THREE.Group();d.name="vdoor";d.add(at(rb(1.25,2.35,.18,T.trim,.06),0,1.17,0));d.add(at(rb(1.0,2.15,.2,"#2B2233",.02),0,1.08,0));
+  const leaf=new THREE.Group();leaf.add(at(rb(.96,2.08,.08,T.wood==="#FFFFFF"?T.quilt2:T.wood,.04),.48,0,0));leaf.add(at(rb(.7,.7,.02,"#FFFFFF",.02),.48,.45,.05));leaf.add(at(rb(.7,.7,.02,"#FFFFFF",.02),.48,-.45,.05));leaf.add(at(sph(.05,T.trim),.85,0,.07));leaf.position.set(-.48,1.06,.06);leaf.rotation.y=-.75;d.add(leaf);
+  const arch=msh(new THREE.CircleGeometry(.62,24,0,Math.PI),T.trim);arch.position.set(0,2.3,0);d.add(arch);
+  const sg=new THREE.Mesh(new THREE.PlaneGeometry(2.0,.5),new THREE.MeshBasicMaterial({map:vrSign(label,T.acc==="#FFD54A"?"#33407A":T.acc),transparent:true}));sg.position.set(-.2,3.05,.25);sg.rotation.y=-.75;d.add(sg);
+  d.add(at(rb(1.1,.04,.6,T.rug,.02),0,.05,.45));d.position.set(3.35,0,2.35);d.rotation.y=Math.PI/2;sc.add(d);return d}
+function vrMannequin(c,c2){return grp(at(cyl(.2,.24,.04,"#C9A36A",16),0,.02,0),at(cyl(.025,.025,.6,"#C9A36A",8),0,.32,0),at(cone(.42,1.0,c,20),0,.85,0),at(cyl(.13,.19,.36,c,14),0,1.45,0),at(msh(new THREE.TorusGeometry(.42,.03,8,24),c2).rotateX(Math.PI/2),0,.37,0),at(sph(.1,"#F3E3D3"),0,1.72,0),at(crownModel(),0,1.84,0).scale.set(.5,.5,.5)&&null)}
+function vrRoomDress(sc,T,win){win(-3.58,1.4,Math.PI/2);const box=[],act=[];
+  // 긴 드레스 행거
+  const rack=new THREE.Group();rack.add(at(rb(4.2,.12,.6,T.trim,.04),0,2.5,0));[-2,2].forEach(x=>rack.add(at(rb(.1,2.5,.5,T.wood,.03),x,1.25,0)));rack.add(at(cyl(.025,.025,3.9,T.trim,8).rotateZ(Math.PI/2),0,2.2,.05));
+  ["#FF7AB0","#B78CFF","#7FC8FF","#6EDC9A","#FFD54A","#FFFFFF","#FF8A65"].forEach((c,i)=>{const x=-1.65+i*.55;rack.add(at(cone(.24,1.05,c,16),x,1.45,.05));rack.add(at(cyl(.09,.13,.26,c,12),x,2.0,.05));rack.add(at(msh(new THREE.TorusGeometry(.06,.012,6,12),T.trim),x,2.17,.05))});
+  [-1.4,-.4,.6,1.5].forEach((x,i)=>rack.add(at(cyl(.22,.22,.3,[T.quilt2,T.acc,"#FFFFFF",T.quilt][i],16),x,2.73,0)));rack.position.set(-1.1,0,-3.15);sc.add(rack);box.push([-3.3,1.1,-3.5,-2.8]);
+  // 신발장
+  const sh=new THREE.Group();sh.add(at(rb(1.3,1.5,.5,T.wood,.04),0,.75,0));for(let r=0;r<3;r++){sh.add(at(rb(1.2,.04,.44,"#F3E6D6",.01),0,.3+r*.45,.04));for(let k=0;k<3;k++){const c=["#FF4F8B","#FFD54A","#B78CFF","#FFFFFF","#7FC8FF","#FF8A65","#6EDC9A","#FF7AB0","#C98B52"][r*3+k];[-.05,.05].forEach(dx=>sh.add(at(sph(.07,c,1,.6,1.6),-.38+k*.38+dx,.36+r*.45,.06)))}}
+  sh.add(at(rb(1.4,.08,.56,T.trim,.03),0,1.54,0));sh.add(at(crownModel(),0,1.68,0));sh.position.set(2.0,0,-3.2);sc.add(sh);box.push([1.3,2.7,-3.5,-2.9]);
+  // 전신 거울
+  const mr=new THREE.Group();mr.add(at(msh(new THREE.TorusGeometry(.5,.07,10,32),T.trim),0,1.4,0));mr.children[0].scale.set(1,1.8,1);const gl=msh(new THREE.CircleGeometry(.48,32),mat("#E8F6FF",{emissive:"#CFEFFF",emissiveIntensity:.35,metalness:.3,roughness:.12}));gl.scale.set(1,1.8,1);gl.position.set(0,1.4,.01);mr.add(gl);
+  mr.add(at(rb(.9,.1,.4,T.trim,.04),0,.05,.1));for(let i=0;i<10;i++){const a=i/10*Math.PI*2;mr.add(at(sph(.04,"#FFF6C9"),Math.cos(a)*.6,1.4+Math.sin(a)*1.08,.06))}mr.position.set(-3.4,0,-1.0);mr.rotation.y=Math.PI/2;sc.add(mr);box.push([-3.5,-3.0,-1.6,-.4]);
+  // 마네킹 2 (대관식 드레스)
+  const m1=vrMannequin("#FFFFFF",T.trim);m1.add(at(crownModel(),0,1.86,0));m1.position.set(1.1,0,-1.3);sc.add(m1);const m2=vrMannequin(T.quilt,T.quilt2);m2.position.set(2.5,0,-.6);sc.add(m2);box.push([.6,1.6,-1.8,-.8],[2.0,3.0,-1.1,-.1]);
+  // 푸프 + 러그 + 보석함
+  sc.add(at(rb(3.2,.03,2.2,T.rug,.02),-.3,.05,1.0));const pf=grp(at(cyl(.55,.5,.4,T.quilt,24),0,.25,0),at(sph(.55,T.quilt,1,.3,1),0,.45,0),...[0,1,2,3,4,5].map(i=>at(sph(.04,T.trim),Math.cos(i)*.3,.6,Math.sin(i)*.3)));pf.position.set(-.4,0,.9);sc.add(pf);box.push([-1.0,.2,.3,1.5]);
+  const jw=grp(at(cyl(.06,.1,.6,T.trim,10),0,.3,0),at(cyl(.3,.3,.04,T.trim,16),0,.62,0),at(rb(.4,.2,.28,T.acc,.05),0,.75,0),at(sph(.05,"#7FD3FF"),-.1,.88,0),at(sph(.05,"#FF4F8B"),.1,.88,0));jw.position.set(-2.7,0,2.4);sc.add(jw);
+  const pl=grp(at(cyl(.25,.2,.4,T.quilt2,16),0,.2,0),at(sph(.32,"#6CC75A",1,1.2,1),0,.68,0),at(sph(.05,T.acc),.15,.8,.25));pl.position.set(-3.0,0,3.0);sc.add(pl);
+  act.push(["mirror","🪞 거울 보기",-2.6,-1.0,b=>b.say("거울아 거울아, 세상에서 누가 제일 멋지니? ✨",3400)],["wear","👗 옷 갈아입기",-1.1,-2.4,b=>b.dressPick()],["shoe","👠 구두 고르기",2.0,-2.5,b=>b.say("반짝반짝 구두 신고 대관식 준비 완료! 👠",3200)],["crownd","👑 대관식 드레스",1.6,-.4,b=>b.say("여왕의 대관식 드레스야. 언젠가 꼭 입어 볼래! 👑",3400)]);
+  return{box,act}}
+function vrRoomStudy(sc,T,win){win(-3.58,-.6,Math.PI/2);const box=[],act=[];
+  const shelf=(x)=>{const g=new THREE.Group();g.add(at(rb(1.1,2.6,.06,T.wood,.02),0,1.3,-.18));[-1,1].forEach(s=>g.add(at(rb(.06,2.6,.42,T.wood,.02),s*.52,1.3,0)));for(let r=0;r<5;r++){g.add(at(rb(1.0,.04,.38,"#F3E6D6",.01),0,.12+r*.5,.02));if(r<5)for(let k=0;k<5;k++){const h=.26+((k*5+r*3)%4)*.04;g.add(at(rb(.15,h,.28,["#FF8A65","#7FD3FF","#FFC93C","#B78CFF","#6EDC9A","#FF7AB0","#C98B52"][(k+r*2)%7],.02),-.36+k*.18,.14+r*.5+h/2,.04))}}g.add(at(rb(1.18,.1,.48,T.trim,.03),0,2.64,0));g.position.set(x,0,-3.3);sc.add(g)};shelf(-2.9);shelf(-1.75);box.push([-3.5,-1.15,-3.5,-3.0]);
+  // 칠판
+  const bd=new THREE.Group();bd.add(at(rb(2.0,1.2,.08,"#C98B52",.03),0,0,0));const ch=new THREE.Mesh(new THREE.PlaneGeometry(1.8,1.0),new THREE.MeshStandardMaterial({map:(()=>{const c=document.createElement("canvas");c.width=512;c.height=284;const g=c.getContext("2d");g.fillStyle="#2F5D4A";g.fillRect(0,0,512,284);g.fillStyle="#FFFFFF";g.font="bold 46px sans-serif";g.textAlign="center";g.fillText("오늘도 한 걸음!",256,90);g.font="38px sans-serif";g.fillStyle="#FFE79A";g.fillText("½ = 0.5 = 50%",256,165);g.fillStyle="#FFC6DC";g.fillText("山 메 산 · 水 물 수",256,230);return new THREE.CanvasTexture(c)})(),roughness:.9}));ch.position.z=.05;bd.add(ch);bd.add(at(rb(1.9,.06,.12,"#C98B52",.02),0,-.62,.06));bd.position.set(.5,1.95,-3.5);sc.add(bd);
+  // 책상 + 지구본 + 의자
+  const desk=grp(at(rb(1.8,.08,.8,T.wood,.03),0,.8,0),at(rb(.5,.76,.74,T.wood,.04),-.62,.4,0),...[[1,-1],[1,1]].map(([a,b])=>at(cyl(.035,.035,.78,T.trim,8),a*.82,.39,b*.34)),at(rb(.42,.12,.03,T.quilt2,.02),-.62,.55,.38),at(rb(.42,.12,.03,T.quilt2,.02),-.62,.28,.38),
+    at(rb(.5,.03,.36,"#FFFFFF",.01),.1,.85,.05),at(cyl(.06,.05,.14,T.acc,10),.55,.91,-.2),at(cyl(.1,.12,.05,T.trim,14),-.5,.86,-.2),at(cyl(.02,.02,.35,T.trim,8),-.5,1.05,-.2),at(cyl(.12,.2,.2,T.quilt2,14),-.5,1.27,-.2));desk.position.set(1.9,0,-3.05);sc.add(desk);
+  const globe=new THREE.Group();globe.name="globe";const gs=sph(.2,"#5BB8F0");globe.add(gs);[[.08,.1,.05],[-.1,-.05,.12],[.05,-.1,-.15],[-.12,.08,-.08]].forEach(([x,y,z])=>globe.add(at(sph(.08,"#6EDC9A",1,.7,1),x,y,z)));const gb=grp(at(cyl(.08,.1,.04,T.trim,12),0,0,0),at(cyl(.015,.015,.15,T.trim,6),0,.08,0),at(msh(new THREE.TorusGeometry(.23,.012,6,24,Math.PI),T.trim).rotateZ(Math.PI/2),0,.3,0));globe.position.set(0,.3,0);gb.add(globe);gb.position.set(2.45,.84,-2.95);sc.add(gb);
+  const chair=grp(at(rb(.5,.1,.5,T.wood,.04),0,.48,0),at(rb(.5,.12,.5,T.quilt2,.06),0,.56,0),at(rb(.5,.6,.08,T.wood,.04),0,.85,.22),...[[-1,-1],[1,-1],[-1,1],[1,1]].map(([a,b])=>at(cyl(.03,.03,.46,T.trim,8),a*.2,.23,b*.2)));chair.position.set(1.9,0,-2.2);sc.add(chair);box.push([.9,2.9,-3.5,-1.9]);
+  // 망원경
+  const tel=grp(at(cyl(.02,.02,1.1,"#4A3A55",6).rotateX(.3),0,.52,-.15),at(cyl(.02,.02,1.1,"#4A3A55",6).rotateZ(.3),-.15,.52,.1),at(cyl(.02,.02,1.1,"#4A3A55",6).rotateZ(-.3),.15,.52,.1),at(cyl(.07,.1,.9,"#FFFFFF",14).rotateZ(1.1),0,1.1,0),at(cyl(.11,.11,.06,T.trim,14).rotateZ(1.1),-.4,1.32,0));tel.position.set(-2.8,0,.4);tel.rotation.y=Math.PI;sc.add(tel);box.push([-3.3,-2.3,0,.8]);
+  // 세계지도 액자
+  const map=grp(rb(1.3,.8,.06,T.trim,.03),at(new THREE.Mesh(new THREE.PlaneGeometry(1.18,.68),new THREE.MeshStandardMaterial({map:(()=>{const c=document.createElement("canvas");c.width=300;c.height=170;const g=c.getContext("2d");g.fillStyle="#BFE6FF";g.fillRect(0,0,300,170);g.fillStyle="#7ED36A";[[40,40,40,30],[70,95,22,40],[150,40,30,25],[160,90,25,35],[210,55,50,30],[250,120,22,14]].forEach(([x,y,a,b])=>{g.beginPath();g.ellipse(x,y,a,b,0,0,7);g.fill()});g.fillStyle="#FF4F8B";g.beginPath();g.arc(232,62,4,0,7);g.fill();return new THREE.CanvasTexture(c)})()})),0,0,.04));map.position.set(-3.55,2.1,2.0);map.rotation.y=Math.PI/2;sc.add(map);
+  // 독서 공간
+  sc.add(at(cyl(1.3,1.3,.03,T.rug,36),.2,.05,1.0));const tb=grp(at(cyl(.45,.45,.06,T.wood,20),0,.45,0),at(cyl(.05,.05,.42,T.trim,8),0,.22,0),at(rb(.3,.06,.22,"#FF8A65",.02),-.05,.51,0),at(rb(.28,.06,.2,"#7FD3FF",.02),-.03,.57,.02),at(cyl(.06,.05,.1,"#FFFFFF",10),.25,.53,.1));tb.position.set(.2,0,1.0);sc.add(tb);box.push([-.35,.75,.45,1.55]);
+  [[-.8,.6],[1.2,.6],[.2,2.1]].forEach(([x,z],i)=>sc.add(at(rb(.6,.2,.6,[T.quilt,T.quilt2,T.acc][i],.1),x,.12,z)));
+  const fl=grp(at(cyl(.18,.2,.05,T.trim),0,.03,0),at(cyl(.025,.025,1.55,T.trim,8),0,.8,0),at(cyl(.18,.28,.32,T.quilt2,16),0,1.65,0));fl.position.set(-2.9,0,2.9);sc.add(fl);
+  act.push(["learn","✏️ 공부하러 가기",1.9,-1.8,b=>{b.say("좋아, 오늘 퀘스트 시작! ✏️",1800);setTimeout(home,1300)}],["globe","🌍 지구본 돌리기",2.3,-2.2,b=>{b.spin=3;b.say("빙글빙글~ 지구는 하루에 한 바퀴 스스로 돌아요(자전) 🌍",3800)}],["tel","🔭 망원경 보기",-2.0,.4,b=>b.say("밤하늘을 보면 달의 울퉁불퉁한 구덩이(크레이터)도 보여! 🔭",3800)],["read","📖 책 읽기",.2,1.9,b=>b.say("오늘은 어떤 책을 읽을까? 📖",3000)],["board","🧑‍🏫 칠판 보기",.5,-2.4,b=>b.say("½은 0.5, 그리고 50%! 모두 같은 크기야 ✨",3600)]);
+  return{box,act}}
+function vrRoomPlay(sc,T,win){win(.4,-3.58,0);const box=[],act=[];
+  // 티피 텐트
+  const tp=new THREE.Group();for(let i=0;i<8;i++){const a=i/8*Math.PI*2;if(i===2)continue;const p=msh(new THREE.ConeGeometry(1.0,2.2,3,1,true,a,Math.PI/4),mat(i%2?T.quilt2:"#FFFFFF",{side:THREE.DoubleSide}));p.position.y=1.1;tp.add(p)}[0,1,2,3].forEach(i=>{const a=i*Math.PI/2+.4;tp.add(at(cyl(.025,.025,2.6,"#C98B52",6),Math.cos(a)*.45,1.2,Math.sin(a)*.45).rotateX(Math.sin(a)*.4).rotateZ(-Math.cos(a)*.4))});
+  tp.add(at(cone(.12,.3,T.acc,3),0,2.5,0));tp.add(at(rb(.6,.12,.6,T.quilt,.06),0,.12,.1));tp.position.set(-2.4,0,-2.4);tp.rotation.y=.6;sc.add(tp);box.push([-3.4,-1.4,-3.4,-1.4]);
+  // 업라이트 피아노
+  const pn=new THREE.Group();pn.add(at(rb(1.6,1.3,.55,"#FFFFFF",.05),0,.85,0));pn.add(at(rb(1.6,.08,.75,"#FFFFFF",.03),0,.72,.15));pn.add(at(rb(1.5,.04,.25,"#FFFFFF",.01),0,.77,.35));for(let i=0;i<10;i++)if(i%7!==2&&i%7!==6)pn.add(at(rb(.07,.03,.14,"#2B2233",.01),-.65+i*.15+.075,.8,.3));
+  pn.add(at(rb(1.66,.1,.6,T.trim,.03),0,1.52,0));pn.add(at(cyl(.07,.06,.18,T.acc,10),.5,1.66,0));[-1,1].forEach(s=>pn.add(at(cyl(.04,.04,.7,"#FFFFFF",8),s*.7,.35,.35)));pn.position.set(2.2,0,-3.2);sc.add(pn);
+  const pb=grp(at(rb(.9,.1,.36,T.quilt,.05),0,.45,0),...[[-1,-1],[1,-1],[-1,1],[1,1]].map(([a,b])=>at(cyl(.03,.03,.42,T.trim,8),a*.38,.21,b*.13)));pb.position.set(2.2,0,-2.35);sc.add(pb);box.push([1.3,3.1,-3.5,-2.1]);
+  // 이젤
+  const ea=grp(at(cyl(.03,.03,1.7,"#B5814A",6).rotateX(.18),0,.82,-.15),at(cyl(.03,.03,1.7,"#B5814A",6).rotateZ(.25),-.25,.8,.08),at(cyl(.03,.03,1.7,"#B5814A",6).rotateZ(-.25),.25,.8,.08),at(rb(.9,.06,.12,"#B5814A",.02),0,.75,.1));const ar=artFrame("sunflowers",.62,.8);ar.position.set(0,1.25,.1);ar.rotation.x=-.12;ea.add(ar);ea.position.set(-2.8,0,1.0);ea.rotation.y=Math.PI/2;sc.add(ea);
+  const pal=grp(at(cyl(.22,.22,.03,"#E9B98C",20),0,0,0),...["#FF4F8B","#FFD54A","#7FC8FF","#6EDC9A","#B78CFF"].map((c,i)=>at(sph(.04,c),Math.cos(i*1.1)*.13,.03,Math.sin(i*1.1)*.13)));pal.position.set(-2.3,.42,1.7);sc.add(pal);sc.add(at(cyl(.2,.2,.38,"#FFFFFF",14),-2.3,.2,1.7));box.push([-3.3,-2.0,.5,2.0]);
+  // 장난감 성
+  const cs=new THREE.Group();cs.add(at(rb(1.0,.7,.6,"#FFD1E2",.04),0,.35,0));[-1,1].forEach(s=>{cs.add(at(cyl(.18,.18,1.1,"#FFB3D1",14),s*.55,.55,0));cs.add(at(cone(.24,.4,T.acc,14),s*.55,1.3,0))});cs.add(at(cyl(.14,.14,1.4,"#FFB3D1",14),0,.7,-.15));cs.add(at(cone(.2,.4,T.trim,14),0,1.6,-.15));cs.add(at(rb(.3,.4,.04,"#C98B52",.06),0,.2,.31));cs.position.set(-.2,0,-3.1);sc.add(cs);box.push([-.9,.5,-3.5,-2.7]);
+  // 볼풀
+  const bp=new THREE.Group();bp.add(msh(new THREE.TorusGeometry(.85,.2,12,32),T.quilt2).rotateX(Math.PI/2));bp.children[0].position.y=.2;bp.add(at(cyl(.85,.85,.05,T.quilt2,32),0,.03,0));const BC=["#FF4F8B","#FFD54A","#7FC8FF","#6EDC9A","#B78CFF","#FFFFFF"];for(let i=0;i<70;i++){const a=i*2.4,r=((i*7)%8)/10;const b=sph(.11,BC[i%6]);b.position.set(Math.cos(a)*r,.3+((i*3)%4)*.06,Math.sin(a)*r);b.name="ball";b.userData.y0=b.position.y;bp.add(b)}bp.position.set(1.3,0,1.1);sc.add(bp);box.push([.4,2.2,.2,2.0]);
+  // 흔들 유니콘
+  const uc=grp(at(msh(new THREE.TorusGeometry(.5,.04,8,24,Math.PI),T.trim).rotateX(Math.PI/2).rotateZ(Math.PI/2),0,.04,0),at(sph(.28,"#FFFFFF",1.4,.9,1),0,.55,0),at(sph(.17,"#FFFFFF",1,1.1,1),.35,.85,0),at(cone(.04,.22,T.trim,8),.42,1.07,0),at(sph(.07,T.acc,1,1,1.6),.2,.95,0),at(sph(.08,T.quilt2,1.6,.6,1),-.35,.6,0),...[[-1,-1],[1,-1],[-1,1],[1,1]].map(([a,b])=>at(cyl(.04,.04,.36,"#FFFFFF",8),a*.2,.24,b*.12)));uc.name="uni";uc.position.set(2.7,0,-.6);uc.rotation.y=-.6;sc.add(uc);box.push([2.2,3.2,-1.1,-.1]);
+  // 바닥 매트 + 깃발 가랜드
+  for(let i=0;i<9;i++)sc.add(at(rb(.9,.03,.9,[T.rug,"#FFFFFF",T.quilt2][i%3],.02),-.6+(i%3)*.9,.05,.3+Math.floor(i/3)*.9));
+  for(let i=0;i<13;i++){const f=cone(.11,.24,["#FF4F8B","#FFD54A","#7FC8FF","#6EDC9A","#B78CFF"][i%5],3);f.rotation.x=Math.PI;f.position.set(-3.45,2.75+Math.abs(i-6)*.03,-3.2+i*.5);sc.add(f)}
+  act.push(["piano","🎹 피아노 치기",2.2,-1.9,b=>musicBox()],["tent","⛺ 텐트에 숨기",-1.6,-1.6,b=>b.hide()],["paint","🎨 그림 그리기",-1.8,1.0,b=>b.say("고흐는 해바라기 그림을 여러 점 그렸어. 나도 그려 볼래! 🌻",3800)],["ball","🟡 볼풀 놀이",1.3,2.3,b=>{b.bounce=3;b.say("풍덩~ 공이 통통 튀어! 🎈",3000)}],["uni","🦄 유니콘 타기",2.0,.2,b=>{b.rock=3;b.say("이랴~ 무지개 나라로 출발! 🦄",3000)}]);
+  return{box,act}}
+
+function vrGo(r,door){const V=vroomInit();V.r=r;V.enter=door?1:0;save();setTimeout(houseView,door?250:0)}
 function buildRoom(){const V=vroomInit(),T=VROOM_T[V.t]||VROOM_T.royal,sc=new THREE.Scene(),L=3.6;
   sc.add(new THREE.HemisphereLight("#FFF8F0","#F5D9C8",T.hemi));const sun=new THREE.DirectionalLight(V.t==="night"?"#C9D4FF":"#FFF3E0",V.t==="night"?.45:.7);sun.position.set(5,10,6);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);const s2=sun.shadow.camera;s2.left=-6;s2.right=6;s2.top=6;s2.bottom=-6;sun.shadow.radius=3;sun.shadow.bias=-.0008;sc.add(sun);
   // 바닥 받침 + 바닥
@@ -1572,7 +1746,7 @@ function buildRoom(){const V=vroomInit(),T=VROOM_T[V.t]||VROOM_T.royal,sc=new TH
     if(V.t==="night"){w.add(at(sph(.16,"#FFF3C2",1,1,.3),.3,.9,.07));[[-.4,.3],[.35,-.3],[-.2,-.45]].forEach(([a,b])=>w.add(at(sph(.04,"#FFE07A"),a,b,.07)))}
     [-1,1].forEach(s=>{w.add(at(rb(.42,2.05,.08,T.drape,.06),s*.95,.05,.16));w.add(at(rb(.46,.08,.12,T.acc,.03),s*.95,-.25,.2))});w.add(at(cyl(.04,.04,2.4,T.trim,8).rotateZ(Math.PI/2),0,1.15,.18));w.add(at(rb(2.3,.32,.1,T.drape,.08),0,1.02,.2));
     w.position.set(x,1.95,z);w.rotation.y=rot;sc.add(w)};
-  win(.6,-L+.02,0);win(-L+.02,-.1,Math.PI/2);
+  const R=V.r||"bed";let mbx=new THREE.Group(),EX={box:[],act:[]};if(R==="bed"){win(.6,-L+.02,0);win(-L+.02,-.1,Math.PI/2);
   // 공주 침대
   const bed=new THREE.Group(),W2=1.9,Ln=2.5;bed.add(at(rb(W2,.38,Ln,T.wood,.08),0,.32,0));bed.add(at(rb(W2-.08,.26,Ln-.12,"#FFFFFF",.12),0,.62,.02));bed.add(at(rb(W2+.04,.12,1.55,T.quilt,.06),0,.77,.45));bed.add(at(rb(W2+.06,.04,.2,T.quilt2,.02),0,.84,-.25));
   for(let i=0;i<7;i++)bed.add(at(sph(.05,T.quilt2),-.75+i*.25,.84,.6));
@@ -1595,7 +1769,7 @@ function buildRoom(){const V=vroomInit(),T=VROOM_T[V.t]||VROOM_T.royal,sc=new TH
   const desk=grp(at(rb(1.5,.08,.7,T.wood,.03),0,.78,0),...[[-1,-1],[1,-1],[-1,1],[1,1]].map(([a,b])=>at(cyl(.035,.035,.76,T.trim,8),a*.68,.39,b*.3)),at(rb(.45,.32,.62,T.wood,.04),.48,.55,0),at(rb(.38,.1,.03,T.quilt2,.02),.48,.6,.32),
     at(rb(.12,.3,.22,"#FF8A65",.02),-.6,.97,-.18),at(rb(.1,.28,.22,"#7FD3FF",.02),-.48,.96,-.18),at(rb(.1,.32,.22,"#6EDC9A",.02),-.37,.98,-.18),at(rb(.38,.03,.28,"#FFFFFF",.01),-.05,.83,.08),at(cyl(.05,.04,.12,T.acc,10),.35,.88,-.12));desk.position.set(.6,0,-3.12);sc.add(desk);
   const chair=grp(at(rb(.5,.1,.5,T.wood,.04),0,.48,0),at(rb(.5,.12,.5,T.quilt2,.06),0,.56,0),at(rb(.5,.6,.08,T.wood,.04),0,.85,.22),...[[-1,-1],[1,-1],[-1,1],[1,1]].map(([a,b])=>at(cyl(.03,.03,.46,T.trim,8),a*.2,.23,b*.2)));chair.position.set(.6,0,-2.35);sc.add(chair);
-  const mbx=musicBoxModel();mbx.position.set(.95,.82,-3.0);mbx.scale.setScalar(.85);sc.add(mbx);
+  mbx=musicBoxModel();mbx.position.set(.95,.82,-3.0);mbx.scale.setScalar(.85);sc.add(mbx);
   // 옷장 (드레스가 보이는)
   const wd=new THREE.Group();wd.add(at(rb(1.6,2.35,.8,T.wood,.06),0,1.2,0));wd.add(at(rb(1.4,2,.04,"#F5EEF2",.02),0,1.18,.38));wd.add(at(cyl(.02,.02,1.36,T.trim,8).rotateZ(Math.PI/2),0,1.95,.2));
   ["#FF7AB0","#B78CFF","#7FD3FF","#FFE79A"].forEach((c,i)=>{const x=-.48+i*.32;wd.add(at(cone(.17,.72,c,14),x,1.42,.22));wd.add(at(cyl(.07,.1,.2,c,10),x,1.86,.22));wd.add(at(msh(new THREE.TorusGeometry(.05,.01,6,12),T.trim),x,2.0,.22))});
@@ -1624,33 +1798,40 @@ function buildRoom(){const V=vroomInit(),T=VROOM_T[V.t]||VROOM_T.royal,sc=new TH
   [["lilies",.9,.7,-L+.04,2.25,-2.3,Math.PI/2],["sunflowers",.5,.62,-.85,2.25,-L+.04,0],["seurat",.62,.5,2.2,2.65,-L+.04,0]].forEach(([k,w,h,x,y,z,r])=>{const f=artFrame(k,w,h);f.position.set(x,y,z);f.rotation.y=r;sc.add(f)});
   if(V.t==="night"){const ea=grp(at(cyl(.03,.03,1.7,"#B5814A",6).rotateX(.18),0,.82,-.15),at(cyl(.03,.03,1.7,"#B5814A",6).rotateZ(.25),-.25,.8,.08),at(cyl(.03,.03,1.7,"#B5814A",6).rotateZ(-.25),.25,.8,.08),at(rb(.9,.06,.12,"#B5814A",.02),0,.75,.1));const ar=artFrame("starry",.8,.62);ar.position.set(0,1.18,.1);ar.rotation.x=-.12;ea.add(ar);ea.position.set(-1.2,0,2.7);ea.rotation.y=.5;sc.add(ea);
     for(let i=0;i<10;i++){const s=sph(.045,"#FFE07A");s.material=mat("#FFE07A",{emissive:"#FFD54A",emissiveIntensity:.9});s.position.set(-3+((i*37)%60)/10,2.6+((i*13)%8)/10,-3+((i*23)%60)/10);s.name="twk";sc.add(s)}}
+  }else EX=({dress:vrRoomDress,study:vrRoomStudy,play:vrRoomPlay}[R]||vrRoomDress)(sc,T,win);
+  const nx=VR_LIST[(VR_LIST.findIndex(x=>x[0]===R)+1)%VR_LIST.length];vrDoor(sc,T,nx[1]+" →");
   // 꼬마전구
   const LC=T.lights;for(let i=0;i<26;i++){const onB=i<13,x=onB?-3.4+i*.55:-L+.12,z=onB?-L+.12:-3.4+(i-13)*.55,y=3.18-Math.abs(Math.sin(i*1.3))*.12;const b=msh(new THREE.SphereGeometry(.05,10,8),mat(LC[i%3],{emissive:LC[i%3],emissiveIntensity:.9}));b.position.set(x,y,z);b.castShadow=false;b.name="fl";sc.add(b)}
   [[-2,-3.2],[-3.2,1.5]].forEach(([x,z])=>{const p=new THREE.PointLight("#FFE7B8",.18,4);p.position.set(x,3,z);sc.add(p)});
   // 빅토리아 · 펫
-  const vic=chibi({dress:"#FF7AB0",top:"#FFFFFF",hair:"#7A4A2E",tails:true,ribbon:"#FF4F8B",crown:true,shoe:"#FF4F8B"});vic.position.set(.4,.07,.9);vic.scale.setScalar(1.1);sc.add(vic);
-  const pets=[];S.pets.filter(p=>!REPTILE.includes(p.k)).slice(0,2).forEach((p,i)=>{const m=petModel(p.k);m.position.set(-.2+i*1.1,.08,1.9);m.rotation.y=-.4;m.scale.setScalar(1.2);sc.add(m);pets.push(m)});
-  return{sc,vic,baby:null,pets,clouds:[],mbx}}
+  const vic=chibi(vicCfg());if(V.enter){vic.position.set(2.75,.07,2.35)}else if(R==="bed")vic.position.set(.4,.07,.9);else vic.position.set(.6,.07,1.7);V.enter=0;vic.scale.setScalar(1.1);sc.add(vic);
+  const pets=[];S.pets.filter(p=>!REPTILE.includes(p.k)&&(R==="bed"||R==="play")).slice(0,2).forEach((p,i)=>{const m=petModel(p.k);m.position.set(-.2+i*1.1,.08,1.9);m.rotation.y=-.4;m.scale.setScalar(1.2);sc.add(m);pets.push(m)});
+  return{sc,vic,baby:null,pets,clouds:[],mbx,R,nx,box:EX.box,act:EX.act}}
 function bindRoom(B,cam,cv,st){const ray=new THREE.Raycaster(),pl=new THREE.Plane(new THREE.Vector3(0,1,0),-.07);B.vic.name="vic";const W={path:[],cb:null};H3.walk=W;
-  const bub=document.createElement("div");bub.className="vbub";st.appendChild(bub);let until=0;const say=(t,ms=2600)=>{bub.textContent=t;until=performance.now()+ms};W.say=say;say("여기는 내 방이야! 나를 눌러 봐 👑",4200);
-  const BOX=[[-3.3,-1.2,-3.5,-.85],[-.2,1.4,-3.5,-2.7],[1.7,3.4,-3.5,-2.5],[-3.5,-2.75,.35,1.85],[-3.5,-2.95,1.8,3.3],[2.45,3.3,.2,1.0]];
-  const free=(x,z)=>{x=Math.max(-3.1,Math.min(3.2,x));z=Math.max(-2.4,Math.min(3.2,z));for(const[a,b,c,d]of BOX)if(x>a&&x<b&&z>c&&z<d){const o=[[x-a,a-.15,z],[b-x,b+.15,z],[z-c,x,c-.15],[d-z,x,d+.15]].sort((p,q)=>p[0]-q[0])[0];return o.length&&o[0]===x-a||o[0]===b-x?[o[1],o[2]]:[o[1],o[2]]}return[x,z]};
+  const bub=document.createElement("div");bub.className="vbub";st.appendChild(bub);let until=0;const say=(t,ms=2600)=>{bub.textContent=t;until=performance.now()+ms};W.say=say;say(B.R==="bed"?"여기는 내 방이야! 나를 눌러 봐 👑":(VR_LIST.find(x=>x[0]===B.R)[1]+"에 왔어! 나를 눌러 봐 ✨"),4200);
+  const BEDBOX=[[-3.3,-1.2,-3.5,-.85],[-.2,1.4,-3.5,-2.7],[1.7,3.4,-3.5,-2.5],[-3.5,-2.75,.35,1.85],[-3.5,-2.95,1.8,3.3],[2.45,3.3,.2,1.0]],BOX=B.R==="bed"?BEDBOX:B.box;
+  const free=(x,z)=>{if(x>2.5&&Math.abs(z-2.35)<.5)return[x,z];x=Math.max(-3.1,Math.min(3.2,x));z=Math.max(-2.4,Math.min(3.2,z));for(const[a,b,c,d]of BOX)if(x>a&&x<b&&z>c&&z<d){const o=[[x-a,a-.15,z],[b-x,b+.15,z],[z-c,x,c-.15],[d-z,x,d+.15]].sort((p,q)=>p[0]-q[0])[0];return o.length&&o[0]===x-a||o[0]===b-x?[o[1],o[2]]:[o[1],o[2]]}return[x,z]};
   const go=(x,z,cb,msg)=>{const p=free(x,z);W.path=[new THREE.Vector3(p[0],.07,p[1])];W.cb=cb||null;say(msg||"총총총~ 🎶",1600);menu.hidden=true};
   const menu=document.createElement("div");menu.className="vmenu";menu.hidden=true;st.appendChild(menu);
-  const ACT=[["bed","🛏️ 침대에서 쉬기",-1.05,-1.6,()=>say("폭신폭신~ 공주 침대 최고야 💤",3200)],["vanity","💄 화장대",-2.3,1.6,()=>say("거울아 거울아~ 오늘도 반짝반짝 ✨",3200)],["wd","👗 옷장",2.4,-2.2,()=>say("오늘은 어떤 드레스 입을까? 👗",3200)],["desk","📚 책상에서 공부",.6,-2.2,()=>{say("좋아, 오늘 퀘스트 하러 가자! ✏️",1800);setTimeout(home,1300)}],["music","🎵 뮤직박스",1.3,-2.3,()=>musicBox()],["crown","👑 왕관 보기",2.1,.6,()=>say("빅토리아 여왕의 왕관이야 👑 반짝!",3200)]];
-  const showMenu=()=>{menu.innerHTML=`<b>👑 Victoria, 뭐 할까?</b><div class="vgrid">${ACT.map(a=>`<button type="button" data-r="${a[0]}">${a[1]}</button>`).join("")}</div><div class="vgrid"><button type="button" data-a="home">🏠 집으로</button><button type="button" data-a="x">닫기</button></div>`;menu.hidden=false;
-    menu.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{const a=ACT.find(x=>x[0]===b.dataset.r);go(a[2],a[3],a[4],"가는 중~ 🎶")});menu.querySelector('[data-a="x"]').onclick=()=>menu.hidden=true;menu.querySelector('[data-a="home"]').onclick=()=>{H3MODE="house";houseView()}};
+  const BEDACT=[["bed","🛏️ 침대에서 쉬기",-1.05,-1.6,()=>say("폭신폭신~ 공주 침대 최고야 💤",3200)],["vanity","💄 화장대",-2.3,1.6,()=>say("거울아 거울아~ 오늘도 반짝반짝 ✨",3200)],["wd","👗 옷장",2.4,-2.2,()=>say("오늘은 어떤 드레스 입을까? 👗",3200)],["desk","📚 책상에서 공부",.6,-2.2,()=>{say("좋아, 오늘 퀘스트 하러 가자! ✏️",1800);setTimeout(home,1300)}],["music","🎵 뮤직박스",1.3,-2.3,()=>musicBox()],["crown","👑 왕관 보기",2.1,.6,()=>say("빅토리아 여왕의 왕관이야 👑 반짝!",3200)]],ACT=B.R==="bed"?BEDACT:B.act;
+  const api={say,spin:0,bounce:0,rock:0,hideT:0,dressPick:()=>{menu.innerHTML=`<b>👗 어떤 드레스를 입을까?</b><div class="vgrid">${VDRESS.map(d=>`<button type="button" data-dr="${d[0]}"><span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:${d[2]};border:1px solid #ddd;vertical-align:-2px"></span> ${d[1]}</button>`).join("")}</div>`;menu.hidden=false;menu.querySelectorAll("[data-dr]").forEach(b=>b.onclick=()=>{vroomInit().dress=b.dataset.dr;save();toast("👗 새 드레스로 갈아입었어요! 집·마을에서도 이 옷을 입어요");houseView()})},hide:()=>{api.hideT=3.2;B.vic.visible=false;say("어디 있게~? 🙈 찾아봐!",3000)}};
+  const door=()=>go(2.75,2.35,()=>vrGo(B.nx[0],true),B.nx[1]+"(으)로 가자!");
+  const showMenu=()=>{menu.innerHTML=`<b>👑 Victoria, 뭐 할까?</b><div class="vgrid">${ACT.map(a=>`<button type="button" data-r="${a[0]}">${a[1]}</button>`).join("")}</div><div class="vgrid">${VR_LIST.filter(x=>x[0]!==B.R).map(x=>`<button type="button" data-rm="${x[0]}">${x[1]}</button>`).join("")}<button type="button" data-a="home">🏠 집으로</button><button type="button" data-a="x">닫기</button></div>`;menu.hidden=false;menu.querySelectorAll("[data-rm]").forEach(b=>b.onclick=()=>go(2.75,2.35,()=>vrGo(b.dataset.rm,true),"문으로 가자!"));
+    menu.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{const a=ACT.find(x=>x[0]===b.dataset.r);go(a[2],a[3],()=>a[4](api),"가는 중~ 🎶")});menu.querySelector('[data-a="x"]').onclick=()=>menu.hidden=true;menu.querySelector('[data-a="home"]').onclick=()=>{H3MODE="house";houseView()}};
   let tap=null;cv.addEventListener("pointerdown",e=>{tap={x:e.clientX,y:e.clientY,t:Date.now()}});
   cv.addEventListener("pointerup",e=>{if(!tap)return;const mv=Math.hypot(e.clientX-tap.x,e.clientY-tap.y),dt=Date.now()-tap.t;tap=null;if(mv>8||dt>400)return;const r=cv.getBoundingClientRect(),m=new THREE.Vector2((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(m,cam);
-    for(const h of ray.intersectObjects(B.sc.children,true)){let o=h.object;while(o){if(o.name==="vic"){say("뭐 할까? 골라 줘!",2200);return menu.hidden?showMenu():menu.hidden=true}if(o.name==="mbox")return go(1.3,-2.3,()=>musicBox());o=o.parent}}
+    for(const h of ray.intersectObjects(B.sc.children,true)){let o=h.object;while(o){if(o.name==="vic"){say("뭐 할까? 골라 줘!",2200);return menu.hidden?showMenu():menu.hidden=true}if(o.name==="mbox")return go(1.3,-2.3,()=>musicBox());if(o.name==="vdoor")return door();o=o.parent}}
     const p=new THREE.Vector3();if(ray.ray.intersectPlane(pl,p)&&Math.abs(p.x)<3.6&&Math.abs(p.z)<3.6)go(p.x,p.z)});
   const pv=new THREE.Vector3();let tt=0;
   return dt=>{tt+=dt;pv.copy(B.vic.position);pv.y+=2.15;pv.project(cam);bub.style.transform=`translate(${Math.max(108,Math.min(st.clientWidth-108,(pv.x*.5+.5)*st.clientWidth))}px,${(-pv.y*.5+.5)*st.clientHeight}px) translate(-50%,-100%)`;bub.style.opacity=performance.now()<until?1:0;
     B.sc.children.forEach((o,i)=>{if(o.name==="fl"||o.name==="twk")o.material.emissiveIntensity=.55+.45*Math.sin(tt*2.2+i)});
+    if(api.spin>0){api.spin-=dt;const g=B.sc.getObjectByName("globe");if(g)g.rotation.y+=dt*6}if(api.rock>0){api.rock-=dt;const u=B.sc.getObjectByName("uni");if(u){u.rotation.z=Math.sin(tt*5)*.18*Math.min(1,api.rock);B.vic.position.set(u.position.x,.75,u.position.z)}if(api.rock<=0){if(u)u.rotation.z=0;B.vic.position.set(2.0,.07,.2)}return true}
+    if(api.bounce>0){api.bounce-=dt;B.sc.traverse(o=>{if(o.name==="ball")o.position.y=o.userData.y0+Math.abs(Math.sin(tt*6+o.id))*.25*Math.min(1,api.bounce)})}if(api.hideT>0){api.hideT-=dt;if(api.hideT<=0){B.vic.visible=true;say("짠! 여기 있지롱 😆",2500)}}
     const v=B.vic.position;if(!W.path.length)return false;const n=W.path[0],dx=n.x-v.x,dz=n.z-v.z,d=Math.hypot(dx,dz),sp=2.2*dt;B.vic.rotation.y=Math.atan2(dx,dz);if(d<=sp){v.x=n.x;v.z=n.z;W.path.shift();if(!W.path.length&&W.cb){const c=W.cb;W.cb=null;c()}}else{v.x+=dx/d*sp;v.z+=dz/d*sp}return true}}
+function vrTabs(){const r=vroomInit().r||"bed";return `<div class="rmtabs">${VR_LIST.map(([k,t])=>`<button type="button" class="${k===r?"on":""}" data-rm="${k}">${t}</button>`).join("")}</div>`}
 function vroomCard(){const V=vroomInit();return `<div class="card"><div class="row"><h3>✨ 내 방 스타일</h3><span class="pill">💎 ${S.gems||0}</span></div><p class="muted">마음에 드는 버전을 골라 봐! 한 번 사면 언제든 바꿀 수 있어요.</p>
   <div class="vrlist">${Object.entries(VROOM_T).map(([k,t])=>{const own=V.own.includes(k),on=V.t===k;return `<button type="button" class="vrop ${on?"on":""}" data-vr="${k}"><span class="vrsw" style="background:linear-gradient(135deg,${t.wall[1]} 0 45%,${t.quilt} 45% 70%,${t.trim} 70%)"></span><b>${t.n}</b><small>${t.d}</small><em>${on?"✓ 지금 내 방":own?"바꾸기":`💎 ${t.p}`}</em></button>`}).join("")}</div></div>`}
-function bindVroom(){app.querySelectorAll("[data-vr]").forEach(b=>b.onclick=()=>{const V=vroomInit(),k=b.dataset.vr,t=VROOM_T[k];if(V.t===k)return;if(!V.own.includes(k)){if(!spend(t.p))return;V.own.push(k);toast(`${t.n} 방으로 새단장! ✨`)}V.t=k;save();houseView()})}
+function bindVroom(){app.querySelectorAll(".rmtabs [data-rm]").forEach(b=>b.onclick=()=>vrGo(b.dataset.rm,false));app.querySelectorAll("[data-vr]").forEach(b=>b.onclick=()=>{const V=vroomInit(),k=b.dataset.vr,t=VROOM_T[k];if(V.t===k)return;if(!V.own.includes(k)){if(!spend(t.p))return;V.own.push(k);toast(`${t.n} 방으로 새단장! ✨`)}V.t=k;save();houseView()})}
 
 let H3MODE="house";
 const TOWN={home:{n:"🏠 우리 집",p:[-5.2,5.2],door:[-4,4]},market:{n:"🛒 시장",p:[5.2,5.2],door:[4,4]},church:{n:"⛪ 교회",p:[0,-6.2],door:[0,-4.4]},pet:{n:"🐾 펫샵",p:[-6,-1.2],door:[-4.4,-1.2]},lib:{n:"📚 도서관",p:[6,-1.2],door:[4.4,-1.2]},park:{n:"🌳 공원",p:[0,1.2],door:[0,2.6]}};
@@ -1668,7 +1849,7 @@ function buildTown(){const sc=new THREE.Scene();sc.add(new THREE.HemisphereLight
   [[-8,-8],[8,-8],[-8,8],[8,8],[-8,0],[8,4],[-3,-8],[3,8]].forEach(([x,z],i)=>sc.add(at(grp(at(cyl(.14,.18,1,"#B5814A",10),0,.5,0),at(sph(.7,i%2?"#7ED36A":"#93DE7F"),0,1.35,0)),x,-.2,z)));
   for(let i=0;i<40;i++){const x=(Math.random()-.5)*17,z=(Math.random()-.5)*17;if(Math.abs(x)<1.4||Math.abs(z-1.2)<1.4)continue;sc.add(at(sph(.08,["#FF7AB0","#FFC93C","#FFFFFF","#B78CFF"][i%4]),x,-.15,z))}
   const clouds=[];for(let i=0;i<4;i++){const c=grp(sph(.8,"#FFFFFF"),at(sph(.6,"#FFFFFF"),.8,-.1,0));c.position.set(-12+i*7,8,-10+i*3);sc.add(c);clouds.push(c)}
-  const vic=chibi({dress:"#FF7AB0",top:"#FFFFFF",hair:"#7A4A2E",tails:true,ribbon:"#FF4F8B",crown:true,shoe:"#FF4F8B"});vic.position.set(-3.6,.07,3.6);vic.scale.setScalar(1.1);sc.add(vic);
+  const vic=chibi(vicCfg());vic.position.set(-3.6,.07,3.6);vic.scale.setScalar(1.1);sc.add(vic);
   const mbx=new THREE.Group();return{sc,vic,baby:null,pets:[],clouds,mbx,town:B}}
 const VERSES=[["요한복음 3:16", "하나님이 세상을 이처럼 사랑하사 독생자를 주셨으니 이는 저를 믿는 자마다 멸망치 않고 영생을 얻게 하려 하심이니라"], ["시편 23:1", "여호와는 나의 목자시니 내가 부족함이 없으리로다"], ["빌립보서 4:13", "내게 능력 주시는 자 안에서 내가 모든 것을 할 수 있느니라"], ["고린도후서 4:16", "그러므로 우리가 낙심하지 아니하노니 겉 사람은 후패하나 우리의 속은 날로 새롭도다"], ["데살로니가전서 5:16-18", "항상 기뻐하라 쉬지 말고 기도하라 범사에 감사하라 이는 그리스도 예수 안에서 너희를 향하신 하나님의 뜻이니라"], ["잠언 3:5", "너는 마음을 다하여 여호와를 의뢰하고 네 명철을 의지하지 말라"], ["여호수아 1:9", "내가 네게 명한 것이 아니냐 마음을 강하게 하고 담대히 하라 두려워 말며 놀라지 말라 네가 어디로 가든지 네 하나님 여호와가 너와 함께 하느니라 하시니라"], ["마태복음 5:14", "너희는 세상의 빛이라 산 위에 있는 동네가 숨기우지 못할 것이요"], ["고린도전서 13:4", "사랑은 오래 참고 사랑은 온유하며 투기하는 자가 되지 아니하며 사랑은 자랑하지 아니하며 교만하지 아니하며"], ["시편 119:105", "주의 말씀은 내 발에 등이요 내 길에 빛이니이다"], ["이사야 41:10", "두려워 말라 내가 너와 함께 함이니라 놀라지 말라 나는 네 하나님이 됨이니라 내가 너를 굳세게 하리라 참으로 너를 도와주리라 참으로 나의 의로운 오른손으로 너를 붙들리라"], ["마태복음 6:33", "너희는 먼저 그의 나라와 그의 의를 구하라 그리하면 이 모든 것을 너희에게 더하시리라"], ["시편 139:14", "내가 주께 감사하옴은 나를 지으심이 신묘막측하심이라 주의 행사가 기이함을 내 영혼이 잘 아나이다"], ["잠언 22:6", "마땅히 행할 길을 아이에게 가르치라 그리하면 늙어도 그것을 떠나지 아니하리라"], ["요한일서 4:19", "우리가 사랑함은 그가 먼저 우리를 사랑하셨음이라"], ["창세기 1:1", "태초에 하나님이 천지를 창조하시니라"], ["시편 8:3", "주의 손가락으로 만드신 주의 하늘과 주의 베풀어 두신 달과 별들을 내가 보오니"], ["시편 19:1", "하늘이 하나님의 영광을 선포하고 궁창이 그 손으로 하신 일을 나타내는도다"]];
 function verseToday(){const d=new Date(),k=Math.floor(d.getTime()/864e5);return VERSES[k%VERSES.length]}
@@ -1724,7 +1905,7 @@ function bind3D(){const st=$("#stage"),cv=$("#h3d");if(!st)return;if(H3){cancelA
 function hTabs(cur){return `<div class="ptabs">${[["house","🏠 집"],["baby","👶 아기"],["pets","🐾 펫"],["decor","🛋️ 꾸미기"],["market","🛒 시장"]].map(([k,t])=>`<button type="button" class="${k===cur?"on":""}" data-pt="${k}">${t}</button>`).join("")}</div>`}
 function bindHTabs(){app.querySelectorAll("[data-pt]").forEach(b=>b.onclick=()=>({house:houseView,baby:babyView,pets:petHome,decor:decorView,market:market})[b.dataset.pt]())}
 function houseView(){hInit();const TM=H3MODE==="town";S.pets.forEach(petDecay);save();const h=careHearts(),b=S.baby;
-  const RM=H3MODE==="room";app.innerHTML=hdr(TM?"🗺️ 빅토리아 마을":RM?"👑 빅토리아 방":"🏠 빅토리아 하우스")+hTabs("house")+`<div class="btns3" style="margin-bottom:8px"><button class="big ${H3MODE==="house"?"":"alt"}" id="tohome" type="button">🏠 집</button><button class="big ${RM?"":"alt"}" id="toroom" type="button">👑 내 방</button><button class="big ${TM?"":"alt"}" id="totown" type="button">🗺️ 마을</button></div>`+house3D()+(RM?vroomCard():"")+
+  const RM=H3MODE==="room";app.innerHTML=hdr(TM?"🗺️ 빅토리아 마을":RM?"👑 빅토리아 방 · "+VR_LIST.find(x=>x[0]===(vroomInit().r||"bed"))[1].slice(3):"🏠 빅토리아 하우스")+hTabs("house")+`<div class="btns3" style="margin-bottom:8px"><button class="big ${H3MODE==="house"?"":"alt"}" id="tohome" type="button">🏠 집</button><button class="big ${RM?"":"alt"}" id="toroom" type="button">👑 내 방</button><button class="big ${TM?"":"alt"}" id="totown" type="button">🗺️ 마을</button></div>`+house3D()+(RM?vrTabs()+vroomCard():"")+
   `<div class="card"><div class="row"><h3>💖 돌봄 하트 ${h}개</h3><span class="pill">💎 ${S.gems||0}</span></div><p class="muted">퀘스트 1개 = 하트 1개. 아기와 펫이 하트를 함께 써요.</p>
    <ul class="mkt">${b?`<li><span>${babyLooks()}</span><div><b>${esc(b.name)} · ${babyAge()}개월</b><small>${BABY_STAGES[babyStage()][1]}${babyGate()?" · 다음 성장에 용품 필요":""}</small></div><button class="buy" type="button" data-go="baby">돌보기</button></li>`:`<li><span>👶</span><div><b>아기 맞이 준비</b><small>준비물을 갖추면 아기가 와요</small></div><button class="buy" type="button" data-go="baby">준비하기</button></li>`}
    ${S.pets.map(p=>`<li><span>${petOf(p.k)[2]}</span><div><b>${esc(p.name)}</b><small>${REPTILE.includes(p.k)?"온실":"펫룸"} · ${loveName(p.love)}${p.fed!==today()?" · 🍚 배고파요":""}</small></div><button class="buy" type="button" data-go="pets">돌보기</button></li>`).join("")}</ul></div>`;
@@ -2543,14 +2724,214 @@ const SCI=[
  qs:[["달이 밝게 보이는 까닭은?","햇빛을 반사해서",["스스로 빛을 내서","불타고 있어서","지구가 비춰서"],"달은 별이 아니야.","햇빛 반사"],["둥글게 꽉 찬 달은?","보름달",["초승달","상현달","그믐달"],"추석에 보는 달!","보름달"],["달 모양이 처음으로 돌아오는 데 걸리는 기간은?","약 30일",["약 7일","약 1년","하루"],"한 달!","약 30일"],["달 모양 변화 순서로 알맞은 것은?","초승달 → 상현달 → 보름달",["보름달 → 초승달 → 상현달","상현달 → 초승달 → 보름달","그믐달 → 보름달 → 초승달"],"가는 달에서 점점 차올라!","초승달 → 상현달 → 보름달 → 하현달 → 그믐달"]],w:"달의 모양이 바뀌는 까닭을 써 봐.",ex:"달이 지구 둘레를 돌면서 햇빛을 받는 부분이 우리에게 다르게 보이기 때문이다."},
 {t:"태양계는 얼마나 클까?",c:[["⚽","태양의 지름은 지구의 약 109배! 지구를 콩알만 하게 줄이면 태양은 커다란 짐볼만 해."],["📏","태양에서 지구까지는 약 1억 5천만 km. 이 거리를 <b>1 천문단위(AU)</b>라고 해서 우주 거리의 자로 써."],["🚀","오늘 만든 모형은 행성 순서를 보여 주지만, 진짜 크기와 거리를 똑같이 줄이면 해왕성은 방 밖, 아주 먼 곳에 놓아야 해. 그만큼 우주는 넓어!"]],
  qs:[["태양의 지름은 지구의 약 몇 배?","약 109배",["약 2배","약 11배","약 1000배"],"백 배가 넘어!","약 109배"],["태양에서 지구까지의 거리는 약?","1억 5천만 km",["150 km","1만 km","15억 km"],"1 천문단위!","약 1억 5천만 km"],["1 천문단위(AU)는 무엇의 거리?","태양에서 지구까지",["지구에서 달까지","서울에서 부산까지","태양에서 해왕성까지"],"우주 거리의 기준!","태양~지구 거리"],["모형과 진짜 태양계의 차이로 알맞은 것은?","진짜는 행성 사이 거리가 훨씬 멀다",["진짜 행성은 철사에 매달려 있다","진짜는 행성이 3개뿐이다","진짜 태양은 노란 플라스틱이다"],"우주는 생각보다 훨씬 넓어!","실제 거리는 모형보다 엄청 멀어."]],w:"태양계 모형과 진짜 태양계의 같은 점과 다른 점을 써 봐.",ex:"행성의 순서와 공전 방향은 같지만, 진짜 태양계는 크기와 거리가 훨씬 크다."}];
+/* 초등 과학 개념어 (3~6학년 전 영역) [id, 단원, 학년군, 그림, [[개념어, 한자, 뜻, 예]]] */
+const SKU=[
+["force","힘과 무게","3~4","⚖️",[
+ ["힘","","물체를 밀거나 당겨서 움직이게 하거나 모양을 바꾸는 작용이에요.","손으로 공을 밀면 공에 힘을 준 거예요."],
+ ["무게","","지구가 물체를 끌어당기는 힘의 크기예요.","같은 크기라도 쇠공이 스티로폼 공보다 무게가 커요."],
+ ["중력","重(무거울 중)+力(힘 력)","지구가 물체를 지구 중심 쪽으로 끌어당기는 힘이에요.","손을 놓으면 사과가 땅으로 떨어지는 건 중력 때문이에요."],
+ ["수평","水(물 수)+平(평평할 평)","기울지 않고 평평한 상태예요.","시소 양쪽 무게가 맞으면 수평을 잡아요."],
+ ["받침점","","시소나 지레를 아래에서 받쳐 주는 점이에요.","시소 가운데 받침점에 가까울수록 무거운 쪽이 수평을 잡기 쉬워요."],
+ ["용수철저울","","용수철이 늘어나는 길이로 물체의 무게를 재는 저울이에요.","무거운 물체를 걸면 용수철이 더 많이 늘어나요."],
+ ["g중","","무게를 나타내는 단위예요. ‘그램중’이라고 읽어요.","사과의 무게는 약 200g중이에요."]]],
+["magnet","자석의 성질","3~4","🧲",[
+ ["자석","磁(자석 자)+石(돌 석)","철로 된 물체를 끌어당기는 성질이 있는 물체예요.","냉장고 문에 붙이는 자석"],
+ ["극","極(끝 극)","자석에서 철을 끌어당기는 힘이 가장 센 양쪽 끝 부분이에요.","막대자석에는 극이 두 개 있어요."],
+ ["N극","","자석을 자유롭게 매달았을 때 북쪽을 가리키는 극이에요.","나침반 바늘의 N극은 북쪽을 가리켜요."],
+ ["S극","","자석을 자유롭게 매달았을 때 남쪽을 가리키는 극이에요.","N극과 S극은 서로 끌어당겨요."],
+ ["나침반","羅(벌일 라)+針(바늘 침)+盤(소반 반)","자석 바늘로 방향(북쪽)을 알려 주는 도구예요.","길을 잃었을 때 나침반으로 북쪽을 찾아요."],
+ ["끌어당김과 밀어냄","","같은 극끼리는 밀어내고, 다른 극끼리는 끌어당기는 자석의 성질이에요.","N극과 N극을 가까이 하면 서로 밀어내요."]]],
+["matter","물체와 물질","3~4","🧱",[
+ ["물체","物(물건 물)+體(몸 체)","모양이 있고 공간을 차지하는 물건이에요.","컵, 의자, 연필은 물체예요."],
+ ["물질","物(물건 물)+質(바탕 질)","물체를 만드는 재료예요.","컵은 유리·플라스틱·금속 같은 물질로 만들어요."],
+ ["금속","金(쇠 금)+屬(무리 속)","단단하고 광택이 있으며 열과 전기가 잘 통하는 물질이에요.","철, 구리, 알루미늄은 금속이에요."],
+ ["성질","性(성품 성)+質(바탕 질)","물질이 가진 고유한 특징이에요.","고무는 잘 늘어나는 성질이 있어요."],
+ ["혼합물","混(섞을 혼)+合(합할 합)+物(물건 물)","두 가지 이상의 물질이 성질이 변하지 않은 채 섞여 있는 것이에요.","콩과 팥을 섞은 것, 소금물은 혼합물이에요."],
+ ["분리","分(나눌 분)+離(떠날 리)","섞여 있는 물질을 따로따로 나누는 것이에요.","자석으로 철 가루를 모래에서 분리해요."],
+ ["거름","","거름종이 같은 것으로 걸러서 고체를 액체에서 분리하는 방법이에요.","흙탕물을 거름종이로 거르면 흙이 남아요."]]],
+["water","물의 상태 변화","3~4","💧",[
+ ["고체","固(굳을 고)+體(몸 체)","모양과 부피가 일정한 물질의 상태예요.","얼음은 고체예요."],
+ ["액체","液(진 액)+體(몸 체)","부피는 일정하지만 담는 그릇에 따라 모양이 바뀌는 상태예요.","물은 컵 모양대로 담겨요."],
+ ["기체","氣(기운 기)+體(몸 체)","모양과 부피가 일정하지 않고 공간을 가득 채우는 상태예요.","수증기, 공기는 기체예요."],
+ ["상태 변화","狀(형상 상)+態(모양 태)","물질이 고체·액체·기체 사이에서 다른 상태로 바뀌는 것이에요.","얼음이 녹아 물이 되는 것"],
+ ["증발","蒸(찔 증)+發(필 발)","액체 표면에서 액체가 기체로 변하는 현상이에요.","젖은 빨래가 마르는 것"],
+ ["끓음","","액체의 표면과 속에서 모두 기체로 변하는 현상이에요.","냄비 속 물이 보글보글 끓어요."],
+ ["응결","凝(엉길 응)+結(맺을 결)","기체인 수증기가 차가운 곳에 닿아 액체인 물로 변하는 현상이에요.","차가운 컵 겉에 물방울이 맺혀요."],
+ ["수증기","水(물 수)+蒸(찔 증)+氣(기운 기)","물이 기체로 변한 것으로, 눈에 보이지 않아요.","주전자의 하얀 김은 수증기가 다시 작은 물방울이 된 거예요."]]],
+["gas","공기와 기체","3~4","🎈",[
+ ["공기","空(빌 공)+氣(기운 기)","우리 주변을 둘러싸고 있는 여러 기체의 혼합물이에요.","공기는 보이지 않지만 공간을 차지해요."],
+ ["산소","酸(실 산)+素(본디 소)","물질이 타는 것을 돕고, 생물이 숨 쉴 때 필요한 기체예요.","촛불은 산소가 있어야 타요."],
+ ["이산화 탄소","二(두 이)+酸化(산화)+炭素(탄소)","불을 끄는 성질이 있고, 석회수를 뿌옇게 만드는 기체예요.","탄산음료 속 기포는 이산화 탄소예요."],
+ ["부피","","물체가 차지하는 공간의 크기예요.","풍선에 공기를 넣으면 부피가 커져요."],
+ ["압력","壓(누를 압)+力(힘 력)","물체를 누르는 힘이에요. 기체에 압력을 높이면 부피가 작아져요.","주사기 입구를 막고 누르면 공기의 부피가 줄어요."],
+ ["기체의 무게","","기체도 무게가 있어요.","공기를 넣은 공은 넣기 전보다 조금 더 무거워요."]]],
+["sound","소리의 성질","3~4","🔔",[
+ ["떨림","","물체가 빠르게 흔들리는 것이에요. 소리는 물체의 떨림으로 생겨요.","소리 나는 소리굽쇠를 물에 대면 물이 튀어요."],
+ ["소리의 세기","","소리가 크고 작은 정도예요.","북을 세게 치면 큰 소리가 나요."],
+ ["소리의 높낮이","","소리가 높고 낮은 정도예요.","실로폰의 짧은 음판은 높은 소리가 나요."],
+ ["소리의 전달","傳(전할 전)+達(이를 달)","소리가 공기·물·고체 같은 물질을 통해 퍼져 나가는 것이에요.","실 전화기는 실을 통해 소리가 전달돼요."],
+ ["소리의 반사","反(돌이킬 반)+射(쏠 사)","소리가 나아가다 물체에 부딪혀 되돌아오는 현상이에요.","산에서 ‘야호’ 하면 메아리가 들려요."],
+ ["소음","騷(떠들 소)+音(소리 음)","듣기 싫고 불편한 소리예요.","방음벽은 도로의 소음을 줄여 줘요."]]],
+["light","빛과 그림자·렌즈","3~6","🔦",[
+ ["빛의 직진","直(곧을 직)+進(나아갈 진)","빛이 곧게 나아가는 성질이에요.","그림자가 생기는 까닭은 빛이 곧게 나아가기 때문이에요."],
+ ["그림자","","빛이 나아가다 물체에 막혀 물체 뒤쪽에 생기는 어두운 부분이에요.","손전등과 손 사이를 가깝게 하면 그림자가 커져요."],
+ ["빛의 반사","反(돌이킬 반)+射(쏠 사)","빛이 거울 같은 물체에 부딪혀 방향이 바뀌어 되돌아 나오는 현상이에요.","거울에 내 모습이 보여요."],
+ ["빛의 굴절","屈(굽을 굴)+折(꺾을 절)","빛이 서로 다른 물질의 경계에서 꺾여 나아가는 현상이에요.","물에 넣은 젓가락이 꺾여 보여요."],
+ ["볼록 렌즈","","가운데가 가장자리보다 두꺼운 렌즈로, 빛을 한곳으로 모아요.","돋보기는 볼록 렌즈예요."],
+ ["프리즘","","햇빛을 여러 가지 색의 빛으로 나누는 유리 기구예요.","프리즘을 통과한 햇빛은 무지개색으로 나뉘어요."]]],
+["animal","동물의 생활과 한살이","3~4","🐞",[
+ ["한살이","","생물이 태어나서 자라고 자손을 남기며 일생을 보내는 과정이에요.","배추흰나비의 한살이: 알 → 애벌레 → 번데기 → 어른벌레"],
+ ["완전 탈바꿈","","알-애벌레-번데기-어른벌레의 단계를 거치는 한살이예요.","나비, 벌, 무당벌레"],
+ ["불완전 탈바꿈","","번데기 단계 없이 알-애벌레-어른벌레로 자라는 한살이예요.","잠자리, 메뚜기, 매미"],
+ ["곤충","昆(벌레 곤)+蟲(벌레 충)","몸이 머리·가슴·배로 나뉘고 다리가 6개인 동물이에요.","개미, 나비는 곤충이지만 거미는 곤충이 아니에요."],
+ ["분류","分(나눌 분)+類(무리 류)","공통점과 차이점에 따라 무리 지어 나누는 것이에요.","다리가 있는 동물과 없는 동물로 분류해요."],
+ ["아가미","","물속에서 숨을 쉬는 기관이에요.","물고기는 아가미로 숨을 쉬어요."],
+ ["서식지","棲(깃들일 서)+息(쉴 식)+地(땅 지)","생물이 자리를 잡고 사는 곳이에요.","북극곰의 서식지는 추운 북극이에요."]]],
+["plant","식물의 구조와 기능","3~6","🌱",[
+ ["뿌리","","식물을 지지하고 물과 양분을 흡수하는 부분이에요.","뿌리털은 물을 잘 흡수하게 해 줘요."],
+ ["줄기","","식물을 지지하고 물이 이동하는 통로가 되는 부분이에요.","줄기를 자르면 물이 지나간 통로를 볼 수 있어요."],
+ ["광합성","光(빛 광)+合(합할 합)+成(이룰 성)","식물이 빛을 이용해 스스로 양분(녹말)을 만드는 과정이에요.","햇빛을 받은 잎에서 녹말이 만들어져요."],
+ ["증산 작용","蒸(찔 증)+散(흩을 산)","잎의 기공을 통해 물이 수증기가 되어 빠져나가는 현상이에요.","잎에 비닐봉지를 씌우면 안쪽에 물방울이 맺혀요."],
+ ["기공","氣(기운 기)+孔(구멍 공)","잎 표면에 있는 아주 작은 구멍이에요.","현미경으로 잎 뒷면을 보면 기공이 보여요."],
+ ["꽃가루받이","","꽃가루가 암술에 옮겨 붙는 것이에요. 이후 씨가 만들어져요.","벌이 꽃가루받이를 도와요."],
+ ["씨","","새로운 식물로 자랄 수 있는 부분이에요.","강낭콩 씨를 심으면 싹이 터요."],
+ ["싹트기","","씨가 물을 흡수해 뿌리와 떡잎이 나오는 것이에요.","씨가 싹트려면 알맞은 물과 온도가 필요해요."]]],
+["eco","생태계와 환경","5~6","🌳",[
+ ["생태계","生(날 생)+態(모양 태)+系(이을 계)","어떤 장소에서 생물과 환경이 서로 영향을 주고받는 것이에요.","연못 생태계, 숲 생태계"],
+ ["생물 요소","","생태계에서 살아 있는 것들이에요.","풀, 토끼, 곰팡이"],
+ ["비생물 요소","","생태계에서 살아 있지 않은 것들이에요.","햇빛, 물, 공기, 흙, 온도"],
+ ["생산자","生(날 생)+産(낳을 산)+者(사람 자)","햇빛을 이용해 스스로 양분을 만드는 생물이에요.","벼, 나무 같은 식물"],
+ ["소비자","消(사라질 소)+費(쓸 비)+者(사람 자)","다른 생물을 먹어서 양분을 얻는 생물이에요.","토끼, 매, 사람"],
+ ["분해자","分(나눌 분)+解(풀 해)+者(사람 자)","죽은 생물이나 배출물을 분해해 양분을 얻는 생물이에요.","곰팡이, 세균"],
+ ["먹이 사슬","","생물들의 먹고 먹히는 관계가 사슬처럼 한 줄로 이어진 것이에요.","벼 → 메뚜기 → 개구리 → 뱀"],
+ ["먹이 그물","","여러 먹이 사슬이 그물처럼 얽힌 것이에요.","먹이 그물에서는 한 생물이 여러 생물을 먹을 수 있어요."],
+ ["적응","適(맞을 적)+應(응할 응)","생물이 사는 곳의 환경에 맞게 생김새와 생활 방식을 갖추는 것이에요.","선인장은 잎이 가시로 되어 물을 아껴요."]]],
+["body","우리 몸과 건강","5~6","🫀",[
+ ["뼈","","몸의 형태를 만들고 몸을 지탱하며 내부 기관을 보호해요.","머리뼈는 뇌를 보호해요."],
+ ["근육","筋(힘줄 근)+肉(고기 육)","줄어들거나 늘어나면서 뼈를 움직이게 해요.","팔을 굽히면 위팔 안쪽 근육이 줄어들어요."],
+ ["소화","消(사라질 소)+化(될 화)","음식물을 잘게 쪼개 몸에 흡수될 수 있게 하는 과정이에요.","입 → 식도 → 위 → 작은창자 → 큰창자"],
+ ["순환","循(돌 순)+環(고리 환)","심장의 펌프 작용으로 혈액이 온몸을 도는 것이에요.","혈액은 산소와 영양소를 온몸에 전달해요."],
+ ["호흡","呼(내쉴 호)+吸(마실 흡)","숨을 들이마시고 내쉬는 활동이에요. 폐에서 산소를 받아들여요.","코 → 기관 → 기관지 → 폐"],
+ ["배설","排(밀칠 배)+泄(샐 설)","혈액 속 노폐물을 걸러 몸 밖으로 내보내는 과정이에요.","콩팥이 노폐물을 걸러 오줌을 만들어요."],
+ ["감각 기관","感(느낄 감)+覺(깨달을 각)","주변의 자극을 받아들이는 기관이에요.","눈, 귀, 코, 혀, 피부"],
+ ["감염병","感(느낄 감)+染(물들 염)+病(병 병)","세균이나 바이러스 같은 병원체가 몸에 들어와 생기는 병이에요. 다른 사람에게 옮을 수 있어요.","손 씻기와 기침 예절로 감염병을 예방해요."]]],
+["land","지표의 변화와 화산·지진","3~4","🌋",[
+ ["풍화","風(바람 풍)+化(될 화)","바위나 돌이 오랜 시간에 걸쳐 잘게 부서지는 현상이에요.","바위 틈의 물이 얼고 녹으면서 바위가 부서져요."],
+ ["침식","侵(침노할 침)+蝕(좀먹을 식)","흐르는 물 등이 지표를 깎는 작용이에요.","강 상류에서는 침식 작용이 활발해요."],
+ ["운반","運(옮길 운)+搬(옮길 반)","깎인 흙이나 돌을 다른 곳으로 옮기는 작용이에요.","흐르는 물이 모래를 하류로 운반해요."],
+ ["퇴적","堆(쌓을 퇴)+積(쌓을 적)","운반된 흙이나 모래가 쌓이는 작용이에요.","강 하류나 바닷가에는 모래가 퇴적돼요."],
+ ["흙","","바위가 부서진 알갱이와 생물이 썩은 물질 등이 섞인 것이에요.","부식물이 많은 흙에서 식물이 잘 자라요."],
+ ["화산","火(불 화)+山(메 산)","땅속 깊은 곳의 마그마가 지표 밖으로 분출해 생긴 지형이에요.","한라산과 백두산은 화산이에요."],
+ ["마그마","","땅속 깊은 곳에서 암석이 녹아 있는 것이에요.","마그마가 지표로 흘러나오면 용암이라고 해요."],
+ ["지진","地(땅 지)+震(벼락 진)","땅이 끊어지면서 흔들리는 현상이에요.","지진이 나면 책상 아래로 몸을 피해요."]]],
+["fossil","지층과 화석","5~6","🦴",[
+ ["지층","地(땅 지)+層(층 층)","자갈·모래·진흙 등이 층층이 쌓여 생긴 줄무늬 모양의 땅이에요.","보통 아래에 있는 지층이 먼저 쌓였어요."],
+ ["퇴적암","堆積(퇴적)+巖(바위 암)","퇴적물이 굳어서 만들어진 암석이에요.","이암, 사암, 역암"],
+ ["이암·사암·역암","泥(진흙 이)·砂(모래 사)·礫(자갈 력)","알갱이 크기에 따라 진흙(이암), 모래(사암), 자갈(역암)로 이루어진 퇴적암이에요.","역암은 알갱이가 가장 커요."],
+ ["화석","化(될 화)+石(돌 석)","옛날에 살았던 생물의 몸체나 흔적이 암석에 남은 것이에요.","삼엽충 화석, 공룡 발자국 화석"],
+ ["화강암","花(꽃 화)+崗(언덕 강)+巖(바위 암)","마그마가 땅속 깊은 곳에서 천천히 식어 알갱이가 큰 암석이에요.","불국사 석탑은 화강암으로 만들었어요."],
+ ["현무암","玄(검을 현)+武(굳셀 무)+巖(바위 암)","용암이 지표에서 빨리 식어 알갱이가 작고 구멍이 있는 경우가 많은 암석이에요.","제주도 돌하르방은 현무암이에요."]]],
+["weather","날씨와 우리 생활","5~6","⛅",[
+ ["습도","濕(젖을 습)+度(법도 도)","공기 중에 수증기가 포함된 정도예요.","습도가 높으면 빨래가 잘 마르지 않아요."],
+ ["이슬","","공기 중 수증기가 차가운 물체 표면에서 응결해 맺힌 물방울이에요.","새벽 풀잎에 이슬이 맺혀요."],
+ ["안개","","지표 가까이에서 수증기가 응결해 작은 물방울로 떠 있는 것이에요.","안개가 끼면 앞이 잘 안 보여요."],
+ ["구름","","하늘 높은 곳에서 수증기가 응결해 작은 물방울이나 얼음 알갱이로 떠 있는 것이에요.","구름 속 물방울이 커지면 비가 돼요."],
+ ["고기압","高(높을 고)+氣壓(기압)","주위보다 공기의 압력이 높은 곳이에요.","바람은 고기압에서 저기압 쪽으로 불어요."],
+ ["저기압","低(낮을 저)+氣壓(기압)","주위보다 공기의 압력이 낮은 곳이에요.","저기압에서는 흐리거나 비가 오기 쉬워요."],
+ ["바람","","공기가 고기압에서 저기압으로 이동하는 것이에요.","낮에 바닷가에서는 바다에서 육지로 해풍이 불어요."]]],
+["space","지구와 달·태양계·별","3~6","🌍",[
+ ["자전","自(스스로 자)+轉(구를 전)","지구가 스스로 하루에 한 바퀴씩 서쪽에서 동쪽으로 도는 것이에요.","지구가 자전해서 낮과 밤이 생겨요."],
+ ["공전","公(공평할 공)+轉(구를 전)","지구가 태양 둘레를 일 년에 한 바퀴씩 도는 것이에요.","지구가 공전해서 계절마다 보이는 별자리가 달라요."],
+ ["행성","行(다닐 행)+星(별 성)","태양 둘레를 도는 큰 천체예요. 스스로 빛을 내지 못해요.","수성, 금성, 지구, 화성, 목성, 토성, 천왕성, 해왕성"],
+ ["위성","衛(지킬 위)+星(별 성)","행성 둘레를 도는 천체예요.","달은 지구의 위성이에요."],
+ ["별","","스스로 빛을 내는 천체예요.","태양도 별이에요."],
+ ["별자리","","밤하늘의 별들을 연결해 이름을 붙인 것이에요.","북두칠성, 카시오페이아자리"],
+ ["북극성","北(북녘 북)+極(끝 극)+星(별 성)","북쪽 하늘에서 거의 움직이지 않아 북쪽을 찾는 데 쓰는 별이에요.","북두칠성으로 북극성을 찾을 수 있어요."],
+ ["달의 위상","位(자리 위)+相(서로 상)","달의 모양이 약 30일을 주기로 바뀌는 것이에요.","초승달 → 상현달 → 보름달 → 하현달 → 그믐달"],
+ ["태양 고도","高(높을 고)+度(법도 도)","태양이 지평선과 이루는 각이에요.","태양 고도가 높을수록 그림자 길이가 짧아요."],
+ ["계절의 변화","","지구의 자전축이 기울어진 채 공전해서 생겨요.","여름에는 태양의 남중 고도가 높아 더워요."]]],
+["solution","용해와 용액","5~6","🧂",[
+ ["용해","溶(녹을 용)+解(풀 해)","어떤 물질이 다른 물질에 녹아 고르게 섞이는 현상이에요.","설탕이 물에 녹는 것"],
+ ["용질","溶(녹을 용)+質(바탕 질)","녹는 물질이에요.","설탕물에서 설탕"],
+ ["용매","溶(녹을 용)+媒(중매 매)","녹이는 물질이에요.","설탕물에서 물"],
+ ["용액","溶(녹을 용)+液(진 액)","용질이 용매에 녹아 고르게 섞인 물질이에요.","설탕물, 소금물"],
+ ["진하기","","같은 양의 용매에 용질이 녹아 있는 많고 적은 정도예요.","진한 설탕물에서는 메추리알이 떠올라요."],
+ ["온도와 용해","","물의 온도가 높을수록 같은 양의 물에 녹는 고체 용질의 양이 대체로 많아져요.","따뜻한 물에 백반이 더 많이 녹아요."]]],
+["acid","산과 염기","5~6","🧪",[
+ ["지시약","指(가리킬 지)+示(보일 시)+藥(약 약)","용액의 성질에 따라 색깔이 변해서 산성·염기성을 알려 주는 물질이에요.","리트머스 종이, 페놀프탈레인 용액"],
+ ["산성 용액","酸(실 산)+性(성품 성)","푸른색 리트머스 종이를 붉게 변하게 하는 용액이에요.","식초, 레몬즙"],
+ ["염기성 용액","鹽(소금 염)+基(터 기)","붉은색 리트머스 종이를 푸르게, 페놀프탈레인 용액을 붉게 변하게 하는 용액이에요.","비눗물, 묽은 수산화 나트륨 용액"],
+ ["리트머스 종이","","산성·염기성에 따라 색이 변하는 종이 지시약이에요.","붉은색 리트머스 종이가 푸르게 변하면 염기성!"],
+ ["페놀프탈레인 용액","","염기성 용액에서 붉은색으로 변하고, 산성 용액에서는 변하지 않는 지시약이에요.","비눗물에 넣으면 붉게 변해요."],
+ ["중화","中(가운데 중)+和(화할 화)","산성 용액과 염기성 용액이 섞여 서로의 성질이 약해지는 것이에요.","산성 토양에 염기성인 석회 가루를 뿌려요."]]],
+["heat","온도와 열","5~6","🌡️",[
+ ["온도","溫(따뜻할 온)+度(법도 도)","물체가 차갑거나 따뜻한 정도를 숫자로 나타낸 것이에요.","단위는 ℃(섭씨도)를 써요."],
+ ["열","熱(더울 열)","온도가 높은 곳에서 낮은 곳으로 이동해 온도를 변하게 하는 것이에요.","뜨거운 국에 넣은 숟가락이 뜨거워져요."],
+ ["전도","傳(전할 전)+導(인도할 도)","고체에서 열이 온도가 높은 곳에서 낮은 곳으로 물질을 따라 이동하는 것이에요.","프라이팬 손잡이 쪽으로 열이 전도돼요."],
+ ["대류","對(대할 대)+流(흐를 류)","액체나 기체에서 따뜻해진 물질이 위로 올라가며 열이 이동하는 것이에요.","난로를 켜면 따뜻한 공기가 위로 올라가요."],
+ ["단열","斷(끊을 단)+熱(더울 열)","열이 이동하지 못하도록 막는 것이에요.","보온병은 단열이 잘 돼요."],
+ ["온도계","溫度(온도)+計(셀 계)","온도를 재는 도구예요.","적외선 온도계, 알코올 온도계"]]],
+["fire","연소와 소화","5~6","🔥",[
+ ["연소","燃(탈 연)+燒(사를 소)","물질이 산소와 반응해 빛과 열을 내는 현상이에요.","초가 타는 것"],
+ ["연소의 조건","","탈 물질, 산소, 발화점 이상의 온도가 모두 있어야 연소가 일어나요.","셋 중 하나라도 없으면 불이 꺼져요."],
+ ["발화점","發(필 발)+火(불 화)+點(점 점)","물질이 불에 직접 닿지 않아도 스스로 타기 시작하는 가장 낮은 온도예요.","성냥 머리는 나무보다 발화점이 낮아요."],
+ ["소화","消(사라질 소)+火(불 화)","연소의 조건 중 하나 이상을 없애 불을 끄는 것이에요.","촛불을 집기병으로 덮으면 산소가 부족해 꺼져요."],
+ ["연소 생성물","","물질이 연소한 뒤 생기는 물질이에요.","초가 타면 물과 이산화 탄소가 생겨요."]]],
+["speed","물체의 운동과 속력","5~6","🚲",[
+ ["운동","運(옮길 운)+動(움직일 동)","시간이 지남에 따라 물체의 위치가 바뀌는 것이에요.","굴러가는 공은 운동하고 있어요."],
+ ["이동 거리","","물체가 움직인 거리예요.","자전거로 3km를 갔어요."],
+ ["속력","速(빠를 속)+力(힘 력)","단위 시간 동안 물체가 이동한 거리예요. 속력 = 이동 거리 ÷ 걸린 시간","2시간에 100km를 가면 속력은 50km/h예요."],
+ ["km/h","","1시간 동안 이동한 거리를 km로 나타낸 속력 단위예요. ‘킬로미터 퍼 아워’ 또는 ‘시속 ○킬로미터’라고 읽어요.","시속 30킬로미터 = 30km/h"],
+ ["교통안전","","속력이 빠를수록 멈추기 어려우므로 교통 규칙을 지켜야 해요.","어린이 보호 구역에서는 속력을 줄여요."]]],
+["electric","전기와 에너지","5~6","💡",[
+ ["전기 회로","電(번개 전)+氣(기운 기)+回(돌 회)+路(길 로)","전지·전선·전구 등을 연결해 전기가 흐르도록 한 것이에요.","전구에 불이 켜지려면 회로가 끊기지 않아야 해요."],
+ ["직렬연결","直(곧을 직)+列(벌일 렬)","전구 여러 개를 한 줄로 연결하는 방법이에요.","하나가 꺼지면 나머지도 꺼져요."],
+ ["병렬연결","竝(나란히 병)+列(벌일 렬)","전구 여러 개를 여러 갈래로 나누어 연결하는 방법이에요.","하나가 꺼져도 나머지는 켜져 있어요."],
+ ["전자석","電(번개 전)+磁(자석 자)+石(돌 석)","전기가 흐를 때만 자석의 성질이 생기는 자석이에요.","고철을 옮기는 기중기에 쓰여요."],
+ ["에너지","","일을 할 수 있는 능력이에요.","생물은 음식에서 에너지를 얻어요."],
+ ["에너지 전환","轉(구를 전)+換(바꿀 환)","에너지의 형태가 다른 형태로 바뀌는 것이에요.","전등: 전기 에너지 → 빛에너지"],
+ ["태양 에너지","","태양에서 오는 에너지로, 대부분 에너지의 근원이에요.","식물은 태양 에너지로 광합성을 해요."]]]];
+const SKALL=SKU.flatMap(u=>u[4].map(w=>({t:w[0],h:w[1],m:w[2],e:w[3],u:u[0],ut:u[1],g:u[2],em:u[3]})));
+const SKK=t=>"과:"+t,skOf=t=>SKALL.find(x=>x.t===t);
+function skInit(){S.sk=S.sk||{done:{},best:{}};S.sk.w=S.sk.w||{};return S.sk}
+function skSt(t){const w=skInit().w;return w[t]||(w[t]={b:0,next:"",ok:0,days:[]})}
+function skMark(t,ok){const s=skSt(t),td=today();if(ok){if(!s.days.includes(td)){s.days.push(td);s.b=Math.min(4,s.b+1)}s.ok++}else{s.b=0}s.next=addDays(td,KW_DAYS[s.b]||1);save()}
+const skMast=t=>{const s=skInit().w[t];return !!s&&s.days.length>=3&&s.b>=3},skSeen=t=>!!skInit().w[t];
+function skDue(){const td=today();return SKALL.filter(x=>{const s=skInit().w[x.t];return s&&!skMast(x.t)&&(!s.next||s.next<=td)}).map(x=>x.t)}
+function skCount(){return SKALL.filter(x=>skMast(x.t)).length}
+function skOpts(w,pool){const same=SKALL.filter(x=>x.t!==w.t&&x.u===w.u),other=SKALL.filter(x=>x.t!==w.t&&x.u!==w.u);return shuffle(same).concat(shuffle(other)).slice(0,3)}
+function skQ(w,i){const o=skOpts(w),tag=`<span class="qtag">${w.em} ${w.ut}</span>`,hint=w.h?`한자 힌트: ${w.h}`:`예) ${w.e}`;const k=i%3;
+  if(k===0)return mkQ(`${tag}이 뜻을 가진 과학 개념어는?<br><span class="kwq">${w.m}</span>`,w.t,o.map(x=>x.t),`${w.t}${w.h?` — ${w.h}`:""}: ${w.m}`,{sk:w.t,hint});
+  if(k===1)return mkQ(`${tag}<b>‘${w.t}’</b>의 뜻은?${w.h?`<br><small class="muted">${w.h}</small>`:""}`,w.m,o.map(x=>x.m),`예) ${w.e}`,{sk:w.t,hint:"한자 하나하나의 뜻을 이어서 생각해 봐."});
+  return mkQ(`${tag}다음 예와 가장 관계있는 개념어는?<br><span class="kwq">${w.e.replace(new RegExp(w.t.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"),"g"),"○○")}</span>`,w.t,o.map(x=>x.t),`${w.t}: ${w.m}`,{sk:w.t,hint:`뜻: ${w.m.slice(0,18)}…`})}
+function skUnitQs(u){const ws=shuffle(SKU.find(x=>x[0]===u)[4].map(w=>skOf(w[0])));const list=ws.concat(shuffle(ws)).slice(0,Math.max(8,ws.length));return list.map((w,i)=>skQ(w,i))}
+function skCards(u,cb){const U=SKU.find(x=>x[0]===u),ws=U[4];let k=0;
+  const draw=()=>{const w=ws[k];app.innerHTML=hdr(`${U[3]} ${U[1]}`)+`<div class="card"><div class="dots">${ws.map((_,j)=>`<i class="${j===k?"on":""}"></i>`).join("")}</div>
+    <div class="flash skcard"><span class="skem">${U[3]}</span><span class="kwterm big1">${w[0]}</span>${w[1]?`<span class="muted">${w[1]}</span>`:""}<p class="skm">${w[2]}</p><p class="ske">예) ${w[3]}</p><button class="ttsb" id="sp" type="button">🔊 읽어 줘</button></div>
+    <p class="muted" style="text-align:center">개념어를 소리 내어 읽고, 뜻을 내 말로 한 번 말해 봐요!</p>
+    <div class="nav2"><button class="big alt" id="pv" type="button" ${k===0?"disabled":""}>이전</button><button class="big" id="nx" type="button">${k<ws.length-1?"다음 카드":"퀴즈 시작!"}</button></div></div>`;bindBack();
+    $("#sp").onclick=()=>sayKo(`${w[0]}. ${w[2]} 예를 들면, ${w[3]}`);$("#pv").onclick=()=>{k--;draw()};$("#nx").onclick=()=>{if(k<ws.length-1){k++;draw()}else cb()}};draw()}
+function skUnit(u,again){const U=SKU.find(x=>x[0]===u),s=skInit();skCards(u,()=>quiz({title:`${U[3]} ${U[1]} 개념어`,qs:skUnitQs(u),pass:Math.ceil(skUnitQs(u).length*.75),remake:()=>skUnitQs(u),onAnswer:(q,ok)=>q.sk&&skMark(q.sk,ok),
+  onPass:sc=>{const first=!s.done[u];s.done[u]=today();s.best[u]=Math.max(s.best[u]||0,sc);if(first){S.gems=(S.gems||0)+2;setTimeout(()=>{gemShower(4);toast(`🏅 ${U[1]} 도장 획득! 💎+2`)},300)}if(!doneToday("sci")){markDone("sci");addXP(15)}save()},after:skHub,afterLabel:"개념어 지도로"}))}
+function skReview(){const due=skDue(),pool=due.length?due:shuffle(SKALL.filter(x=>skSeen(x.t)&&!skMast(x.t)).map(x=>x.t));const list=shuffle(pool).slice(0,10);if(!list.length)return toast("복습할 개념어가 아직 없어요. 단원부터 열어 봐요!");
+  quiz({title:"🔁 과학 개념어 복습",qs:list.map((t,i)=>skQ(skOf(t),i)),onAnswer:(q,ok)=>q.sk&&skMark(q.sk,ok),onPass:sc=>{if(sc===list.length){S.gems=(S.gems||0)+1;toast("🔁 복습 만점! 💎+1")}if(!doneToday("sci")){markDone("sci");addXP(10)}save()},after:skHub,afterLabel:"개념어 지도로"})}
+function skDict(){app.innerHTML=hdr("📘 과학 개념어 사전")+SKU.map(U=>`<div class="card"><h3>${U[3]} ${U[1]} <small class="muted">${U[2]}학년</small></h3><ul class="skdl">${U[4].map(w=>`<li><b>${skMast(w[0])?"⭐ ":""}${w[0]}</b>${w[1]?` <small class="muted">${w[1]}</small>`:""}<br><span>${w[2]}</span><br><small class="muted">예) ${w[3]}</small></li>`).join("")}</ul></div>`).join("");bindBack()}
+function skHub(){const s=skInit(),n=skCount(),due=skDue().length;
+  app.innerHTML=hdr("🔬 과학 개념어 탐험")+`<div class="card"><div class="row"><h3>⭐ 과학 개념어 마스터</h3><span class="pill">${n} / ${SKALL.length}</span></div><div class="bar"><i style="width:${n/SKALL.length*100}%;background:#2FB673"></i></div>
+   <p class="muted">초등 3~6학년 과학 전 영역 ${SKU.length}개 단원, 개념어 ${SKALL.length}개. 서로 다른 날 3번 맞히면 ⭐마스터!</p>
+   <div class="btns2"><button class="big" id="skr" type="button">🔁 복습 ${due}개</button><button class="big alt" id="skd" type="button">📘 개념어 사전</button></div></div>
+   ${[["3~4","3~4학년"],["3~6","3~6학년 이어지는 단원"],["5~6","5~6학년"]].map(([g,gt])=>`<div class="card"><h3>${gt}</h3><div class="skmap">${SKU.filter(U=>U[2]===g).map(U=>{const d=!!s.done[U[0]],m=U[4].filter(w=>skMast(w[0])).length;return `<button type="button" class="skst ${d?"on":""}" data-u="${U[0]}"><span class="skem">${U[3]}</span><b>${U[1]}</b><small>${d?`🏅 도장 · ⭐${m}/${U[4].length}`:`개념어 ${U[4].length}개`}</small></button>`}).join("")}</div></div>`).join("")}
+   <p class="muted" style="text-align:center">단원 하나를 통과하면 오늘 과학 퀘스트 완료! 첫 도장 💎+2</p>`;
+  bindBack();$("#skr").onclick=skReview;$("#skd").onclick=skDict;app.querySelectorAll("[data-u]").forEach(b=>b.onclick=()=>skUnit(b.dataset.u))}
+
 function sciHub(){const s=sciInit(),done=doneToday("sci");
-  app.innerHTML=hdr("🔭 과학 탐험")+`<div class="card"><h3>🪐 우리 태양계</h3><div class="prow">${PLANETS.map(p=>`<button type="button" class="pbtn" data-p="${p[1]}">${planetBall(p,Math.max(18,p[3]*.4))}<small>${p[0]}</small></button>`).join("")}</div><p class="muted">행성을 누르면 영어 이름을 들려줘요.</p><div class="btns2"><button class="big alt" id="rv" type="button">🔁 행성 다시 만나기</button><button class="big alt" id="qz" type="button">🪐 태양계 퀴즈</button></div></div>
+  app.innerHTML=hdr("🔭 과학 탐험")+`<button class="card petlink" id="skgo" type="button"><span class="petem">🔬</span><div><h3>과학 개념어 탐험 · ⭐${skCount()}/${SKALL.length}</h3><p class="muted">초등 3~6학년 과학 전 영역 개념어 도장깨기${skDue().length?` · 복습 ${skDue().length}개`:""}</p></div></button><div class="card"><h3>🪐 우리 태양계</h3><div class="prow">${PLANETS.map(p=>`<button type="button" class="pbtn" data-p="${p[1]}">${planetBall(p,Math.max(18,p[3]*.4))}<small>${p[0]}</small></button>`).join("")}</div><p class="muted">행성을 누르면 영어 이름을 들려줘요.</p><div class="btns2"><button class="big alt" id="rv" type="button">🔁 행성 다시 만나기</button><button class="big alt" id="qz" type="button">🪐 태양계 퀴즈</button></div></div>
   <div class="card"><div class="row"><h3>🚀 과학 단계 올리기</h3><span class="pill">${Math.min(s.lv,SCI.length)} / ${SCI.length}</span></div><div class="bar"><i style="width:${s.lv/SCI.length*100}%;background:#F2A516"></i></div>
    <ul class="tricks">${SCI.map((L,i)=>`<li class="${i<s.lv?"ok":""}">${i<s.lv?"⭐":i===s.lv?"▶️":"🔒"} ${i+1}단계 · ${L.t}${i<s.lv?` <button type="button" class="tc" data-re="${i}">다시</button>`:""}</li>`).join("")}</ul>
    ${s.lv<SCI.length?`<button class="big" id="go" type="button" ${done?"disabled":""}>${done?"오늘 과학 완료! 내일 다음 단계":`${s.lv+1}단계 시작: ${SCI[s.lv].t}`}</button>`:`<p class="pill">🌟 과학 단계 모두 완료!</p>`}</div>
   <div class="card verse"><h3>📖 하늘을 보며</h3><p class="vtext">${VERSES.find(v=>v[0]==="시편 19:1")[1]}</p><p class="vref">시편 19:1 · 개역한글</p></div>
   <div class="card"><button class="big alt" id="rb" type="button">🛠️ 태양계 조립 미션 다시 하기</button></div>`;
-  bindBack();app.querySelectorAll(".pbtn").forEach(b=>b.onclick=()=>{try{say(b.dataset.p)}catch(e){}});$("#rv").onclick=()=>sciReview(0);$("#qz").onclick=sciQuiz;
+  bindBack();$("#skgo").onclick=skHub;app.querySelectorAll(".pbtn").forEach(b=>b.onclick=()=>{try{say(b.dataset.p)}catch(e){}});$("#rv").onclick=()=>sciReview(0);$("#qz").onclick=sciQuiz;
   if($("#go"))$("#go").onclick=()=>sciLesson(s.lv,false);app.querySelectorAll("[data-re]").forEach(b=>b.onclick=()=>sciLesson(+b.dataset.re,true));
   $("#rb").onclick=()=>{s.step=0;save();sciBuild()}}
 function sciLesson(n,practice){const L=SCI[n];let i=0;
