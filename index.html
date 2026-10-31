@@ -186,6 +186,11 @@ button:focus-visible,label:focus-within{outline:3px solid var(--accent);outline-
 .pstage{display:flex;justify-content:center;padding:10px 0}.pball{display:inline-block;border-radius:50%;box-shadow:inset -6px -6px 12px rgba(0,0,0,.18),0 4px 10px rgba(0,0,0,.12)}.prow{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:flex-end}.pbtn{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;font:inherit;font-size:.7rem;color:var(--ink)}
 .gshower{position:fixed;inset:0;pointer-events:none;z-index:80;overflow:hidden}.gshower i{position:absolute;top:-40px;font-style:normal;animation:gfall 2.4s ease-in forwards}@keyframes gfall{to{transform:translateY(110vh) rotate(360deg)}}
 .orbit{position:relative;width:280px;height:280px;margin:0 auto}.orb{position:absolute;left:50%;top:50%;border:1px dashed rgba(91,75,214,.35);border-radius:50%;transform:translate(-50%,-50%);animation:spin linear infinite}.orb span{position:absolute;top:-6px;left:50%;width:12px;height:12px;border-radius:50%;margin-left:-6px}.osun{position:absolute;left:50%;top:50%;width:34px;height:34px;margin:-17px;border-radius:50%;background:radial-gradient(#FFF3A0,#F2A516);box-shadow:0 0 20px #FFC93C}@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+.verse{background:linear-gradient(#FFFBF0,#FFF4DC)}.vtext{font-size:1.1rem;line-height:1.8;margin:6px 0;font-family:serif}.vref{text-align:right;color:var(--muted);font-size:.85rem;margin:0}
+.ptab{width:100%;border-collapse:collapse;font-size:.85rem;margin:8px 0}.ptab th,.ptab td{border-bottom:1px solid #EEE;padding:6px 4px;text-align:left;vertical-align:top}.ptab th{color:var(--muted);font-weight:normal}.wkhot{outline:3px solid #FF7AB0;animation:pop .6s}
+.hzchips{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0}.hzc{display:flex;flex-direction:column;align-items:center;width:40px;padding:4px 0;border-radius:10px;background:var(--soft);font-family:var(--han);font-size:1.3rem}.hzc small{font-size:.5rem;color:#FF7AB0;letter-spacing:1px}.hzc.on{background:#FFF3C2}.hz.sm{font-size:1.8rem}.flipc{min-height:200px;cursor:pointer}
+.prevb{display:block;margin:0 0 8px auto;border:0;background:var(--soft);border-radius:999px;padding:6px 14px;font:inherit;font-size:.85rem;color:#6b5bd6}.rvcard{max-height:88vh;overflow:auto;text-align:left}.rvcard .prompt{font-size:1rem;margin:8px 0}.opt.rv{cursor:default;display:flex;justify-content:space-between;align-items:center;gap:6px}.opt.rv em{font-style:normal;font-size:.72rem;opacity:.8;white-space:nowrap}
+.btns3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.btns3 .big{padding:12px 4px;font-size:.92rem}.vrlist{display:grid;gap:8px}.vrop{display:grid;grid-template-columns:48px 1fr auto;grid-template-rows:auto auto;column-gap:10px;align-items:center;text-align:left;border:2px solid #EEE6F5;background:#fff;border-radius:16px;padding:10px;font:inherit}.vrop.on{border-color:#FF7AB0;background:#FFF5F9}.vrsw{grid-row:1/3;width:48px;height:48px;border-radius:12px;box-shadow:inset 0 0 0 2px rgba(0,0,0,.05)}.vrop small{grid-column:2;color:#8A7F96;font-size:.75rem}.vrop em{grid-row:1/3;grid-column:3;font-style:normal;font-size:.8rem;font-weight:700;color:#FF4F8B;white-space:nowrap}
 .recap{margin:6px 0 0;padding-left:1.1em;font-size:.95rem;line-height:1.6}.recap li{margin:3px 0}
 .qtag{display:table;margin-left:auto;margin-right:auto;font-family:var(--display);font-size:.95rem;background:var(--soft);color:var(--accent);border-radius:99px;padding:2px 12px;margin-bottom:6px}
 .hintb{appearance:none;align-self:center;border:2px dashed var(--cheese);background:transparent;color:var(--ink);border-radius:99px;padding:6px 18px;font-family:var(--display);font-size:1.05rem;cursor:pointer}
@@ -514,7 +519,7 @@ function hourNow(){const d=new Date();return d.getHours()+d.getMinutes()/60}
 function isOpen(h){return S.test||hourNow()>=h}
 const DAILY=5;
 function doneToday(t){if(!S[t])return false;return S[t].last===today()&&(S[t].cnt||1)>=DAILY&&!S.test}
-function markDone(t){const d=today();if(S[t].last===d)S[t].cnt=(S[t].cnt||1)+1;else S[t].cnt=1;S[t].last=d;S[t].n++;checkGem()}
+function markDone(t){evLog(t);const d=today();if(S[t].last===d)S[t].cnt=(S[t].cnt||1)+1;else S[t].cnt=1;S[t].last=d;S[t].n++;checkGem()}
 function addXP(n){S.xp+=n;const t=today();if(!S.days.includes(t))S.days.push(t);if(S.days.length>60)S.days=S.days.slice(-60);save()}
 function streak(){let c=0;const d=new Date();for(;;){const s=d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());if(S.days.includes(s)){c++;d.setDate(d.getDate()-1)}else{if(c===0&&s===today()){d.setDate(d.getDate()-1);if(S.days.includes(d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())))continue}break}}return c}
 function dday(){const t=new Date();t.setHours(0,0,0,0);return Math.round((EXAM-t)/864e5)}
@@ -544,15 +549,25 @@ function mkQ(prompt,right,wrongs,exp,extra={}){const o=shuffle([right,...wrongs]
 
 /* 퀴즈 엔진 */
 function quiz(o){
-  const N=o.qs.length,queue=o.qs.map(q=>Object.assign({},q,{re:false}));let i=0,score=0,combo=0,fastWrong=0;const marks=[];
+  const N=o.qs.length,queue=o.qs.map(q=>Object.assign({},q,{re:false}));let i=0,score=0,combo=0,fastWrong=0;const marks=[],past=[];
   const CAT_OK=["생각해서 맞혔어! 최고!","냥! 한 번에 정답!","완벽해, Victoria!","우와, 꼼꼼하게 풀었네!"];
   function lock(ms){const opts=[...app.querySelectorAll(".opt:not(.no)")],bar=$("#think");opts.forEach(b=>b.disabled=true);
     if(bar){bar.hidden=false;const f=bar.querySelector("i");f.style.transition="none";f.style.width="0%";void f.offsetWidth;f.style.transition=`width ${ms}ms linear`;f.style.width="100%"}
     return new Promise(r=>setTimeout(()=>{opts.forEach(b=>{if(!b.classList.contains("no"))b.disabled=false});if(bar)bar.hidden=true;r(Date.now())},ms))}
   function cooldown(){const ov=document.createElement("div");ov.className="pop-ov";ov.innerHTML=`<div class="pop-card"><div class="bigem">🐢</div><h2>잠깐! 찍으면 안 돼요</h2><p>문제를 끝까지 읽고, 보기 4개를 하나씩 비교해 봐.</p><p class="muted" id="cd">3</p></div>`;document.body.appendChild(ov);let t=3;const iv=setInterval(()=>{t--;const c=ov.querySelector("#cd");if(c)c.textContent=t;if(t<=0){clearInterval(iv);ov.remove()}},1000)}
+  function review(start,lim){const L=lim==null?past.length:lim;let k=start;const ov=document.createElement("div");ov.className="pop-ov";document.body.appendChild(ov);
+    const draw=()=>{const h=past[k],q=h.q,pk=h.picks;
+      ov.innerHTML=`<div class="pop-card rvcard"><div class="row"><b>${q.re?"🔁 ":""}${k+1}번째 문제</b><span class="pill">${L}개 중</span></div>
+        <div class="prompt">${q.say?q.prompt:plainQ(q.prompt)}</div>
+        <div class="opts">${q.opts.map((x,j)=>`<div class="opt rv ${j===q.ans?"ok":pk.includes(j)?"no":""}">${x}${j===q.ans?"<em>✔ 정답</em>":pk.includes(j)?"<em>내가 고른 답</em>":""}</div>`).join("")}</div>
+        ${q.exp?`<div class="hintbox">${q.say?q.exp:plainQ(q.exp)}</div>`:""}
+        <div class="btns2"><button class="big alt" id="rvp" type="button" ${k===0?"disabled":""}>◀ 앞 문제</button><button class="big alt" id="rvn" type="button" ${k>=L-1?"disabled":""}>다음 문제 ▶</button></div>
+        <button class="big" id="rvx" type="button">${o.inEnd?"닫기":"지금 문제로 돌아가기"}</button></div>`;
+      ov.querySelector("#rvp").onclick=()=>{if(k>0){k--;draw()}};ov.querySelector("#rvn").onclick=()=>{if(k<L-1){k++;draw()}};ov.querySelector("#rvx").onclick=()=>ov.remove()};draw()}
   function show(){
     const q=queue[i],re=q.re;let tries=0,openAt=0,first=null;
     app.innerHTML=hdr(o.title)+`<div class="card">
+      ${past.length?`<button class="prevb" id="prevb" type="button">◀ 앞 문제 보기</button>`:""}
       <div class="qprog">${queue.map((x,k)=>`<i class="${k<N?(marks[k]===true?"ok":marks[k]===false?"no":k===i?"now":""):(k<i?"ok":k===i?"now re":"re")}"></i>`).join("")}</div>
       ${re?`<p class="retag">🔁 아까 틀린 문제, 다시 도전!</p>`:""}
       <div class="prompt">${q.say?q.prompt:plainQ(q.prompt)}</div>
@@ -563,7 +578,7 @@ function quiz(o){
       ${q.hint?`<button class="hintb" id="hintb" type="button">💡 힌트 보기</button><div class="hintbox" id="hintbox" hidden>${plainQ(q.hint)}</div>`:""}${q.say?"":`<button class="hardb" id="hardb" type="button">🙋 문제 말이 어려워요</button>`}
       ${combo>=2?`<div class="combo">🔥 ${combo}연속 한 번에 정답!</div>`:""}
       <div id="fb"></div></div>`;
-    bindBack();bindEasy();if($("#hardb"))$("#hardb").onclick=()=>hardPop(q,o.title);
+    bindBack();bindEasy();const lim=past.length;if($("#prevb"))$("#prevb").onclick=()=>review(lim-1,lim);if($("#hardb"))$("#hardb").onclick=()=>hardPop(q,o.title);
     if(q.say){const sp=()=>{say(q.say);sparkle(document.querySelector(".prompt .pw"))};sp();$("#sayb").onclick=sp}
     const openHint=()=>{if($("#hintbox")){$("#hintbox").hidden=false;$("#hintb").hidden=true}};
     if(q.hint)$("#hintb").onclick=openHint;
@@ -580,7 +595,7 @@ function quiz(o){
     $("#cfmno").onclick=()=>{sel=null;app.querySelectorAll(".opt").forEach(x=>x.classList.remove("sel"));$("#cfmbar").hidden=true};
     app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>pick(b));
     const submit=b=>{
-      const k=+b.dataset.k,ok=k===q.ans,quick=Date.now()-openAt<700;tries++;
+      const k=+b.dataset.k,ok=k===q.ans,quick=Date.now()-openAt<700;tries++;if(tries===1)past.push({q,picks:[]});past[past.length-1].picks.push(k);
       if(tries===1&&!re){marks[i]=ok;if(o.onAnswer)o.onAnswer(q,ok);app.querySelector(".qprog").children[i].className=ok?"ok":"no"}
       if(ok){b.classList.add("pop");
         if(tries===1){if(!re){score++;combo++}fastWrong=0;finish(true,re?"이번엔 정확해! 기억했구나!":(o.mascot===true?"딩동댕! 맞았어!":CAT_OK[Math.floor(Math.random()*CAT_OK.length)]+(combo>=3?` 🔥${combo}연속!`:"")),"--good")}
@@ -603,8 +618,8 @@ function quiz(o){
       <h2>${n}문제 중 ${score}개 한 번에 정답</h2>
       <p class="muted">점수는 처음 고른 답으로만 매겨요.</p>
       ${o.pass?`<p class="muted">${pass?"퀘스트 클리어!":`${o.pass}개 이상 한 번에 맞히면 클리어! 다시 도전해 볼까?`}</p>`:""}
-      <div class="btns" style="width:100%">${o.story!=null?`<button class="big alt" id="restory" type="button">📜 이야기 다시 보기</button>`:""}${!pass?`<button class="big" id="retry" type="button">다시 도전</button>`:""}<button class="big ${pass?"":"alt"}" id="gohome" type="button">홈으로</button></div></div>`;
-    bindBack();$("#gohome").onclick=o.after||home;if(o.after)$("#gohome").textContent=o.afterLabel||"다음 ▶";if($("#restory"))$("#restory").onclick=()=>histLesson(o.story,true);
+      <div class="btns" style="width:100%">${past.length?`<button class="big alt" id="rvall" type="button">📋 푼 문제 다시 보기</button>`:""}${o.story!=null?`<button class="big alt" id="restory" type="button">📜 이야기 다시 보기</button>`:""}${!pass?`<button class="big" id="retry" type="button">다시 도전</button>`:""}<button class="big ${pass?"":"alt"}" id="gohome" type="button">홈으로</button></div></div>`;
+    bindBack();$("#gohome").onclick=o.after||home;if(o.after)$("#gohome").textContent=o.afterLabel||"다음 ▶";if($("#rvall"))$("#rvall").onclick=()=>{o.inEnd=true;review(0)};if($("#restory"))$("#restory").onclick=()=>histLesson(o.story,true);
     if($("#retry"))$("#retry").onclick=()=>{const q=o.remake?o.remake():o.qs;quiz(Object.assign({},o,{qs:q}))};
   }
   show();
@@ -637,14 +652,15 @@ function home(){
   ${("Notification" in window)&&Notification.permission!=="granted"&&("setAppBadge" in navigator)?`<button class="big alt" id="badgeOn" type="button">♥ 새 퀘스트 알림 켜기</button>`:""}
   ${S.test?`<button class="big" id="parent" type="button">🔧 보호자 설정 (진도·펫·백업)</button><button class="big alt" id="rst" type="button">기록 전체 초기화</button><p class="foot" id="rstAsk" hidden>정말 지울까요? <button class="back" id="rstYes" type="button">네, 지워요</button></p>`:""}
   <div class="card rep"><h3>💌 엄마에게 오늘 자랑하기${S.reportLast===today()?" ✓":""}</h3><p class="muted">${S.reportLast===today()?"오늘 자랑 완료! 내일도 들려줘.":"오늘 한 퀘스트를 카톡으로 엄마에게 자랑하면 +5 XP!"}</p><div class="btns2"><button class="big ${S.reportLast===today()?"alt":""}" id="rep" type="button">💌 자랑 보내기</button><button class="big alt" id="req" type="button">📮 요청 보내기</button></div><p class="muted" style="margin:4px 0 0">앱에 바라는 게 있으면 까닭과 함께 엄마에게 요청해요.</p><p class="muted" id="repmsg" hidden style="white-space:pre-line"></p></div>
+  ${weekBanner()}
   ${wrongCard()}
   ${petCardHome()}
   ${shopHTML(nextCook())}
-  <p class="foot" id="ver">Victoria Quest v3.0</p>`;
+  <p class="foot" id="ver">Victoria Quest v3.5</p>`;
   if(S.test){$("#parent").onclick=parentPanel;$("#rst").onclick=()=>{$("#rstAsk").hidden=false};$("#rstYes").onclick=()=>{try{localStorage.removeItem(KEY)}catch(e){}location.reload()}}
   app.querySelectorAll(".tile").forEach(b=>b.onclick=()=>({cook:cookStart,hist,hz,en,mem,ko,ma,sci})[b.dataset.t]());
   updBadge();
-  $("#gem").onclick=gemRoom;$("#petgo").onclick=houseView;$("#wrgo").onclick=wrongReview;
+  $("#gem").onclick=gemRoom;$("#petgo").onclick=houseView;$("#wrgo").onclick=wrongReview;$("#wkgo").onclick=weekView;
   $("#rulesb").onclick=showRules;
   if(!S.rulesSeen&&!document.querySelector(".pop-ov"))showRules();
   if($("#rep"))$("#rep").onclick=sendReport;if($("#req"))$("#req").onclick=reqView;
@@ -750,6 +766,26 @@ function hzDayQs(d){
 const EXAM30="九金南男女東六母木門父北四三西水十五月二人日一子弟七土八兄火";
 function hzMixQs(n){const mock=n===25,L=mock?[...EXAM30]:HZ.map(h=>h[0]),qs=[];const plan=n===25?["A","A","A","A","A","A","A","A","B","B","B","B","B","B","B","B","C","C","C","C","C","C","D","D","D"]:["A","A","A","B","B","B","C","C","D","A"];
   const idx=shuffle(HZ.map((_,k)=>k).filter(k=>!mock||EXAM30.includes(HZ[k][0])));let p=0;plan.forEach(t=>{qs.push(hzQ(t,idx[p++%idx.length],L))});return shuffle(qs)}
+/* 모르는 한자 집중 반복 */
+const HZ_FOCUS_SEED="母校南韓靑四學東小山北年外先敎弟軍室兄女王生八國民大西";
+function hzF(){S.hz.focus=S.hz.focus||{};if(!S.hz.focusSeeded){[...HZ_FOCUS_SEED].forEach(c=>{if(HZ.some(h=>h[0]===c)&&!S.hz.focus[c])S.hz.focus[c]={days:[],ok:0,miss:0}});S.hz.focusSeeded=true;save()}return S.hz.focus}
+const hzFDone=c=>{const f=hzF()[c];return f&&f.days.length>=3};
+function hzFList(){return Object.keys(hzF()).filter(c=>!hzFDone(c))}
+function hzFMark(c,ok){const f=hzF()[c];if(!f)return;const td=today();if(ok){f.ok++;if(!f.days.includes(td)){f.days.push(td);if(f.days.length===3){S.gems=(S.gems||0)+1;setTimeout(()=>toast(`🎉 ${c} 완전히 외웠어! 💎+1`),400)}}}else{f.miss++;f.days=f.days.slice(0,Math.max(0,f.days.length-1))}save()}
+function hzFQs(n=10){const list=shuffle(hzFList()),pick=[];while(pick.length<Math.min(n,Math.max(list.length,1)*2)&&list.length)pick.push(list[pick.length%list.length]);
+  return pick.slice(0,n).map((c,i)=>{const h=HZ.find(x=>x[0]===c),others=shuffle(HZ.filter(x=>x[0]!==c)).slice(0,3),st=HZSTORY[c];
+    return i%2?mkQ(`<span class="qtag">🔁 집중 반복</span>‘<b>${h[1]} ${h[2]}</b>’에 알맞은 한자는?`,`<span class="hz sm">${c}</span>`,others.map(o=>`<span class="hz sm">${o[0]}</span>`),`${c} = ${h[1]} ${h[2]}${st?" · "+st[1]:""}`,{hint:st?`${st[0]} ${st[1]}`:"모양을 떠올려 봐!",fc:c})
+      :mkQ(`<span class="qtag">🔁 집중 반복</span><span class="hz">${c}</span><br>이 한자의 뜻과 소리는?`,`${h[1]} ${h[2]}`,others.map(o=>`${o[1]} ${o[2]}`),`${c} = ${h[1]} ${h[2]}${st?" · "+st[1]:""}`,{hint:st?`${st[0]} ${st[1]}`:"뜻을 먼저 떠올리고, 소리를 맞혀 봐.",fc:c})})}
+function hzFocusCard(){const all=Object.keys(hzF()),left=hzFList();if(!all.length)return "";return `<div class="card"><div class="row"><h3>🔁 모르는 한자 집중 반복</h3><span class="pill">외운 한자 ${all.length-left.length} / ${all.length}</span></div>
+  <div class="hzchips">${all.map(c=>`<span class="hzc ${hzFDone(c)?"on":""}">${c}<small>${"●".repeat(hzF()[c].days.length)}${"○".repeat(Math.max(0,3-hzF()[c].days.length))}</small></span>`).join("")}</div>
+  <p class="muted">서로 다른 날 3번 맞히면 ⭐ 외움! (●○○) 틀리면 한 칸 뒤로. 한 글자 외울 때마다 💎+1</p>
+  ${left.length?`<div class="btns2"><button class="big" id="hzf" type="button">집중 반복 10문제</button><button class="big alt" id="hzfc" type="button">🃏 카드 넘기기</button></div>`:`<p class="pill">🌟 모두 외웠어요!</p>`}</div>`}
+function hzFlip(){const list=shuffle(hzFList());let i=0,flip=false;const draw=()=>{if(i>=list.length){toast("🃏 카드 한 바퀴 끝! 이제 10문제로 확인해 봐");return hz()}const c=list[i],h=HZ.find(x=>x[0]===c),st=HZSTORY[c];
+  app.innerHTML=hdr("🃏 한자 카드")+`<div class="card"><div class="row"><span class="pill">${i+1} / ${list.length}</span></div><div class="flash flipc" id="fc"><span class="hz">${c}</span>${flip?`<span class="word">${h[1]} ${h[2]}</span>${st?`<div class="story">${st[0]} ${st[1]}</div>`:""}`:`<p class="muted">눌러서 뒤집기</p>`}</div>
+   ${flip?`<div class="btns2"><button class="big" id="ok" type="button">⭕ 알았어</button><button class="big alt" id="no" type="button">❌ 몰랐어</button></div>`:""}<button class="ttsb" id="sp" type="button">🔊 읽어 줘</button></div>`;bindBack();
+  $("#fc").onclick=()=>{flip=true;draw()};$("#sp").onclick=()=>sayKo(`${h[1]} ${h[2]}`);if(flip){$("#ok").onclick=()=>{i++;flip=false;draw()};$("#no").onclick=()=>{list.push(c);i++;flip=false;draw()}}};draw()}
+function hzFocusRun(){quiz({title:"🔁 한자 집중 반복",qs:hzFQs(10),onAnswer:(q,ok)=>hzFMark(q.fc,ok),onPass:()=>{if(!doneToday("hz")){markDone("hz");addXP(15)}},after:hz,afterLabel:"한자로 돌아가기"})}
+
 function hzMain(){
   const T="한자 8급 합격 작전";const n=S.hz.n,dd=dday();
   if(!isOpen(7))return lockScreen(T,7,"아침 7시에 열려요!");
@@ -989,7 +1025,7 @@ function nbGame(m,done){const N=Math.max(1,m.lv.nb),K=12,pal=[CATS[0],CATS[4],CA
     cur=-1;const acc=(hit+cr)/K;if(acc>=.9)m.lv.nb=Math.min(2,N+1);else if(acc<.6)m.lv.nb=1;
     app.innerHTML=hdr("👀 아까 그 고양이?")+`<div class="card lock"><h2>정확도 ${Math.round(acc*100)}%</h2><p>찾아낸 '같아요' ${hit}개 · 놓친 것 ${miss}개 · 잘못 누른 것 ${fa}개</p><p class="muted">${m.lv.nb>N?`대단해! 다음엔 '${nbWord(m.lv.nb)}' 고양이로 도전해요.`:"다음에도 같은 단계로 연습해요. 할수록 쉬워져요!"}</p><button class="big" id="go" type="button">다음</button></div>`;bindBack();$("#go").onclick=()=>done(Math.round(acc*100))}}
 function memEnd(res,practice){const m=memInit();
-  if(!practice&&!(m.last===today()&&(m.cnt||1)>=DAILY)){m.cnt=m.last===today()?(m.cnt||1)+1:1;m.last=today();m.log.push({d:today(),corsi:res.corsi||0,back:res.back||0,nb:res.nb||0});if(m.log.length>60)m.log=m.log.slice(-60);addXP(20);checkGem()}else save();
+  if(!practice&&!(m.last===today()&&(m.cnt||1)>=DAILY)){m.cnt=m.last===today()?(m.cnt||1)+1:1;m.last=today();evLog("mem");m.log.push({d:today(),corsi:res.corsi||0,back:res.back||0,nb:res.nb||0});if(m.log.length>60)m.log=m.log.slice(-60);addXP(20);checkGem()}else save();
   try{if(!S.log||S.log.d!==today())S.log={d:today(),r:[]};S.log.r.push(["기억 탐험",`발자국 ${res.corsi} · 거꾸로 ${res.back} · 고양이 ${res.nb}%`,"",1]);save()}catch(e){}
   app.innerHTML=hdr("🧠 기억 탐험")+`<div class="card result"><div class="stars">🧠✨</div><h2>오늘의 기억 기록</h2>
    <ul class="rw" style="width:100%"><li><b>🐾</b><span>고양이 발자국 최고</span><em>${res.corsi}개</em></li><li><b>🔁</b><span>거꾸로 기억 최고</span><em>${res.back}개</em></li><li><b>👀</b><span>아까 그 고양이 정확도</span><em>${res.nb}%</em></li></ul>
@@ -1036,7 +1072,7 @@ function pastHTML(t){const cap=t==="ma"?MA.length:t==="ko"?KO.length:t==="hist"?
   return `<div class="card"><h3>지난 퀘스트 다시 하기</h3><p class="muted">언제든 다시 할 수 있어요. 복습용이라 진도는 그대로예요.</p><div class="tapchips">${Array.from({length:n},(_,d)=>`<button type="button" class="tc past" data-t="${t}" data-d="${d}" ${t==="hz"?'style="font-family:var(--han)"':""}>${lab(d)}</button>`).join("")}</div></div>`}
 function withPast(t){app.insertAdjacentHTML("beforeend",pastHTML(t));app.querySelectorAll(".past").forEach(b=>b.onclick=()=>{const d=+b.dataset.d;if(t==="hist")histLesson(d,true);else if(t==="ko")koLesson(d,true);else if(t==="ma")maLesson(d,true);else if(t==="hz")hzLearn(d,true);else enLearn(d,true)})}
 function hist(){histMain();withPast("hist")}
-function hz(){hzMain();withPast("hz")}
+function hz(){hzMain();if(isOpen(7)){app.insertAdjacentHTML("beforeend",hzFocusCard());if($("#hzf"))$("#hzf").onclick=hzFocusRun;if($("#hzfc"))$("#hzfc").onclick=hzFlip}withPast("hz")}
 function en(){enMain();withPast("en")}
 function histDay(d){quiz({title:"선애의 한국사 퀴즈 (복습)",mascot:true,qs:[0,1,2,3,4].map(k=>{const id=d*5+k,h=HIST[id];return mkQ(esc(h[0]),h[1],h[2],esc(h[3]),{id})}),
   onAnswer:(q,ok)=>{const w=S.hist.wrong;if(!ok&&!w.includes(q.id))w.push(q.id);save()}})}
@@ -1049,7 +1085,7 @@ function reportText(){const d=new Date(),td=today(),c=t=>S[t].last===td?(S[t].cn
   return `[Victoria 오늘의 자랑 💌] ${d.getMonth()+1}/${d.getDate()}(${days})
 🍳 요리: 오늘 ${ck}번 · Lv.${lv}까지 클리어
 📜 한국사: 오늘 ${c("hist")}개 · ${Math.min(S.hist.n,HSTORY.length)}/${HSTORY.length}편${S.hist.wrong.length?` · 다시 볼 문제 ${S.hist.wrong.length}개`:""}
-漢 한자: 오늘 ${c("hz")}개 · ${hzLearnedChars(Math.min(S.hz.n,HZDAYS.length)).length}/${HZ.length}자 (${Math.min(S.hz.n,HZDAYS.length)}/${HZDAYS.length}과)${S.hz.best?` · 모의시험 최고 ${S.hz.best}/25`:""} · 시험 D-${Math.max(dday(),0)}
+漢 한자: 오늘 ${c("hz")}개${(()=>{const a=Object.keys(hzF()),l=hzFList();return a.length?` · 집중 반복 ${a.length-l.length}/${a.length}자 외움`:""})()} · ${hzLearnedChars(Math.min(S.hz.n,HZDAYS.length)).length}/${HZ.length}자 (${Math.min(S.hz.n,HZDAYS.length)}/${HZDAYS.length}과)${S.hz.best?` · 모의시험 최고 ${S.hz.best}/25`:""} · 시험 D-${Math.max(dday(),0)}
 🔤 영어: 오늘 ${c("en")}개 · Day ${Math.min(S.en.n,ENGDAYS.length)}/${ENGDAYS.length}
 ${(S.hardQ||[]).filter(h=>h.d===td).length?`🙋 말이 어려웠던 문제 ${(S.hardQ||[]).filter(h=>h.d===td).length}개: ${(S.hardQ||[]).filter(h=>h.d===td).slice(-3).map(h=>"「"+h.q+"」").join(" / ")}\n`:""}📘 국어: 오늘 ${c("ko")}개 · ${Math.min(S.ko.n,KO.length)}/${KO.length}과 · 개념어 마스터 ${kwCount()}/${KW.length}${(()=>{kwInit();const u=Object.entries(S.kw.w).filter(([t,v])=>v.unk&&!kwMastered(t)).map(([t])=>t);return u.length?`\n   🔸 아직 익히는 개념어: ${u.slice(0,8).join(", ")}`:""})()}${S.ko.writes.length&&S.ko.writes.at(-1).d===td?`\n   ✏️ 생각 한 줄: “${S.ko.writes.at(-1).a}”`:""}
 🔢 수학: 오늘 ${c("ma")}개 · ${(()=>{maInit();return Object.entries(MTRK).map(([k,t])=>`${t.n.split(" ")[1]} ${Math.min(S.ma.t[k],t.list.length)}/${t.list.length}`).join(" · ")})()}${S.ma.writes.length&&S.ma.writes.at(-1).d===td?`\n   ✏️ 말로 설명: “${S.ma.writes.at(-1).a}”`:""}
@@ -1452,10 +1488,10 @@ function bindWalk(B,cam,cv,st){const ray=new THREE.Raycaster(),pl=new THREE.Plan
   function hideMenu(){menu.hidden=true}
   function showMenu(){const hasStroller=S.baby&&S.binv&&S.binv.stroller,g=gardenInit(),wat=g.last===today();
     menu.innerHTML=`<b>👑 Victoria, 어디로 갈까?</b><div class="vgrid">${[["L","🛋️ 거실"],["B","👶 아기방"],["P","🐾 펫룸"],["G","🌿 온실"],["oL","🌷 꽃밭"],["oS","🎠 그네"],["oF","⛲ 분수"],["oB2","🪑 벤치"]].map(([k,t])=>`<button type="button" data-go="${k}">${t}</button>`).join("")}</div>
-     <div class="vgrid"><button type="button" data-a="water" ${wat?"disabled":""}>🚿 꽃에 물 주기${wat?" ✓":""}</button><button type="button" data-a="walk">🚼 유모차 산책${hasStroller?"":" 🔒"}</button><button type="button" data-a="music">🎵 뮤직박스</button><button type="button" data-a="town">🗺️ 마을로 나가기</button><button type="button" data-a="x">닫기</button></div>`;menu.hidden=false;
+     <div class="vgrid"><button type="button" data-a="water" ${wat?"disabled":""}>🚿 꽃에 물 주기${wat?" ✓":""}</button><button type="button" data-a="walk">🚼 유모차 산책${hasStroller?"":" 🔒"}</button><button type="button" data-a="music">🎵 뮤직박스</button><button type="button" data-a="room">👑 내 방</button><button type="button" data-a="town">🗺️ 마을로 나가기</button><button type="button" data-a="x">닫기</button></div>`;menu.hidden=false;
     menu.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>{const k=b.dataset.go,p=WN[k];if(k==="oS")return go(5.4,-4.4,()=>{W.swing=4;say("슝~ 하늘까지! 🎠",3500)});if(k==="oF")return go(5.0,3.3,()=>say("소원을 빌어 볼까? ⛲✨",3200));go(p[0]+(Math.random()-.5)*.4,p[1]+(Math.random()-.5)*.4)});
     menu.querySelector('[data-a="x"]').onclick=hideMenu;menu.querySelector('[data-a="town"]').onclick=()=>go(5.6,5.6,()=>{say("마을로 출발~ 🗺️",1500);setTimeout(()=>{H3MODE="town";houseView()},700)},"대문으로 가자!");
-    menu.querySelector('[data-a="music"]').onclick=()=>go(-2.3,1.3,()=>musicBox(),"뮤직박스 들으러 가자 🎵");
+    menu.querySelector('[data-a="room"]').onclick=()=>go(-2,.6,()=>{say("내 방으로 가자 👑",1200);setTimeout(()=>{H3MODE="room";houseView()},600)},"내 방으로~");menu.querySelector('[data-a="music"]').onclick=()=>go(-2.3,1.3,()=>musicBox(),"뮤직박스 들으러 가자 🎵");
     menu.querySelector('[data-a="water"]').onclick=()=>go(-2.2,5.0,water,"꽃에 물 주러 가자 🚿");
     menu.querySelector('[data-a="walk"]').onclick=()=>{if(!S.baby)return toast("먼저 아기를 맞이해요! (👶 아기 탭)");if(!hasStroller)return toast("🚼 시장에서 유모차를 사면 산책할 수 있어요 (💎40)");strollWalk()}}
   function water(){const g=gardenInit();if(g.last===today()){say("오늘은 벌써 물 줬어! 내일 또 💧");return}say("쪼르륵~ 💧 무럭무럭 자라라!",2600);const drops=[];for(let i=0;i<14;i++){const d=sph(.04,"#7FD3FF");d.position.set(-3.2+Math.random()*2,1.3+Math.random()*.6,5.6+Math.random()*.4);B.sc.add(d);drops.push(d)}W.drops={list:drops,t:0};
@@ -1503,6 +1539,119 @@ function musicBox(){S.music=S.music||{plays:{},mine:[]};const M=S.music;
   musicRefresh=()=>{if(document.querySelector(".mlist")||app.textContent.includes("빅토리아 뮤직박스"))draw()};draw()}
 
 /* ===================== 마을: 시장 · 교회 · 펫샵 · 도서관 · 공원 ===================== */
+/* ---------- 👑 빅토리아 방 (업그레이드) ---------- */
+const VROOM_T={
+ royal:{n:"👑 로열 핑크",d:"핑크와 금빛 장식, 하얀 공주 침대",p:0,wall:["stripe","#FFDCE8","#FFEAF2"],trim:"#E9BE5A",panel:"#FFF6F9",floor:["planks","#F4DEC6","#EAD0B4"],wood:"#FFFFFF",quilt:"#FF8FB8",quilt2:"#FFD1E2",drape:"#FFC6DC",acc:"#FF6FA8",rug:"#FFE3EF",lights:["#FFE8A3","#FFC6DC","#FFFFFF"],sky:"#FFF4F8",hemi:.72},
+ lav:{n:"💜 라벤더 드림",d:"구름 벽지와 민트 포인트, 꿈꾸는 방",p:15,wall:["cloud","#E5DCFF","#FFFFFF"],trim:"#FFFFFF",panel:"#F7F3FF",floor:["planks","#E8DEFF","#D8CBF7"],wood:"#FFFFFF",quilt:"#B9A2FF",quilt2:"#D8F6EB",drape:"#D9CCFF",acc:"#8F75F5",rug:"#D8F6EB",lights:["#FFFFFF","#D9CCFF","#BFEBDD"],sky:"#F5F1FF",hemi:.75},
+ night:{n:"🌙 별밤 아틀리에",d:"고흐의 별밤처럼 반짝이는 남색 방과 이젤",p:20,wall:["stars","#33407A","#FFE07A"],trim:"#E9BE5A",panel:"#2A3566",floor:["planks","#CFA272","#BE915F"],wood:"#E8C9A0",quilt:"#3E5BA9",quilt2:"#FFD54A",drape:"#7C8FD6",acc:"#FFD54A",rug:"#F3E2B8",lights:["#FFE07A","#FFF3C2","#FFC86B"],sky:"#1E2550",hemi:.55}};
+function vroomInit(){S.vroom=S.vroom||{t:"royal",own:["royal"]};return S.vroom}
+function vrTex(kind,a,b,rx,ry){if(kind!=="stars")return c3tex(kind,a,b,rx,ry);const c=document.createElement("canvas");c.width=c.height=256;const g=c.getContext("2d");g.fillStyle=a;g.fillRect(0,0,256,256);
+  g.strokeStyle="rgba(130,160,230,.35)";g.lineWidth=6;for(let i=0;i<4;i++){g.beginPath();for(let x=0;x<=256;x+=8)g.lineTo(x,40+i*64+Math.sin(x/30+i)*10);g.stroke()}
+  g.fillStyle=b;const st=(x,y,r)=>{g.beginPath();for(let k=0;k<10;k++){const a2=k*Math.PI/5-Math.PI/2,rr=k%2?r*.45:r;g.lineTo(x+Math.cos(a2)*rr,y+Math.sin(a2)*rr)}g.fill()};[[30,30,9],[150,22,6],[220,80,8],[90,110,5],[40,180,7],[180,170,9],[120,230,6],[230,230,5]].forEach(p=>st(...p));
+  const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(rx,ry);return t}
+function vrText(txt,col,bg){const c=document.createElement("canvas");c.width=512;c.height=160;const g=c.getContext("2d");if(bg){g.fillStyle=bg;g.fillRect(0,0,512,160)}g.font="italic bold 96px Georgia,serif";g.textAlign="center";g.textBaseline="middle";g.fillStyle=col;g.fillText(txt,256,84);const t=new THREE.CanvasTexture(c);return t}
+function crownModel(gold="#F3C24A"){const g=grp(at(msh(new THREE.TorusGeometry(.17,.035,8,24),gold).rotateX(Math.PI/2),0,0,0));for(let i=0;i<5;i++){const a=i/5*Math.PI*2;g.add(at(cone(.05,.16,gold,8),Math.cos(a)*.17,.09,Math.sin(a)*.17));g.add(at(sph(.03,["#FF4F8B","#7FD3FF","#B78CFF","#6EDC9A","#FF4F8B"][i]),Math.cos(a)*.17,.19,Math.sin(a)*.17))}g.add(at(sph(.045,"#FF4F8B"),0,.02,.18));return g}
+function buildRoom(){const V=vroomInit(),T=VROOM_T[V.t]||VROOM_T.royal,sc=new THREE.Scene(),L=3.6;
+  sc.add(new THREE.HemisphereLight("#FFF8F0","#F5D9C8",T.hemi));const sun=new THREE.DirectionalLight(V.t==="night"?"#C9D4FF":"#FFF3E0",V.t==="night"?.45:.7);sun.position.set(5,10,6);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);const s2=sun.shadow.camera;s2.left=-6;s2.right=6;s2.top=6;s2.bottom=-6;sun.shadow.radius=3;sun.shadow.bias=-.0008;sc.add(sun);
+  // 바닥 받침 + 바닥
+  sc.add(at(rb(7.8,.5,7.8,"#FFFFFF",.18),0,-.27,0));sc.add(at(rb(7.95,.12,7.95,T.trim,.05),0,-.5,0));
+  const fl=msh(new THREE.BoxGeometry(7.2,.06,7.2),new THREE.MeshStandardMaterial({map:vrTex(T.floor[0],T.floor[1],T.floor[2],3,3),roughness:.75}));fl.position.set(0,.02,0);sc.add(fl);
+  // 벽
+  const wm=new THREE.MeshStandardMaterial({map:vrTex(T.wall[0],T.wall[1],T.wall[2],5,2.4),roughness:.9});
+  const bw=msh(new THREE.BoxGeometry(7.4,3.4,.24),wm);bw.position.set(0,1.7,-L-.1);sc.add(bw);const lw=msh(new THREE.BoxGeometry(.24,3.4,7.4),wm);lw.position.set(-L-.1,1.7,0);sc.add(lw);
+  sc.add(at(rb(7.6,.18,.4,T.trim,.06),0,3.45,-L-.1));sc.add(at(rb(.4,.18,7.6,T.trim,.06),-L-.1,3.45,0));
+  // 웨인스코팅
+  const pan=(len,ax)=>{const g=new THREE.Group();g.add(at(rb(ax?len:.08,1.1,ax?.08:len,T.panel,.02),0,.57,0));const n=Math.round(len/.9);for(let i=0;i<n;i++){const p=-len/2+(i+.5)*(len/n);g.add(ax?at(rb(.6,.62,.03,T.trim,.02),p,.58,.05):at(rb(.03,.62,.6,T.trim,.02),.05,.58,p));g.add(ax?at(rb(.52,.54,.035,T.panel,.02),p,.58,.06):at(rb(.035,.54,.52,T.panel,.02),.06,.58,p))}
+    g.add(at(rb(ax?len:.14,.08,ax?.14:len,T.trim,.03),0,1.14,0));g.add(at(rb(ax?len:.12,.16,ax?.12:len,"#FFFFFF",.03),0,.1,0));return g};
+  const pb=pan(7.1,1);pb.position.set(0,0,-L+.04);sc.add(pb);const pl=pan(7.1,0);pl.position.set(-L+.04,0,0);sc.add(pl);
+  // 창문 (아치) + 커튼
+  const win=(x,z,rot)=>{const w=new THREE.Group(),gl=mat(T.sky==="#1E2550"?"#3B4C9A":"#CFEFFF",{emissive:V.t==="night"?"#2B3A80":"#BFE8FF",emissiveIntensity:.5});
+    w.add(at(rb(1.5,1.5,.1,"#FFFFFF",.04),0,0,0));w.add(at(msh(new THREE.BoxGeometry(1.26,1.28,.02),gl),0,0,.05));const arch=msh(new THREE.CircleGeometry(.75,24,0,Math.PI),"#FFFFFF");arch.position.set(0,.75,.0);w.add(arch);
+    const ag=msh(new THREE.CircleGeometry(.63,24,0,Math.PI),gl);ag.position.set(0,.75,.06);w.add(ag);w.add(at(rb(.05,.6,.04,"#FFFFFF",.01),0,1.05,.08));
+    w.add(at(rb(.05,1.9,.05,"#FFFFFF",.01),0,.2,.07));w.add(at(rb(1.26,.05,.05,"#FFFFFF",.01),0,.1,.07));w.add(at(rb(1.7,.08,.24,"#FFFFFF",.03),0,-.8,.1));
+    if(V.t==="night"){w.add(at(sph(.16,"#FFF3C2",1,1,.3),.3,.9,.07));[[-.4,.3],[.35,-.3],[-.2,-.45]].forEach(([a,b])=>w.add(at(sph(.04,"#FFE07A"),a,b,.07)))}
+    [-1,1].forEach(s=>{w.add(at(rb(.42,2.05,.08,T.drape,.06),s*.95,.05,.16));w.add(at(rb(.46,.08,.12,T.acc,.03),s*.95,-.25,.2))});w.add(at(cyl(.04,.04,2.4,T.trim,8).rotateZ(Math.PI/2),0,1.15,.18));w.add(at(rb(2.3,.32,.1,T.drape,.08),0,1.02,.2));
+    w.position.set(x,1.95,z);w.rotation.y=rot;sc.add(w)};
+  win(.6,-L+.02,0);win(-L+.02,-.1,Math.PI/2);
+  // 공주 침대
+  const bed=new THREE.Group(),W2=1.9,Ln=2.5;bed.add(at(rb(W2,.38,Ln,T.wood,.08),0,.32,0));bed.add(at(rb(W2-.08,.26,Ln-.12,"#FFFFFF",.12),0,.62,.02));bed.add(at(rb(W2+.04,.12,1.55,T.quilt,.06),0,.77,.45));bed.add(at(rb(W2+.06,.04,.2,T.quilt2,.02),0,.84,-.25));
+  for(let i=0;i<7;i++)bed.add(at(sph(.05,T.quilt2),-.75+i*.25,.84,.6));
+  [-.45,.45].forEach(x=>bed.add(at(rb(.7,.2,.42,"#FFFFFF",.1),x,.86,-.92)));bed.add(at(rb(.5,.18,.3,T.quilt2,.09),0,.92,-.7));
+  bed.add(at(rb(W2+.12,1.4,.16,T.wood,.06),0,.8,-Ln/2-.02));const hb=msh(new THREE.ExtrudeGeometry(new THREE.Shape().absarc(0,0,.95,0,Math.PI,false),{depth:.12,bevelEnabled:false}),T.wood);hb.position.set(0,1.5,-Ln/2-.08);bed.add(hb);
+  bed.add(at(msh(new THREE.TorusGeometry(.42,.03,8,28,Math.PI),T.trim),0,1.5,-Ln/2+.07));bed.add(at(sph(.11,T.acc),0,1.92,-Ln/2+.06));
+  [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([a,b])=>{bed.add(at(cyl(.05,.05,2.75,T.trim,10),a*(W2/2+.02),1.38,b*(Ln/2)));bed.add(at(sph(.08,T.trim),a*(W2/2+.02),2.8,b*(Ln/2)))});
+  [-1,1].forEach(s=>{bed.add(at(rb(.08,.08,Ln+.16,T.trim,.03),s*(W2/2+.02),2.72,0));bed.add(at(rb(W2+.16,.08,.08,T.trim,.03),0,2.72,s*Ln/2))});{const top=new THREE.Mesh(new THREE.BoxGeometry(W2,.02,Ln),mat(T.drape,{transparent:true,opacity:.35}));top.position.y=2.73;bed.add(top)}const dm=mat(T.drape,{transparent:true,opacity:.55,side:THREE.DoubleSide});
+  [[-1,0],[1,0]].forEach(([s])=>{const d=new THREE.Mesh(new THREE.BoxGeometry(.04,1.6,Ln*.95),dm);d.position.set(s*(W2/2+.04),1.9,0);bed.add(d);[-1,1].forEach(b=>bed.add(at(cone(.18,1.7,T.drape,12),s*(W2/2+.04),1.55,b*(Ln/2-.12))))});
+  const valance=new THREE.Mesh(new THREE.BoxGeometry(W2+.2,.3,.04),dm);valance.position.set(0,2.55,Ln/2+.06);bed.add(valance);
+  const teddy=grp(at(sph(.16,"#D9A57A"),0,.16,0),at(sph(.12,"#D9A57A"),0,.4,0),at(sph(.05,"#D9A57A"),-.09,.5,0),at(sph(.05,"#D9A57A"),.09,.5,0),at(sph(.05,"#F3D3B5"),0,.37,.1),at(rb(.2,.05,.04,T.acc,.02),0,.29,.11));teddy.position.set(.55,.86,-.55);bed.add(teddy);
+  bed.position.set(-2.25,0,-2.2);sc.add(bed);
+  // 이름판 + 가랜드
+  const np=grp(rb(1.9,.55,.06,"#FFFFFF",.12),at(new THREE.Mesh(new THREE.PlaneGeometry(1.75,.5),new THREE.MeshStandardMaterial({map:vrText("Victoria",V.t==="night"?"#E9BE5A":T.acc),transparent:true})),0,0,.035));np.position.set(-L+.04,2.9,2.15);np.rotation.y=Math.PI/2;np.scale.setScalar(.82);sc.add(np);
+  for(let i=0;i<9;i++){const f=cone(.11,.24,[T.acc,T.quilt2,T.trim][i%3],3);f.rotation.x=Math.PI;f.position.set(-3.35+i*.27,2.62+Math.abs(i-4)*.035,-L+.08);sc.add(f)}
+  // 협탁 + 램프
+  const ns=grp(at(rb(.6,.6,.5,T.wood,.06),0,.32,0),at(rb(.48,.18,.04,T.quilt2,.03),0,.38,.25),at(sph(.03,T.trim),0,.38,.28),at(cyl(.1,.12,.06,T.trim,16),0,.65,0),at(cyl(.02,.02,.3,T.trim,8),0,.82,0),at(cyl(.14,.22,.24,V.t==="night"?"#FFF3C2":T.quilt2,16),0,1.02,0));ns.position.set(-.85,0,-3.25);sc.add(ns);
+  const lp=new THREE.PointLight("#FFE2B0",V.t==="night"?.9:.4,4);lp.position.set(-.85,1.1,-3.1);sc.add(lp);
+  // 책상 + 의자 + 뮤직박스
+  const desk=grp(at(rb(1.5,.08,.7,T.wood,.03),0,.78,0),...[[-1,-1],[1,-1],[-1,1],[1,1]].map(([a,b])=>at(cyl(.035,.035,.76,T.trim,8),a*.68,.39,b*.3)),at(rb(.45,.32,.62,T.wood,.04),.48,.55,0),at(rb(.38,.1,.03,T.quilt2,.02),.48,.6,.32),
+    at(rb(.12,.3,.22,"#FF8A65",.02),-.6,.97,-.18),at(rb(.1,.28,.22,"#7FD3FF",.02),-.48,.96,-.18),at(rb(.1,.32,.22,"#6EDC9A",.02),-.37,.98,-.18),at(rb(.38,.03,.28,"#FFFFFF",.01),-.05,.83,.08),at(cyl(.05,.04,.12,T.acc,10),.35,.88,-.12));desk.position.set(.6,0,-3.12);sc.add(desk);
+  const chair=grp(at(rb(.5,.1,.5,T.wood,.04),0,.48,0),at(rb(.5,.12,.5,T.quilt2,.06),0,.56,0),at(rb(.5,.6,.08,T.wood,.04),0,.85,.22),...[[-1,-1],[1,-1],[-1,1],[1,1]].map(([a,b])=>at(cyl(.03,.03,.46,T.trim,8),a*.2,.23,b*.2)));chair.position.set(.6,0,-2.35);sc.add(chair);
+  const mbx=musicBoxModel();mbx.position.set(.95,.82,-3.0);mbx.scale.setScalar(.85);sc.add(mbx);
+  // 옷장 (드레스가 보이는)
+  const wd=new THREE.Group();wd.add(at(rb(1.6,2.35,.8,T.wood,.06),0,1.2,0));wd.add(at(rb(1.4,2,.04,"#F5EEF2",.02),0,1.18,.38));wd.add(at(cyl(.02,.02,1.36,T.trim,8).rotateZ(Math.PI/2),0,1.95,.2));
+  ["#FF7AB0","#B78CFF","#7FD3FF","#FFE79A"].forEach((c,i)=>{const x=-.48+i*.32;wd.add(at(cone(.17,.72,c,14),x,1.42,.22));wd.add(at(cyl(.07,.1,.2,c,10),x,1.86,.22));wd.add(at(msh(new THREE.TorusGeometry(.05,.01,6,12),T.trim),x,2.0,.22))});
+  [-1,1].forEach(s=>{const dr=new THREE.Group();dr.add(at(rb(.72,2.1,.06,T.wood,.03),s*.36,0,0));dr.add(at(rb(.56,1.8,.02,T.quilt2,.02),s*.36,0,.04));dr.add(at(sph(.04,T.trim),s*.62,0,.06));dr.position.set(s*.78,1.18,.42);dr.rotation.y=s*-1.1;wd.add(dr)});
+  wd.add(at(rb(1.75,.14,.9,T.trim,.04),0,2.42,0));wd.add(at(crownModel(),0,2.6,0));wd.position.set(2.55,0,-3.05);sc.add(wd);
+  // 화장대 + 거울 + 의자
+  const vn=new THREE.Group();vn.add(at(rb(1.4,.08,.6,T.wood,.03),0,.8,0));[-1,1].forEach(s=>vn.add(at(rb(.42,.74,.56,T.wood,.04),s*.48,.42,0)));[-1,1].forEach(s=>{vn.add(at(rb(.34,.14,.03,T.quilt2,.02),s*.48,.58,.29));vn.add(at(rb(.34,.14,.03,T.quilt2,.02),s*.48,.32,.29))});
+  vn.add(at(msh(new THREE.TorusGeometry(.48,.06,10,32),T.trim),0,1.55,-.2));const mir=msh(new THREE.CircleGeometry(.46,32),mat("#E8F6FF",{emissive:"#CFEFFF",emissiveIntensity:.35,metalness:.3,roughness:.15}));mir.position.set(0,1.55,-.19);vn.add(mir);
+  for(let i=0;i<8;i++){const a=i/8*Math.PI*2;vn.add(at(sph(.04,"#FFF6C9",1,1,1),Math.cos(a)*.56,1.55+Math.sin(a)*.56,-.15))}
+  vn.add(at(cyl(.05,.06,.14,"#FF9EC4",10),-.4,.91,.05));vn.add(at(sph(.06,"#B78CFF"),-.25,.9,.1));vn.add(at(cyl(.08,.08,.03,"#FFFFFF",14),.35,.85,.08));vn.add(at(sph(.03,"#FF4F8B"),.35,.89,.08));
+  vn.position.set(-3.18,0,1.1);vn.rotation.y=Math.PI/2;sc.add(vn);
+  const stool=grp(at(cyl(.24,.2,.16,T.quilt,18),0,.48,0),at(sph(.24,T.quilt,1,.35,1),0,.58,0),at(cyl(.04,.04,.42,T.trim,8),0,.21,0),at(cyl(.18,.18,.03,T.trim,14),0,.02,0));stool.position.set(-2.45,0,1.1);sc.add(stool);
+  // 책장
+  const bs=new THREE.Group();bs.add(at(rb(1.3,2.2,.06,T.wood,.02),0,1.1,-.18));[-1,1].forEach(s=>bs.add(at(rb(.06,2.2,.42,T.wood,.02),s*.62,1.1,0)));bs.add(at(rb(1.3,.08,.42,T.wood,.02),0,.06,0));for(let r=0;r<4;r++){bs.add(at(rb(1.18,.04,.36,"#F3E6D6",.01),0,.3+r*.5,.04));for(let k=0;k<6;k++){const h=.28+((k*7+r*3)%5)*.03;bs.add(at(rb(.13,h,.28,["#FF8A65","#7FD3FF","#FFC93C","#B78CFF","#6EDC9A","#FF7AB0"][(k+r)%6],.02),-.45+k*.17+(r%2)*.05,.32+r*.5+h/2,.06))}}
+  bs.add(at(rb(1.38,.1,.48,T.trim,.03),0,2.24,0));bs.add(at(teddy.clone(),.3,2.3,0));bs.position.set(-3.27,0,2.55);bs.rotation.y=Math.PI/2;sc.add(bs);
+  // 러그 + 쿠션
+  sc.add(at(cyl(1.55,1.55,.03,T.rug,40),.45,.06,.75));sc.add(at(msh(new THREE.TorusGeometry(1.5,.05,8,40),T.quilt2).rotateX(Math.PI/2),.45,.07,.75));
+  const heart=new THREE.Shape();heart.moveTo(0,.12);heart.bezierCurveTo(0,.3,-.32,.3,-.32,.08);heart.bezierCurveTo(-.32,-.12,0,-.2,0,-.32);heart.bezierCurveTo(0,-.2,.32,-.12,.32,.08);heart.bezierCurveTo(.32,.3,0,.3,0,.12);
+  const hc=msh(new THREE.ExtrudeGeometry(heart,{depth:.14,bevelEnabled:true,bevelSize:.05,bevelThickness:.05,bevelSegments:3}),T.acc);hc.scale.setScalar(1.3);hc.position.set(1.55,.45,1.55);hc.rotation.set(-.35,-.6,0);sc.add(hc);
+  sc.add(at(sph(.42,T.quilt2,1,.62,1),1.2,.3,1.95));
+  // 왕관 진열대
+  const disp=grp(at(cyl(.32,.38,.9,"#FFFFFF",20),0,.45,0),at(cyl(.4,.4,.08,T.trim,20),0,.93,0),at(crownModel(),0,1.05,0),at(new THREE.Mesh(new THREE.SphereGeometry(.34,24,16,0,Math.PI*2,0,Math.PI/2),mat("#E6F7FF",{transparent:true,opacity:.28,roughness:.05})),0,.97,0));disp.position.set(2.85,0,.6);sc.add(disp);
+  // 화분 · 스탠드 · 액자
+  const plant=grp(at(cyl(.25,.2,.4,T.quilt2,16),0,.2,0),at(sph(.32,"#6CC75A",1,1.2,1),0,.68,0),at(sph(.22,"#7ED36A"),.18,.9,.08),at(sph(.05,T.acc),.15,.8,.25),at(sph(.05,"#FFC93C"),-.18,.7,.2));plant.position.set(2.95,0,-1.5);sc.add(plant);
+  const flamp=grp(at(cyl(.18,.2,.05,T.trim),0,.03,0),at(cyl(.025,.025,1.55,T.trim,8),0,.8,0),at(cyl(.18,.28,.32,T.quilt2,16),0,1.65,0));flamp.position.set(2.95,0,2.95);sc.add(flamp);const fb=new THREE.PointLight("#FFE2B0",V.t==="night"?.8:.35,4);fb.position.set(2.95,1.5,2.95);sc.add(fb);
+  [["lilies",.9,.7,-L+.04,2.25,-2.3,Math.PI/2],["sunflowers",.5,.62,-.85,2.25,-L+.04,0],["seurat",.62,.5,2.2,2.65,-L+.04,0]].forEach(([k,w,h,x,y,z,r])=>{const f=artFrame(k,w,h);f.position.set(x,y,z);f.rotation.y=r;sc.add(f)});
+  if(V.t==="night"){const ea=grp(at(cyl(.03,.03,1.7,"#B5814A",6).rotateX(.18),0,.82,-.15),at(cyl(.03,.03,1.7,"#B5814A",6).rotateZ(.25),-.25,.8,.08),at(cyl(.03,.03,1.7,"#B5814A",6).rotateZ(-.25),.25,.8,.08),at(rb(.9,.06,.12,"#B5814A",.02),0,.75,.1));const ar=artFrame("starry",.8,.62);ar.position.set(0,1.18,.1);ar.rotation.x=-.12;ea.add(ar);ea.position.set(-1.2,0,2.7);ea.rotation.y=.5;sc.add(ea);
+    for(let i=0;i<10;i++){const s=sph(.045,"#FFE07A");s.material=mat("#FFE07A",{emissive:"#FFD54A",emissiveIntensity:.9});s.position.set(-3+((i*37)%60)/10,2.6+((i*13)%8)/10,-3+((i*23)%60)/10);s.name="twk";sc.add(s)}}
+  // 꼬마전구
+  const LC=T.lights;for(let i=0;i<26;i++){const onB=i<13,x=onB?-3.4+i*.55:-L+.12,z=onB?-L+.12:-3.4+(i-13)*.55,y=3.18-Math.abs(Math.sin(i*1.3))*.12;const b=msh(new THREE.SphereGeometry(.05,10,8),mat(LC[i%3],{emissive:LC[i%3],emissiveIntensity:.9}));b.position.set(x,y,z);b.castShadow=false;b.name="fl";sc.add(b)}
+  [[-2,-3.2],[-3.2,1.5]].forEach(([x,z])=>{const p=new THREE.PointLight("#FFE7B8",.18,4);p.position.set(x,3,z);sc.add(p)});
+  // 빅토리아 · 펫
+  const vic=chibi({dress:"#FF7AB0",top:"#FFFFFF",hair:"#7A4A2E",tails:true,ribbon:"#FF4F8B",crown:true,shoe:"#FF4F8B"});vic.position.set(.4,.07,.9);vic.scale.setScalar(1.1);sc.add(vic);
+  const pets=[];S.pets.filter(p=>!REPTILE.includes(p.k)).slice(0,2).forEach((p,i)=>{const m=petModel(p.k);m.position.set(-.2+i*1.1,.08,1.9);m.rotation.y=-.4;m.scale.setScalar(1.2);sc.add(m);pets.push(m)});
+  return{sc,vic,baby:null,pets,clouds:[],mbx}}
+function bindRoom(B,cam,cv,st){const ray=new THREE.Raycaster(),pl=new THREE.Plane(new THREE.Vector3(0,1,0),-.07);B.vic.name="vic";const W={path:[],cb:null};H3.walk=W;
+  const bub=document.createElement("div");bub.className="vbub";st.appendChild(bub);let until=0;const say=(t,ms=2600)=>{bub.textContent=t;until=performance.now()+ms};W.say=say;say("여기는 내 방이야! 나를 눌러 봐 👑",4200);
+  const BOX=[[-3.3,-1.2,-3.5,-.85],[-.2,1.4,-3.5,-2.7],[1.7,3.4,-3.5,-2.5],[-3.5,-2.75,.35,1.85],[-3.5,-2.95,1.8,3.3],[2.45,3.3,.2,1.0]];
+  const free=(x,z)=>{x=Math.max(-3.1,Math.min(3.2,x));z=Math.max(-2.4,Math.min(3.2,z));for(const[a,b,c,d]of BOX)if(x>a&&x<b&&z>c&&z<d){const o=[[x-a,a-.15,z],[b-x,b+.15,z],[z-c,x,c-.15],[d-z,x,d+.15]].sort((p,q)=>p[0]-q[0])[0];return o.length&&o[0]===x-a||o[0]===b-x?[o[1],o[2]]:[o[1],o[2]]}return[x,z]};
+  const go=(x,z,cb,msg)=>{const p=free(x,z);W.path=[new THREE.Vector3(p[0],.07,p[1])];W.cb=cb||null;say(msg||"총총총~ 🎶",1600);menu.hidden=true};
+  const menu=document.createElement("div");menu.className="vmenu";menu.hidden=true;st.appendChild(menu);
+  const ACT=[["bed","🛏️ 침대에서 쉬기",-1.05,-1.6,()=>say("폭신폭신~ 공주 침대 최고야 💤",3200)],["vanity","💄 화장대",-2.3,1.6,()=>say("거울아 거울아~ 오늘도 반짝반짝 ✨",3200)],["wd","👗 옷장",2.4,-2.2,()=>say("오늘은 어떤 드레스 입을까? 👗",3200)],["desk","📚 책상에서 공부",.6,-2.2,()=>{say("좋아, 오늘 퀘스트 하러 가자! ✏️",1800);setTimeout(home,1300)}],["music","🎵 뮤직박스",1.3,-2.3,()=>musicBox()],["crown","👑 왕관 보기",2.1,.6,()=>say("빅토리아 여왕의 왕관이야 👑 반짝!",3200)]];
+  const showMenu=()=>{menu.innerHTML=`<b>👑 Victoria, 뭐 할까?</b><div class="vgrid">${ACT.map(a=>`<button type="button" data-r="${a[0]}">${a[1]}</button>`).join("")}</div><div class="vgrid"><button type="button" data-a="home">🏠 집으로</button><button type="button" data-a="x">닫기</button></div>`;menu.hidden=false;
+    menu.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{const a=ACT.find(x=>x[0]===b.dataset.r);go(a[2],a[3],a[4],"가는 중~ 🎶")});menu.querySelector('[data-a="x"]').onclick=()=>menu.hidden=true;menu.querySelector('[data-a="home"]').onclick=()=>{H3MODE="house";houseView()}};
+  let tap=null;cv.addEventListener("pointerdown",e=>{tap={x:e.clientX,y:e.clientY,t:Date.now()}});
+  cv.addEventListener("pointerup",e=>{if(!tap)return;const mv=Math.hypot(e.clientX-tap.x,e.clientY-tap.y),dt=Date.now()-tap.t;tap=null;if(mv>8||dt>400)return;const r=cv.getBoundingClientRect(),m=new THREE.Vector2((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(m,cam);
+    for(const h of ray.intersectObjects(B.sc.children,true)){let o=h.object;while(o){if(o.name==="vic"){say("뭐 할까? 골라 줘!",2200);return menu.hidden?showMenu():menu.hidden=true}if(o.name==="mbox")return go(1.3,-2.3,()=>musicBox());o=o.parent}}
+    const p=new THREE.Vector3();if(ray.ray.intersectPlane(pl,p)&&Math.abs(p.x)<3.6&&Math.abs(p.z)<3.6)go(p.x,p.z)});
+  const pv=new THREE.Vector3();let tt=0;
+  return dt=>{tt+=dt;pv.copy(B.vic.position);pv.y+=2.15;pv.project(cam);bub.style.transform=`translate(${Math.max(108,Math.min(st.clientWidth-108,(pv.x*.5+.5)*st.clientWidth))}px,${(-pv.y*.5+.5)*st.clientHeight}px) translate(-50%,-100%)`;bub.style.opacity=performance.now()<until?1:0;
+    B.sc.children.forEach((o,i)=>{if(o.name==="fl"||o.name==="twk")o.material.emissiveIntensity=.55+.45*Math.sin(tt*2.2+i)});
+    const v=B.vic.position;if(!W.path.length)return false;const n=W.path[0],dx=n.x-v.x,dz=n.z-v.z,d=Math.hypot(dx,dz),sp=2.2*dt;B.vic.rotation.y=Math.atan2(dx,dz);if(d<=sp){v.x=n.x;v.z=n.z;W.path.shift();if(!W.path.length&&W.cb){const c=W.cb;W.cb=null;c()}}else{v.x+=dx/d*sp;v.z+=dz/d*sp}return true}}
+function vroomCard(){const V=vroomInit();return `<div class="card"><div class="row"><h3>✨ 내 방 스타일</h3><span class="pill">💎 ${S.gems||0}</span></div><p class="muted">마음에 드는 버전을 골라 봐! 한 번 사면 언제든 바꿀 수 있어요.</p>
+  <div class="vrlist">${Object.entries(VROOM_T).map(([k,t])=>{const own=V.own.includes(k),on=V.t===k;return `<button type="button" class="vrop ${on?"on":""}" data-vr="${k}"><span class="vrsw" style="background:linear-gradient(135deg,${t.wall[1]} 0 45%,${t.quilt} 45% 70%,${t.trim} 70%)"></span><b>${t.n}</b><small>${t.d}</small><em>${on?"✓ 지금 내 방":own?"바꾸기":`💎 ${t.p}`}</em></button>`}).join("")}</div></div>`}
+function bindVroom(){app.querySelectorAll("[data-vr]").forEach(b=>b.onclick=()=>{const V=vroomInit(),k=b.dataset.vr,t=VROOM_T[k];if(V.t===k)return;if(!V.own.includes(k)){if(!spend(t.p))return;V.own.push(k);toast(`${t.n} 방으로 새단장! ✨`)}V.t=k;save();houseView()})}
+
 let H3MODE="house";
 const TOWN={home:{n:"🏠 우리 집",p:[-5.2,5.2],door:[-4,4]},market:{n:"🛒 시장",p:[5.2,5.2],door:[4,4]},church:{n:"⛪ 교회",p:[0,-6.2],door:[0,-4.4]},pet:{n:"🐾 펫샵",p:[-6,-1.2],door:[-4.4,-1.2]},lib:{n:"📚 도서관",p:[6,-1.2],door:[4.4,-1.2]},park:{n:"🌳 공원",p:[0,1.2],door:[0,2.6]}};
 function buildTown(){const sc=new THREE.Scene();sc.add(new THREE.HemisphereLight("#FFF8F0","#F5D9C8",.66));const sun=new THREE.DirectionalLight("#FFF3E0",.72);sun.position.set(6,11,7);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);const c2=sun.shadow.camera;c2.left=-11;c2.right=11;c2.top=11;c2.bottom=-11;sc.add(sun);
@@ -1521,12 +1670,21 @@ function buildTown(){const sc=new THREE.Scene();sc.add(new THREE.HemisphereLight
   const clouds=[];for(let i=0;i<4;i++){const c=grp(sph(.8,"#FFFFFF"),at(sph(.6,"#FFFFFF"),.8,-.1,0));c.position.set(-12+i*7,8,-10+i*3);sc.add(c);clouds.push(c)}
   const vic=chibi({dress:"#FF7AB0",top:"#FFFFFF",hair:"#7A4A2E",tails:true,ribbon:"#FF4F8B",crown:true,shoe:"#FF4F8B"});vic.position.set(-3.6,.07,3.6);vic.scale.setScalar(1.1);sc.add(vic);
   const mbx=new THREE.Group();return{sc,vic,baby:null,pets:[],clouds,mbx,town:B}}
+const VERSES=[["요한복음 3:16", "하나님이 세상을 이처럼 사랑하사 독생자를 주셨으니 이는 저를 믿는 자마다 멸망치 않고 영생을 얻게 하려 하심이니라"], ["시편 23:1", "여호와는 나의 목자시니 내가 부족함이 없으리로다"], ["빌립보서 4:13", "내게 능력 주시는 자 안에서 내가 모든 것을 할 수 있느니라"], ["고린도후서 4:16", "그러므로 우리가 낙심하지 아니하노니 겉 사람은 후패하나 우리의 속은 날로 새롭도다"], ["데살로니가전서 5:16-18", "항상 기뻐하라 쉬지 말고 기도하라 범사에 감사하라 이는 그리스도 예수 안에서 너희를 향하신 하나님의 뜻이니라"], ["잠언 3:5", "너는 마음을 다하여 여호와를 의뢰하고 네 명철을 의지하지 말라"], ["여호수아 1:9", "내가 네게 명한 것이 아니냐 마음을 강하게 하고 담대히 하라 두려워 말며 놀라지 말라 네가 어디로 가든지 네 하나님 여호와가 너와 함께 하느니라 하시니라"], ["마태복음 5:14", "너희는 세상의 빛이라 산 위에 있는 동네가 숨기우지 못할 것이요"], ["고린도전서 13:4", "사랑은 오래 참고 사랑은 온유하며 투기하는 자가 되지 아니하며 사랑은 자랑하지 아니하며 교만하지 아니하며"], ["시편 119:105", "주의 말씀은 내 발에 등이요 내 길에 빛이니이다"], ["이사야 41:10", "두려워 말라 내가 너와 함께 함이니라 놀라지 말라 나는 네 하나님이 됨이니라 내가 너를 굳세게 하리라 참으로 너를 도와주리라 참으로 나의 의로운 오른손으로 너를 붙들리라"], ["마태복음 6:33", "너희는 먼저 그의 나라와 그의 의를 구하라 그리하면 이 모든 것을 너희에게 더하시리라"], ["시편 139:14", "내가 주께 감사하옴은 나를 지으심이 신묘막측하심이라 주의 행사가 기이함을 내 영혼이 잘 아나이다"], ["잠언 22:6", "마땅히 행할 길을 아이에게 가르치라 그리하면 늙어도 그것을 떠나지 아니하리라"], ["요한일서 4:19", "우리가 사랑함은 그가 먼저 우리를 사랑하셨음이라"], ["창세기 1:1", "태초에 하나님이 천지를 창조하시니라"], ["시편 8:3", "주의 손가락으로 만드신 주의 하늘과 주의 베풀어 두신 달과 별들을 내가 보오니"], ["시편 19:1", "하늘이 하나님의 영광을 선포하고 궁창이 그 손으로 하신 일을 나타내는도다"]];
+function verseToday(){const d=new Date(),k=Math.floor(d.getTime()/864e5);return VERSES[k%VERSES.length]}
+function verseCard(){const v=verseToday();return `<div class="card verse"><h3>📖 오늘의 말씀</h3><p class="vtext">${v[1]}</p><p class="vref">${v[0]} · 개역한글</p><div class="btns2"><button class="big alt" id="vread" type="button">🔊 읽어 줘</button><button class="big alt" id="vcopy" type="button">✍️ 따라 쓰기</button></div><div id="vbox"></div></div>`}
+function bindVerse(){const v=verseToday();if(!$("#vread"))return;$("#vread").onclick=()=>sayKo(v[1]+". "+v[0]);
+  $("#vcopy").onclick=()=>{$("#vbox").innerHTML=`<textarea id="vt" class="kwrite" rows="3" placeholder="말씀을 또박또박 따라 써 봐"></textarea><button class="big" id="vok" type="button">다 썼어요</button><p class="muted" id="vmsg"></p>`;
+    $("#vok").onclick=()=>{const a=$("#vt").value.replace(/\s/g,""),b=v[1].replace(/\s/g,"");if(a.length<b.length*.8)return $("#vmsg").textContent="조금 더 써 볼까? 끝까지 따라 써 봐!";let same=0;for(let i=0;i<Math.min(a.length,b.length);i++)if(a[i]===b[i])same++;
+      if(same/b.length<.85)return $("#vmsg").textContent="틀린 글자가 있는지 한 글자씩 비교해 봐!";S.church=S.church||{prayers:[]};const first=S.church.vday!==today();S.church.vday=today();if(first){S.gems=(S.gems||0)+1;addXP(3)}save();$("#vbox").innerHTML=`<p class="pill">✨ 말씀을 마음에 새겼어요!${first?" 💎+1":""}</p>`;try{confetti()}catch(e){}}}}
+
 function churchVisit(){const sun=new Date().getDay()===0,b=S.baby;S.church=S.church||{prayers:[]};
   app.innerHTML=hdr("⛪ 교회")+`<div class="card"><div class="hstory"><span class="hem">⛪</span></div><div class="fb"><div class="ava" style="background:#7C6CF0">우주냥</div><div class="bubble"><p style="font-size:1.12rem;line-height:1.75">${sun?"오늘은 주일! 교회에 왔어요. 조용히 마음을 모아 볼까?":"교회에 왔어요. 주일이 아니어도 조용히 기도하고 감사를 적을 수 있어요."}</p></div></div>
    <div class="btns2"><button class="big alt" id="hymn" type="button">🎵 찬송 오르골 듣기</button><button class="big alt" id="pray" type="button">🙏 감사 기도 쓰기</button></div>
    ${b?`<button class="big" id="bchurch" type="button" ${sun&&hasB("carrier")?"":"disabled"}>👶 ${esc(b.name)}와 함께 예배드리기 ${sun?(hasB("carrier")?"":"(아기띠 필요)"):"(주일에 열려요)"}</button>`:""}</div>
+   ${verseCard()}
    ${S.church.prayers.length?`<div class="card"><h3>📖 나의 감사 노트</h3><ul class="tricks">${S.church.prayers.slice(-5).reverse().map(x=>`<li class="ok">${esc(x.t)}<br><small>${x.d}</small></li>`).join("")}</ul></div>`:""}`;
-  bindBack();$("#back").textContent="← 마을";$("#back").onclick=()=>{H3MODE="town";houseView()};
+  bindBack();bindVerse();$("#back").textContent="← 마을";$("#back").onclick=()=>{H3MODE="town";houseView()};
   $("#hymn").onclick=()=>{playSong("grace");toast("🎵 Amazing Grace(나 같은 죄인 살리신)")};
   $("#pray").onclick=()=>{app.insertAdjacentHTML("beforeend",`<div class="card" id="pcard"><div class="kexample"><b>✏️ 예시</b><p>오늘 맛있는 아침을 먹고 동생과 웃을 수 있어서 감사합니다.</p></div><textarea id="pt" class="kwrite" rows="3" maxlength="200" placeholder="오늘 감사한 일을 써 봐"></textarea><button class="big" id="psave" type="button">감사 기도 남기기</button></div>`);$("#pray").disabled=true;
     $("#psave").onclick=()=>{const v=$("#pt").value.trim();if(v.length<5)return toast("한 문장만 써 볼까?");S.church.prayers.push({d:today(),t:v});const first=S.church.last!==today();S.church.last=today();if(first)addXP(5);save();toast("🙏 감사 노트에 담았어요"+(first?" +5 XP":""));churchVisit()}};
@@ -1548,14 +1706,14 @@ function house3D(){return `<div class="stage3" id="stage"><canvas id="h3d"></can
 function bind3D(){const st=$("#stage"),cv=$("#h3d");if(!st)return;if(H3){cancelAnimationFrame(H3.raf);try{H3.r.dispose()}catch(e){}H3=null}
   ensureThree().then(()=>{if(!document.body.contains(cv))return;const ld=$("#s3load");if(ld)ld.remove();
     const W=st.clientWidth,Hh=st.clientHeight,r=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});r.setPixelRatio(Math.min(devicePixelRatio||1,2));r.setSize(W,Hh,false);r.shadowMap.enabled=true;r.shadowMap.type=THREE.PCFSoftShadowMap;
-    const cam=new THREE.PerspectiveCamera(30,W/Hh,.1,100),B=H3MODE==="town"?buildTown():buildHouse(),tgt=new THREE.Vector3(0,.4,0);
+    const cam=new THREE.PerspectiveCamera(30,W/Hh,.1,100),B=H3MODE==="town"?buildTown():H3MODE==="room"?buildRoom():buildHouse(),tgt=new THREE.Vector3(0,.4,0);
     const place=()=>{const el=.62,a=AZ*Math.PI/180;cam.position.set(DIST*Math.cos(el)*Math.sin(a),DIST*Math.sin(el)+.4,DIST*Math.cos(el)*Math.cos(a));cam.lookAt(tgt)};place();
     let sx=null,a0=0,pd=0,d0=0;const pts=new Map();
     cv.addEventListener("pointerdown",e=>{pts.set(e.pointerId,e.clientX+","+e.clientY);cv.setPointerCapture(e.pointerId);if(pts.size===1){sx=e.clientX;a0=AZ}else{const v=[...pts.values()].map(s=>s.split(",").map(Number));pd=Math.hypot(v[0][0]-v[1][0],v[0][1]-v[1][1]);d0=DIST}});
     cv.addEventListener("pointermove",e=>{if(!pts.has(e.pointerId))return;pts.set(e.pointerId,e.clientX+","+e.clientY);if(pts.size===1&&sx!==null){AZ=Math.max(-5,Math.min(95,a0-(e.clientX-sx)*.4));place()}else if(pts.size===2&&pd){const v=[...pts.values()].map(s=>s.split(",").map(Number));DIST=Math.max(12,Math.min(H3MODE==="town"?44:28,d0*pd/Math.hypot(v[0][0]-v[1][0],v[0][1]-v[1][1])));place()}});
     const up=e=>{pts.delete(e.pointerId);if(pts.size===0)sx=null;pd=0};cv.addEventListener("pointerup",up);cv.addEventListener("pointercancel",up);
     cv.addEventListener("wheel",e=>{e.preventDefault();DIST=Math.max(12,Math.min(H3MODE==="town"?44:28,DIST+e.deltaY*.01));place()},{passive:false});
-    const t0=performance.now();let tl0=t0;H3={r,raf:0};H3.B=B;if(H3MODE==="town"){DIST=36}else if(DIST>28)DIST=24;place();const walkStep=H3MODE==="town"?bindTown(B,cam,cv,st):bindWalk(B,cam,cv,st);const loop=()=>{if(!document.body.contains(cv)){r.dispose();H3=null;return}const now=performance.now(),t=(now-t0)/1000,dt=Math.min(.25,(now-tl0)/1000);tl0=now;
+    const t0=performance.now();let tl0=t0;H3={r,raf:0};H3.B=B;if(H3MODE==="town"){DIST=36}else if(H3MODE==="room"){if(window.H3LAST!=="room")DIST=19}else if(DIST>28||window.H3LAST==="room")DIST=24;window.H3LAST=H3MODE;place();const walkStep=H3MODE==="town"?bindTown(B,cam,cv,st):H3MODE==="room"?bindRoom(B,cam,cv,st):bindWalk(B,cam,cv,st);const loop=()=>{if(!document.body.contains(cv)){r.dispose();H3=null;return}const now=performance.now(),t=(now-t0)/1000,dt=Math.min(.25,(now-tl0)/1000);tl0=now;
       const moving=walkStep(dt);B.vic.position.y=.07+Math.abs(Math.sin(t*(moving?9:2.2)))*(moving?.09:.05);if(!moving)B.vic.rotation.y=AZ*Math.PI/180+Math.sin(t*.6)*.2;const mt=B.mbx.getObjectByName("mtop");if(mt)mt.rotation.y=H3&&H3.music?t*3:0;
       if(B.baby)B.baby.rotation.z=Math.sin(t*1.6)*.06;
       B.pets.forEach((p,i)=>{p.position.y=.07+Math.max(0,Math.sin(t*2.6+i))*.06;const tl=p.getObjectByName("tail");if(tl)tl.rotation.z=Math.sin(t*5+i)*.4;const f=p.getObjectByName("fish");if(f){f.position.x=Math.sin(t*1.2)*.15;f.rotation.y=Math.cos(t*1.2)>0?0:Math.PI}});
@@ -1566,11 +1724,11 @@ function bind3D(){const st=$("#stage"),cv=$("#h3d");if(!st)return;if(H3){cancelA
 function hTabs(cur){return `<div class="ptabs">${[["house","🏠 집"],["baby","👶 아기"],["pets","🐾 펫"],["decor","🛋️ 꾸미기"],["market","🛒 시장"]].map(([k,t])=>`<button type="button" class="${k===cur?"on":""}" data-pt="${k}">${t}</button>`).join("")}</div>`}
 function bindHTabs(){app.querySelectorAll("[data-pt]").forEach(b=>b.onclick=()=>({house:houseView,baby:babyView,pets:petHome,decor:decorView,market:market})[b.dataset.pt]())}
 function houseView(){hInit();const TM=H3MODE==="town";S.pets.forEach(petDecay);save();const h=careHearts(),b=S.baby;
-  app.innerHTML=hdr(TM?"🗺️ 빅토리아 마을":"🏠 빅토리아 하우스")+hTabs("house")+`<div class="btns2" style="margin-bottom:8px"><button class="big ${TM?"alt":""}" id="tohome" type="button">🏠 집</button><button class="big ${TM?"":"alt"}" id="totown" type="button">🗺️ 마을 (시장·교회·펫샵)</button></div>`+house3D()+
+  const RM=H3MODE==="room";app.innerHTML=hdr(TM?"🗺️ 빅토리아 마을":RM?"👑 빅토리아 방":"🏠 빅토리아 하우스")+hTabs("house")+`<div class="btns3" style="margin-bottom:8px"><button class="big ${H3MODE==="house"?"":"alt"}" id="tohome" type="button">🏠 집</button><button class="big ${RM?"":"alt"}" id="toroom" type="button">👑 내 방</button><button class="big ${TM?"":"alt"}" id="totown" type="button">🗺️ 마을</button></div>`+house3D()+(RM?vroomCard():"")+
   `<div class="card"><div class="row"><h3>💖 돌봄 하트 ${h}개</h3><span class="pill">💎 ${S.gems||0}</span></div><p class="muted">퀘스트 1개 = 하트 1개. 아기와 펫이 하트를 함께 써요.</p>
    <ul class="mkt">${b?`<li><span>${babyLooks()}</span><div><b>${esc(b.name)} · ${babyAge()}개월</b><small>${BABY_STAGES[babyStage()][1]}${babyGate()?" · 다음 성장에 용품 필요":""}</small></div><button class="buy" type="button" data-go="baby">돌보기</button></li>`:`<li><span>👶</span><div><b>아기 맞이 준비</b><small>준비물을 갖추면 아기가 와요</small></div><button class="buy" type="button" data-go="baby">준비하기</button></li>`}
    ${S.pets.map(p=>`<li><span>${petOf(p.k)[2]}</span><div><b>${esc(p.name)}</b><small>${REPTILE.includes(p.k)?"온실":"펫룸"} · ${loveName(p.love)}${p.fed!==today()?" · 🍚 배고파요":""}</small></div><button class="buy" type="button" data-go="pets">돌보기</button></li>`).join("")}</ul></div>`;
-  bindBack();bindHTabs();bind3D();$("#tohome").onclick=()=>{H3MODE="house";houseView()};$("#totown").onclick=()=>{H3MODE="town";houseView()};app.querySelectorAll("[data-go]").forEach(x=>x.onclick=()=>({baby:babyView,pets:petHome})[x.dataset.go]());window.scrollTo(0,0)}
+  bindBack();bindHTabs();bind3D();$("#tohome").onclick=()=>{H3MODE="house";houseView()};$("#toroom").onclick=()=>{H3MODE="room";houseView()};if(RM)bindVroom();$("#totown").onclick=()=>{H3MODE="town";houseView()};app.querySelectorAll("[data-go]").forEach(x=>x.onclick=()=>({baby:babyView,pets:petHome})[x.dataset.go]());window.scrollTo(0,0)}
 /* ---------- 아기 ---------- */
 function buyBaby(id,price){const k=id.split(":")[1],it=bItem(k);if(!spend(price))return;
   if(it[4][0]==="c")S.binv[k]=(S.binv[k]||0)+Number(it[4].slice(1));else{S.binv[k]=1;if(k==="crib"&&!S.house.decor.includes("crib"))S.house.decor.push("crib");if(k==="mat"&&!S.house.decor.includes("mat"))S.house.decor.push("mat")}
@@ -2276,6 +2434,7 @@ function parentPanel(){hInit();koInit();const cl=LEVELS.filter(l=>S.cook[l.id]&&
   app.innerHTML=hdr("🔧 보호자 설정")+`<div class="card"><h3>📋 진도 되살리기</h3><p class="muted">아이가 마지막으로 끝낸 곳을 숫자로 넣으면 그다음부터 이어서 해요.</p>
    <ul class="mkt pform">${row("p_cook","🍳 요리 클리어",cl,LEVELS.length,"레벨")}${row("p_hist","📜 한국사",S.hist.n,HSTORY.length,"편")}${row("p_hz","漢 한자",S.hz.n,HZDAYS.length,"과")}${row("p_en","🔤 영어",S.en.n,ENGDAYS.length,"Day")}${row("p_ko","📘 국어",S.ko.n,KO.length,"과")}${(maInit(),"")}${row("p_mc","🧮 수학 연산",S.ma.t.calc,MTRK.calc.list.length,"과")}${row("p_ms","📐 수학 도형",S.ma.t.shape,MTRK.shape.list.length,"과")}${row("p_mr","⚖️ 수학 비와 비례",S.ma.t.ratio,MTRK.ratio.list.length,"과")}${row("p_gem","💎 보석",S.gems||0,9999,"개")}</ul>
    <button class="big" id="psave" type="button">진도 저장</button><p class="muted" id="pmsg"></p></div>
+  <div class="card"><h3>🔁 모르는 한자 목록</h3><p class="muted">아이가 모르는 한자를 붙여 넣으면 집중 반복에 들어가요. (8급 52자 안의 글자만)</p><input id="pfz" class="pinput" placeholder="예) 母校南韓"><button class="big alt" id="pfzb" type="button">집중 반복에 추가</button></div>
   <div class="card"><h3>🐾 잃어버린 펫 되찾기</h3><p class="muted">사 두었던 펫이 사라졌다면 골라서 다시 데려와요. (보석은 들지 않아요.)</p>
    <select id="ppet" class="pinput">${PETS.map(P=>`<option value="${P[0]}">${P[2]} ${P[4]?P[4]+" ":""}${P[1]}</option>`).join("")}</select><input id="pname2" class="pinput" maxlength="10" placeholder="펫 이름"><button class="big alt" id="ppetb" type="button">펫 되찾기</button></div>
   <div class="card"><h3>💾 기록 백업</h3><p class="muted">휴대폰을 바꾸거나 앱을 다시 설치할 때 이 코드를 붙여 넣으면 기록이 그대로 돌아와요. 카톡 ‘나에게 보내기’에 저장해 두세요.</p>
@@ -2284,6 +2443,7 @@ function parentPanel(){hInit();koInit();const cl=LEVELS.filter(l=>S.cook[l.id]&&
   $("#psave").onclick=()=>{const v=id=>Math.max(0,parseInt($("#"+id).value||"0",10)||0);
     const c=Math.min(v("p_cook"),LEVELS.length);LEVELS.forEach(l=>{if(l.id<=c){S.cook[l.id]=S.cook[l.id]||{};S.cook[l.id].clear=true}});S.cookCur=Math.min(c+1,LEVELS.length);
     S.hist.n=Math.min(v("p_hist"),HSTORY.length);S.hz.n=Math.min(v("p_hz"),HZDAYS.length);S.en.n=Math.min(v("p_en"),ENGDAYS.length);S.ko.n=Math.min(v("p_ko"),KO.length);maInit();S.ma.t.calc=Math.min(v("p_mc"),MTRK.calc.list.length);S.ma.t.shape=Math.min(v("p_ms"),MTRK.shape.list.length);S.ma.t.ratio=Math.min(v("p_mr"),MTRK.ratio.list.length);S.gems=v("p_gem");save();$("#pmsg").textContent="저장했어요! 이어서 할 수 있어요."};
+  $("#pfzb").onclick=()=>{const v=$("#pfz").value.replace(/青/g,"靑").replace(/教/g,"敎");let n=0;[...v].forEach(c=>{if(HZ.some(h=>h[0]===c)&&!hzF()[c]){hzF()[c]={days:[],ok:0,miss:0};n++}});save();toast(`🔁 ${n}자 추가했어요`)};
   $("#ppetb").onclick=()=>{const k=$("#ppet").value,P=petOf(k),n=$("#pname2").value.trim()||P[1];S.inv[k+"_0"]=1;S.inv[k+"_1"]=(S.inv[k+"_1"]||0)+3;if(!S.pets.some(p=>p.k===k))S.pets.push({k,name:n,love:10,skill:0,fed:"",seen:today(),day:"",did:[]});save();toast(`${P[2]} ${esc(n)}가 돌아왔어요!`)};
   $("#pexp").onclick=async()=>{const code="VQ1:"+btoa(unescape(encodeURIComponent(JSON.stringify(S))));try{await navigator.clipboard.writeText(code);$("#pmsg2").textContent="복사했어요! 카톡 ‘나에게 보내기’에 붙여 넣어 보관하세요."}catch(e){$("#pimp").value=code;$("#pmsg2").textContent="아래 코드를 길게 눌러 복사해 보관하세요."}};
   $("#pimpb").onclick=()=>{try{const t=$("#pimp").value.trim().replace(/^VQ1:/,"");const o=JSON.parse(decodeURIComponent(escape(atob(t))));if(!o||typeof o!=="object"||!("xp" in o))throw 0;S=o;save();$("#pmsg2").textContent="되살렸어요! 잠시 후 홈으로 가요.";setTimeout(()=>location.reload(),900)}catch(e){$("#pmsg2").textContent="코드가 올바르지 않아요. 처음부터 끝까지 다 붙여 넣었는지 확인해 주세요."}}}
@@ -2388,6 +2548,7 @@ function sciHub(){const s=sciInit(),done=doneToday("sci");
   <div class="card"><div class="row"><h3>🚀 과학 단계 올리기</h3><span class="pill">${Math.min(s.lv,SCI.length)} / ${SCI.length}</span></div><div class="bar"><i style="width:${s.lv/SCI.length*100}%;background:#F2A516"></i></div>
    <ul class="tricks">${SCI.map((L,i)=>`<li class="${i<s.lv?"ok":""}">${i<s.lv?"⭐":i===s.lv?"▶️":"🔒"} ${i+1}단계 · ${L.t}${i<s.lv?` <button type="button" class="tc" data-re="${i}">다시</button>`:""}</li>`).join("")}</ul>
    ${s.lv<SCI.length?`<button class="big" id="go" type="button" ${done?"disabled":""}>${done?"오늘 과학 완료! 내일 다음 단계":`${s.lv+1}단계 시작: ${SCI[s.lv].t}`}</button>`:`<p class="pill">🌟 과학 단계 모두 완료!</p>`}</div>
+  <div class="card verse"><h3>📖 하늘을 보며</h3><p class="vtext">${VERSES.find(v=>v[0]==="시편 19:1")[1]}</p><p class="vref">시편 19:1 · 개역한글</p></div>
   <div class="card"><button class="big alt" id="rb" type="button">🛠️ 태양계 조립 미션 다시 하기</button></div>`;
   bindBack();app.querySelectorAll(".pbtn").forEach(b=>b.onclick=()=>{try{say(b.dataset.p)}catch(e){}});$("#rv").onclick=()=>sciReview(0);$("#qz").onclick=sciQuiz;
   if($("#go"))$("#go").onclick=()=>sciLesson(s.lv,false);app.querySelectorAll("[data-re]").forEach(b=>b.onclick=()=>sciLesson(+b.dataset.re,true));
@@ -2402,6 +2563,40 @@ function sciLesson(n,practice){const L=SCI[n];let i=0;
   const adv=()=>{const s=sciInit();if(!practice&&s.lv===n&&!doneToday("sci")){s.lv++;markDone("sci");addXP(15);S.gems=(S.gems||0)+3;toast("🚀 과학 단계 UP! 💎 +3");save()}};
   const go=()=>quiz({title:"🔭 "+L.t,qs:L.qs.map((q,j)=>mkQ(q[0],q[1],q[2],q[4],{hint:q[3],id:n*10+j})),onAnswer:(q,ok)=>{const w=sciInit().wrong;if(!ok&&!w.includes(q.id))w.push(q.id);save()},onPass:adv,after:()=>maWrite(n,practice,{t:L.t,w:L.w,ex:L.ex}),afterLabel:"다음: 말로 설명하기 ✏️"});
   card()}
+
+/* 주간 진도표 (토요일 보고) */
+function evLog(t){S.ev=S.ev||[];S.ev.push([today(),t]);if(S.ev.length>800)S.ev=S.ev.slice(-800)}
+function weekRange(){const d=new Date(),day=d.getDay(),start=new Date(d.getFullYear(),d.getMonth(),d.getDate()-day);const f=x=>x.getFullYear()+"-"+pad(x.getMonth()+1)+"-"+pad(x.getDate());const end=new Date(start);end.setDate(start.getDate()+6);return[f(start),f(end),start]}
+function progRows(){maInit();sciInit();koInit();const r=[],pc=(a,b)=>`${Math.min(a,b)}/${b} (${Math.round(Math.min(a,b)/b*100)}%)`;
+  r.push(["🍳 요리",pc(LEVELS.filter(l=>S.cook[l.id]&&S.cook[l.id].clear).length,LEVELS.length),(nextCook()||{name:"모두 완료"}).name||""]);
+  r.push(["📜 한국사",pc(S.hist.n,HSTORY.length),S.hist.n<HSTORY.length?HSTORY[S.hist.n].t:"복습 단계"]);
+  r.push(["漢 한자",pc(S.hz.n,HZDAYS.length),`익힌 한자 ${hzLearnedChars(Math.min(S.hz.n,HZDAYS.length)).length}/${HZ.length}자${S.hz.best?` · 모의 최고 ${S.hz.best}/25`:""}`]);
+  r.push(["🔤 영어",pc(S.en.n,ENGDAYS.length),S.en.n<ENGDAYS.length?(ENGDAYS[S.en.n].title||"알파벳"):"완료"]);
+  r.push(["📘 국어",pc(S.ko.n,KO.length),S.ko.n<KO.length?KO[S.ko.n].t:"복습 단계"]);
+  Object.entries(MTRK).forEach(([k,t])=>{const p=S.ma.t[k];r.push([t.n.replace(" 도장깨기",""),pc(p,t.list.length),p<t.list.length?mtTitle(t.list[p]):"완료"])});
+  r.push(["🪐 과학",S.sci.built?pc(S.sci.lv,SCI.length):`조립 ${Math.max(0,S.sci.step-1)}/8`,S.sci.built?(S.sci.lv<SCI.length?SCI[S.sci.lv].t:"완료"):"태양계 조립 중"]);
+  r.push(["📗 개념어",`${kwCount()}/${KW.length} 마스터`,`익히는 중인 말 ${Object.entries(kwInit().w).filter(([t,v])=>v.unk&&!kwMastered(t)).length}개`]);
+  return r}
+function weekStats(){const[a,b]=weekRange(),ev=(S.ev||[]).filter(e=>e[0]>=a&&e[0]<=b),cnt={};ev.forEach(e=>cnt[e[1]]=(cnt[e[1]]||0)+1);const days=(S.days||[]).filter(d=>d>=a&&d<=b).length,gemDays=(S.gemDays||[]).filter(d=>d>=a&&d<=b).length;return{a,b,cnt,total:ev.length,days,gemDays}}
+const TNAME={hist:"한국사",hz:"한자",en:"영어",ko:"국어",ma:"수학",sci:"과학",mem:"기억 탐험",cook:"요리"};
+function weekText(){const w=weekStats(),wr=wrongPool().length,ww=[...(S.ko.writes||[]),...(S.ma.writes||[])].filter(x=>x.d>=w.a&&x.d<=w.b);
+  return `[Victoria 주간 진도표 📊] ${w.a.slice(5).replace("-","/")} ~ ${w.b.slice(5).replace("-","/")}
+✅ 이번 주: ${w.days}일 공부 · 퀘스트 ${w.total}개 · 보석 상자 ${w.gemDays}번
+${Object.entries(w.cnt).map(([k,v])=>`· ${TNAME[k]||k} ${v}개`).join("\n")||"· (이번 주 기록이 아직 없어요)"}
+
+📚 과목별 진도
+${progRows().map(r=>`${r[0]}: ${r[1]} · ${r[2]}`).join("\n")}
+
+💎 보석 ${S.gems||0}개 · ⭐ Lv.${Math.floor(S.xp/50)+1} (${S.xp} XP) · 연속 ${streak()}일
+📝 남은 오답 ${wr}개${(S.hardQ||[]).filter(h=>h.d>=w.a).length?` · 🙋 말이 어려웠던 문제 ${(S.hardQ||[]).filter(h=>h.d>=w.a).length}개`:""}
+${S.baby?`👶 ${esc(S.baby.name)} ${babyAge()}개월`:""}${ww.length?`\n✏️ 이번 주 내가 쓴 문장\n${ww.slice(-3).map(x=>`· “${x.a}”`).join("\n")}`:""}`}
+function weekView(){const w=weekStats();app.innerHTML=hdr("📊 주간 진도표")+`<div class="card"><h3>${w.a.slice(5)} ~ ${w.b.slice(5)}</h3><p class="muted">이번 주 ${w.days}일 공부 · 퀘스트 ${w.total}개 · 보석 상자 ${w.gemDays}번</p>
+  <table class="ptab"><tr><th>과목</th><th>진도</th><th>다음 / 비고</th></tr>${progRows().map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join("")}</table>
+  <button class="big" id="wsend" type="button">💌 엄마에게 진도표 보내기</button><p class="muted" id="wmsg"></p></div>`;bindBack();
+  $("#wsend").onclick=async()=>{const t=weekText();let ok=false;try{if(navigator.share){await navigator.share({title:"Victoria 주간 진도표",text:t});ok=true}}catch(e){if(e&&e.name==="AbortError")return}if(!ok){try{await navigator.clipboard.writeText(t);ok=true;$("#wmsg").textContent="복사했어요! 카톡에 붙여 넣어 보내요."}catch(e){$("#wmsg").textContent=t}}
+    if(ok){const[a]=weekRange();if(S.weekSent!==a){S.weekSent=a;addXP(10);S.gems=(S.gems||0)+3;save();toast("📊 진도표 보내기 완료! 💎+3 · +10 XP")}}}}
+function weekBanner(){const isSat=new Date().getDay()===6,[a]=weekRange(),sent=S.weekSent===a;if(!isSat&&!sent)return `<button class="card petlink" id="wkgo" type="button"><span class="petem">📊</span><div><h3>주간 진도표</h3><p class="muted">어디까지 왔는지 한눈에! 토요일에 엄마에게 보내면 💎+3</p></div></button>`;
+  return `<button class="card petlink ${isSat&&!sent?"wkhot":""}" id="wkgo" type="button"><span class="petem">📊</span><div><h3>${sent?"이번 주 진도표 보냈어요 ✓":"오늘은 토요일! 진도표 보내는 날"}</h3><p class="muted">${sent?"다음 주 토요일에 또 보내요.":"엄마에게 이번 주 진도표를 보내면 💎+3 · +10 XP"}</p></div></button>`}
 
 function rulesHTML(){return `<h2>💎 보석 모으는 법</h2>
 <ol class="rules">
@@ -2457,7 +2652,7 @@ function cook(){
   stepB.forEach((b,i)=>b.onclick=()=>{if(i!==done)return;b.classList.add("ok");done++;cheer(done===steps.length?"다 됐다! 완성 버튼 눌러 줘!":i===tIdx?"알람이 울릴 때까지 기다려~ 손목이 떨리면 다음!":CHEER[i%CHEER.length]);refresh()});
   refresh();
   $("#go").onclick=()=>{
-    const st=S.cook[cur]=S.cook[cur]||{};st.cook=(st.cook||0)+1;const first=!st.clear;st.clear=true;const td0=today();S.cookDay=S.cookDay&&S.cookDay.d===td0?{d:td0,c:S.cookDay.c+1}:{d:td0,c:1};addXP(10);checkGem();
+    const st=S.cook[cur]=S.cook[cur]||{};st.cook=(st.cook||0)+1;const first=!st.clear;st.clear=true;const td0=today();S.cookDay=S.cookDay&&S.cookDay.d===td0?{d:td0,c:S.cookDay.c+1}:{d:td0,c:1};evLog("cook");addXP(10);checkGem();
     $("#go").hidden=true;$("#after").hidden=false;confetti();cheer(first?`Lv.${cur} 클리어! 너 진짜 셰프다!`:"또 성공! 실력이 늘고 있어!");
     $("#msg").textContent=`+10 XP · ${st.cook}번째 요리${first&&cur<LEVELS.length?` · Lv.${cur+1} 열림!`:""}`;
     app.querySelectorAll(".lv").forEach(b=>{const id=+b.dataset.id;if(cOpen(id)){b.disabled=false;b.classList.remove("locked")}});
