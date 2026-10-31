@@ -198,6 +198,7 @@ svg.old{background:#FBF4E6!important}svg.old *{fill:none;stroke:#9C5B33;stroke-w
 .hzparts{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:4px;background:#fff;border-radius:14px;padding:8px}.hzpt{display:flex;flex-direction:column;align-items:center;min-width:50px}.hzpt svg{width:38px;height:38px}.hzpt i{font-style:normal;font-family:var(--han);font-size:1.6rem;color:var(--hanja);line-height:1.1}.hzpt small{font-size:.66rem;color:#8A7F96}.hzpt.res i{color:#FF4F8B}.hzparts>b{color:#C9B6E8}
 .hzst{margin:0;font-size:.95rem;line-height:1.55}.hzbtns{display:flex;gap:6px;flex-wrap:wrap}.hzsrc{margin:0;font-size:.66rem;color:#A89FB4}.hidech .f3 .hz3{color:#C9B6E8}svg.qpic{width:120px;height:120px;background:#fff;border-radius:16px;display:block;margin:6px auto}
 .skmap{display:grid;grid-template-columns:1fr 1fr;gap:8px}.skst{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;border:2px solid #E3F4EA;background:#fff;border-radius:16px;padding:10px;font:inherit}.skst.on{border-color:#2FB673;background:#F0FBF4}.skst .skem{font-size:1.6rem}.skst small{color:#7A8F80;font-size:.72rem}.skcard .skem{font-size:2.6rem}.skm{font-size:1.05rem;line-height:1.55;margin:6px 0}.ske{color:#6B5E78;font-size:.92rem;margin:0}.skdl{list-style:none;padding:0;margin:0;display:grid;gap:8px}.skdl li{background:var(--soft);border-radius:12px;padding:8px 10px;font-size:.9rem;line-height:1.45}
+.qtag.miss{background:#FFE3EC;color:#D6336C}
 .recap{margin:6px 0 0;padding-left:1.1em;font-size:.95rem;line-height:1.6}.recap li{margin:3px 0}
 .qtag{display:table;margin-left:auto;margin-right:auto;font-family:var(--display);font-size:.95rem;background:var(--soft);color:var(--accent);border-radius:99px;padding:2px 12px;margin-bottom:6px}
 .hintb{appearance:none;align-self:center;border:2px dashed var(--cheese);background:transparent;color:var(--ink);border-radius:99px;padding:6px 18px;font-family:var(--display);font-size:1.05rem;cursor:pointer}
@@ -555,7 +556,19 @@ function bindBack(){const b=$("#back");if(b)b.onclick=home}
 function mkQ(prompt,right,wrongs,exp,extra={}){const o=shuffle([right,...wrongs]);return Object.assign({prompt,opts:o,ans:o.indexOf(right),exp},extra)}
 
 /* 퀴즈 엔진 */
-function quiz(o){
+/* 자주 틀리는 문제 자동 재출제 */
+const missTxt=h=>String(h||"").replace(/<svg[\s\S]*?<\/svg>/g,"[그림]").replace(/<[^>]+>/g,"").replace(/\s+/g," ").trim();
+function missKey(g,q){const t=g+"|"+missTxt(q.prompt)+"|"+missTxt(q.opts[q.ans]);let h=0;for(let i=0;i<t.length;i++)h=(h*31+t.charCodeAt(i))|0;return "m"+(h>>>0).toString(36)}
+function missRec(g,q,ok){if(!g||q.miss)return;S.miss=S.miss||{};const k=missKey(g,q),e=S.miss[k];
+  if(ok){if(e){e.c=(e.c||0)+1;if(e.c>=2)delete S.miss[k]}return}
+  if(e){e.n++;e.c=0;e.t=today()}else S.miss[k]={g,n:1,c:0,t:today(),q:{prompt:q.prompt,opts:q.opts,ans:q.ans,exp:q.exp||"",hint:q.hint||""}};
+  const ks=Object.keys(S.miss);if(ks.length>80){ks.sort((a,b)=>(S.miss[a].t>S.miss[b].t?1:-1));delete S.miss[ks[0]]}}
+function missDue(g){const td=today();return Object.entries(S.miss||{}).filter(([k,e])=>(!g||e.g===g)&&(e.n>=2||e.t<td))}
+function missQ(k,e){const right=e.q.opts[e.q.ans],op=shuffle(e.q.opts.slice());return Object.assign({},e.q,{prompt:`<span class="qtag miss">🔁 자주 틀린 문제 · ${e.n}번 틀림</span>`+e.q.prompt.replace(/^<span class="qtag miss">[\s\S]*?<\/span>/,""),opts:op,ans:op.indexOf(right),miss:k})}
+function missInject(o){if(o.noMiss)return o;const g=o.missKey||o.title,have=new Set(o.qs.map(q=>missTxt(q.prompt)));const extra=missDue(g).filter(([k,e])=>!have.has(missTxt(e.q.prompt))).sort((a,b)=>b[1].n-a[1].n).slice(0,2).map(([k,e])=>missQ(k,e));
+  return extra.length?Object.assign({},o,{qs:o.qs.concat(extra)}):o}
+function missHit(q,ok){if(!q.miss||!S.miss)return;const e=S.miss[q.miss];if(!e)return;if(ok){e.c=(e.c||0)+1;if(e.c>=2)delete S.miss[q.miss]}else{e.n++;e.c=0;e.t=today()}save()}
+function quiz(o){o=missInject(o);
   const N=o.qs.length,queue=o.qs.map(q=>Object.assign({},q,{re:false}));let i=0,score=0,combo=0,fastWrong=0;const marks=[],past=[];
   const CAT_OK=["생각해서 맞혔어! 최고!","냥! 한 번에 정답!","완벽해, Victoria!","우와, 꼼꼼하게 풀었네!"];
   function lock(ms){const opts=[...app.querySelectorAll(".opt:not(.no)")],bar=$("#think");opts.forEach(b=>b.disabled=true);
@@ -603,7 +616,7 @@ function quiz(o){
     app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>pick(b));
     const submit=b=>{
       const k=+b.dataset.k,ok=k===q.ans,quick=Date.now()-openAt<700;tries++;if(tries===1)past.push({q,picks:[]});past[past.length-1].picks.push(k);
-      if(tries===1&&!re){marks[i]=ok;if(o.onAnswer)o.onAnswer(q,ok);app.querySelector(".qprog").children[i].className=ok?"ok":"no"}
+      if(tries===1&&!re){marks[i]=ok;if(q.miss)missHit(q,ok);else if(!o.noMiss)missRec(o.missKey||o.title,q,ok);if(o.onAnswer)o.onAnswer(q,ok);app.querySelector(".qprog").children[i].className=ok?"ok":"no"}
       if(ok){b.classList.add("pop");
         if(tries===1){if(!re){score++;combo++}fastWrong=0;finish(true,re?"이번엔 정확해! 기억했구나!":(o.mascot===true?"딩동댕! 맞았어!":CAT_OK[Math.floor(Math.random()*CAT_OK.length)]+(combo>=3?` 🔥${combo}연속!`:"")),"--good")}
         else finish(false,"맞았어! 다음엔 한 번에 맞혀 보자. 이 문제는 끝에 한 번 더 나와요.","--good");
@@ -663,7 +676,7 @@ function home(){
   ${wrongCard()}
   ${petCardHome()}
   ${shopHTML(nextCook())}
-  <p class="foot" id="ver">Victoria Quest v3.8</p>`;
+  <p class="foot" id="ver">Victoria Quest v3.9</p>`;
   if(S.test){$("#parent").onclick=parentPanel;$("#rst").onclick=()=>{$("#rstAsk").hidden=false};$("#rstYes").onclick=()=>{try{localStorage.removeItem(KEY)}catch(e){}location.reload()}}
   app.querySelectorAll(".tile").forEach(b=>b.onclick=()=>({cook:cookStart,hist,hz,en,mem,ko,ma,sci})[b.dataset.t]());
   updBadge();
@@ -2655,11 +2668,12 @@ function wrongPool(){const out=[];
   (S.hist.wrong||[]).forEach(id=>{const h=HIST[id];if(h)out.push({s:"hist",id,lab:"📜 한국사",q:[esc(h[0]),h[1],h[2],"",esc(h[3])]})});
   (S.ko&&S.ko.wrong||[]).forEach(id=>{const L=KO[Math.floor(id/10)];const q=L&&L.qs[id%10];if(q)out.push({s:"ko",id,lab:"📘 국어",q})});
   (S.ma&&S.ma.wrong||[]).forEach(id=>{let q=null;if(id>=700){const L=SB[Math.floor((id-700)/10)];if(L)q=L.g()[(id-700)%10]}else if(id>=500){const L=MB[Math.floor((id-500)/10)];if(L)q=L.g()[(id-500)%10]}else{const L=MA[Math.floor(id/10)];if(L)q=L.g()[id%10]}if(q)out.push({s:"ma",id,lab:"🔢 수학",q})});
+  missDue().filter(([k,e])=>e.n>=2).forEach(([k,e])=>out.push({s:"miss",id:k,lab:"🔁 자주 틀림",q:[e.q.prompt.replace(/^<span class="qtag[^"]*">[\s\S]*?<\/span>/,""),e.q.opts[e.q.ans],e.q.opts.filter((_,j)=>j!==e.q.ans),e.q.hint,e.q.exp]}));
   return out}
 function wrGot(){S.wrg=S.wrg&&S.wrg.d===today()?S.wrg:{d:today(),n:0};return S.wrg}
 function wrongReview(){const pool=shuffle(wrongPool()).slice(0,5);if(!pool.length){popup(`<div class="bigem">🌟</div><h2>틀린 문제가 하나도 없어!</h2><p>퀘스트를 풀다가 틀린 문제가 생기면 여기서 다시 풀 수 있어요.</p>`);return}
-  quiz({title:"📝 오답 복습",qs:pool.map((x,j)=>mkQ(`<span class="qtag">${x.lab} · 틀렸던 문제</span>`+x.q[0],x.q[1],x.q[2],x.q[4],{hint:x.q[3]||"",wr:x})),
-    onAnswer:(q,ok)=>{if(!ok)return;const x=q.wr,list=x.s==="hist"?S.hist.wrong:S[x.s].wrong,k=list.indexOf(x.id);if(k>=0)list.splice(k,1);const g=wrGot();if(g.n<WR_GEM_DAY){g.n++;S.gems=(S.gems||0)+1;setTimeout(()=>toast("💎 +1 오답을 이겨냈어!"),300)}save()},
+  quiz({title:"📝 오답 복습",noMiss:true,qs:pool.map((x,j)=>mkQ(`<span class="qtag">${x.lab} · 틀렸던 문제</span>`+x.q[0],x.q[1],x.q[2],x.q[4],{hint:x.q[3]||"",wr:x})),
+    onAnswer:(q,ok)=>{if(!ok)return;const x=q.wr;if(x.s==="miss"){const e=S.miss&&S.miss[x.id];if(e){e.c=(e.c||0)+1;if(e.c>=2)delete S.miss[x.id]}}else{const list=x.s==="hist"?S.hist.wrong:S[x.s].wrong,k=list.indexOf(x.id);if(k>=0)list.splice(k,1)}const g=wrGot();if(g.n<WR_GEM_DAY){g.n++;S.gems=(S.gems||0)+1;setTimeout(()=>toast("💎 +1 오답을 이겨냈어!"),300)}save()},
     onPass:()=>{},after:()=>{const left=wrongPool().length;popup(`<div class="bigem">📝</div><h2>오답 복습 끝!</h2><p>오늘 오답으로 받은 보석: 💎 ${wrGot().n}개 (하루 최대 ${WR_GEM_DAY}개)</p><p class="muted">${left?`남은 오답 ${left}개. 내일 또 도전!`:"오답을 모두 이겨냈어! 🌟"}</p>`);home()},afterLabel:"끝내기"})}
 function wrongCard(){const n=wrongPool().length,g=wrGot().n;return `<button class="card petlink" id="wrgo" type="button"><span class="petem">📝</span><div><h3>오답 복습 ${n?`<span class="pill">${n}개</span>`:""}</h3><p class="muted">${n?`틀렸던 문제를 다시 맞히면 한 문제에 💎+1! (오늘 ${g}/${WR_GEM_DAY})`:"아직 틀린 문제가 없어요. 멋져!"}</p></div></button>`}
 
@@ -2904,14 +2918,81 @@ function skQ(w,i){const o=skOpts(w),tag=`<span class="qtag">${w.em} ${w.ut}</spa
   if(k===0)return mkQ(`${tag}이 뜻을 가진 과학 개념어는?<br><span class="kwq">${w.m}</span>`,w.t,o.map(x=>x.t),`${w.t}${w.h?` — ${w.h}`:""}: ${w.m}`,{sk:w.t,hint});
   if(k===1)return mkQ(`${tag}<b>‘${w.t}’</b>의 뜻은?${w.h?`<br><small class="muted">${w.h}</small>`:""}`,w.m,o.map(x=>x.m),`예) ${w.e}`,{sk:w.t,hint:"한자 하나하나의 뜻을 이어서 생각해 봐."});
   return mkQ(`${tag}다음 예와 가장 관계있는 개념어는?<br><span class="kwq">${w.e.replace(new RegExp(w.t.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"),"g"),"○○")}</span>`,w.t,o.map(x=>x.t),`${w.t}: ${w.m}`,{sk:w.t,hint:`뜻: ${w.m.slice(0,18)}…`})}
-function skUnitQs(u){const ws=shuffle(SKU.find(x=>x[0]===u)[4].map(w=>skOf(w[0])));const list=ws.concat(shuffle(ws)).slice(0,Math.max(8,ws.length));return list.map((w,i)=>skQ(w,i))}
+/* 차시별 이유 묻기·실험 예상 문제 [유형(why|exp), 질문, 정답, 오답3, 풀이] */
+const SKWHY={
+force:[["exp","용수철저울에 추를 1개 걸었더니 2cm 늘어났어요. 같은 추를 2개 걸면 어떻게 될까요?","약 4cm 늘어난다",["그대로 2cm 늘어난다","1cm로 줄어든다","끊어진다"],"용수철은 무게에 비례해서 늘어나요. 무게가 2배면 늘어난 길이도 약 2배!"],
+ ["why","시소에서 무거운 아빠와 가벼운 내가 수평을 잡으려면 아빠는 어디에 앉아야 할까요?","받침점에 더 가까이",["받침점에서 더 멀리","시소 맨 끝","나와 같은 거리"],"무거운 쪽이 받침점에 가까이 앉아야 수평을 잡을 수 있어요."],
+ ["why","공을 위로 던져도 다시 땅으로 떨어지는 까닭은?","지구가 끌어당기는 힘(중력) 때문에",["공이 가벼워서","공기가 공을 밀어서","공이 지쳐서"],"지구는 모든 물체를 지구 중심 쪽으로 끌어당겨요. 이 힘이 중력이에요."]],
+magnet:[["exp","막대자석 두 개의 N극끼리 가까이 가져가면 어떻게 될까요?","서로 밀어낸다",["서로 끌어당긴다","아무 일도 없다","자석이 녹는다"],"같은 극끼리는 밀어내고, 다른 극끼리는 끌어당겨요."],
+ ["exp","철 클립, 알루미늄 캔, 플라스틱 자, 동전 모양 철 와셔 중 자석에 붙는 것은?","철 클립과 철 와셔",["알루미늄 캔","플라스틱 자","모두 다 붙는다"],"자석은 철로 된 물체를 끌어당겨요. 알루미늄과 플라스틱은 붙지 않아요."],
+ ["why","나침반 바늘이 항상 북쪽을 가리킬 수 있는 까닭은?","바늘이 자석이기 때문에",["바늘이 무거워서","바람이 불어서","바늘이 반짝여서"],"나침반 바늘은 작은 자석이라서 N극이 북쪽을 가리켜요."]],
+matter:[["exp","소금과 모래가 섞여 있어요. 물에 넣어 저은 뒤 거름종이로 거르면 거름종이 위에 남는 것은?","모래",["소금","물","아무것도 남지 않는다"],"소금은 물에 녹아 거름종이를 통과하고, 녹지 않는 모래만 남아요."],
+ ["why","프라이팬 몸체는 금속으로, 손잡이는 나무나 플라스틱으로 만드는 까닭은?","금속은 열이 잘 통하고, 나무·플라스틱은 열이 잘 통하지 않아서",["금속이 더 가벼워서","나무가 더 단단해서","색깔을 맞추려고"],"물질마다 성질이 달라서 쓰임에 맞게 골라 써요."],
+ ["exp","소금물을 증발 접시에 담아 가열하면 무엇이 남을까요?","소금",["모래","아무것도 남지 않는다","설탕"],"물은 증발해 날아가고 녹아 있던 소금이 남아요."]],
+water:[["exp","얼음물이 담긴 컵을 실온에 두면 컵 바깥쪽에 물방울이 맺혀요. 이 물방울은 어디에서 왔을까요?","공기 중의 수증기가 응결한 것",["컵 속 물이 스며 나온 것","얼음이 튀어 나온 것","컵이 녹은 것"],"공기 중 수증기가 차가운 컵 표면에 닿아 물방울로 변해요(응결)."],
+ ["exp","물을 얼리면 부피는 어떻게 될까요?","늘어난다",["줄어든다","그대로다","사라진다"],"물이 얼면 부피가 늘어나요. 그래서 꽉 찬 유리병을 얼리면 깨질 수 있어요."],
+ ["why","젖은 빨래가 바람이 부는 맑은 날 더 빨리 마르는 까닭은?","증발이 더 활발해져서",["끓음이 일어나서","응결이 일어나서","빨래가 무거워져서"],"햇빛이 비치고 바람이 불면 물이 더 빨리 증발해요."]],
+gas:[["exp","입구를 막은 주사기의 피스톤을 세게 누르면 안의 공기 부피는?","줄어든다",["늘어난다","그대로다","공기가 사라진다"],"기체에 압력을 가하면 부피가 작아져요."],
+ ["exp","촛불을 집기병으로 덮으면 어떻게 될까요?","얼마 뒤 촛불이 꺼진다",["더 밝게 탄다","계속 똑같이 탄다","초가 커진다"],"촛불이 타는 데 필요한 산소가 부족해져서 꺼져요."],
+ ["why","높은 산에 올라가면 과자 봉지가 빵빵하게 부푸는 까닭은?","바깥 공기의 압력이 낮아져서",["과자가 커져서","봉지가 따뜻해져서","산소가 많아져서"],"높은 곳은 공기의 압력이 낮아 봉지 속 기체의 부피가 커져요."]],
+sound:[["exp","소리가 나는 소리굽쇠를 물에 살짝 대면 어떻게 될까요?","물이 튄다",["물이 얼어붙는다","아무 변화가 없다","물이 뜨거워진다"],"소리가 나는 물체는 떨리고 있어서 물이 튀어요."],
+ ["exp","고무줄을 팽팽하게 당길수록 튕겼을 때 소리는?","더 높아진다",["더 낮아진다","소리가 안 난다","그대로다"],"줄이 팽팽할수록 빠르게 떨려서 높은 소리가 나요."],
+ ["why","실 전화기로 친구 목소리가 들리는 까닭은?","소리가 실의 떨림으로 전달되어서",["실이 빛을 보내서","컵이 소리를 만들어서","바람이 소리를 실어 와서"],"소리는 고체인 실을 통해서도 전달돼요."]],
+light:[["exp","손전등과 손 사이의 거리를 가깝게 하면 벽에 생긴 손 그림자는?","커진다",["작아진다","사라진다","색이 바뀐다"],"물체가 빛에 가까울수록 빛을 많이 가려 그림자가 커져요."],
+ ["why","물이 담긴 컵에 넣은 빨대가 꺾여 보이는 까닭은?","빛이 물과 공기의 경계에서 굴절해서",["빨대가 진짜 휘어서","빛이 반사돼서","물이 빨대를 밀어서"],"빛은 서로 다른 물질의 경계에서 꺾여 나아가요."],
+ ["exp","볼록 렌즈로 햇빛을 종이 위 한 점에 모으면 어떻게 될까요?","그 점이 뜨거워져 종이가 탈 수 있다",["종이가 차가워진다","빛이 사라진다","종이가 젖는다"],"볼록 렌즈는 빛을 한곳에 모아서 그 부분의 온도가 높아져요. (실제로는 위험하니 어른과 함께만!)"]],
+animal:[["exp","배추흰나비 애벌레가 다 자라면 다음에는 무엇이 될까요?","번데기",["알","어른벌레","올챙이"],"배추흰나비는 알 → 애벌레 → 번데기 → 어른벌레로 자라요(완전 탈바꿈)."],
+ ["why","거미가 곤충이 아닌 까닭은?","다리가 8개이고 몸이 두 부분이라서",["날개가 있어서","물에 살아서","너무 작아서"],"곤충은 몸이 머리·가슴·배 세 부분, 다리가 6개예요."],
+ ["why","물고기가 물속에서 숨을 쉴 수 있는 까닭은?","아가미로 물속 산소를 받아들여서",["폐가 아주 커서","숨을 쉬지 않아서","비늘로 숨을 쉬어서"],"물고기는 아가미로 숨을 쉬어요."]],
+plant:[["exp","같은 화분 두 개 중 하나만 어두운 곳에 일주일 두었어요. 어두운 곳의 식물은 어떻게 될까요?","잎이 누렇게 되고 약하게 자란다",["더 진한 초록색이 된다","꽃이 더 많이 핀다","아무 차이가 없다"],"빛이 없으면 광합성을 하지 못해 잘 자라지 못해요."],
+ ["exp","잎이 달린 가지와 잎을 딴 가지에 각각 비닐봉지를 씌웠어요. 물방울이 더 많이 맺히는 쪽은?","잎이 달린 가지",["잎을 딴 가지","둘 다 같다","둘 다 맺히지 않는다"],"잎의 기공으로 물이 빠져나가는 증산 작용 때문이에요."],
+ ["why","붉은 색소 물에 꽂아 둔 백합 줄기를 가로로 자르면 붉은 점들이 보이는 까닭은?","줄기가 물이 이동하는 통로이기 때문에",["줄기가 원래 붉어서","잎이 색소를 만들어서","뿌리가 색소를 싫어해서"],"뿌리에서 흡수한 물은 줄기 속 통로를 따라 잎까지 올라가요."]],
+eco:[["exp","어떤 섬에서 뱀이 갑자기 모두 사라진다면, 뱀이 잡아먹던 개구리의 수는 처음에 어떻게 될까요?","늘어난다",["줄어든다","변하지 않는다","모두 사라진다"],"천적이 사라지면 처음에는 수가 늘어나요. 그러다 먹이가 부족해지는 등 생태계 전체가 영향을 받아요."],
+ ["why","생태계에 분해자가 없다면 어떤 일이 생길까요?","죽은 생물과 배출물이 쌓여 양분이 되돌아가지 못한다",["식물이 더 잘 자란다","동물이 더 많아진다","아무 일도 없다"],"분해자는 죽은 생물을 분해해 흙으로 양분을 되돌려 줘요."],
+ ["why","사막여우의 귀가 크고 북극여우의 귀가 작은 까닭은?","사는 곳의 환경에 적응했기 때문에",["먹이가 달라서","색깔을 맞추려고","그냥 우연이라서"],"큰 귀는 열을 내보내기 좋고, 작은 귀는 열을 덜 잃어요. 환경에 적응한 모습이에요."]],
+body:[["exp","팔을 굽힐 때 위팔 안쪽 근육은 어떻게 될까요?","줄어든다",["늘어난다","사라진다","딱딱한 뼈가 된다"],"근육이 줄어들면서 뼈를 당겨 팔이 굽혀져요."],
+ ["why","달리기를 하면 숨이 가빠지고 심장이 빨리 뛰는 까닭은?","몸에 산소와 영양소가 더 많이 필요해서",["몸이 차가워져서","배가 고파서","뼈가 자라서"],"운동하면 산소가 많이 필요해서 호흡과 순환이 빨라져요."],
+ ["why","손을 비누로 꼼꼼히 씻으면 감염병 예방에 도움이 되는 까닭은?","손에 묻은 병원체를 없애 몸에 들어오는 것을 막아서",["손이 따뜻해져서","손이 미끄러워져서","손이 커져서"],"손을 통해 병원체가 입·코·눈으로 들어오는 것을 막아요."]],
+land:[["exp","흙 언덕을 만들고 위에서 물을 부으면, 위쪽과 아래쪽에서 각각 주로 일어나는 일은?","위쪽은 깎이고(침식), 아래쪽은 쌓인다(퇴적)",["위쪽은 쌓이고 아래쪽은 깎인다","둘 다 쌓인다","아무 변화가 없다"],"흐르는 물은 높은 곳을 깎고, 낮은 곳에 흙을 쌓아요."],
+ ["why","바위 틈에 스며든 물이 겨울에 바위를 부수는 까닭은?","물이 얼면서 부피가 늘어나서",["물이 뜨거워져서","물이 증발해서","바위가 물을 좋아해서"],"얼음이 되면 부피가 늘어나 틈을 벌려요. 이것도 풍화예요."],
+ ["why","지진이 났을 때 책상 아래로 들어가는 까닭은?","떨어지는 물건으로부터 머리와 몸을 보호하려고",["숨바꼭질하려고","지진이 멈추게 하려고","따뜻해서"],"흔들릴 때는 몸을 보호하고, 흔들림이 멈추면 넓은 곳으로 대피해요."]],
+fossil:[["why","보통 지층에서 아래층이 위층보다 먼저 쌓였다고 보는 까닭은?","퇴적물은 아래부터 차례로 쌓이기 때문에",["아래층이 더 무거워서","위층이 더 반짝여서","아래층이 더 얇아서"],"뒤집히지 않았다면 아래층이 먼저, 위층이 나중에 쌓인 거예요."],
+ ["exp","높은 산의 지층에서 조개 화석이 발견되었어요. 무엇을 알 수 있을까요?","그곳이 옛날에는 바다였다",["옛날에 조개가 산에 살았다","누가 조개를 버렸다","화산이 조개를 만들었다"],"화석으로 옛날의 환경을 알 수 있어요."],
+ ["exp","역암, 사암, 이암 중 알갱이가 가장 큰 것은?","역암",["사암","이암","모두 같다"],"역암은 자갈, 사암은 모래, 이암은 진흙으로 이루어져요."]],
+weather:[["exp","따뜻한 물을 담은 집기병 위에 얼음 접시를 올리면 병 안에 무엇이 생길까요?","뿌연 김(작은 물방울)",["얼음 덩어리","불꽃","아무것도 생기지 않는다"],"수증기가 차가워져 응결하면 구름처럼 작은 물방울이 생겨요."],
+ ["why","맑은 날 낮에 바닷가에서 바다에서 육지 쪽으로 바람이 부는 까닭은?","낮에는 육지가 바다보다 빨리 데워져 기압이 낮아져서",["바다가 더 뜨거워서","파도가 바람을 만들어서","물고기가 헤엄쳐서"],"공기는 고기압(바다)에서 저기압(육지)으로 이동해요. 이것이 해풍이에요."],
+ ["why","습도가 높은 날 빨래가 잘 마르지 않는 까닭은?","공기 중에 수증기가 많아 증발이 느려서",["햇빛이 강해서","바람이 세서","온도가 높아서"],"공기에 이미 수증기가 많으면 물이 잘 증발하지 않아요."]],
+solution:[["exp","같은 양의 찬물과 따뜻한 물에 백반을 녹이면, 더 많이 녹는 쪽은?","따뜻한 물",["찬물","똑같다","둘 다 안 녹는다"],"물의 온도가 높을수록 녹는 고체 용질의 양이 대체로 많아요."],
+ ["exp","진한 설탕물과 묽은 설탕물에 방울토마토를 넣으면, 더 잘 떠오르는 쪽은?","진한 설탕물",["묽은 설탕물","둘 다 가라앉는다","똑같이 뜬다"],"용액이 진할수록 물체가 더 잘 떠요."],
+ ["why","설탕 10g을 물 50g에 녹이면 설탕물의 무게는 약 60g이에요. 그 까닭은?","설탕이 물에 녹아도 없어지지 않기 때문에",["설탕이 증발해서","물이 늘어나서","저울이 틀려서"],"용해되어 보이지 않아도 용질은 용액 속에 그대로 있어요."]],
+acid:[["exp","레몬즙에 푸른색 리트머스 종이를 적시면?","붉게 변한다",["푸른색 그대로다","노랗게 변한다","하얗게 변한다"],"레몬즙은 산성이라 푸른색 리트머스 종이를 붉게 바꿔요."],
+ ["exp","비눗물에 페놀프탈레인 용액을 떨어뜨리면?","붉은색으로 변한다",["변화가 없다","파란색으로 변한다","검게 변한다"],"비눗물은 염기성이라 페놀프탈레인 용액이 붉게 변해요."],
+ ["why","속이 쓰릴 때 먹는 제산제가 효과가 있는 까닭은?","염기성 성분이 위산(산성)을 약하게 해서",["위를 차갑게 해서","잠이 오게 해서","위산을 늘려서"],"산성과 염기성이 만나면 서로의 성질이 약해져요(중화)."]],
+heat:[["exp","뜨거운 국에 쇠숟가락과 나무 숟가락을 꽂아 두면, 손잡이가 먼저 뜨거워지는 것은?","쇠숟가락",["나무 숟가락","동시에","둘 다 차가워진다"],"금속은 열이 잘 전도돼요."],
+ ["why","방 안의 난로는 보통 낮은 곳에, 에어컨은 높은 곳에 다는 까닭은?","따뜻한 공기는 위로, 차가운 공기는 아래로 이동(대류)해서",["보기 좋아서","전기가 덜 들어서","소리가 작아서"],"대류를 이용하면 방 전체 온도가 고르게 바뀌어요."],
+ ["why","겨울에 이중창을 쓰면 집이 더 따뜻한 까닭은?","창 사이 공기층이 열의 이동을 막아서(단열)",["유리가 열을 만들어서","햇빛이 더 많이 들어와서","바람이 세져서"],"공기층은 열이 잘 통하지 않아 단열 효과가 있어요."]],
+fire:[["exp","크기가 다른 집기병으로 같은 촛불을 덮으면, 더 오래 타는 쪽은?","큰 집기병",["작은 집기병","똑같다","둘 다 안 꺼진다"],"큰 집기병 안에 산소가 더 많아서 더 오래 타요."],
+ ["why","모닥불에 흙을 덮으면 불이 꺼지는 까닭은?","산소의 공급을 막아서",["흙이 불을 먹어서","흙이 뜨거워서","탈 물질이 늘어서"],"연소의 조건 중 산소를 없애면 불이 꺼져요."],
+ ["why","전기로 인한 불에 물을 뿌리면 안 되는 까닭은?","물을 통해 전기가 흘러 감전될 수 있어서",["물이 아까워서","불이 더 차가워져서","물이 증발해서"],"전기 화재에는 소화기를 쓰고, 먼저 전원을 차단해요."]],
+speed:[["exp","3시간 동안 150km를 이동한 자동차의 속력은?","50km/h",["150km/h","30km/h","450km/h"],"속력 = 이동 거리 ÷ 걸린 시간 = 150 ÷ 3 = 50(km/h)"],
+ ["exp","같은 거리를 달리기할 때 더 빠른 사람은?","걸린 시간이 더 짧은 사람",["걸린 시간이 더 긴 사람","키가 큰 사람","신발이 새것인 사람"],"같은 거리라면 걸린 시간이 짧을수록 속력이 빨라요."],
+ ["why","학교 앞 어린이 보호 구역에서 자동차 속력을 30km/h 이하로 줄이는 까닭은?","속력이 빠를수록 멈추는 데 더 긴 거리가 필요해서",["기름을 아끼려고","소리를 줄이려고","길이 좁아서"],"속력이 느려야 위험할 때 빨리 멈출 수 있어요."]],
+space:[["why","낮과 밤이 생기는 까닭은?","지구가 하루에 한 바퀴씩 자전해서",["지구가 태양 둘레를 공전해서","달이 태양을 가려서","태양이 지구 둘레를 돌아서"],"지구가 자전하면서 태양을 향한 쪽은 낮, 반대쪽은 밤이 돼요."],
+ ["exp","오늘 저녁 서쪽 하늘에 초승달이 보였어요. 약 일주일 뒤 저녁 남쪽 하늘에 보이는 달은?","상현달",["보름달","그믐달","하현달"],"달은 초승달 → 상현달 → 보름달 → 하현달 → 그믐달 순으로 약 30일마다 모양이 바뀌어요."],
+ ["why","여름에 겨울보다 더운 까닭은?","태양의 남중 고도가 높아 같은 넓이의 땅이 받는 에너지가 많아서",["여름에 지구가 태양과 훨씬 가까워져서","여름에 태양이 더 커져서","여름에 달이 안 보여서"],"지구 자전축이 기울어진 채 공전해서 계절마다 태양 고도가 달라져요."]],
+electric:[["exp","전구 2개를 직렬로 연결한 회로에서 전구 1개를 빼면 나머지 전구는?","꺼진다",["더 밝아진다","그대로 켜져 있다","깜빡인다"],"직렬연결은 한 줄로 이어져서 하나가 빠지면 회로가 끊겨요."],
+ ["exp","전자석에 감은 전선을 더 많이 감으면 클립이 붙는 수는?","늘어난다",["줄어든다","변하지 않는다","0이 된다"],"전선을 많이 감을수록 전자석의 세기가 세져요."],
+ ["why","집 안 전등들을 병렬로 연결하는 까닭은?","한 전등이 꺼져도 다른 전등은 켜져 있게 하려고",["전기를 더 많이 쓰려고","전선을 아끼려고","더 어둡게 하려고"],"병렬연결은 갈래가 나뉘어 있어 하나가 꺼져도 나머지는 켜져요."]]};
+
+function skWhyQs(u){return (SKWHY[u]||[]).map(([k,q,a,w,e])=>mkQ(`<span class="qtag">${k==="exp"?"🧪 실험 예상":"🔍 왜 그럴까?"}</span>${q}`,a,w,e,{hint:k==="exp"?"실험에서 무엇이 달라지는지 하나씩 떠올려 봐.":"개념어 카드에서 배운 뜻을 떠올려 봐."}))}
+function skUnitQs(u){const ws=shuffle(SKU.find(x=>x[0]===u)[4].map(w=>skOf(w[0])));const list=ws.concat(shuffle(ws)).slice(0,Math.max(8,ws.length));return list.map((w,i)=>skQ(w,i)).concat(shuffle(skWhyQs(u)))}
 function skCards(u,cb){const U=SKU.find(x=>x[0]===u),ws=U[4];let k=0;
   const draw=()=>{const w=ws[k];app.innerHTML=hdr(`${U[3]} ${U[1]}`)+`<div class="card"><div class="dots">${ws.map((_,j)=>`<i class="${j===k?"on":""}"></i>`).join("")}</div>
     <div class="flash skcard"><span class="skem">${U[3]}</span><span class="kwterm big1">${w[0]}</span>${w[1]?`<span class="muted">${w[1]}</span>`:""}<p class="skm">${w[2]}</p><p class="ske">예) ${w[3]}</p><button class="ttsb" id="sp" type="button">🔊 읽어 줘</button></div>
     <p class="muted" style="text-align:center">개념어를 소리 내어 읽고, 뜻을 내 말로 한 번 말해 봐요!</p>
     <div class="nav2"><button class="big alt" id="pv" type="button" ${k===0?"disabled":""}>이전</button><button class="big" id="nx" type="button">${k<ws.length-1?"다음 카드":"퀴즈 시작!"}</button></div></div>`;bindBack();
     $("#sp").onclick=()=>sayKo(`${w[0]}. ${w[2]} 예를 들면, ${w[3]}`);$("#pv").onclick=()=>{k--;draw()};$("#nx").onclick=()=>{if(k<ws.length-1){k++;draw()}else cb()}};draw()}
-function skUnit(u,again){const U=SKU.find(x=>x[0]===u),s=skInit();skCards(u,()=>quiz({title:`${U[3]} ${U[1]} 개념어`,qs:skUnitQs(u),pass:Math.ceil(skUnitQs(u).length*.75),remake:()=>skUnitQs(u),onAnswer:(q,ok)=>q.sk&&skMark(q.sk,ok),
+function skUnit(u,again){const U=SKU.find(x=>x[0]===u),s=skInit();skCards(u,()=>quiz({title:`${U[3]} ${U[1]} 개념어`,qs:skUnitQs(u),pass:Math.ceil((Math.max(8,SKU.find(x=>x[0]===u)[4].length)+(SKWHY[u]||[]).length)*.75),remake:()=>skUnitQs(u),onAnswer:(q,ok)=>q.sk&&skMark(q.sk,ok),
   onPass:sc=>{const first=!s.done[u];s.done[u]=today();s.best[u]=Math.max(s.best[u]||0,sc);if(first){S.gems=(S.gems||0)+2;setTimeout(()=>{gemShower(4);toast(`🏅 ${U[1]} 도장 획득! 💎+2`)},300)}if(!doneToday("sci")){markDone("sci");addXP(15)}save()},after:skHub,afterLabel:"개념어 지도로"}))}
 function skReview(){const due=skDue(),pool=due.length?due:shuffle(SKALL.filter(x=>skSeen(x.t)&&!skMast(x.t)).map(x=>x.t));const list=shuffle(pool).slice(0,10);if(!list.length)return toast("복습할 개념어가 아직 없어요. 단원부터 열어 봐요!");
   quiz({title:"🔁 과학 개념어 복습",qs:list.map((t,i)=>skQ(skOf(t),i)),onAnswer:(q,ok)=>q.sk&&skMark(q.sk,ok),onPass:sc=>{if(sc===list.length){S.gems=(S.gems||0)+1;toast("🔁 복습 만점! 💎+1")}if(!doneToday("sci")){markDone("sci");addXP(10)}save()},after:skHub,afterLabel:"개념어 지도로"})}
