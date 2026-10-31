@@ -202,6 +202,8 @@ svg.old{background:#FBF4E6!important}svg.old *{fill:none;stroke:#9C5B33;stroke-w
 .socur{border:2px solid #3B82C4}.skst.so.on{border-color:#3B82C4;background:#EEF5FC}
 .wrrule ol.rules{text-align:left}.wrbox{background:#FFF7E0;border-radius:14px;padding:10px 12px;text-align:left;margin:8px 0}.wrbox p{margin:4px 0}
 .course{border:2px solid #2FB673}.clist{display:grid;gap:8px;margin-top:6px}.crow{display:grid;grid-template-columns:30px 34px 1fr auto;align-items:center;gap:8px;text-align:left;border:2px solid #E3F4EA;background:#fff;border-radius:16px;padding:10px;font:inherit}.crow .cn{width:28px;height:28px;border-radius:50%;background:#EEF2F7;display:flex;align-items:center;justify-content:center;font-weight:800;color:#6B5E78}.crow .cic{font-size:1.5rem;text-align:center;font-family:var(--han)}.crow .ctx{display:flex;flex-direction:column}.crow .ctx small{color:#7A8F80;font-size:.74rem}.crow .cgo{font-weight:800;color:#2FB673;font-size:.85rem}.crow.done{background:#F0FBF4;opacity:.8}.crow.done .cn{background:#2FB673;color:#fff}.crow:disabled{opacity:.5}.more{margin:10px 0}.more summary{cursor:pointer;font-weight:800;padding:12px 14px;background:var(--card);border-radius:16px;list-style:none;color:#6B5E78}.more summary::-webkit-details-marker{display:none}.hpick.on{background:#2FB673;color:#fff}
+.goal{background:#FFF0F6;border-radius:14px;padding:10px 12px;margin:8px 0;display:flex;flex-direction:column;gap:4px}.goal .row{display:flex;justify-content:space-between;align-items:center}.goal small{color:#8A6F80}.goal .tc,.goal .buy{align-self:flex-end}.goal.done{flex-direction:row;justify-content:space-between;align-items:center}.goalb{display:flex;flex-direction:column;align-items:flex-start;width:100%;margin:8px 0;padding:10px 12px;border:2px dashed #FF7AB0;background:#FFF7FA;border-radius:14px;font:inherit;font-weight:800;color:#D6336C;text-align:left}.goalb small{font-weight:400;color:#8A6F80}.souvline{font-size:.76rem;margin:2px 0 6px}.souvbig{font-size:4rem}
+.frgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.frc{display:flex;flex-direction:column;align-items:center;text-align:center;background:var(--soft);border-radius:14px;padding:8px 2px}.frc b{font-size:.78rem}.frc small{font-size:.62rem;color:#8A7F96}.fri{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem}.frh{font-size:.62rem;min-height:14px}.frcat{font-weight:800;margin:10px 0 4px;font-size:.88rem}.tc.on{background:#E3F6EA}.frscene{display:flex;gap:10px;align-items:flex-start;background:var(--soft);border-radius:16px;padding:12px}.frbig{flex:0 0 56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem}.frtext{margin:4px 0 0;font-size:1.02rem;line-height:1.55}.fropts{display:grid;gap:8px;margin:8px 0}.frop,.frh2{text-align:left;line-height:1.45;padding:12px}.frh2.sel{border-color:#B78CFF;background:#F3EEFC}.frfb{border-radius:14px;padding:10px 12px;margin-top:8px}.frfb.good{background:#E3F6EA}.frfb.ok{background:#FFF7E0}.frfb.bad{background:#FFE3EC}.frfb p{margin:4px 0}.frsay{font-size:1.3rem;font-weight:800;text-align:center;background:#FFF0F6;border-radius:16px;padding:16px;margin:10px 0;line-height:1.5}
 .recap{margin:6px 0 0;padding-left:1.1em;font-size:.95rem;line-height:1.6}.recap li{margin:3px 0}
 .qtag{display:table;margin-left:auto;margin-right:auto;font-family:var(--display);font-size:.95rem;background:var(--soft);color:var(--accent);border-radius:99px;padding:2px 12px;margin-bottom:6px}
 .hintb{appearance:none;align-self:center;border:2px dashed var(--cheese);background:transparent;color:var(--ink);border-radius:99px;padding:6px 18px;font-family:var(--display);font-size:1.05rem;cursor:pointer}
@@ -530,7 +532,7 @@ function hourNow(){const d=new Date();return d.getHours()+d.getMinutes()/60}
 function isOpen(h){return S.test||hourNow()>=h}
 const DAILY=5;
 function doneToday(t){if(!S[t])return false;return S[t].last===today()&&(S[t].cnt||1)>=DAILY&&!S.test}
-function markDone(t){evLog(t);const d=today();if(S[t].last===d)S[t].cnt=(S[t].cnt||1)+1;else S[t].cnt=1;S[t].last=d;S[t].n++;checkGem()}
+function markDone(t){evLog(t);const d=today(),was=S[t].last===d;if(was)S[t].cnt=(S[t].cnt||1)+1;else S[t].cnt=1;S[t].last=d;S[t].n++;checkGem();if(!was&&courseToday().some(x=>x.k===t))courseToast()}
 function addXP(n){S.xp+=n;const t=today();if(!S.days.includes(t))S.days.push(t);if(S.days.length>60)S.days=S.days.slice(-60);save()}
 function streak(){let c=0;const d=new Date();for(;;){const s=d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());if(S.days.includes(s)){c++;d.setDate(d.getDate()-1)}else{if(c===0&&s===today()){d.setDate(d.getDate()-1);if(S.days.includes(d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())))continue}break}}return c}
 function dday(){const t=new Date();t.setHours(0,0,0,0);return Math.round((EXAM-t)/864e5)}
@@ -680,9 +682,9 @@ function home(){
   ${wrongCard()}
   ${petCardHome()}
   ${shopHTML(nextCook())}
-  <p class="foot" id="ver">Victoria Quest v4.1</p>`;
+  <p class="foot" id="ver">Victoria Quest v4.3</p>`;
   if(S.test){$("#parent").onclick=parentPanel;$("#rst").onclick=()=>{$("#rstAsk").hidden=false};$("#rstYes").onclick=()=>{try{localStorage.removeItem(KEY)}catch(e){}location.reload()}}
-  app.querySelectorAll(".tile").forEach(b=>b.onclick=()=>({cook:cookStart,hist,hz,en,mem,ko,ma,sci,so:soc})[b.dataset.t]());app.querySelectorAll(".crow").forEach(b=>b.onclick=()=>slotGo(b.dataset.c));
+  app.querySelectorAll(".tile").forEach(b=>b.onclick=()=>({cook:cookStart,hist,hz,en,mem,ko,ma,sci,so:soc})[b.dataset.t]());app.querySelectorAll(".crow").forEach(b=>b.onclick=()=>slotGo(b.dataset.c));bindGoal();
   updBadge();
   $("#gem").onclick=gemRoom;$("#petgo").onclick=houseView;$("#wrgo").onclick=wrongReview;$("#wkgo").onclick=weekView;
   $("#rulesb").onclick=showRules;
@@ -1226,11 +1228,11 @@ function title(){const lv=Math.floor(S.xp/50)+1;return lv>=12?"Queen Victoria":l
 function weekGems(){const now=new Date(),day=(now.getDay()+6)%7,mon=new Date(now.getFullYear(),now.getMonth(),now.getDate()-day);return (S.gemDays||[]).filter(d=>{const [y,m,dd]=d.split("-").map(Number);return new Date(y,m-1,dd)>=mon}).length}
 function popup(html){const o=document.createElement("div");o.className="pop-ov";o.innerHTML=`<div class="pop-card">${html}<button class="big" type="button">좋아!</button></div>`;document.body.appendChild(o);o.querySelector("button").onclick=()=>{o.remove();if(document.querySelector("#ver"))home()};try{confetti()}catch(e){}}
 function gemTarget(){const td=today(),c=courseToday();if(!c.every(x=>slotDone(x.k)))return null;const inC=new Set(c.map(x=>x.k));let extra=0;
-  ["hist","hz","en","ko","ma","sci","so","mem"].forEach(t=>{if(S[t]&&S[t].last===td){const n=Math.min(S[t].cnt||1,DAILY);extra+=inC.has(t)?n-1:n}});if(S.cookDay&&S.cookDay.d===td)extra+=Math.min(S.cookDay.c||1,DAILY);
+  ["hist","hz","en","ko","ma","sci","so","mem","fr"].forEach(t=>{if(S[t]&&S[t].last===td){const n=Math.min(S[t].cnt||1,DAILY);extra+=inC.has(t)?n-1:n}});if(S.cookDay&&S.cookDay.d===td)extra+=Math.min(S.cookDay.c||1,DAILY);
   return {base:10,extra:Math.min(3,extra),pf:S.perf&&S.perf.d===td?Math.min(S.perf.n,3):0}}
 function questsLeft(){return courseToday().filter(x=>!slotDone(x.k)).map(x=>CNAME[x.k][1])}
 function checkGem(){const td=today(),g=gemTarget();if(!g)return;const tot=g.base+g.extra+g.pf,prev=S.gemToday&&S.gemToday.d===td?S.gemToday.n:0;if(tot<=prev)return;
-  S.gems=(S.gems||0)+tot-prev;S.gemToday={d:td,n:tot};const first=S.gemDay!==td;if(first){S.gemDay=td;S.gemDays=(S.gemDays||[]).concat(td).slice(-60)}save();
+  S.gems=(S.gems||0)+tot-prev;S.gemToday={d:td,n:tot};const first=S.gemDay!==td;if(first){S.gemDay=td;S.gemDays=(S.gemDays||[]).concat(td).slice(-60);giftSouv()}save();
   if(!first){setTimeout(()=>toast(`💎 +${tot-prev} 보석! (오늘 ${tot}개)`),300);return}
   const days=S.gemDays.length,i=Math.min(days,CATS.length)-1;
   setTimeout(()=>popup(`<div class="bigem">💎</div><h2>오늘의 보석 상자!</h2><p>5개 퀘스트를 모두 끝냈어! <b>💎 +${tot}</b></p><p class="muted">퀘스트를 한 개 더 할 때마다 💎+2, 만점 퀴즈마다 💎+1</p>${days<=CATS.length?`<div class="newcat">${catFace(CATS[i][1],i)}</div><p><b>${CATS[i][0]}</b>가 도감에 들어왔어!</p>`:""}`),400)}
@@ -1557,6 +1559,7 @@ function buildHouse(){const H=S.house,sc=new THREE.Scene(),R=2;// 방 하나 4�
   const pets=[];let pi=0,gi=0;S.pets.forEach(p=>{const rep=REPTILE.includes(p.k),k=rep?gi++:pi++;const x=rep?.9+k*1.4:.9+(k%3)*1.15,z=rep?3.1:-3.2+Math.floor(k/3)*1.4;
     if(S.inv[p.k+"_0"]&&!rep){const hs=petHouse(["#FFF3E0","#E3F6FF","#F1E8FF","#E8FFF1"][k%4]);hs.position.set(x,.07,z-.05);hs.scale.setScalar(.85);sc.add(hs)}
     const m=petModel(p.k);m.position.set(x,.07,z+(rep?0:.6));m.rotation.y=-.3;m.scale.setScalar(1.3);m.userData.ph=k;sc.add(m);pets.push(m)});
+  frInit();[["sora",-1.0,2.9,"#FFB3D1","#5A3A2A"],["doyun",3.0,4.9,"#9ED8FF","#2B2233"]].forEach(([k,x,z,c,hr])=>{if(frLv(k)<1)return;const m=chibi({dress:c,top:"#FFFFFF",hair:hr,tails:k==="sora",ribbon:c,shoe:c});m.name="friend_"+k;m.position.set(x,.07,z);m.rotation.y=-.6;sc.add(m)});
   gardenBuild(sc);const mbx=musicBoxModel();mbx.position.set(-1.8,.5,1.7);sc.add(mbx);
   return{sc,vic,baby,pets,clouds,mbx}}
 /* ---------- 빅토리아 움직이기 · 정원 · 유모차 · 뮤직박스 ---------- */
@@ -1602,7 +1605,7 @@ function bindWalk(B,cam,cv,st){const ray=new THREE.Raycaster(),pl=new THREE.Plan
   const say=(t,ms=2600)=>{bub.textContent=t;bubUntil=performance.now()+ms};W.say=say;say(IDLE[0],4000);
   const go=(x,z,cb,msg)=>{say(msg||"가는 중~ 🎶",1800);const v=B.vic.position,a=wRegion(v.x,v.z),b=wRegion(x,z);const pts=(a===b?[]:wPath(a,b)).concat([[x,z]]);W.path=pts.map(p=>new THREE.Vector3(p[0],.07,p[1]));W.cb=cb||null;hideMenu()};
   const hit=(cx,cy)=>{const r=cv.getBoundingClientRect(),m=new THREE.Vector2((cx-r.left)/r.width*2-1,-(cy-r.top)/r.height*2+1);ray.setFromCamera(m,cam);const hs=ray.intersectObjects(B.sc.children,true);
-    for(const h of hs){let o=h.object;while(o){if(o.name==="vic")return{t:"vic"};if(o.name==="mbox")return{t:"mbox"};if(o.name==="flw")return{t:"flw"};o=o.parent}}const p=new THREE.Vector3();if(ray.ray.intersectPlane(pl,p))return{t:"ground",x:p.x,z:p.z};return null};
+    for(const h of hs){let o=h.object;while(o){if(o.name==="vic")return{t:"vic"};if(o.name&&o.name.startsWith("friend_"))return{t:"friend",k:o.name.slice(7)};if(o.name==="mbox")return{t:"mbox"};if(o.name==="flw")return{t:"flw"};o=o.parent}}const p=new THREE.Vector3();if(ray.ray.intersectPlane(pl,p))return{t:"ground",x:p.x,z:p.z};return null};
   const menu=document.createElement("div");menu.className="vmenu";menu.hidden=true;st.appendChild(menu);
   function hideMenu(){menu.hidden=true}
   function showMenu(){const hasStroller=S.baby&&S.binv&&S.binv.stroller,g=gardenInit(),wat=g.last===today();
@@ -1621,7 +1624,7 @@ function bindWalk(B,cam,cv,st){const ray=new THREE.Raycaster(),pl=new THREE.Plan
       W.cb=()=>{B.sc.remove(s);W.stroller=null;if(B.baby)B.baby.visible=true;S.care.used++;b.did.push("walk");babyCredit();save();toast(`🚼 ${esc(b.name)}와 정원 산책 완료! 바깥바람을 쐬고 기분이 좋아졌어요.`)}})}
   let tap=null;cv.addEventListener("pointerdown",e=>{tap={x:e.clientX,y:e.clientY,t:Date.now()}});
   cv.addEventListener("pointerup",e=>{if(!tap)return;const moved=Math.hypot(e.clientX-tap.x,e.clientY-tap.y),dt=Date.now()-tap.t;tap=null;if(moved>8||dt>400)return;const h=hit(e.clientX,e.clientY);if(!h)return;
-    if(h.t==="vic"){say("어디로 갈까? 골라 줘!",2500);return menu.hidden?showMenu():hideMenu()}if(h.t==="mbox")return go(-2.3,1.3,()=>musicBox());if(h.t==="flw")return go(-2.2,5.0,water);
+    if(h.t==="vic"){say("어디로 갈까? 골라 줘!",2500);return menu.hidden?showMenu():hideMenu()}if(h.t==="friend"){const L=FR_VISIT_LINES(h.k);return say(`${FRN[h.k][0]}: ${L[Math.floor(Math.random()*L.length)]}`,3800)}if(h.t==="mbox")return go(-2.3,1.3,()=>musicBox());if(h.t==="flw")return go(-2.2,5.0,water);
     if(Math.abs(h.x)<6.3&&Math.abs(h.z)<6.3)go(h.x,h.z)});
   const pv=new THREE.Vector3();const placeBub=()=>{pv.copy(B.vic.position);pv.y+=2.15;pv.project(cam);const x=Math.max(108,Math.min(st.clientWidth-108,(pv.x*.5+.5)*st.clientWidth)),y=(-pv.y*.5+.5)*st.clientHeight;bub.style.transform=`translate(${x}px,${y}px) translate(-50%,-100%)`;
     const now=performance.now();if(now>bubUntil){idle+=1;if(idle>240){idle=0;say(IDLE[Math.floor(Math.random()*IDLE.length)],3500)}else bub.style.opacity=0}if(now<=bubUntil)bub.style.opacity=1};
@@ -1716,6 +1719,9 @@ function vrRoomStudy(sc,T,win){win(-3.58,-.6,Math.PI/2);const box=[],act=[];
   sc.add(at(cyl(1.3,1.3,.03,T.rug,36),.2,.05,1.0));const tb=grp(at(cyl(.45,.45,.06,T.wood,20),0,.45,0),at(cyl(.05,.05,.42,T.trim,8),0,.22,0),at(rb(.3,.06,.22,"#FF8A65",.02),-.05,.51,0),at(rb(.28,.06,.2,"#7FD3FF",.02),-.03,.57,.02),at(cyl(.06,.05,.1,"#FFFFFF",10),.25,.53,.1));tb.position.set(.2,0,1.0);sc.add(tb);box.push([-.35,.75,.45,1.55]);
   [[-.8,.6],[1.2,.6],[.2,2.1]].forEach(([x,z],i)=>sc.add(at(rb(.6,.2,.6,[T.quilt,T.quilt2,T.acc][i],.1),x,.12,z)));
   const fl=grp(at(cyl(.18,.2,.05,T.trim),0,.03,0),at(cyl(.025,.025,1.55,T.trim,8),0,.8,0),at(cyl(.18,.28,.32,T.quilt2,16),0,1.65,0));fl.position.set(-2.9,0,2.9);sc.add(fl);
+  {const nS=Object.keys(skInit().done).length+Object.keys(soInit().done).length;const sign=new THREE.Mesh(new THREE.PlaneGeometry(1.5,.32),new THREE.MeshBasicMaterial({map:vrSign(`🏅 내 도장 ${nS}개`,"#2F7A4F"),transparent:true}));sign.position.set(2.25,3.25,-3.47);sc.add(sign);
+   for(let i=0;i<18;i++){const x=1.2+(i%6)*.4,y=3.0-Math.floor(i/6)*.36,on=i<nS;const f=grp(rb(.3,.3,.04,on?T.trim:"#E8E1EE",.02),at(rb(.22,.22,.02,on?["#FF8A65","#7FC8FF","#6EDC9A","#B78CFF","#FFD54A","#FF7AB0"][i%6]:"#F6F2F9",.01),0,0,.02));if(on)f.add(at(sph(.04,"#FFFFFF"),0,0,.04));f.position.set(x,y,-3.47);sc.add(f)}}
+  act.push(["stamps","🏅 도장 벽 보기",2.2,-2.0,b=>{const n=Object.keys(skInit().done).length+Object.keys(soInit().done).length;b.say(n?`도장 ${n}개! 과학·사회 단원을 통과할 때마다 액자가 하나씩 채워져 ✨`:"과학·사회 단원을 통과하면 여기 액자가 하나씩 채워져!",3800)}]);
   act.push(["learn","✏️ 공부하러 가기",1.9,-1.8,b=>{b.say("좋아, 오늘 퀘스트 시작! ✏️",1800);setTimeout(home,1300)}],["globe","🌍 지구본 돌리기",2.3,-2.2,b=>{b.spin=3;b.say("빙글빙글~ 지구는 하루에 한 바퀴 스스로 돌아요(자전) 🌍",3800)}],["tel","🔭 망원경 보기",-2.0,.4,b=>b.say("밤하늘을 보면 달의 울퉁불퉁한 구덩이(크레이터)도 보여! 🔭",3800)],["read","📖 책 읽기",.2,1.9,b=>b.say("오늘은 어떤 책을 읽을까? 📖",3000)],["board","🧑‍🏫 칠판 보기",.5,-2.4,b=>b.say("½은 0.5, 그리고 50%! 모두 같은 크기야 ✨",3600)]);
   return{box,act}}
 function vrRoomPlay(sc,T,win){win(.4,-3.58,0);const box=[],act=[];
@@ -1815,7 +1821,7 @@ function buildRoom(){const V=vroomInit(),T=VROOM_T[V.t]||VROOM_T.royal,sc=new TH
   [["lilies",.9,.7,-L+.04,2.25,-2.3,Math.PI/2],["sunflowers",.5,.62,-.85,2.25,-L+.04,0],["seurat",.62,.5,2.2,2.65,-L+.04,0]].forEach(([k,w,h,x,y,z,r])=>{const f=artFrame(k,w,h);f.position.set(x,y,z);f.rotation.y=r;sc.add(f)});
   if(V.t==="night"){const ea=grp(at(cyl(.03,.03,1.7,"#B5814A",6).rotateX(.18),0,.82,-.15),at(cyl(.03,.03,1.7,"#B5814A",6).rotateZ(.25),-.25,.8,.08),at(cyl(.03,.03,1.7,"#B5814A",6).rotateZ(-.25),.25,.8,.08),at(rb(.9,.06,.12,"#B5814A",.02),0,.75,.1));const ar=artFrame("starry",.8,.62);ar.position.set(0,1.18,.1);ar.rotation.x=-.12;ea.add(ar);ea.position.set(-1.2,0,2.7);ea.rotation.y=.5;sc.add(ea);
     for(let i=0;i<10;i++){const s=sph(.045,"#FFE07A");s.material=mat("#FFE07A",{emissive:"#FFD54A",emissiveIntensity:.9});s.position.set(-3+((i*37)%60)/10,2.6+((i*13)%8)/10,-3+((i*23)%60)/10);s.name="twk";sc.add(s)}}
-  }else EX=({dress:vrRoomDress,study:vrRoomStudy,play:vrRoomPlay}[R]||vrRoomDress)(sc,T,win);
+  souvShelf(sc,T);}else EX=({dress:vrRoomDress,study:vrRoomStudy,play:vrRoomPlay}[R]||vrRoomDress)(sc,T,win);
   const nx=VR_LIST[(VR_LIST.findIndex(x=>x[0]===R)+1)%VR_LIST.length];vrDoor(sc,T,nx[1]+" →");
   // 꼬마전구
   const LC=T.lights;for(let i=0;i<26;i++){const onB=i<13,x=onB?-3.4+i*.55:-L+.12,z=onB?-L+.12:-3.4+(i-13)*.55,y=3.18-Math.abs(Math.sin(i*1.3))*.12;const b=msh(new THREE.SphereGeometry(.05,10,8),mat(LC[i%3],{emissive:LC[i%3],emissiveIntensity:.9}));b.position.set(x,y,z);b.castShadow=false;b.name="fl";sc.add(b)}
@@ -1826,7 +1832,7 @@ function buildRoom(){const V=vroomInit(),T=VROOM_T[V.t]||VROOM_T.royal,sc=new TH
   return{sc,vic,baby:null,pets,clouds:[],mbx,R,nx,box:EX.box,act:EX.act}}
 function bindRoom(B,cam,cv,st){const ray=new THREE.Raycaster(),pl=new THREE.Plane(new THREE.Vector3(0,1,0),-.07);B.vic.name="vic";const W={path:[],cb:null};H3.walk=W;
   const bub=document.createElement("div");bub.className="vbub";st.appendChild(bub);let until=0;const say=(t,ms=2600)=>{bub.textContent=t;until=performance.now()+ms};W.say=say;say(B.R==="bed"?"여기는 내 방이야! 나를 눌러 봐 👑":(VR_LIST.find(x=>x[0]===B.R)[1]+"에 왔어! 나를 눌러 봐 ✨"),4200);
-  const BEDBOX=[[-3.3,-1.2,-3.5,-.85],[-.2,1.4,-3.5,-2.7],[1.7,3.4,-3.5,-2.5],[-3.5,-2.75,.35,1.85],[-3.5,-2.95,1.8,3.3],[2.45,3.3,.2,1.0]],BOX=B.R==="bed"?BEDBOX:B.box;
+  const BEDBOX=[[-3.3,-1.2,-3.5,-.85],[-.2,1.4,-3.5,-2.7],[1.7,3.4,-3.5,-2.5],[-3.5,-2.75,.35,1.85],[-3.5,-2.95,1.8,3.3],[2.45,3.3,.2,1.0],[-2.3,1.3,2.9,3.5]],BOX=B.R==="bed"?BEDBOX:B.box;
   const free=(x,z)=>{if(x>2.5&&Math.abs(z-2.35)<.5)return[x,z];x=Math.max(-3.1,Math.min(3.2,x));z=Math.max(-2.4,Math.min(3.2,z));for(const[a,b,c,d]of BOX)if(x>a&&x<b&&z>c&&z<d){const o=[[x-a,a-.15,z],[b-x,b+.15,z],[z-c,x,c-.15],[d-z,x,d+.15]].sort((p,q)=>p[0]-q[0])[0];return o.length&&o[0]===x-a||o[0]===b-x?[o[1],o[2]]:[o[1],o[2]]}return[x,z]};
   const go=(x,z,cb,msg)=>{const p=free(x,z);W.path=[new THREE.Vector3(p[0],.07,p[1])];W.cb=cb||null;say(msg||"총총총~ 🎶",1600);menu.hidden=true};
   const menu=document.createElement("div");menu.className="vmenu";menu.hidden=true;st.appendChild(menu);
@@ -1851,7 +1857,7 @@ function vroomCard(){const V=vroomInit();return `<div class="card"><div class="r
 function bindVroom(){app.querySelectorAll(".rmtabs [data-rm]").forEach(b=>b.onclick=()=>vrGo(b.dataset.rm,false));app.querySelectorAll("[data-vr]").forEach(b=>b.onclick=()=>{const V=vroomInit(),k=b.dataset.vr,t=VROOM_T[k];if(V.t===k)return;if(!V.own.includes(k)){if(!spend(t.p))return;V.own.push(k);toast(`${t.n} 방으로 새단장! ✨`)}V.t=k;save();houseView()})}
 
 let H3MODE="house";
-const TOWN={home:{n:"🏠 우리 집",p:[-5.2,5.2],door:[-4,4]},market:{n:"🛒 시장",p:[5.2,5.2],door:[4,4]},church:{n:"⛪ 교회",p:[0,-6.2],door:[0,-4.4]},pet:{n:"🐾 펫샵",p:[-6,-1.2],door:[-4.4,-1.2]},lib:{n:"📚 도서관",p:[6,-1.2],door:[4.4,-1.2]},park:{n:"🌳 공원",p:[0,1.2],door:[0,2.6]}};
+const TOWN={home:{n:"🏠 우리 집",p:[-5.2,5.2],door:[-4,4]},market:{n:"🛒 시장",p:[5.2,5.2],door:[4,4]},church:{n:"⛪ 교회",p:[0,-6.2],door:[0,-4.4]},pet:{n:"🐾 펫샵",p:[-6,-1.2],door:[-4.4,-1.2]},lib:{n:"📚 도서관",p:[6,-1.2],door:[4.4,-1.2]},park:{n:"🌳 공원·친구",p:[0,1.2],door:[0,2.6]}};
 function buildTown(){const sc=new THREE.Scene();sc.add(new THREE.HemisphereLight("#FFF8F0","#F5D9C8",.66));const sun=new THREE.DirectionalLight("#FFF3E0",.72);sun.position.set(6,11,7);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);const c2=sun.shadow.camera;c2.left=-11;c2.right=11;c2.top=11;c2.bottom=-11;sc.add(sun);
   sc.add(at(rb(19,.7,19,"#9FDB7F",.4),0,-.55,0));sc.add(at(rb(18.4,1.1,18.4,"#D4A274",.4),0,-1.35,0));
   sc.add(at(rb(2.2,.06,17,"#F3E6D6",.03),0,-.17,0));sc.add(at(rb(17,.06,2.2,"#F3E6D6",.03),0,-.17,1.2));sc.add(at(cyl(2.4,2.4,.07,"#EADBC8",32),0,-.16,1.2));
@@ -1887,7 +1893,7 @@ function churchVisit(){const sun=new Date().getDay()===0,b=S.baby;S.church=S.chu
   $("#pray").onclick=()=>{app.insertAdjacentHTML("beforeend",`<div class="card" id="pcard"><div class="kexample"><b>✏️ 예시</b><p>오늘 맛있는 아침을 먹고 동생과 웃을 수 있어서 감사합니다.</p></div><textarea id="pt" class="kwrite" rows="3" maxlength="200" placeholder="오늘 감사한 일을 써 봐"></textarea><button class="big" id="psave" type="button">감사 기도 남기기</button></div>`);$("#pray").disabled=true;
     $("#psave").onclick=()=>{const v=$("#pt").value.trim();if(v.length<5)return toast("한 문장만 써 볼까?");S.church.prayers.push({d:today(),t:v});const first=S.church.last!==today();S.church.last=today();if(first)addXP(5);save();toast("🙏 감사 노트에 담았어요"+(first?" +5 XP":""));churchVisit()}};
   if($("#bchurch"))$("#bchurch").onclick=()=>{babyNeedsToday(b);if(b.did.includes("church"))return toast("오늘은 이미 함께 예배드렸어요");b.did.push("church");babyCredit();save();toast(`⛪ ${esc(b.name)}와 함께 예배드렸어요. 아기가 찬양 소리에 방긋 웃어요.`);churchVisit()}}
-function townAction(k){if(k==="home"){H3MODE="house";return houseView()}if(k==="market")return market();if(k==="pet")return petShop();if(k==="lib")return kwDict();if(k==="church")return churchVisit();if(k==="park")return H3&&H3.walk&&H3.walk.say("공원 바람이 시원해~ 🌳",3000)}
+function townAction(k){if(k==="home"){H3MODE="house";return houseView()}if(k==="market")return market();if(k==="pet")return petShop();if(k==="lib")return kwDict();if(k==="church")return churchVisit();if(k==="park")return frParkVisit()}
 function bindTown(B,cam,cv,st){const ray=new THREE.Raycaster(),pl=new THREE.Plane(new THREE.Vector3(0,1,0),-.07);B.vic.name="vic";const W={path:[],cb:null};H3.walk=W;
   const bub=document.createElement("div");bub.className="vbub";st.appendChild(bub);let until=0;const say=(t,ms=2600)=>{bub.textContent=t;until=performance.now()+ms};W.say=say;say("마을에 나왔어! 가고 싶은 곳을 눌러 봐 👆",4500);
   const labels={};Object.entries(TOWN).forEach(([k,v])=>{const d=document.createElement("button");d.type="button";d.className="tlabel";d.textContent=v.n;d.onclick=()=>go(k);st.appendChild(d);labels[k]=d});
@@ -1919,8 +1925,8 @@ function bind3D(){const st=$("#stage"),cv=$("#h3d");if(!st)return;if(H3){cancelA
       B.clouds.forEach((c,i)=>{c.position.x=-12+((t*.25+i*6)%24)});
       r.render(B.sc,cam);H3.raf=requestAnimationFrame(loop)};loop()}).catch(()=>{const ld=$("#s3load");if(ld)ld.textContent="3D 집을 불러오지 못했어요. 인터넷 연결을 확인해 줘요."})}
 
-function hTabs(cur){return `<div class="ptabs">${[["house","🏠 집"],["baby","👶 아기"],["pets","🐾 펫"],["decor","🛋️ 꾸미기"],["market","🛒 시장"]].map(([k,t])=>`<button type="button" class="${k===cur?"on":""}" data-pt="${k}">${t}</button>`).join("")}</div>`}
-function bindHTabs(){app.querySelectorAll("[data-pt]").forEach(b=>b.onclick=()=>({house:houseView,baby:babyView,pets:petHome,decor:decorView,market:market})[b.dataset.pt]())}
+function hTabs(cur){return `<div class="ptabs">${[["house","🏠 집"],["baby","👶 아기"],["pets","🐾 펫"],["decor","🛋️ 꾸미기"],["market","🛒 시장"],["friend","🤝 친구"]].map(([k,t])=>`<button type="button" class="${k===cur?"on":""}" data-pt="${k}">${t}</button>`).join("")}</div>`}
+function bindHTabs(){app.querySelectorAll("[data-pt]").forEach(b=>b.onclick=()=>({house:houseView,baby:babyView,pets:petHome,decor:decorView,market:market,friend:friendView})[b.dataset.pt]())}
 function houseView(){hInit();const TM=H3MODE==="town";S.pets.forEach(petDecay);save();const h=careHearts(),b=S.baby;
   const RM=H3MODE==="room";app.innerHTML=hdr(TM?"🗺️ 빅토리아 마을":RM?"👑 빅토리아 방 · "+VR_LIST.find(x=>x[0]===(vroomInit().r||"bed"))[1].slice(3):"🏠 빅토리아 하우스")+hTabs("house")+`<div class="btns3" style="margin-bottom:8px"><button class="big ${H3MODE==="house"?"":"alt"}" id="tohome" type="button">🏠 집</button><button class="big ${RM?"":"alt"}" id="toroom" type="button">👑 내 방</button><button class="big ${TM?"":"alt"}" id="totown" type="button">🗺️ 마을</button></div>`+house3D()+(RM?vrTabs()+vroomCard():"")+
   `<div class="card"><div class="row"><h3>💖 돌봄 하트 ${h}개</h3><span class="pill">💎 ${S.gems||0}</span></div><p class="muted">퀘스트 1개 = 하트 1개. 아기와 펫이 하트를 함께 써요.</p>
@@ -2678,7 +2684,7 @@ function wrGot(){S.wrg=S.wrg&&S.wrg.d===today()?S.wrg:{d:today(),n:0};return S.w
 function wrongReview(){const pool=shuffle(wrongPool()).slice(0,5);if(!pool.length){popup(`<div class="bigem">🌟</div><h2>틀린 문제가 하나도 없어!</h2><p>퀘스트를 풀다가 틀린 문제가 생기면 여기서 다시 풀 수 있어요.</p>`);return}
   const ov=document.createElement("div");ov.className="pop-ov";ov.innerHTML=`<div class="pop-card wrrule"><div class="bigem">📝</div><h2>오답 복습 규칙</h2>
    <ol class="rules"><li><b>잘 읽-고-</b> 문제를 끝까지 소리 내어 읽어요.</li><li><b>신중하게-</b> 보기 ${pool[0].q[2].length+1}개를 하나씩 모두 비교해요.</li><li><b>확실할 때만</b> ‘이걸로 할게!’를 눌러요. 생각하는 시간이 조금 더 길어요.</li></ol>
-   <div class="wrbox"><p>💎 한 문제 맞힐 때마다 <b>+1</b> (하루 최대 ${WR_GEM_DAY}개)</p><p>✨ 오늘 ${pool.length}문제를 <b>한 번도 안 틀리고</b> 모두 맞히면 받은 보석 <b>2배!</b></p><p class="muted">❌ 처음 고른 답이 하나라도 틀리면 2배는 사라져요.</p></div>
+   <div class="wrbox"><p>💎 한 문제 맞힐 때마다 <b>+1</b> (하루 최대 ${WR_GEM_DAY}개)</p><p>✨ 오늘 ${pool.length}문제를 <b>한 번도 안 틀리고</b> 모두 맞히면 받은 보석 <b>2배!</b></p><p class="muted">처음 고른 답이 하나라도 틀리면 2배는 없지만, 맞힌 보석은 그대로 받아요. 천천히 해도 괜찮아!</p></div>
    <button class="big" type="button" id="wrstart">규칙 알았어! 천천히 시작</button></div>`;document.body.appendChild(ov);
   ov.querySelector("#wrstart").onclick=()=>{ov.remove();wrongRun(pool)}}
 function wrongRun(pool){let earned=0,slip=false;
@@ -3220,28 +3226,29 @@ function soc(){const s=soInit(),n=soCount(),due=soDue().length,cur=SOU.filter(U=
   bindBack();if($("#sonext"))$("#sonext").onclick=()=>soUnit(next[0]);$("#sor").onclick=soReview;$("#sod").onclick=soDict;app.querySelectorAll("[data-u]").forEach(b=>b.onclick=()=>soUnit(b.dataset.u))}
 
 /* 🗓️ 오늘의 코스 (하루 5칸) */
-const CNAME={ma:["🔢","수학"],ko:["📘","국어"],hist:["📜","한국사"],so:["🌏","사회"],sci:["🔬","과학"],hz:["漢","한자"],en:["🔤","영어"],rev:["📝","복습"],mem:["🧠","기억 탐험"]};
+const CNAME={ma:["🔢","수학"],ko:["📘","국어"],hist:["📜","한국사"],so:["🌏","사회"],sci:["🔬","과학"],hz:["漢","한자"],en:["🔤","영어"],rev:["📝","복습"],mem:["🧠","기억 탐험"],fr:["🤝","마음 연습"]};
 function dayIdx(){const[y,m,d]=today().split("-").map(Number);return Math.floor(Date.UTC(y,m-1,d)/864e5)}
-function courseToday(){const i=dayIdx();return[{k:["ma","ko","hist"][i%3],tag:"학교 공부"},{k:["so","sci"][i%2],tag:["학교 진도","탐구"][i%2]},{k:["hz","en"][i%2],tag:"언어"},{k:"rev",tag:"복습"},{k:"mem",tag:"두뇌"}]}
+function courseToday(){const i=dayIdx();return[{k:["ma","ko","hist"][i%3],tag:"학교 공부"},{k:["so","sci"][i%2],tag:["학교 진도","탐구"][i%2]},{k:["hz","en"][i%2],tag:"언어"},{k:"rev",tag:"복습"},{k:["mem","fr"][i%2],tag:["두뇌","마음"][i%2]}]}
 function slotDone(k){const td=today();if(k==="rev")return !!(S.rev&&S.rev.d===td);return !!(S[k]&&S[k].last===td)}
-function revDone(){S.rev={d:today()};save();checkGem()}
+function revDone(){const was=S.rev&&S.rev.d===today();S.rev={d:today()};save();checkGem();if(!was)courseToast()}
 function slotSub(k){if(k==="so"){soInit();const n=SOU.find(U=>!S.so.done[U[0]]);return n?`${n[1]}${n[2]==="6-2"?" · 학교 진도":""}`:"복습"}
   if(k==="sci"){skInit();const n=SKU.find(U=>!S.sk.done[U[0]]);return n?`개념어 · ${n[1]}`:"태양계 탐험"}
   if(k==="rev"){const w=wrongPool().length;const c=soDue().length+skDue().length+kwDue().length;return w?`오답 ${w}개 (안 틀리면 2배!)`:c?`개념어 복습 ${c}개`:"복습할 게 없으면 눌러서 바로 통과"}
-  if(k==="ma")return "연산·도형 도장깨기";if(k==="ko")return "글냥이와 탐험";if(k==="hist")return "선애의 이야기";if(k==="hz")return "8급 합격 작전";if(k==="en")return "파닉스 · 장면 영어";if(k==="mem")return "작업 기억 게임";return ""}
-function slotGo(k){if(k==="rev")return revSlot();if(k==="so")return soc();({hist,hz,en,mem,ko,ma,sci})[k]()}
+  if(k==="ma")return "연산·도형 도장깨기";if(k==="ko")return "글냥이와 탐험";if(k==="hist")return "선애의 이야기";if(k==="hz")return "8급 합격 작전";if(k==="en")return "파닉스 · 장면 영어";if(k==="mem")return "작업 기억 게임";if(k==="fr"){const n=frNext();return `${FRCAT[n[1]]} · ${frWho(n[2])[0]}`}return ""}
+function slotGo(k){if(k==="rev")return revSlot();if(k==="so")return soc();if(k==="fr")return frRun(frNext()[0]);({hist,hz,en,mem,ko,ma,sci})[k]()}
 function revSlot(){if(wrongPool().length)return wrongReview();if(soDue().length)return soReview();if(skDue().length)return skReview();if(kwDue().length)return kwReview(()=>{revDone();home()});
   const seenSo=SOALL.some(x=>soSeen(x.t)&&!soMast(x.t)),seenSk=SKALL.some(x=>skSeen(x.t)&&!skMast(x.t));if(seenSo)return soReview();if(seenSk)return skReview();
   revDone();popup(`<div class="bigem">🌟</div><h2>복습할 게 하나도 없어!</h2><p>틀린 문제도, 다시 볼 개념어도 없어요. 오늘 복습 칸은 통과 ✓</p>`)}
 function courseHTML(){const c=courseToday(),n=c.filter(x=>slotDone(x.k)).length,open=isOpen(7);
   return `<div class="card course"><div class="row"><h3>🗓️ 오늘의 코스</h3><span class="pill">${n} / 5</span></div><div class="bar"><i style="width:${n*20}%;background:#2FB673"></i></div>
    <p class="muted">${n===5?"🎉 오늘 코스 완주! 보석 상자 💎+10을 받았어요.":open?"5칸을 모두 끝내면 보석 상자 💎+10!":"⏰ 아침 7시에 열려요."}</p>
-   <div class="clist">${c.map((x,i)=>{const d=slotDone(x.k),[ic,nm]=CNAME[x.k];return `<button type="button" class="crow ${d?"done":""}" data-c="${x.k}" ${!open&&!S.test?"disabled":""}><span class="cn">${d?"✓":i+1}</span><span class="cic">${ic}</span><span class="ctx"><b>${nm}</b><small>${x.tag} · ${slotSub(x.k)}</small></span><span class="cgo">${d?"완료":"시작 ▶"}</span></button>`}).join("")}</div></div>`}
+   ${goalHTML()}<div class="clist">${c.map((x,i)=>{const d=slotDone(x.k),[ic,nm]=CNAME[x.k];return `<button type="button" class="crow ${d?"done":""}" data-c="${x.k}" ${!open&&!S.test?"disabled":""}><span class="cn">${d?"✓":i+1}</span><span class="cic">${ic}</span><span class="ctx"><b>${nm}</b><small>${x.tag} · ${slotSub(x.k)}</small></span><span class="cgo">${d?"완료":"시작 ▶"}</span></button>`}).join("")}</div></div>`}
 /* 🗣️ 하브루타: 설명하기 + 질문 만들기 */
 function habruta(subj,u,sc){const isSo=subj==="so",U=isSo?SOU.find(x=>x[0]===u):SKU.find(x=>x[0]===u),ws=(isSo?U[5]:U[4]).map(w=>w[0]),pick=shuffle(ws.slice()).slice(0,3),st=isSo?soInit():skInit();
   app.innerHTML=hdr("🗣️ 내 말로 설명하기")+`<div class="card"><p class="pill">${U[3]} ${U[1]} · 퀴즈 통과! 마지막 단계</p>
    <h3>1. 동생에게 설명하듯 써 봐</h3><p class="muted">아래 개념어 중 하나를 골라, 처음 듣는 동생도 알아듣게 <b>두 문장</b>으로 설명해요.</p>
    <div class="tapchips">${pick.map(t=>`<button type="button" class="tc hpick" data-t="${t}">${t}</button>`).join("")}</div>
+   <button type="button" class="tc" id="hframe">✍️ 문장 틀로 쓰기</button>
    <textarea id="hx" class="pinput" rows="4" placeholder="예) 증발은 물이 수증기가 되어 날아가는 거야. 그래서 젖은 빨래가 마르는 거야."></textarea>
    <h3>2. 궁금한 질문 하나 만들기</h3><p class="muted">이 단원을 배우고 더 알고 싶은 것을 질문으로 써요. 끝에 물음표(?)!</p>
    <div class="tapchips">${["왜 ~일까?","만약 ~라면 어떻게 될까?","~와 ~는 무엇이 다를까?","우리 생활에서 ~는 어디에 쓰일까?"].map(t=>`<button type="button" class="tc hq" data-q="${t}">${t}</button>`).join("")}</div>
@@ -3249,16 +3256,137 @@ function habruta(subj,u,sc){const isSo=subj==="so",U=isSo?SOU.find(x=>x[0]===u):
    <p class="muted">🎤 키보드의 마이크 버튼을 누르면 말로 해도 글자로 바뀌어요.</p><p class="muted" id="hmsg" style="color:var(--bad)"></p>
    <div class="btns2"><button class="big" id="hsave" type="button">엄마에게 보내고 도장 받기</button><button class="big alt" id="hskip" type="button">다음에 할래</button></div></div>`;bindBack();
   let term=pick[0];app.querySelectorAll(".hpick").forEach(b=>b.onclick=()=>{term=b.dataset.t;app.querySelectorAll(".hpick").forEach(x=>x.classList.toggle("on",x===b));const t=$("#hx");if(!t.value.trim())t.value=`${term}은(는) `;t.focus()});
-  app.querySelectorAll(".hq").forEach(b=>b.onclick=()=>{const t=$("#hq");t.value=b.dataset.q;t.focus()});
+  app.querySelectorAll(".hq").forEach(b=>b.onclick=()=>{const t=$("#hq");t.value=b.dataset.q;t.focus()});$("#hframe").onclick=()=>{const t=$("#hx");t.value=`${term}은(는) ____이에요. 예를 들면 ____.`;t.focus();const i=t.value.indexOf("____");t.setSelectionRange(i,i+4)};
   $("#hskip").onclick=()=>{toast("설명과 질문을 써야 도장을 받아요. 다음에 꼭!");isSo?soc():skHub()};
   $("#hsave").onclick=()=>{const a=$("#hx").value.trim(),q=$("#hq").value.trim();
-    if(a.replace(/\s/g,"").length<15)return $("#hmsg").textContent="설명을 조금 더 써 볼까? 두 문장이면 충분해!";
+    if(a.includes("____"))return $("#hmsg").textContent="____ 자리를 내 말로 채워 줘!";if(a.replace(/\s/g,"").length<15)return $("#hmsg").textContent="설명을 조금 더 써 볼까? 두 문장이면 충분해!";
     if(q.replace(/\s/g,"").length<6||!/[?？]|까\s*$/.test(q))return $("#hmsg").textContent="질문은 물음표(?)로 끝나게 써 줘!";
     if(q.includes("~"))return $("#hmsg").textContent="질문 속 ~ 자리를 내 말로 바꿔 써 줘!";
     st.writes=st.writes||[];st.writes.push({d:today(),t:U[1],q:"설명: "+term,a,qq:q});if(st.writes.length>60)st.writes.shift();
     const first=!st.done[u];st.done[u]=today();st.best[u]=Math.max(st.best[u]||0,sc||0);if(first){S.gems=(S.gems||0)+1;setTimeout(()=>{gemShower(3);toast(`🏅 ${U[1]} 도장 획득! 💎+1`)},300)}
     const key=isSo?"so":"sci";if(!doneToday(key)){markDone(key);addXP(20)}save();
     popup(`<div class="bigem">🏅</div><h2>${U[1]} 도장 쾅!</h2><p>“${esc(a).slice(0,80)}”</p><p class="muted">❓ ${esc(q)}</p><p class="muted">주간 진도표로 엄마에게 전해질 거예요.</p>`);isSo?soc():skHub()}}
+
+/* 🎁 코스 완주 선물(방 소품 컬렉션) · 🎯 꾸미기 목표 */
+const SOUV=[["bear","곰돌이 인형","🧸","#D9A57A","plush"],["bunny","토끼 인형","🐰","#FFFFFF","plush"],["catp","고양이 인형","🐱","#F2B36D","plush"],["vase","장미 꽃병","🌹","#FF4F8B","vase"],["tulipv","튤립 꽃병","🌷","#FFD54A","vase"],["plant","미니 화분","🪴","#6CC75A","plant"],["cactus","꼬마 선인장","🌵","#7ED36A","plant"],["candle","향초","🕯️","#FFF3C2","candle"],["lamp","별 무드등","⭐","#FFE07A","lamp"],["moon","달 무드등","🌙","#FFF6C9","lamp"],["snow","스노볼","🔮","#BFE6FF","globe"],["frame","가족 액자","🖼️","#E9BE5A","frame"],["books","동화책 세 권","📚","#7FC8FF","books"],["cup","찻잔 세트","☕","#FFFFFF","cup"],["cake","딸기 케이크","🍰","#FFD1E2","cake"],["cupcake","컵케이크","🧁","#B78CFF","cake"],["balloon","하트 풍선","🎈","#FF4F8B","balloon"],["crystal","크리스털","💎","#9FE3FF","crystal"],["shell","소라 껍데기","🐚","#FFE3C2","shell"],["trophy","작은 트로피","🏆","#F3C24A","trophy"],["piggy","돼지 저금통","🐷","#FFB3D1","piggy"],["hglass","모래시계","⏳","#E9C46A","hglass"],["jbox","보석함","💍","#B78CFF","box"],["perfume","향수병","🧴","#FF9EC4","bottle"],["duck","고무 오리","🦆","#FFD54A","duck"],["train","장난감 기차","🚂","#FF6A3D","train"],["robot","장난감 로봇","🤖","#9AA3B5","robot"],["clock","탁상시계","⏰","#7FC8FF","clock"],["heartc","하트 쿠션","💗","#FF7AB0","heart"],["tiara","티아라","👑","#F3C24A","tiara"]];
+function souvInit(){S.souv=S.souv||[];return S.souv}
+function giftSouv(){const own=souvInit(),left=SOUV.filter(x=>!own.includes(x[0]));if(!left.length||S.souvDay===today())return;const g=left[Math.floor(Math.random()*left.length)];own.push(g[0]);S.souvDay=today();save();
+  setTimeout(()=>popup(`<div class="bigem">🎁</div><h2>코스 완주 선물!</h2><div class="souvbig">${g[2]}</div><p><b>${g[1]}</b>을(를) 받았어요.</p><p class="muted">👑 내 방(침실) 선반에 놓았어요. 컬렉션 ${own.length} / ${SOUV.length}</p>`),900)}
+function souvModel(g){const c=g[3],t=g[4],G=new THREE.Group();const em=(col)=>mat(col,{emissive:col,emissiveIntensity:.7});
+  if(t==="plush"){G.add(at(sph(.11,c),0,.11,0),at(sph(.08,c),0,.26,0),at(sph(.035,c),-.06,.33,0),at(sph(.035,c),.06,.33,0),at(sph(.015,"#2B2233"),-.03,.27,.07),at(sph(.015,"#2B2233"),.03,.27,.07));if(g[0]==="bunny"){G.add(at(cyl(.02,.02,.12,c,6),-.03,.38,0),at(cyl(.02,.02,.12,c,6),.03,.38,0))}}
+  else if(t==="vase"){G.add(at(cyl(.06,.08,.18,"#9FD8F5",14),0,.09,0));[[0,.26,0],[-.05,.24,.02],[.05,.24,-.02]].forEach(p=>G.add(at(sph(.04,c),...p)));G.add(at(cyl(.008,.008,.1,"#6CC75A",4),0,.2,0))}
+  else if(t==="plant"){G.add(at(cyl(.07,.055,.1,"#E9A27A",12),0,.05,0),at(sph(.08,c,1,g[0]==="cactus"?1.6:1,1),0,.17,0))}
+  else if(t==="candle"){G.add(at(cyl(.05,.05,.12,c,14),0,.06,0));const f=msh(new THREE.ConeGeometry(.02,.05,8),em("#FFB830"));f.position.y=.15;G.add(f)}
+  else if(t==="lamp"){G.add(at(cyl(.05,.06,.04,"#FFFFFF",12),0,.02,0));const b=msh(new THREE.SphereGeometry(.08,14,10),em(c));b.position.y=.13;G.add(b)}
+  else if(t==="globe"){G.add(at(cyl(.06,.07,.05,"#C98B52",12),0,.025,0),at(new THREE.Mesh(new THREE.SphereGeometry(.08,16,12),mat(c,{transparent:true,opacity:.45})),0,.13,0),at(sph(.03,"#FFFFFF"),0,.1,0))}
+  else if(t==="frame"){G.add(at(rb(.18,.22,.03,c,.01),0,.12,0),at(rb(.13,.16,.01,"#BFE6FF",.005),0,.12,.018)).rotateX(-.15)}
+  else if(t==="books"){["#FF8A65",c,"#6EDC9A"].forEach((cc,i)=>G.add(at(rb(.2,.04,.14,cc,.01),0,.02+i*.045,0)))}
+  else if(t==="cup"){G.add(at(cyl(.08,.08,.01,c,16),0,.005,0),at(cyl(.045,.035,.06,c,14),0,.04,0),at(cyl(.04,.04,.005,"#B5814A",12),0,.07,0))}
+  else if(t==="cake"){G.add(at(cyl(.08,.08,.06,c,16),0,.03,0),at(cyl(.08,.08,.02,"#FFFFFF",16),0,.07,0),at(sph(.025,"#FF4F8B"),0,.1,0))}
+  else if(t==="balloon"){G.add(at(sph(.08,c,1,1.1,.8),0,.32,0),at(cyl(.004,.004,.26,"#FFFFFF",4),0,.12,0),at(cyl(.03,.03,.02,"#C98B52",8),0,.01,0))}
+  else if(t==="crystal"){const m=msh(new THREE.OctahedronGeometry(.08),mat(c,{transparent:true,opacity:.8,metalness:.3,roughness:.1}));m.position.y=.09;m.scale.y=1.4;G.add(m)}
+  else if(t==="shell"){const m=cone(.06,.16,c,10);m.rotation.z=Math.PI/2.4;m.position.y=.05;G.add(m)}
+  else if(t==="trophy"){G.add(at(rb(.1,.04,.1,"#7A4A2E",.01),0,.02,0),at(cyl(.015,.015,.06,c,8),0,.07,0),at(cyl(.06,.025,.08,c,14),0,.14,0))}
+  else if(t==="piggy"){G.add(at(sph(.09,c,1.2,1,1),0,.09,0),at(cyl(.03,.03,.02,"#FF8FB8",10).rotateX(Math.PI/2),.0,.09,.1),at(sph(.02,c),-.05,.17,.03),at(sph(.02,c),.05,.17,.03))}
+  else if(t==="hglass"){G.add(at(cone(.05,.08,c,10),0,.12,0).rotateX(Math.PI),at(cone(.05,.08,c,10),0,.05,0),at(cyl(.06,.06,.01,"#7A4A2E",10),0,0,0),at(cyl(.06,.06,.01,"#7A4A2E",10),0,.17,0))}
+  else if(t==="box"){G.add(at(rb(.16,.08,.11,c,.02),0,.04,0),at(sph(.02,"#FF4F8B"),0,.09,0))}
+  else if(t==="bottle"){G.add(at(rb(.08,.12,.05,c,.02),0,.06,0),at(sph(.025,"#F3C24A"),0,.14,0))}
+  else if(t==="duck"){G.add(at(sph(.08,c,1.2,.9,1),0,.07,0),at(sph(.05,c),.05,.15,0),at(cone(.02,.04,"#FF8A65",6).rotateZ(-Math.PI/2),.11,.15,0))}
+  else if(t==="train"){G.add(at(rb(.2,.08,.09,c,.02),0,.07,0),at(rb(.07,.07,.09,c,.02),-.06,.14,0));[-.06,.06].forEach(x=>G.add(at(cyl(.025,.025,.1,"#2B2233",10).rotateX(Math.PI/2),x,.03,0)))}
+  else if(t==="robot"){G.add(at(rb(.1,.12,.07,c,.02),0,.08,0),at(rb(.08,.07,.07,c,.02),0,.18,0),at(sph(.012,"#7FD3FF"),-.02,.19,.04),at(sph(.012,"#7FD3FF"),.02,.19,.04))}
+  else if(t==="clock"){G.add(at(cyl(.08,.08,.03,c,18).rotateX(Math.PI/2),0,.1,0),at(cyl(.065,.065,.01,"#FFFFFF",18).rotateX(Math.PI/2),0,.1,.016))}
+  else if(t==="heart"){G.add(at(sph(.07,c,1,.9,.6),-.04,.08,0),at(sph(.07,c,1,.9,.6),.04,.08,0),at(cone(.08,.1,c,12).rotateZ(Math.PI),0,.02,0))}
+  else if(t==="tiara"){const cr=crownModel(c);cr.scale.setScalar(.5);cr.position.y=.03;G.add(cr)}
+  return G}
+function souvShelf(sc,T){const own=souvInit();const sh=new THREE.Group();sh.add(at(rb(3.5,.46,.46,T.wood,.05),0,.23,0),at(rb(3.6,.06,.52,T.trim,.02),0,.48,0));[-1.15,0,1.15].forEach(x=>sh.add(at(rb(.9,.26,.02,T.quilt2,.02),x,.24,.235)));
+  own.slice(-10).forEach((id,i)=>{const g=SOUV.find(x=>x[0]===id);if(!g)return;const m=souvModel(g);m.position.set(-1.55+i*.345,.51,0);m.scale.setScalar(1.15);sh.add(m)});
+  sh.position.set(-.5,0,3.18);sc.add(sh)}
+/* 🎯 꾸미기 목표 */
+function goalItems(){hInit();vroomInit();wearInit();const H=S.house,V=S.vroom,W=S.wear,L=[];
+  Object.entries(VROOM_T).forEach(([k,t])=>{if(!V.own.includes(k))L.push({id:"v:"+k,g:"👑 내 방 스타일",n:t.n.slice(2).trim(),ic:t.n.slice(0,2),p:t.p})});
+  WALLS.forEach(w=>{if(!H.own.walls.includes(w[0]))L.push({id:"w:"+w[0],g:"🎨 벽지·바닥",n:w[1]+" 벽지",ic:"🎨",p:w[3]})});FLOORS.forEach(f=>{if(!H.own.floors.includes(f[0]))L.push({id:"f:"+f[0],g:"🎨 벽지·바닥",n:f[1]+" 바닥",ic:"🧱",p:f[3]})});
+  DECOR.forEach(d=>{if(!H.decor.includes(d[0]))L.push({id:"d:"+d[0],g:"🛋️ 가구",n:d[2],ic:d[3]||"🛋️",p:d[4]})});
+  WEAR.forEach(w=>{if(!W.own.includes(w[0]))L.push({id:"r:"+w[0],g:"👗 아기 옷·머리띠",n:w[1],ic:w[2],p:w[3]})});return L}
+function goalOwned(id){const[k,v]=id.split(":");hInit();vroomInit();wearInit();if(k==="v")return S.vroom.own.includes(v);if(k==="w")return S.house.own.walls.includes(v);if(k==="f")return S.house.own.floors.includes(v);if(k==="d")return S.house.decor.includes(v);if(k==="r")return S.wear.own.includes(v);return false}
+function goalGo(id){const k=id[0];if(k==="v"){H3MODE="room";vroomInit().r="bed";houseView()}else if(k==="r")babyView();else decorView()}
+function goalPick(){const L=goalItems(),groups=[...new Set(L.map(x=>x.g))];
+  app.innerHTML=hdr("🎯 꾸미기 목표 정하기")+`<div class="card"><p class="muted">갖고 싶은 것 하나를 고르면, 홈 화면에서 얼마나 남았는지 매일 보여 줘요. 오늘의 코스를 끝낼수록 가까워져요!</p></div>`+
+   groups.map(g=>`<div class="card"><h3>${g}</h3><ul class="mkt">${L.filter(x=>x.g===g).map(x=>`<li><span>${x.ic}</span><div><b>${x.n}</b><small>💎 ${x.p}</small></div><button class="buy" type="button" data-goal="${x.id}">🎯 목표</button></li>`).join("")}</ul></div>`).join("")+(L.length?"":`<div class="card"><p>모두 다 모았어요! 🌟</p></div>`);
+  bindBack();app.querySelectorAll("[data-goal]").forEach(b=>b.onclick=()=>{const x=L.find(y=>y.id===b.dataset.goal);S.goal={id:x.id,n:x.n,ic:x.ic,p:x.p};save();toast(`🎯 목표: ${x.n}! 오늘의 코스로 모아 보자`);home()})}
+function goalHTML(){const g=S.goal,own=souvInit().length;let h="";
+  if(!g)h=`<button type="button" class="goalb" id="goalset">🎯 꾸미기 목표 정하기 <small>갖고 싶은 걸 고르면 남은 보석을 보여 줘요</small></button>`;
+  else if(goalOwned(g.id))h=`<div class="goal done"><b>🎉 목표 달성! ${g.ic} ${esc(g.n)}</b><button type="button" class="tc" id="goalset">새 목표 정하기</button></div>`;
+  else{const have=S.gems||0,need=Math.max(0,g.p-have),pct=Math.min(100,have/g.p*100),days=Math.ceil(need/15);
+    h=`<div class="goal"><div class="row"><b>🎯 ${g.ic} ${esc(g.n)}</b><span class="pill">💎 ${Math.min(have,g.p)} / ${g.p}</span></div><div class="bar"><i style="width:${pct}%;background:#FF7AB0"></i></div>
+     <small>${need?`${need}개 남았어요 · 코스를 완주하면 약 ${days}일!`:"지금 살 수 있어요!"}</small>${need?`<button type="button" class="tc" id="goalset">바꾸기</button>`:`<button type="button" class="buy" id="goalgo">사러 가기 ▶</button>`}</div>`}
+  return `${h}<p class="muted souvline">🎁 코스를 완주한 날마다 내 방 선반에 소품이 하나씩 늘어나요 · 컬렉션 ${own} / ${SOUV.length}</p>`}
+function bindGoal(){if($("#goalset"))$("#goalset").onclick=goalPick;if($("#goalgo"))$("#goalgo").onclick=()=>goalGo(S.goal.id)}
+function courseToast(){const c=courseToday(),n=c.filter(x=>slotDone(x.k)).length;if(n<5)setTimeout(()=>toast(`✅ 오늘의 코스 ${n}/5 · 🎁 선물까지 ${5-n}칸!`),1600)}
+
+/* 🤝 마음 연습: 관계·상황 대처 [id, 분류, 누구, 장소, 그림, 상황, [[말, good|ok|bad, 상대 마음/풀이]], 따라 말할 문장, 듣고 싶은 말 질문(없으면 "")] */
+const FRN={sora:["소라","👧","#FFB3D1","같은 반 친구"],doyun:["도윤","👦","#9ED8FF","같은 반 친구"],teacher:["담임 선생님","👩‍🏫","#B78CFF","어른"],grandma:["이웃 할머니","👵","#E9C46A","어른"],shop:["가게 사장님","🧑‍🍳","#FF8A65","어른"],lib:["사서 선생님","📚","#6EDC9A","어른"],baby:["아기","👶","#FFE79A","동생"],stranger:["모르는 어른","🧍","#9AA3B5","낯선 사람"],me:["나","💜","#C9B6FF","내 마음"]};
+const FRCAT={hello:"👋 인사와 시작",play:"🤸 같이 놀기",comfort:"🤗 위로하기",praise:"🎉 칭찬·축하",sorry:"🙏 사과와 화해",help:"🙋 도움 요청",adult:"🙇 어른께 예의",little:"👶 동생 돌보기",safe:"🛡️ 낯선 상황·안전",mine:"💜 내 마음 말하기"};
+const FRS=[
+["h1","hello","sora","학교 교실","🏫","아침에 교실에 들어갔더니 소라가 먼저 와서 앉아 있어요.",[["“소라야, 안녕! 좋은 아침!” 하고 웃으며 말한다.","good","소라 마음: 😊 반갑게 인사해 주니 기분이 좋아요."],["그냥 내 자리에 앉는다.","ok","소라 마음: 😐 나를 못 봤나? 조금 서운할 수 있어요. 눈을 보고 인사하면 더 좋아요."],["“왜 이렇게 일찍 왔어?”라고 말한다.","bad","소라 마음: 😟 따지는 것처럼 들려서 당황할 수 있어요."]],"소라야, 안녕! 좋은 아침!",""],
+["h2","hello","doyun","공원","🌳","공원에서 처음 보는 아이가 혼자 공놀이를 하고 있어요. 같이 하고 싶어요.",[["“안녕, 나는 빅토리아야. 나도 같이 해도 돼?” 하고 묻는다.","good","친구 마음: 😊 이름을 알려 주고 물어봐 주니 편하게 대답할 수 있어요."],["말없이 공을 뺏어서 찬다.","bad","친구 마음: 😠 내 공을 뺏어 가서 화가 나요."],["멀리서 계속 쳐다보기만 한다.","ok","친구 마음: 🤔 왜 보지? 궁금하지만 먼저 말하기 어려워요. 용기 내어 물어보면 좋아요."]],"안녕, 나는 빅토리아야. 나도 같이 해도 돼?",""],
+["p1","play","sora","운동장","⚽","소라랑 놀고 싶은데 소라는 지금 그네를 타고 있어요. 그네는 하나만 비어 있지 않아요.",[["“다 타면 나도 타도 될까? 기다릴게!” 하고 말한다.","good","소라 마음: 😊 기다려 준다니 고마워요. 차례를 지키는 건 멋진 일이에요."],["“빨리 내려! 내 차례야!”라고 소리친다.","bad","소라 마음: 😣 갑자기 소리 질러서 놀라고 속상해요."],["그네 줄을 잡고 흔든다.","bad","소라 마음: 😨 위험하고 무서워요. 다칠 수 있어요."]],"다 타면 나도 타도 될까? 기다릴게!",""],
+["p2","play","doyun","교실","🎲","도윤이가 “보드게임 같이 할래?” 하고 물었어요. 그런데 나는 지금 책을 다 읽고 싶어요.",[["“고마워! 이 책 다 읽고 같이 할게. 10분만 기다려 줄래?”","good","도윤 마음: 😊 거절이 아니라 약속이라서 기다릴 수 있어요. 고마운 마음도 전해졌어요."],["“싫어.” 하고 고개를 돌린다.","bad","도윤 마음: 😞 나랑 놀기 싫은가? 상처받을 수 있어요."],["대답하지 않고 책만 본다.","ok","도윤 마음: 😕 내 말을 못 들었나? 짧게라도 대답해 주면 좋아요."]],"고마워! 이 책 다 읽고 같이 할게.",""],
+["p3","play","sora","놀이터","🧩","소라가 정한 놀이 규칙이 나는 조금 마음에 안 들어요.",[["“이렇게 바꾸면 어때? 둘 다 재밌게 할 수 있을 것 같아.” 하고 제안한다.","good","소라 마음: 🙂 내 생각도 존중받고, 새 생각도 들을 수 있어서 좋아요."],["“네 규칙 진짜 이상해!”라고 말한다.","bad","소라 마음: 😢 내 생각이 무시당한 것 같아 속상해요."],["화가 나서 놀이를 그만두고 가 버린다.","ok","소라 마음: 😟 왜 갔지? 말로 알려 주면 함께 바꿀 수 있어요."]],"이렇게 바꾸면 어때? 둘 다 재밌게 할 수 있을 것 같아.",""],
+["c1","comfort","sora","교실","😢","소라가 받아쓰기 시험을 망쳤다며 엎드려 울고 있어요.",[["옆에 앉아서 “많이 속상하지? 다음엔 같이 연습하자.” 하고 말한다.","good","소라 마음: 🥹 내 마음을 알아줘서 위로가 돼요."],["“나는 100점인데!” 하고 자랑한다.","bad","소라 마음: 😭 더 속상해져요. 슬플 때 자랑은 상처가 돼요."],["“울지 마, 별것 아니야.”라고 말한다.","ok","소라 마음: 😔 나한테는 큰일인데… 먼저 마음을 알아주는 말이 필요해요."]],"많이 속상하지? 다음엔 같이 연습하자.","내가 시험을 망쳐 속상할 때, 친구가 어떤 말을 해 주면 좋을까?"],
+["c2","comfort","doyun","운동장","🩹","도윤이가 달리다가 넘어져서 무릎에 피가 나요.",[["“괜찮아? 많이 아프지? 보건실에 같이 가자.”","good","도윤 마음: 🙏 걱정해 주고 도와줘서 든든해요."],["보고 깔깔 웃는다.","bad","도윤 마음: 😣 아프고 창피한데 웃어서 더 속상해요."],["못 본 척 지나간다.","ok","도윤 마음: 😞 아무도 안 도와줘서 서운해요. 직접 돕기 어려우면 선생님께 알려요."]],"괜찮아? 많이 아프지? 보건실에 같이 가자.","내가 다쳤을 때 듣고 싶은 말은?"],
+["c3","comfort","sora","집 앞","🐟","소라네 집 물고기가 죽어서 소라가 슬퍼해요.",[["“정말 슬프겠다. 많이 아꼈잖아.” 하고 말해 준다.","good","소라 마음: 🥲 내 슬픔을 알아줘서 고마워요."],["“새로 사면 되잖아.”라고 말한다.","bad","소라 마음: 😢 내가 아끼던 친구였는데… 마음이 아파요."],["“물고기 이야기 그만하고 놀자.”라고 말한다.","ok","소라 마음: 😔 아직 슬픈데 금방 놀기 어려워요. 먼저 마음을 들어 주세요."]],"정말 슬프겠다. 많이 아꼈잖아.","내가 아끼던 것을 잃어 슬플 때 듣고 싶은 말은?"],
+["c4","comfort","doyun","교실","😟","도윤이가 친구들이 자기만 빼고 놀았다며 시무룩해요.",[["“속상했겠다. 나랑 같이 놀자!”","good","도윤 마음: 😊 혼자가 아니라는 느낌이 들어 힘이 나요."],["“네가 뭘 잘못했겠지.”라고 말한다.","bad","도윤 마음: 😢 내 탓이라고 하니 더 외로워요."],["“그런 일도 있지 뭐.” 하고 넘긴다.","ok","도윤 마음: 😐 내 마음을 잘 몰라주는 것 같아요."]],"속상했겠다. 나랑 같이 놀자!","나만 빠진 것 같아 외로울 때 듣고 싶은 말은?"],
+["g1","praise","sora","강당","🎨","소라 그림이 학교 대회에서 상을 받았어요.",[["“우와, 축하해! 색깔이 정말 예뻤어.”","good","소라 마음: 🥰 구체적으로 칭찬해 줘서 더 기뻐요."],["“나도 그 정도는 그릴 수 있어.”","bad","소라 마음: 😕 축하받고 싶었는데 서운해요."],["“응.” 하고 아무 말 안 한다.","ok","소라 마음: 😐 기뻐해 주길 바랐어요. 한마디 축하가 큰 힘이 돼요."]],"우와, 축하해! 색깔이 정말 예뻤어.","내가 잘했을 때 듣고 싶은 칭찬은?"],
+["g2","praise","doyun","교실","🎂","오늘은 도윤이 생일이에요.",[["“도윤아, 생일 축하해! 좋은 하루 보내!”","good","도윤 마음: 😄 기억해 주고 축하해 줘서 행복해요."],["“생일이라고 뭐 다른가?”","bad","도윤 마음: 😞 특별한 날인데 서운해요."],["선물 줄 게 없어서 아무 말도 안 한다.","ok","도윤 마음: 🙂 선물이 없어도 괜찮아요. 축하 한마디가 선물이에요."]],"도윤아, 생일 축하해!",""],
+["s1","sorry","sora","복도","💥","복도에서 뛰다가 소라와 부딪혀 소라 필통이 떨어졌어요.",[["필통을 주워 주며 “미안해, 괜찮아? 내가 뛰어서 그랬어.”","good","소라 마음: 🙂 진심으로 사과해 줘서 괜찮아졌어요."],["“네가 거기 있어서 그렇잖아!”","bad","소라 마음: 😠 내 잘못이 아닌데 억울해요."],["그냥 계속 뛰어간다.","bad","소라 마음: 😣 미안하다는 말도 없어서 속상해요."]],"미안해, 괜찮아? 내가 뛰어서 그랬어.",""],
+["s2","sorry","doyun","교실","✏️","도윤이가 내 연필을 말없이 가져가서 썼어요. 도윤이가 “미안해”라고 사과해요.",[["“다음엔 먼저 물어봐 줘. 사과해 줘서 고마워.”","good","도윤 마음: 😊 사과를 받아 주고 바라는 점도 알려 줘서 다음엔 조심할 수 있어요."],["“절대 용서 안 해!”","bad","도윤 마음: 😢 사과했는데 받아 주지 않아 슬퍼요."],["“괜찮아.” 하지만 속으로 계속 화가 나 있다.","ok","도윤 마음: 🙂 괜찮은 줄 알아요. 바라는 점을 말로 알려 주면 마음도 편해져요."]],"다음엔 먼저 물어봐 줘. 사과해 줘서 고마워.","내가 실수했을 때, 친구가 어떤 말로 받아 주면 좋을까?"],
+["s3","sorry","sora","놀이터","😤","소라와 놀다가 서로 화가 나서 말다툼을 했어요. 다음 날이에요.",[["“어제 화내서 미안해. 다시 같이 놀래?”","good","소라 마음: 🥹 먼저 다가와 줘서 고맙고 다시 친해질 수 있어요."],["소라가 먼저 사과할 때까지 모른 척한다.","ok","소라 마음: 😔 나도 미안한데 말하기가 어려워요. 누가 먼저 말해도 멋진 일이에요."],["다른 친구들에게 소라 흉을 본다.","bad","소라 마음: 😭 뒤에서 흉보면 더 크게 상처받아요."]],"어제 화내서 미안해. 다시 같이 놀래?",""],
+["a1","help","teacher","교실","❓","수업 시간에 선생님 설명을 잘 못 알아들었어요.",[["손을 들고 “선생님, 다시 한 번 설명해 주실 수 있어요?” 하고 여쭌다.","good","선생님 마음: 😊 물어봐 주면 도와줄 수 있어서 좋아요. 모르는 걸 묻는 건 용기예요."],["모르는 채로 그냥 넘어간다.","ok","선생님 마음: 🤔 몰랐구나… 말해 주면 꼭 도와줄 수 있어요."],["옆 친구를 계속 쿡쿡 찌른다.","bad","친구 마음: 😣 수업 중에 방해받아 불편해요."]],"선생님, 다시 한 번 설명해 주실 수 있어요?",""],
+["a2","help","lib","도서관","📚","도서관에서 읽고 싶은 책을 아무리 찾아도 못 찾겠어요.",[["사서 선생님께 가서 작은 목소리로 “이 책을 찾고 있어요. 도와주실 수 있나요?”","good","사서 선생님 마음: 🙂 정확하게 말해 줘서 금방 찾아 줄 수 있어요."],["큰 소리로 “책이 어디 있어요!” 하고 외친다.","bad","다른 사람 마음: 😣 도서관은 조용히 해야 하는 곳이라 놀라요."],["못 찾아서 그냥 집에 간다.","ok","나: 😞 아쉬워요. 도움을 청하면 찾을 수 있어요."]],"이 책을 찾고 있어요. 도와주실 수 있나요?",""],
+["ad1","adult","grandma","아파트 엘리베이터","🛗","엘리베이터에서 이웃 할머니를 만났어요.",[["“안녕하세요!” 하고 고개 숙여 인사한다.","good","할머니 마음: 😊 인사 잘하는 아이구나, 기분이 좋아요."],["“안녕!” 하고 손을 흔든다.","ok","할머니 마음: 🙂 반갑지만, 어른께는 ‘안녕하세요’처럼 높임말로 인사해요."],["모른 척 휴대폰만 본다.","bad","할머니 마음: 😐 인사를 안 받아서 조금 서운해요."]],"안녕하세요!",""],
+["ad2","adult","shop","시장 가게","🛒","가게에서 딸기를 사려고 해요.",[["“사장님, 딸기 한 팩 주세요.” 계산하고 “감사합니다!”","good","사장님 마음: 😊 예의 바르게 말해 줘서 기분 좋게 팔 수 있어요."],["딸기를 가리키며 “이거.”라고만 한다.","ok","사장님 마음: 🙂 알아듣긴 했지만 ‘주세요’, ‘감사합니다’를 말하면 더 좋아요."],["돈을 던지듯 내려놓는다.","bad","사장님 마음: 😟 무시당한 느낌이 들어요."]],"사장님, 딸기 한 팩 주세요. 감사합니다!",""],
+["ad3","adult","grandma","집 앞","🎁","이웃 할머니가 귤을 한 봉지 주셨어요.",[["두 손으로 받으며 “감사합니다! 잘 먹을게요.”","good","할머니 마음: 🥰 고마워해 주니 나눈 보람이 있어요."],["한 손으로 받고 그냥 간다.","ok","할머니 마음: 🙂 받아 줘서 좋지만, 어른께는 두 손으로 받고 감사 인사를 해요."],["“귤 싫어요.”라고 말한다.","bad","할머니 마음: 😞 마음을 담아 준 건데 속상해요. 싫어도 ‘마음은 감사해요’라고 말할 수 있어요."]],"감사합니다! 잘 먹을게요.",""],
+["l1","little","baby","우리 집","🍼","아기가 배가 고파서 울고 있어요.",[["“배고팠구나, 조금만 기다려. 금방 줄게.” 하고 다정하게 말하며 우유를 준비한다.","good","아기 마음: 🥹 목소리를 들으니 안심돼요."],["“시끄러워! 울지 마!” 하고 소리친다.","bad","아기 마음: 😭 더 무섭고 불안해요. 아기는 울음으로 말해요."],["귀를 막고 방으로 들어간다.","ok","아기 마음: 😢 아무도 와 주지 않아요. 내가 못 하면 어른께 알려요."]],"배고팠구나, 조금만 기다려. 금방 줄게.",""],
+["l2","little","baby","거실","🧸","동생이 내가 아끼는 인형을 가지고 놀고 싶어 해요.",[["“이건 내가 아끼는 거라 조심히 같이 보자. 대신 이 인형은 너 가져도 돼.”","good","동생 마음: 😊 언니(누나)가 다정하게 알려 줘서 좋아요."],["확 뺏고 밀어 버린다.","bad","동생 마음: 😭 아프고 슬퍼요. 동생은 아직 어려서 말로 알려 줘야 해요."],["“안 돼!” 하고 숨긴다.","ok","동생 마음: 😢 왜 안 되는지 몰라요. 이유와 다른 방법을 알려 주면 좋아요."]],"이건 내가 아끼는 거라 조심히 같이 보자.",""],
+["l3","little","baby","놀이방","🧱","동생이 블록 쌓기를 하다가 무너져서 울어요.",[["“무너져서 속상하지? 같이 다시 쌓아 보자!”","good","동생 마음: 😊 같이 해 주니 다시 해 볼 힘이 나요."],["“그것도 못 해?”라고 놀린다.","bad","동생 마음: 😭 놀려서 더 슬퍼요."],["무너진 블록을 내가 다 쌓아 버린다.","ok","동생 마음: 😐 도와줬지만 내가 해 보고 싶었어요. 같이 하자고 말해 주면 좋아요."]],"무너져서 속상하지? 같이 다시 쌓아 보자!","내가 하던 일이 잘 안 돼서 속상할 때 듣고 싶은 말은?"],
+["x1","safe","stranger","학교 앞","🚗","학교 끝나고 모르는 어른이 “엄마가 데려오라고 했어. 차에 타.” 라고 말해요.",[["“싫어요! 엄마한테 직접 물어볼게요.” 하고 크게 말한 뒤 학교로 돌아가 선생님께 알린다.","good","잘했어요! 🛡️ 모르는 사람의 차에는 절대 타지 않아요. 큰 소리로 거절하고 바로 아는 어른에게 알려요."],["엄마가 보냈다니까 따라간다.","bad","위험해요! 😨 엄마가 보냈다고 해도 모르는 사람은 따라가면 안 돼요."],["무서워서 아무 말 없이 서 있는다.","ok","무서울 수 있어요. 그래도 ‘싫어요!’ 하고 크게 말하고 사람 많은 곳·선생님께 가요."]],"싫어요! 엄마한테 직접 물어볼게요.",""],
+["x2","safe","me","큰 마트","🛍️","마트에서 엄마를 잃어버렸어요.",[["그 자리에 멈춰 기다리거나, 계산대 직원에게 “엄마를 잃어버렸어요. 도와주세요.”라고 말한다.","good","잘했어요! 🛡️ 매장 직원(이름표 단 사람)이나 계산대에 도움을 청해요. 엄마 전화번호를 외워 두면 더 좋아요."],["엄마를 찾으러 마트 밖으로 나간다.","bad","위험해요! 😨 밖으로 나가면 더 찾기 어려워요."],["모르는 아저씨를 따라간다.","bad","위험해요! 😨 도움은 직원이나 경찰처럼 확인된 사람에게 청해요."]],"엄마를 잃어버렸어요. 도와주세요.",""],
+["x3","safe","stranger","놀이터","🍬","모르는 어른이 사탕을 주며 “같이 강아지 보러 갈래?” 해요.",[["“아니요, 싫어요.” 하고 그 자리를 떠나 아는 어른에게 말한다.","good","잘했어요! 🛡️ 모르는 사람의 선물과 부탁은 거절하고, 꼭 어른에게 알려요."],["강아지가 보고 싶어서 따라간다.","bad","위험해요! 😨 모르는 사람을 따라가면 절대 안 돼요."],["사탕만 받고 집에 간다.","ok","조심해요! 🤔 모르는 사람이 주는 음식은 받지 않고, 있었던 일을 어른에게 꼭 말해요."]],"아니요, 싫어요.",""],
+["x4","safe","me","길","📞","길에서 넘어져 많이 다쳤는데 주변에 아는 사람이 없어요.",[["가까운 가게에 들어가 “다쳤어요. 도와주세요.” 하고 말하고, 엄마에게 전화한다.","good","잘했어요! 🛡️ 가게 직원처럼 도움을 줄 수 있는 어른에게 말해요. 크게 다치면 어른이 119에 전화해 줄 수 있어요."],["울면서 혼자 집까지 걸어간다.","ok","혼자 참지 않아도 돼요. 도움을 청하는 건 부끄러운 일이 아니에요."],["아무에게도 말하지 않고 숨긴다.","bad","다친 건 꼭 어른에게 알려야 치료를 받을 수 있어요."]],"다쳤어요. 도와주세요.",""],
+["m1","mine","doyun","교실","🙅","도윤이가 장난으로 내 머리를 자꾸 잡아당겨요. 나는 싫어요.",[["도윤이 눈을 보고 “그만해. 나는 그거 싫어.”라고 분명하게 말한다.","good","도윤 마음: 😳 싫은 줄 몰랐어요. 분명하게 말해 줘서 알게 됐어요. 그래도 계속하면 선생님께 말해요."],["참고 아무 말도 안 한다.","ok","내 마음: 😣 계속 참으면 더 힘들어져요. 싫은 건 싫다고 말해도 돼요."],["도윤이를 세게 때린다.","bad","도윤 마음: 😭 아프고, 나도 혼날 수 있어요. 말로 먼저 해요."]],"그만해. 나는 그거 싫어.","누가 나를 불편하게 할 때, 친구들이 나에게 어떤 말을 해 주면 힘이 날까?"],
+["m2","mine","me","집","🌧️","오늘 학교에서 속상한 일이 있었어요. 집에 와서 엄마가 “오늘 어땠어?” 하고 물어요.",[["“오늘 속상한 일이 있었어. 이야기해도 돼?”","good","엄마 마음: 🤗 말해 줘서 고마워요. 같이 생각할 수 있어요."],["“몰라!” 하고 방문을 쾅 닫는다.","bad","엄마 마음: 😟 무슨 일인지 몰라서 걱정돼요."],["“괜찮아.” 하고 혼자 참는다.","ok","엄마 마음: 🙂 괜찮은 줄 알아요. 힘든 마음은 나누면 가벼워져요."]],"오늘 속상한 일이 있었어. 이야기해도 돼?","내가 속상한 날, 엄마가 어떤 말을 해 주면 좋을까?"],
+["m3","mine","sora","교실","🙋","모둠 활동에서 내 의견을 말하고 싶은데 다들 다른 이야기를 해요.",[["손을 들고 “나도 생각이 있는데 말해도 될까?” 하고 묻는다.","good","친구들 마음: 🙂 차례를 정중하게 물어봐서 귀 기울여 들을 수 있어요."],["친구 말을 끊고 내 말만 한다.","bad","친구 마음: 😕 말을 끊어서 기분이 상해요."],["말하지 못하고 끝난다.","ok","내 마음: 😔 아쉬워요. 내 생각도 소중해요. 용기 내어 말해 봐요."]],"나도 생각이 있는데 말해도 될까?",""]];
+function frInit(){S.fr=S.fr||{n:0,last:"",cnt:0};S.fr.done=S.fr.done||{};S.fr.love=S.fr.love||{};S.fr.hear=S.fr.hear||[];return S.fr}
+const frWho=k=>k==="baby"&&S.baby?[S.baby.name,"👶","#FFE79A","동생"]:FRN[k];
+function frNext(){const f=frInit(),cats=Object.keys(FRCAT);let best=null,bi=1e9;FRS.forEach((s,i)=>{if(f.done[s[0]])return;const r=Object.values(f.done).length,score=(cats.indexOf(s[1])-r%cats.length+cats.length)%cats.length*100+i;if(score<bi){bi=score;best=s}});return best||FRS[Math.floor(Math.random()*FRS.length)]}
+function frLv(k){return Math.floor((frInit().love[k]||0)/3)}
+function friendView(){hInit();const f=frInit(),nx=frNext(),done=Object.keys(f.done).length;
+  app.innerHTML=hdr("🤝 마음 연습")+hTabs("friend")+`<div class="card"><h3>🤝 빅토리아 마을 친구들</h3><p class="muted">친구, 어른, 동생, 낯선 사람… 상황마다 어떤 말을 하면 좋을지 연습해요. 연습할수록 친구와 더 친해지고, 친한 친구는 내 집에 놀러 와요!</p>
+   <div class="frgrid">${["sora","doyun","teacher","grandma","shop","lib","baby","stranger"].map(k=>{const w=frWho(k),l=f.love[k]||0;return `<div class="frc"><span class="fri" style="background:${w[2]}">${w[1]}</span><b>${esc(w[0])}</b><small>${w[3]}</small><span class="frh">${k==="stranger"?"🛡️".repeat(Math.min(3,l)):"💗".repeat(Math.min(3,l%3||(l?3:0)))}${l?` Lv.${frLv(k)}`:""}</span></div>`}).join("")}</div></div>
+   <button class="card petlink" id="frgo" type="button"><span class="petem">${nx[4]}</span><div><h3>오늘의 상황 · ${FRCAT[nx[1]]}</h3><p class="muted">${esc(frWho(nx[2])[0])} · ${nx[3]} — ${nx[5].slice(0,34)}…</p></div></button>
+   <div class="card"><div class="row"><h3>📒 상황 연습장</h3><span class="pill">${done} / ${FRS.length}</span></div>${Object.entries(FRCAT).map(([c,t])=>`<p class="frcat">${t}</p><div class="tapchips">${FRS.filter(s=>s[1]===c).map(s=>`<button type="button" class="tc ${f.done[s[0]]?"on":""}" data-fs="${s[0]}">${f.done[s[0]]?"✓ ":""}${s[4]} ${esc(frWho(s[2])[0])}</button>`).join("")}</div>`).join("")}</div>
+   <div class="card"><h3>💜 내가 듣고 싶은 말 노트</h3>${f.hear.length?`<ul class="skdl">${f.hear.slice(-8).reverse().map(h=>`<li><small class="muted">${h.q}</small><br><b>“${esc(h.a)}”</b></li>`).join("")}</ul>`:`<p class="muted">위로·칭찬 상황을 연습하면 내가 듣고 싶은 말이 여기에 모여요. 엄마도 볼 수 있어요.</p>`}</div>`;
+  bindBack();bindHTabs();$("#frgo").onclick=()=>frRun(nx[0]);app.querySelectorAll("[data-fs]").forEach(b=>b.onclick=()=>frRun(b.dataset.fs))}
+function frRun(id){const s=FRS.find(x=>x[0]===id),w=frWho(s[2]),f=frInit(),tried=new Set();const opts=shuffle(s[6].map((o,i)=>({o,i})));
+  const scene=()=>`<div class="frscene"><span class="frbig" style="background:${w[2]}">${w[1]}</span><div><small class="muted">${FRCAT[s[1]]} · ${s[3]}</small><p class="frtext">${s[4]} ${esc(s[5].replace("아기",S.baby&&s[2]==="baby"?S.baby.name:"아기"))}</p></div></div>`;
+  const step1=(fb)=>{app.innerHTML=hdr("🤝 이럴 땐 뭐라고 할까?")+`<div class="card">${scene()}<button class="ttsb" id="sp" type="button">🔊 상황 읽어 줘</button>
+     <h3>이럴 때 어떻게 말하고 행동하면 좋을까?</h3><div class="fropts">${opts.map(({o,i})=>`<button type="button" class="opt frop ${tried.has(i)?(o[1]==="good"?"ok":"no"):""}" data-i="${i}" ${tried.has(i)?"disabled":""}>${esc(o[0])}</button>`).join("")}</div><div id="frfb">${fb||""}</div></div>`;bindBack();
+    $("#sp").onclick=()=>sayKo(s[5]);app.querySelectorAll(".frop").forEach(b=>b.onclick=()=>{const i=+b.dataset.i,o=s[6][i];tried.add(i);
+      if(o[1]==="good"){step1(`<div class="frfb good"><b>👍 좋은 선택이에요!</b><p>${esc(o[2])}</p><button class="big" id="fr2" type="button">따라 말해 보기 ▶</button></div>`);$("#fr2").onclick=step2}
+      else step1(`<div class="frfb ${o[1]}"><b>${o[1]==="ok"?"🤔 괜찮지만, 더 좋은 말이 있어요":"💭 이 말은 마음을 아프게 할 수 있어요"}</b><p>${esc(o[2])}</p><p class="muted">다른 것도 골라 볼까?</p></div>`)})};
+  const step2=()=>{app.innerHTML=hdr("🗣️ 소리 내어 따라 말하기")+`<div class="card">${scene()}<div class="frsay">“${esc(s[7])}”</div><button class="ttsb" id="sp2" type="button">🔊 먼저 들어 보기</button>
+     <p class="muted">상대의 눈을 보고, 웃는 얼굴로, 또박또박 한 번 소리 내어 말해 봐요. 엄마나 인형을 친구라고 생각해도 좋아요!</p><button class="big" id="said" type="button">✅ 소리 내어 말했어요</button></div>`;bindBack();
+    $("#sp2").onclick=()=>sayKo(s[7]);$("#said").onclick=()=>s[8]?step3():finish()};
+  const step3=()=>{const sug=["“많이 속상했지? 내가 옆에 있을게.”","“괜찮아, 네가 노력한 거 알아.”","“같이 다시 해 보자!”","“말해 줘서 고마워.”"];
+    app.innerHTML=hdr("💜 내 마음 들여다보기")+`<div class="card"><h3>${esc(s[8])}</h3><p class="muted">정답은 없어요. 내 마음에 드는 말을 고르거나 직접 써 봐요.</p><div class="fropts">${sug.map(t=>`<button type="button" class="opt frh2">${t}</button>`).join("")}</div>
+     <textarea id="frw" class="pinput" rows="2" placeholder="내가 듣고 싶은 말을 직접 써도 좋아요"></textarea><button class="big" id="frs" type="button">이 말로 할게</button></div>`;bindBack();
+    let pick="";app.querySelectorAll(".frh2").forEach(b=>b.onclick=()=>{pick=b.textContent.replace(/[“”]/g,"");app.querySelectorAll(".frh2").forEach(x=>x.classList.toggle("sel",x===b))});
+    $("#frs").onclick=()=>{const a=($("#frw").value.trim()||pick);if(!a)return toast("하나 골라 주거나 써 줘요!");f.hear.push({d:today(),q:s[8],a});if(f.hear.length>60)f.hear.shift();save();finish()}};
+  const finish=()=>{const first=!f.done[s[0]],before=frLv(s[2]);f.done[s[0]]=today();f.love[s[2]]=(f.love[s[2]]||0)+1;const up=frLv(s[2])>before;if(!doneToday("fr")){markDone("fr");addXP(10)}save();
+    popup(`<div class="bigem">${up?"💞":"🌟"}</div><h2>${up?`${esc(w[0])}와(과) 더 친해졌어요!`:"마음 연습 완료!"}</h2><p>“${esc(s[7])}”</p>${up&&["sora","doyun"].includes(s[2])?`<p class="muted">🏠 ${esc(w[0])}가 빅토리아 하우스에 놀러 와요! 집에서 친구를 눌러 봐요.</p>`:""}<p class="muted">실제로 이런 상황이 오면, 오늘 연습한 말을 떠올려 봐요.</p>`);friendView()};
+  step1()}
+function frParkVisit(){if(H3&&H3.walk)H3.walk.say("공원에 친구들이 있네! 마음 연습하러 가자 🤝",2000);setTimeout(friendView,1200)}
+const FR_VISIT_LINES=k=>{const n=souvInit().length,st=Object.keys(skInit().done).length+Object.keys(soInit().done).length;return k==="sora"?[`방이 정말 예쁘다! 소품이 ${n}개나 있네 😍`,"다음에 우리 집에도 놀러 와!","같이 그림 그릴래? 🎨",st?`도장을 ${st}개나 모았어? 대단하다!`:"오늘도 같이 공부할래?"]:["와, 집 멋지다! 🏠","정원에서 같이 공 찰래? ⚽","네 아기 정말 귀엽다 👶","놀러 오게 해 줘서 고마워!"]};
 
 function sciHub(){const s=sciInit(),done=doneToday("sci");
   app.innerHTML=hdr("🔭 과학 탐험")+`<button class="card petlink" id="skgo" type="button"><span class="petem">🔬</span><div><h3>과학 개념어 탐험 · ⭐${skCount()}/${SKALL.length}</h3><p class="muted">초등 3~6학년 과학 전 영역 개념어 도장깨기${skDue().length?` · 복습 ${skDue().length}개`:""}</p></div></button><div class="card"><h3>🪐 우리 태양계</h3><div class="prow">${PLANETS.map(p=>`<button type="button" class="pbtn" data-p="${p[1]}">${planetBall(p,Math.max(18,p[3]*.4))}<small>${p[0]}</small></button>`).join("")}</div><p class="muted">행성을 누르면 영어 이름을 들려줘요.</p><div class="btns2"><button class="big alt" id="rv" type="button">🔁 행성 다시 만나기</button><button class="big alt" id="qz" type="button">🪐 태양계 퀴즈</button></div></div>
@@ -3297,7 +3425,7 @@ function progRows(){maInit();sciInit();koInit();const r=[],pc=(a,b)=>`${Math.min
   r.push(["📗 개념어",`${kwCount()}/${KW.length} 마스터`,`익히는 중인 말 ${Object.entries(kwInit().w).filter(([t,v])=>v.unk&&!kwMastered(t)).length}개`]);
   return r}
 function weekStats(){const[a,b]=weekRange(),ev=(S.ev||[]).filter(e=>e[0]>=a&&e[0]<=b),cnt={};ev.forEach(e=>cnt[e[1]]=(cnt[e[1]]||0)+1);const days=(S.days||[]).filter(d=>d>=a&&d<=b).length,gemDays=(S.gemDays||[]).filter(d=>d>=a&&d<=b).length;return{a,b,cnt,total:ev.length,days,gemDays}}
-const TNAME={hist:"한국사",hz:"한자",en:"영어",ko:"국어",ma:"수학",sci:"과학",so:"사회",mem:"기억 탐험",cook:"요리"};
+const TNAME={hist:"한국사",hz:"한자",en:"영어",ko:"국어",ma:"수학",sci:"과학",so:"사회",fr:"마음 연습",mem:"기억 탐험",cook:"요리"};
 function weekText(){const w=weekStats(),wr=wrongPool().length,ww=[...(S.ko.writes||[]),...(S.ma.writes||[]),...((S.so&&S.so.writes)||[]),...((S.sk&&S.sk.writes)||[])].filter(x=>x.d>=w.a&&x.d<=w.b),wq=ww.filter(x=>x.qq);
   return `[Victoria 주간 진도표 📊] ${w.a.slice(5).replace("-","/")} ~ ${w.b.slice(5).replace("-","/")}
 ✅ 이번 주: ${w.days}일 공부 · 퀘스트 ${w.total}개 · 보석 상자 ${w.gemDays}번
@@ -3308,7 +3436,7 @@ ${progRows().map(r=>`${r[0]}: ${r[1]} · ${r[2]}`).join("\n")}
 
 💎 보석 ${S.gems||0}개 · ⭐ Lv.${Math.floor(S.xp/50)+1} (${S.xp} XP) · 연속 ${streak()}일
 📝 남은 오답 ${wr}개${(S.hardQ||[]).filter(h=>h.d>=w.a).length?` · 🙋 말이 어려웠던 문제 ${(S.hardQ||[]).filter(h=>h.d>=w.a).length}개`:""}
-${S.baby?`👶 ${esc(S.baby.name)} ${babyAge()}개월`:""}${ww.length?`\n✏️ 이번 주 내가 쓴 문장\n${ww.slice(-4).map(x=>`· [${x.t}] “${x.a}”`).join("\n")}`:""}${wq.length?`\n❓ 이번 주 내가 만든 질문\n${wq.slice(-4).map(x=>`· ${x.qq}`).join("\n")}`:""}`}
+${S.baby?`👶 ${esc(S.baby.name)} ${babyAge()}개월`:""}${ww.length?`\n✏️ 이번 주 내가 쓴 문장\n${ww.slice(-4).map(x=>`· [${x.t}] “${x.a}”`).join("\n")}`:""}${(()=>{const h=((S.fr&&S.fr.hear)||[]).filter(x=>x.d>=w.a&&x.d<=w.b);return h.length?`\n💜 내가 듣고 싶은 말\n${h.slice(-3).map(x=>`· “${x.a}”`).join("\n")}`:""})()}${wq.length?`\n❓ 이번 주 내가 만든 질문\n${wq.slice(-4).map(x=>`· ${x.qq}`).join("\n")}`:""}`}
 function weekView(){const w=weekStats();app.innerHTML=hdr("📊 주간 진도표")+`<div class="card"><h3>${w.a.slice(5)} ~ ${w.b.slice(5)}</h3><p class="muted">이번 주 ${w.days}일 공부 · 퀘스트 ${w.total}개 · 보석 상자 ${w.gemDays}번</p>
   <table class="ptab"><tr><th>과목</th><th>진도</th><th>다음 / 비고</th></tr>${progRows().map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join("")}</table>
   <button class="big" id="wsend" type="button">💌 엄마에게 진도표 보내기</button><p class="muted" id="wmsg"></p></div>`;bindBack();
