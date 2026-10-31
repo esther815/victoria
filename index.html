@@ -201,6 +201,7 @@ svg.old{background:#FBF4E6!important}svg.old *{fill:none;stroke:#9C5B33;stroke-w
 .qtag.miss{background:#FFE3EC;color:#D6336C}
 .socur{border:2px solid #3B82C4}.skst.so.on{border-color:#3B82C4;background:#EEF5FC}
 .wrrule ol.rules{text-align:left}.wrbox{background:#FFF7E0;border-radius:14px;padding:10px 12px;text-align:left;margin:8px 0}.wrbox p{margin:4px 0}
+.course{border:2px solid #2FB673}.clist{display:grid;gap:8px;margin-top:6px}.crow{display:grid;grid-template-columns:30px 34px 1fr auto;align-items:center;gap:8px;text-align:left;border:2px solid #E3F4EA;background:#fff;border-radius:16px;padding:10px;font:inherit}.crow .cn{width:28px;height:28px;border-radius:50%;background:#EEF2F7;display:flex;align-items:center;justify-content:center;font-weight:800;color:#6B5E78}.crow .cic{font-size:1.5rem;text-align:center;font-family:var(--han)}.crow .ctx{display:flex;flex-direction:column}.crow .ctx small{color:#7A8F80;font-size:.74rem}.crow .cgo{font-weight:800;color:#2FB673;font-size:.85rem}.crow.done{background:#F0FBF4;opacity:.8}.crow.done .cn{background:#2FB673;color:#fff}.crow:disabled{opacity:.5}.more{margin:10px 0}.more summary{cursor:pointer;font-weight:800;padding:12px 14px;background:var(--card);border-radius:16px;list-style:none;color:#6B5E78}.more summary::-webkit-details-marker{display:none}.hpick.on{background:#2FB673;color:#fff}
 .recap{margin:6px 0 0;padding-left:1.1em;font-size:.95rem;line-height:1.6}.recap li{margin:3px 0}
 .qtag{display:table;margin-left:auto;margin-right:auto;font-family:var(--display);font-size:.95rem;background:var(--soft);color:var(--accent);border-radius:99px;padding:2px 12px;margin-bottom:6px}
 .hintb{appearance:none;align-self:center;border:2px dashed var(--cheese);background:transparent;color:var(--ink);border-radius:99px;padding:6px 18px;font-family:var(--display);font-size:1.05rem;cursor:pointer}
@@ -670,7 +671,8 @@ function home(){
    <div class="row"><span class="pill">Lv.${lv} · ${S.xp} XP</span><span class="pill">연속 ${streak()}일</span>${dd>=0?`<span class="pill" style="color:var(--hanja)">한자 시험 D-${dd===0?"DAY":dd}</span>`:""}</div>
    <div class="bar"><i style="width:${pct}%"></i></div>
    <button class="rulesb" id="rulesb" type="button">📖 보석 규칙 보기</button></header>
-  <div class="tiles">${T.map(([k,n,w,c,ic])=>{const[s,txt]=status(k);return `<button class="tile" type="button" data-t="${k}"><span class="ic" style="background:var(${c});${k==="hz"||k==="hist"?"font-family:var(--han)":""}">${ic}</span><h3>${n}</h3><span class="when">${w}</span><span class="chip ${s}">${txt}</span>${s==="go"&&k!=="cook"?`<span class="heart" aria-label="새 퀘스트">♥</span>`:""}</button>`}).join("")}</div>
+  ${courseHTML()}
+  <details class="more"><summary>➕ 더 하고 싶으면 · 과목 전체 · 요리</summary><p class="muted">코스 밖 퀘스트는 1개마다 💎+1 (하루 3개까지)</p><div class="tiles">${T.map(([k,n,w,c,ic])=>{const[s,txt]=status(k);return `<button class="tile" type="button" data-t="${k}"><span class="ic" style="background:var(${c});${k==="hz"||k==="hist"?"font-family:var(--han)":""}">${ic}</span><h3>${n}</h3><span class="when">${w}</span><span class="chip ${s}">${txt}</span>${s==="go"&&k!=="cook"?`<span class="heart" aria-label="새 퀘스트">♥</span>`:""}</button>`}).join("")}</div></details>
   ${("Notification" in window)&&Notification.permission!=="granted"&&("setAppBadge" in navigator)?`<button class="big alt" id="badgeOn" type="button">♥ 새 퀘스트 알림 켜기</button>`:""}
   ${S.test?`<button class="big" id="parent" type="button">🔧 보호자 설정 (진도·펫·백업)</button><button class="big alt" id="rst" type="button">기록 전체 초기화</button><p class="foot" id="rstAsk" hidden>정말 지울까요? <button class="back" id="rstYes" type="button">네, 지워요</button></p>`:""}
   <div class="card rep"><h3>💌 엄마에게 오늘 자랑하기${S.reportLast===today()?" ✓":""}</h3><p class="muted">${S.reportLast===today()?"오늘 자랑 완료! 내일도 들려줘.":"오늘 한 퀘스트를 카톡으로 엄마에게 자랑하면 +5 XP!"}</p><div class="btns2"><button class="big ${S.reportLast===today()?"alt":""}" id="rep" type="button">💌 자랑 보내기</button><button class="big alt" id="req" type="button">📮 요청 보내기</button></div><p class="muted" style="margin:4px 0 0">앱에 바라는 게 있으면 까닭과 함께 엄마에게 요청해요.</p><p class="muted" id="repmsg" hidden style="white-space:pre-line"></p></div>
@@ -678,9 +680,9 @@ function home(){
   ${wrongCard()}
   ${petCardHome()}
   ${shopHTML(nextCook())}
-  <p class="foot" id="ver">Victoria Quest v4.0</p>`;
+  <p class="foot" id="ver">Victoria Quest v4.1</p>`;
   if(S.test){$("#parent").onclick=parentPanel;$("#rst").onclick=()=>{$("#rstAsk").hidden=false};$("#rstYes").onclick=()=>{try{localStorage.removeItem(KEY)}catch(e){}location.reload()}}
-  app.querySelectorAll(".tile").forEach(b=>b.onclick=()=>({cook:cookStart,hist,hz,en,mem,ko,ma,sci,so:soc})[b.dataset.t]());
+  app.querySelectorAll(".tile").forEach(b=>b.onclick=()=>({cook:cookStart,hist,hz,en,mem,ko,ma,sci,so:soc})[b.dataset.t]());app.querySelectorAll(".crow").forEach(b=>b.onclick=()=>slotGo(b.dataset.c));
   updBadge();
   $("#gem").onclick=gemRoom;$("#petgo").onclick=houseView;$("#wrgo").onclick=wrongReview;$("#wkgo").onclick=weekView;
   $("#rulesb").onclick=showRules;
@@ -1223,10 +1225,10 @@ const STREAK_BADGE=[[3,"🔥 3일 연속"],[7,"🌈 7일 연속"],[14,"🏅 14�
 function title(){const lv=Math.floor(S.xp/50)+1;return lv>=12?"Queen Victoria":lv>=8?"지식의 기사":lv>=5?"한자 탐험가":lv>=3?"꼬마 셰프":"새싹 탐험가"}
 function weekGems(){const now=new Date(),day=(now.getDay()+6)%7,mon=new Date(now.getFullYear(),now.getMonth(),now.getDate()-day);return (S.gemDays||[]).filter(d=>{const [y,m,dd]=d.split("-").map(Number);return new Date(y,m-1,dd)>=mon}).length}
 function popup(html){const o=document.createElement("div");o.className="pop-ov";o.innerHTML=`<div class="pop-card">${html}<button class="big" type="button">좋아!</button></div>`;document.body.appendChild(o);o.querySelector("button").onclick=()=>{o.remove();if(document.querySelector("#ver"))home()};try{confetti()}catch(e){}}
-function gemTarget(){const td=today(),c=t=>S[t]&&S[t].last===td?Math.min(S[t].cnt||1,DAILY):0,ck=S.cookDay&&S.cookDay.d===td?Math.min(S.cookDay.c||1,DAILY):0,mm=S.mem&&S.mem.last===td?Math.min(S.mem.cnt||1,DAILY):0;
-  if(!(ck&&c("hist")&&c("hz")&&c("en")&&mm))return null;
-  return {base:10,extra:(c("hist")+c("hz")+c("en")+ck+mm-5+c("ko")+c("ma")+c("sci")+c("so"))*2,pf:S.perf&&S.perf.d===td?Math.min(S.perf.n,5):0}}
-function questsLeft(){const td=today(),l=[];if(!(S.cookDay&&S.cookDay.d===td))l.push("요리");[["hist","한국사"],["hz","한자"],["en","영어"]].forEach(([t,n])=>{if(S[t].last!==td)l.push(n)});if(!(S.mem&&S.mem.last===td))l.push("기억 탐험");return l}
+function gemTarget(){const td=today(),c=courseToday();if(!c.every(x=>slotDone(x.k)))return null;const inC=new Set(c.map(x=>x.k));let extra=0;
+  ["hist","hz","en","ko","ma","sci","so","mem"].forEach(t=>{if(S[t]&&S[t].last===td){const n=Math.min(S[t].cnt||1,DAILY);extra+=inC.has(t)?n-1:n}});if(S.cookDay&&S.cookDay.d===td)extra+=Math.min(S.cookDay.c||1,DAILY);
+  return {base:10,extra:Math.min(3,extra),pf:S.perf&&S.perf.d===td?Math.min(S.perf.n,3):0}}
+function questsLeft(){return courseToday().filter(x=>!slotDone(x.k)).map(x=>CNAME[x.k][1])}
 function checkGem(){const td=today(),g=gemTarget();if(!g)return;const tot=g.base+g.extra+g.pf,prev=S.gemToday&&S.gemToday.d===td?S.gemToday.n:0;if(tot<=prev)return;
   S.gems=(S.gems||0)+tot-prev;S.gemToday={d:td,n:tot};const first=S.gemDay!==td;if(first){S.gemDay=td;S.gemDays=(S.gemDays||[]).concat(td).slice(-60)}save();
   if(!first){setTimeout(()=>toast(`💎 +${tot-prev} 보석! (오늘 ${tot}개)`),300);return}
@@ -2430,7 +2432,7 @@ function gemQuiz(q,key,practice,onWin,onLose){const qq=mkQ(q[0],q[1],q[2],q[4],{
   $("#cfmno").onclick=()=>{gsel=null;app.querySelectorAll(".opt").forEach(x=>x.classList.remove("sel"));$("#cfmbar").hidden=true};
   $("#cfmyes").onclick=()=>{if(!gsel)return;const b=gsel;b.classList.remove("sel");$("#cfmbar").hidden=true;gsubmit(b)};
   const gsubmit=b=>{app.querySelectorAll(".opt").forEach(x=>{x.disabled=true;if(+x.dataset.k===qq.ans)x.classList.add("ok")});const ok=+b.dataset.k===qq.ans;if(!ok)b.classList.add("no");
-    if(ok){S.gemQ=S.gemQ||{};const td=today(),got=!practice&&S.gemQ[key]!==td;let n=0;if(got){const r=Math.random();n=r<.4?1:r<.7?2:r<.87?3:r<.96?5:10;S.gems=(S.gems||0)+n;S.gemQ[key]=td;save()}
+    if(ok){S.gemQ=S.gemQ||{};const td=today(),got=!practice&&S.gemQ[key]!==td;let n=0;if(got){const r=Math.random();n=r<.45?1:r<.8?2:3;S.gems=(S.gems||0)+n;S.gemQ[key]=td;save()}
       $("#fb").innerHTML=`<div class="gembox" id="gbox">🎁</div><p class="prompt" id="gmsg">${got?"보석 상자를 눌러 열어 봐!":practice?"정답! (연습이라 보석은 없어요)":"정답! 이 퀴즈 보석은 오늘 이미 받았어요."}</p><button class="big" id="gnext" type="button">다음으로 ▶</button>`;
       if(got)$("#gbox").onclick=()=>{$("#gbox").textContent="💎".repeat(Math.min(n,5))+(n>5?"✨":"");$("#gbox").classList.add("open");$("#gmsg").innerHTML=`<b>💎 ${n}개!</b> ${n>=5?"대박! ":""}진짜 이해했구나!`;try{confetti()}catch(e){}};
       $("#gnext").onclick=onWin}
@@ -2517,7 +2519,7 @@ const MTRK={calc:{n:"🧮 연산",d:"분수와 소수 이야기부터 6-2 분수
  shape:{n:"📐 도형 도장깨기",d:"점·선·면부터 한 단계씩! 도장을 모아 Victoria의 성을 짓고 6학년 2학기까지",list:[...SB.map((_,i)=>["sb",i]),...[6,7,11,12,13,14,15,16].map(i=>["ma",i])]},
  ratio:{n:"⚖️ 비와 비례",d:"비의 성질, 비례식, 비례배분",list:[8,9,10].map(i=>["ma",i])}};
 let MCUR=null;
-function maAdv(kind,n,practice){if(practice||doneToday("ma")||!MCUR)return;const it=MTRK[MCUR].list[S.ma.t[MCUR]];if(it&&it[0]===kind&&it[1]===n){S.ma.t[MCUR]++;markDone("ma");addXP(15);if(kind==="sb"){const L=SB[n],g=L.boss?8:3;S.gems=(S.gems||0)+g;setTimeout(()=>{try{confetti()}catch(e){}popup(`<div class="bigem">${L.boss?"👑":"🏅"}</div><h2>${n+1}단계 도장 쾅!</h2><p>「${L.t}」 클리어! <b>💎 +${g}</b></p>${stampBoard()}`)},300)}save()}}
+function maAdv(kind,n,practice){if(practice||doneToday("ma")||!MCUR)return;const it=MTRK[MCUR].list[S.ma.t[MCUR]];if(it&&it[0]===kind&&it[1]===n){S.ma.t[MCUR]++;markDone("ma");addXP(15);if(kind==="sb"){const L=SB[n],g=L.boss?5:2;S.gems=(S.gems||0)+g;setTimeout(()=>{try{confetti()}catch(e){}popup(`<div class="bigem">${L.boss?"👑":"🏅"}</div><h2>${n+1}단계 도장 쾅!</h2><p>「${L.t}」 클리어! <b>💎 +${g}</b></p>${stampBoard()}`)},300)}save()}}
 const mtTitle=it=>it[0]==="mb"?MB[it[1]].t:it[0]==="sb"?SB[it[1]].t:MA[it[1]].t;
 function maRun(trk,pos,practice){MCUR=trk;const it=MTRK[trk].list[pos];if(!it)return;it[0]==="mb"?mbLesson(it[1],practice):it[0]==="sb"?sbLesson(it[1],practice):maLesson(it[1],practice)}
 function maMain(){const T="수학 탐험",k=maInit(),done=doneToday("ma"),open=isOpen(7);
@@ -2665,7 +2667,7 @@ function reqView(){S.reqs=S.reqs||[];let kind=0;
   draw()}
 
 /* 오답 복습: 맞히면 보석 */
-const WR_GEM_DAY=10;
+const WR_GEM_DAY=5;
 function wrongPool(){const out=[];
   (S.hist.wrong||[]).forEach(id=>{const h=HIST[id];if(h)out.push({s:"hist",id,lab:"📜 한국사",q:[esc(h[0]),h[1],h[2],"",esc(h[3])]})});
   (S.ko&&S.ko.wrong||[]).forEach(id=>{const L=KO[Math.floor(id/10)];const q=L&&L.qs[id%10];if(q)out.push({s:"ko",id,lab:"📘 국어",q})});
@@ -2682,7 +2684,7 @@ function wrongReview(){const pool=shuffle(wrongPool()).slice(0,5);if(!pool.lengt
 function wrongRun(pool){let earned=0,slip=false;
   quiz({title:"📝 오답 복습",noMiss:true,think:3500,qs:pool.map((x,j)=>mkQ(`<span class="qtag">${x.lab} · 틀렸던 문제</span>`+x.q[0],x.q[1],x.q[2],x.q[4],{hint:x.q[3]||"",wr:x})),
     onAnswer:(q,ok)=>{if(!ok){slip=true;return}const x=q.wr;if(x.s==="miss"){const e=S.miss&&S.miss[x.id];if(e){e.c=(e.c||0)+1;if(e.c>=2)delete S.miss[x.id]}}else{const list=x.s==="hist"?S.hist.wrong:S[x.s].wrong,k=list.indexOf(x.id);if(k>=0)list.splice(k,1)}const g=wrGot();if(g.n<WR_GEM_DAY){g.n++;earned++;S.gems=(S.gems||0)+1;setTimeout(()=>toast("💎 +1 오답을 이겨냈어!"),300)}save()},
-    onPass:()=>{},after:()=>{const left=wrongPool().length,dbl=!slip&&earned>0;if(dbl){S.gems=(S.gems||0)+earned;wrGot().n+=0;save();try{gemShower(earned*2)}catch(e){}}popup(`<div class="bigem">${dbl?"✨":"📝"}</div><h2>${dbl?`한 번도 안 틀렸어! 보석 2배 💎+${earned*2}`:"오답 복습 끝!"}</h2>${!dbl&&slip?`<p class="muted">이번엔 처음 고른 답이 틀린 문제가 있었어. 다음엔 끝까지 읽고 천천히!</p>`:""}<p>오늘 오답으로 받은 보석: 💎 ${wrGot().n}개 (하루 최대 ${WR_GEM_DAY}개)</p><p class="muted">${left?`남은 오답 ${left}개. 내일 또 도전!`:"오답을 모두 이겨냈어! 🌟"}</p>`);home()},afterLabel:"끝내기"})}
+    onPass:()=>{revDone()},after:()=>{const left=wrongPool().length,dbl=!slip&&earned>0;if(dbl){S.gems=(S.gems||0)+earned;wrGot().n+=0;save();try{gemShower(earned*2)}catch(e){}}popup(`<div class="bigem">${dbl?"✨":"📝"}</div><h2>${dbl?`한 번도 안 틀렸어! 보석 2배 💎+${earned*2}`:"오답 복습 끝!"}</h2>${!dbl&&slip?`<p class="muted">이번엔 처음 고른 답이 틀린 문제가 있었어. 다음엔 끝까지 읽고 천천히!</p>`:""}<p>오늘 오답으로 받은 보석: 💎 ${wrGot().n}개 (하루 최대 ${WR_GEM_DAY}개)</p><p class="muted">${left?`남은 오답 ${left}개. 내일 또 도전!`:"오답을 모두 이겨냈어! 🌟"}</p>`);home()},afterLabel:"끝내기"})}
 function wrongCard(){const n=wrongPool().length,g=wrGot().n;return `<button class="card petlink" id="wrgo" type="button"><span class="petem">📝</span><div><h3>오답 복습 ${n?`<span class="pill">${n}개</span>`:""}</h3><p class="muted">${n?`틀렸던 문제를 다시 맞히면 한 문제에 💎+1! (오늘 ${g}/${WR_GEM_DAY})`:"아직 틀린 문제가 없어요. 멋져!"}</p></div></button>`}
 
 /* ===================== 과학: 태양계 탐사 미션 ===================== */
@@ -3001,16 +3003,16 @@ function skCards(u,cb){const U=SKU.find(x=>x[0]===u),ws=U[4];let k=0;
     <div class="nav2"><button class="big alt" id="pv" type="button" ${k===0?"disabled":""}>이전</button><button class="big" id="nx" type="button">${k<ws.length-1?"다음 카드":"퀴즈 시작!"}</button></div></div>`;bindBack();
     $("#sp").onclick=()=>sayKo(`${w[0]}. ${w[2]} 예를 들면, ${w[3]}`);$("#pv").onclick=()=>{k--;draw()};$("#nx").onclick=()=>{if(k<ws.length-1){k++;draw()}else cb()}};draw()}
 function skUnit(u,again){const U=SKU.find(x=>x[0]===u),s=skInit();skCards(u,()=>quiz({title:`${U[3]} ${U[1]} 개념어`,qs:skUnitQs(u),pass:Math.ceil((Math.max(8,SKU.find(x=>x[0]===u)[4].length)+(SKWHY[u]||[]).length)*.75),remake:()=>skUnitQs(u),onAnswer:(q,ok)=>q.sk&&skMark(q.sk,ok),
-  onPass:sc=>{const first=!s.done[u];s.done[u]=today();s.best[u]=Math.max(s.best[u]||0,sc);if(first){S.gems=(S.gems||0)+2;setTimeout(()=>{gemShower(4);toast(`🏅 ${U[1]} 도장 획득! 💎+2`)},300)}if(!doneToday("sci")){markDone("sci");addXP(15)}save()},after:skHub,afterLabel:"개념어 지도로"}))}
+  onPass:sc=>{s.pend={u,sc}},after:()=>{if(s.pend&&s.pend.u===u){const sc=s.pend.sc;s.pend=null;habruta("sk",u,sc)}else skHub()},afterLabel:"다음 ▶"}))}
 function skReview(){const due=skDue(),pool=due.length?due:shuffle(SKALL.filter(x=>skSeen(x.t)&&!skMast(x.t)).map(x=>x.t));const list=shuffle(pool).slice(0,10);if(!list.length)return toast("복습할 개념어가 아직 없어요. 단원부터 열어 봐요!");
-  quiz({title:"🔁 과학 개념어 복습",qs:list.map((t,i)=>skQ(skOf(t),i)),onAnswer:(q,ok)=>q.sk&&skMark(q.sk,ok),onPass:sc=>{if(sc===list.length){S.gems=(S.gems||0)+1;toast("🔁 복습 만점! 💎+1")}if(!doneToday("sci")){markDone("sci");addXP(10)}save()},after:skHub,afterLabel:"개념어 지도로"})}
+  quiz({title:"🔁 과학 개념어 복습",qs:list.map((t,i)=>skQ(skOf(t),i)),onAnswer:(q,ok)=>q.sk&&skMark(q.sk,ok),onPass:sc=>{revDone();if(sc===list.length){S.gems=(S.gems||0)+1;toast("🔁 복습 만점! 💎+1")}addXP(10);save()},after:skHub,afterLabel:"개념어 지도로"})}
 function skDict(){app.innerHTML=hdr("📘 과학 개념어 사전")+SKU.map(U=>`<div class="card"><h3>${U[3]} ${U[1]} <small class="muted">${U[2]}학년</small></h3><ul class="skdl">${U[4].map(w=>`<li><b>${skMast(w[0])?"⭐ ":""}${w[0]}</b>${w[1]?` <small class="muted">${w[1]}</small>`:""}<br><span>${w[2]}</span><br><small class="muted">예) ${w[3]}</small></li>`).join("")}</ul></div>`).join("");bindBack()}
 function skHub(){const s=skInit(),n=skCount(),due=skDue().length;
   app.innerHTML=hdr("🔬 과학 개념어 탐험")+`<div class="card"><div class="row"><h3>⭐ 과학 개념어 마스터</h3><span class="pill">${n} / ${SKALL.length}</span></div><div class="bar"><i style="width:${n/SKALL.length*100}%;background:#2FB673"></i></div>
    <p class="muted">초등 3~6학년 과학 전 영역 ${SKU.length}개 단원, 개념어 ${SKALL.length}개. 서로 다른 날 3번 맞히면 ⭐마스터!</p>
    <div class="btns2"><button class="big" id="skr" type="button">🔁 복습 ${due}개</button><button class="big alt" id="skd" type="button">📘 개념어 사전</button></div></div>
    ${[["3~4","3~4학년"],["3~6","3~6학년 이어지는 단원"],["5~6","5~6학년"]].map(([g,gt])=>`<div class="card"><h3>${gt}</h3><div class="skmap">${SKU.filter(U=>U[2]===g).map(U=>{const d=!!s.done[U[0]],m=U[4].filter(w=>skMast(w[0])).length;return `<button type="button" class="skst ${d?"on":""}" data-u="${U[0]}"><span class="skem">${U[3]}</span><b>${U[1]}</b><small>${d?`🏅 도장 · ⭐${m}/${U[4].length}`:`개념어 ${U[4].length}개`}</small></button>`}).join("")}</div></div>`).join("")}
-   <p class="muted" style="text-align:center">단원 하나를 통과하면 오늘 과학 퀘스트 완료! 첫 도장 💎+2</p>`;
+   <p class="muted" style="text-align:center">퀴즈 통과 → 내 말로 설명하기 + 질문 하나 쓰면 도장! 첫 도장 💎+1</p>`;
   bindBack();$("#skr").onclick=skReview;$("#skd").onclick=skDict;app.querySelectorAll("[data-u]").forEach(b=>b.onclick=()=>skUnit(b.dataset.u))}
 
 /* 초등 사회 개념어 (2022 개정 성취기준 기준) [id, 단원, 학기, 그림, 성취기준, [[개념어,한자,뜻,예]]] — 6-2(지금 학교 진도) 먼저 */
@@ -3204,9 +3206,9 @@ function soCards(u,cb){const U=SOU.find(x=>x[0]===u),ws=U[5];let k=0;
     $("#sp").onclick=()=>sayKo(`${w[0]}. ${w[2]} 예를 들면, ${w[3]}`);$("#pv").onclick=()=>{k--;draw()};$("#nx").onclick=()=>{if(k<ws.length-1){k++;draw()}else cb()}};draw()}
 function soUnit(u){const U=SOU.find(x=>x[0]===u),s=soInit(),tot=Math.max(8,U[5].length)+(SOWHY[u]||[]).length;
   soCards(u,()=>quiz({title:`${U[3]} ${U[1]} 개념어`,qs:soUnitQs(u),pass:Math.ceil(tot*.75),remake:()=>soUnitQs(u),onAnswer:(q,ok)=>q.so&&soMark(q.so,ok),
-   onPass:sc=>{const first=!s.done[u];s.done[u]=today();s.best[u]=Math.max(s.best[u]||0,sc);if(first){S.gems=(S.gems||0)+2;setTimeout(()=>{gemShower(4);toast(`🏅 ${U[1]} 도장 획득! 💎+2`)},300)}if(!doneToday("so")){markDone("so");addXP(15)}save()},after:soc,afterLabel:"사회 지도로"}))}
+   onPass:sc=>{s.pend={u,sc}},after:()=>{if(s.pend&&s.pend.u===u){const sc=s.pend.sc;s.pend=null;habruta("so",u,sc)}else soc()},afterLabel:"다음 ▶"}))}
 function soReview(){const due=soDue(),pool=due.length?due:shuffle(SOALL.filter(x=>soSeen(x.t)&&!soMast(x.t)).map(x=>x.t)),list=shuffle(pool).slice(0,10);if(!list.length)return toast("복습할 개념어가 아직 없어요. 단원부터 열어 봐요!");
-  quiz({title:"🔁 사회 개념어 복습",qs:list.map((t,i)=>soQ(soOf(t),i)),onAnswer:(q,ok)=>q.so&&soMark(q.so,ok),onPass:sc=>{if(sc===list.length){S.gems=(S.gems||0)+1;toast("🔁 복습 만점! 💎+1")}if(!doneToday("so")){markDone("so");addXP(10)}save()},after:soc,afterLabel:"사회 지도로"})}
+  quiz({title:"🔁 사회 개념어 복습",qs:list.map((t,i)=>soQ(soOf(t),i)),onAnswer:(q,ok)=>q.so&&soMark(q.so,ok),onPass:sc=>{revDone();if(sc===list.length){S.gems=(S.gems||0)+1;toast("🔁 복습 만점! 💎+1")}addXP(10);save()},after:soc,afterLabel:"사회 지도로"})}
 function soDict(){app.innerHTML=hdr("📙 사회 개념어 사전")+SOU.map(U=>`<div class="card"><h3>${U[3]} ${U[1]} <small class="muted">${SOSEM[U[2]]}</small></h3><ul class="skdl">${U[5].map(w=>`<li><b>${soMast(w[0])?"⭐ ":""}${w[0]}</b>${w[1]?` <small class="muted">${w[1]}</small>`:""}<br><span>${w[2]}</span><br><small class="muted">예) ${w[3]}</small></li>`).join("")}</ul></div>`).join("");bindBack()}
 function soc(){const s=soInit(),n=soCount(),due=soDue().length,cur=SOU.filter(U=>U[2]==="6-2"),next=cur.find(U=>!s.done[U[0]]);
   app.innerHTML=hdr("🌏 사회 개념어 탐험")+`<div class="card"><div class="row"><h3>⭐ 사회 개념어 마스터</h3><span class="pill">${n} / ${SOALL.length}</span></div><div class="bar"><i style="width:${n/SOALL.length*100}%;background:#3B82C4"></i></div>
@@ -3214,8 +3216,49 @@ function soc(){const s=soInit(),n=soCount(),due=soDue().length,cur=SOU.filter(U=
    ${next?`<button class="big" id="sonext" type="button">▶ 오늘 진도: ${next[3]} ${next[1]}</button>`:""}
    <div class="btns2"><button class="big alt" id="sor" type="button">🔁 복습 ${due}개</button><button class="big alt" id="sod" type="button">📙 개념어 사전</button></div></div>
    ${Object.keys(SOSEM).map(g=>`<div class="card ${g==="6-2"?"socur":""}"><h3>${g==="6-2"?"📍 ":""}${SOSEM[g]}</h3><div class="skmap">${SOU.filter(U=>U[2]===g).map(U=>{const d=!!s.done[U[0]],m=U[5].filter(w=>soMast(w[0])).length;return `<button type="button" class="skst so ${d?"on":""}" data-u="${U[0]}"><span class="skem">${U[3]}</span><b>${U[1]}</b><small>${d?`🏅 도장 · ⭐${m}/${U[5].length}`:`개념어 ${U[5].length}개`}</small></button>`}).join("")}</div></div>`).join("")}
-   <p class="muted" style="text-align:center">단원 하나를 통과하면 오늘 사회 퀘스트 완료! 첫 도장 💎+2</p>`;
+   <p class="muted" style="text-align:center">퀴즈 통과 → 내 말로 설명하기 + 질문 하나 쓰면 도장! 첫 도장 💎+1</p>`;
   bindBack();if($("#sonext"))$("#sonext").onclick=()=>soUnit(next[0]);$("#sor").onclick=soReview;$("#sod").onclick=soDict;app.querySelectorAll("[data-u]").forEach(b=>b.onclick=()=>soUnit(b.dataset.u))}
+
+/* 🗓️ 오늘의 코스 (하루 5칸) */
+const CNAME={ma:["🔢","수학"],ko:["📘","국어"],hist:["📜","한국사"],so:["🌏","사회"],sci:["🔬","과학"],hz:["漢","한자"],en:["🔤","영어"],rev:["📝","복습"],mem:["🧠","기억 탐험"]};
+function dayIdx(){const[y,m,d]=today().split("-").map(Number);return Math.floor(Date.UTC(y,m-1,d)/864e5)}
+function courseToday(){const i=dayIdx();return[{k:["ma","ko","hist"][i%3],tag:"학교 공부"},{k:["so","sci"][i%2],tag:["학교 진도","탐구"][i%2]},{k:["hz","en"][i%2],tag:"언어"},{k:"rev",tag:"복습"},{k:"mem",tag:"두뇌"}]}
+function slotDone(k){const td=today();if(k==="rev")return !!(S.rev&&S.rev.d===td);return !!(S[k]&&S[k].last===td)}
+function revDone(){S.rev={d:today()};save();checkGem()}
+function slotSub(k){if(k==="so"){soInit();const n=SOU.find(U=>!S.so.done[U[0]]);return n?`${n[1]}${n[2]==="6-2"?" · 학교 진도":""}`:"복습"}
+  if(k==="sci"){skInit();const n=SKU.find(U=>!S.sk.done[U[0]]);return n?`개념어 · ${n[1]}`:"태양계 탐험"}
+  if(k==="rev"){const w=wrongPool().length;const c=soDue().length+skDue().length+kwDue().length;return w?`오답 ${w}개 (안 틀리면 2배!)`:c?`개념어 복습 ${c}개`:"복습할 게 없으면 눌러서 바로 통과"}
+  if(k==="ma")return "연산·도형 도장깨기";if(k==="ko")return "글냥이와 탐험";if(k==="hist")return "선애의 이야기";if(k==="hz")return "8급 합격 작전";if(k==="en")return "파닉스 · 장면 영어";if(k==="mem")return "작업 기억 게임";return ""}
+function slotGo(k){if(k==="rev")return revSlot();if(k==="so")return soc();({hist,hz,en,mem,ko,ma,sci})[k]()}
+function revSlot(){if(wrongPool().length)return wrongReview();if(soDue().length)return soReview();if(skDue().length)return skReview();if(kwDue().length)return kwReview(()=>{revDone();home()});
+  const seenSo=SOALL.some(x=>soSeen(x.t)&&!soMast(x.t)),seenSk=SKALL.some(x=>skSeen(x.t)&&!skMast(x.t));if(seenSo)return soReview();if(seenSk)return skReview();
+  revDone();popup(`<div class="bigem">🌟</div><h2>복습할 게 하나도 없어!</h2><p>틀린 문제도, 다시 볼 개념어도 없어요. 오늘 복습 칸은 통과 ✓</p>`)}
+function courseHTML(){const c=courseToday(),n=c.filter(x=>slotDone(x.k)).length,open=isOpen(7);
+  return `<div class="card course"><div class="row"><h3>🗓️ 오늘의 코스</h3><span class="pill">${n} / 5</span></div><div class="bar"><i style="width:${n*20}%;background:#2FB673"></i></div>
+   <p class="muted">${n===5?"🎉 오늘 코스 완주! 보석 상자 💎+10을 받았어요.":open?"5칸을 모두 끝내면 보석 상자 💎+10!":"⏰ 아침 7시에 열려요."}</p>
+   <div class="clist">${c.map((x,i)=>{const d=slotDone(x.k),[ic,nm]=CNAME[x.k];return `<button type="button" class="crow ${d?"done":""}" data-c="${x.k}" ${!open&&!S.test?"disabled":""}><span class="cn">${d?"✓":i+1}</span><span class="cic">${ic}</span><span class="ctx"><b>${nm}</b><small>${x.tag} · ${slotSub(x.k)}</small></span><span class="cgo">${d?"완료":"시작 ▶"}</span></button>`}).join("")}</div></div>`}
+/* 🗣️ 하브루타: 설명하기 + 질문 만들기 */
+function habruta(subj,u,sc){const isSo=subj==="so",U=isSo?SOU.find(x=>x[0]===u):SKU.find(x=>x[0]===u),ws=(isSo?U[5]:U[4]).map(w=>w[0]),pick=shuffle(ws.slice()).slice(0,3),st=isSo?soInit():skInit();
+  app.innerHTML=hdr("🗣️ 내 말로 설명하기")+`<div class="card"><p class="pill">${U[3]} ${U[1]} · 퀴즈 통과! 마지막 단계</p>
+   <h3>1. 동생에게 설명하듯 써 봐</h3><p class="muted">아래 개념어 중 하나를 골라, 처음 듣는 동생도 알아듣게 <b>두 문장</b>으로 설명해요.</p>
+   <div class="tapchips">${pick.map(t=>`<button type="button" class="tc hpick" data-t="${t}">${t}</button>`).join("")}</div>
+   <textarea id="hx" class="pinput" rows="4" placeholder="예) 증발은 물이 수증기가 되어 날아가는 거야. 그래서 젖은 빨래가 마르는 거야."></textarea>
+   <h3>2. 궁금한 질문 하나 만들기</h3><p class="muted">이 단원을 배우고 더 알고 싶은 것을 질문으로 써요. 끝에 물음표(?)!</p>
+   <div class="tapchips">${["왜 ~일까?","만약 ~라면 어떻게 될까?","~와 ~는 무엇이 다를까?","우리 생활에서 ~는 어디에 쓰일까?"].map(t=>`<button type="button" class="tc hq" data-q="${t}">${t}</button>`).join("")}</div>
+   <textarea id="hq" class="pinput" rows="2" placeholder="예) 바다에서 물이 증발하면 왜 소금은 남을까?"></textarea>
+   <p class="muted">🎤 키보드의 마이크 버튼을 누르면 말로 해도 글자로 바뀌어요.</p><p class="muted" id="hmsg" style="color:var(--bad)"></p>
+   <div class="btns2"><button class="big" id="hsave" type="button">엄마에게 보내고 도장 받기</button><button class="big alt" id="hskip" type="button">다음에 할래</button></div></div>`;bindBack();
+  let term=pick[0];app.querySelectorAll(".hpick").forEach(b=>b.onclick=()=>{term=b.dataset.t;app.querySelectorAll(".hpick").forEach(x=>x.classList.toggle("on",x===b));const t=$("#hx");if(!t.value.trim())t.value=`${term}은(는) `;t.focus()});
+  app.querySelectorAll(".hq").forEach(b=>b.onclick=()=>{const t=$("#hq");t.value=b.dataset.q;t.focus()});
+  $("#hskip").onclick=()=>{toast("설명과 질문을 써야 도장을 받아요. 다음에 꼭!");isSo?soc():skHub()};
+  $("#hsave").onclick=()=>{const a=$("#hx").value.trim(),q=$("#hq").value.trim();
+    if(a.replace(/\s/g,"").length<15)return $("#hmsg").textContent="설명을 조금 더 써 볼까? 두 문장이면 충분해!";
+    if(q.replace(/\s/g,"").length<6||!/[?？]|까\s*$/.test(q))return $("#hmsg").textContent="질문은 물음표(?)로 끝나게 써 줘!";
+    if(q.includes("~"))return $("#hmsg").textContent="질문 속 ~ 자리를 내 말로 바꿔 써 줘!";
+    st.writes=st.writes||[];st.writes.push({d:today(),t:U[1],q:"설명: "+term,a,qq:q});if(st.writes.length>60)st.writes.shift();
+    const first=!st.done[u];st.done[u]=today();st.best[u]=Math.max(st.best[u]||0,sc||0);if(first){S.gems=(S.gems||0)+1;setTimeout(()=>{gemShower(3);toast(`🏅 ${U[1]} 도장 획득! 💎+1`)},300)}
+    const key=isSo?"so":"sci";if(!doneToday(key)){markDone(key);addXP(20)}save();
+    popup(`<div class="bigem">🏅</div><h2>${U[1]} 도장 쾅!</h2><p>“${esc(a).slice(0,80)}”</p><p class="muted">❓ ${esc(q)}</p><p class="muted">주간 진도표로 엄마에게 전해질 거예요.</p>`);isSo?soc():skHub()}}
 
 function sciHub(){const s=sciInit(),done=doneToday("sci");
   app.innerHTML=hdr("🔭 과학 탐험")+`<button class="card petlink" id="skgo" type="button"><span class="petem">🔬</span><div><h3>과학 개념어 탐험 · ⭐${skCount()}/${SKALL.length}</h3><p class="muted">초등 3~6학년 과학 전 영역 개념어 도장깨기${skDue().length?` · 복습 ${skDue().length}개`:""}</p></div></button><div class="card"><h3>🪐 우리 태양계</h3><div class="prow">${PLANETS.map(p=>`<button type="button" class="pbtn" data-p="${p[1]}">${planetBall(p,Math.max(18,p[3]*.4))}<small>${p[0]}</small></button>`).join("")}</div><p class="muted">행성을 누르면 영어 이름을 들려줘요.</p><div class="btns2"><button class="big alt" id="rv" type="button">🔁 행성 다시 만나기</button><button class="big alt" id="qz" type="button">🪐 태양계 퀴즈</button></div></div>
@@ -3234,7 +3277,7 @@ function sciLesson(n,practice){const L=SCI[n];let i=0;
      <button class="skipb" id="skip" type="button">🙋 이미 알아요! 넘기기 → 💎 보석 퀴즈</button></div>`;
     bindBack();bindKw();$("#prev").onclick=()=>{i--;card()};$("#nx").onclick=()=>{if(i<L.c.length-1){i++;card()}else go()};
     $("#skip").onclick=()=>{const q=L.qs[Math.floor(Math.random()*L.qs.length)];gemQuiz(q,"sci"+n,practice,()=>{adv();sciHub()},()=>card())}};
-  const adv=()=>{const s=sciInit();if(!practice&&s.lv===n&&!doneToday("sci")){s.lv++;markDone("sci");addXP(15);S.gems=(S.gems||0)+3;toast("🚀 과학 단계 UP! 💎 +3");save()}};
+  const adv=()=>{const s=sciInit();if(!practice&&s.lv===n&&!doneToday("sci")){s.lv++;markDone("sci");addXP(15);S.gems=(S.gems||0)+2;toast("🚀 과학 단계 UP! 💎 +2");save()}};
   const go=()=>quiz({title:"🔭 "+L.t,qs:L.qs.map((q,j)=>mkQ(q[0],q[1],q[2],q[4],{hint:q[3],id:n*10+j})),onAnswer:(q,ok)=>{const w=sciInit().wrong;if(!ok&&!w.includes(q.id))w.push(q.id);save()},onPass:adv,after:()=>maWrite(n,practice,{t:L.t,w:L.w,ex:L.ex}),afterLabel:"다음: 말로 설명하기 ✏️"});
   card()}
 
@@ -3255,7 +3298,7 @@ function progRows(){maInit();sciInit();koInit();const r=[],pc=(a,b)=>`${Math.min
   return r}
 function weekStats(){const[a,b]=weekRange(),ev=(S.ev||[]).filter(e=>e[0]>=a&&e[0]<=b),cnt={};ev.forEach(e=>cnt[e[1]]=(cnt[e[1]]||0)+1);const days=(S.days||[]).filter(d=>d>=a&&d<=b).length,gemDays=(S.gemDays||[]).filter(d=>d>=a&&d<=b).length;return{a,b,cnt,total:ev.length,days,gemDays}}
 const TNAME={hist:"한국사",hz:"한자",en:"영어",ko:"국어",ma:"수학",sci:"과학",so:"사회",mem:"기억 탐험",cook:"요리"};
-function weekText(){const w=weekStats(),wr=wrongPool().length,ww=[...(S.ko.writes||[]),...(S.ma.writes||[])].filter(x=>x.d>=w.a&&x.d<=w.b);
+function weekText(){const w=weekStats(),wr=wrongPool().length,ww=[...(S.ko.writes||[]),...(S.ma.writes||[]),...((S.so&&S.so.writes)||[]),...((S.sk&&S.sk.writes)||[])].filter(x=>x.d>=w.a&&x.d<=w.b),wq=ww.filter(x=>x.qq);
   return `[Victoria 주간 진도표 📊] ${w.a.slice(5).replace("-","/")} ~ ${w.b.slice(5).replace("-","/")}
 ✅ 이번 주: ${w.days}일 공부 · 퀘스트 ${w.total}개 · 보석 상자 ${w.gemDays}번
 ${Object.entries(w.cnt).map(([k,v])=>`· ${TNAME[k]||k} ${v}개`).join("\n")||"· (이번 주 기록이 아직 없어요)"}
@@ -3265,7 +3308,7 @@ ${progRows().map(r=>`${r[0]}: ${r[1]} · ${r[2]}`).join("\n")}
 
 💎 보석 ${S.gems||0}개 · ⭐ Lv.${Math.floor(S.xp/50)+1} (${S.xp} XP) · 연속 ${streak()}일
 📝 남은 오답 ${wr}개${(S.hardQ||[]).filter(h=>h.d>=w.a).length?` · 🙋 말이 어려웠던 문제 ${(S.hardQ||[]).filter(h=>h.d>=w.a).length}개`:""}
-${S.baby?`👶 ${esc(S.baby.name)} ${babyAge()}개월`:""}${ww.length?`\n✏️ 이번 주 내가 쓴 문장\n${ww.slice(-3).map(x=>`· “${x.a}”`).join("\n")}`:""}`}
+${S.baby?`👶 ${esc(S.baby.name)} ${babyAge()}개월`:""}${ww.length?`\n✏️ 이번 주 내가 쓴 문장\n${ww.slice(-4).map(x=>`· [${x.t}] “${x.a}”`).join("\n")}`:""}${wq.length?`\n❓ 이번 주 내가 만든 질문\n${wq.slice(-4).map(x=>`· ${x.qq}`).join("\n")}`:""}`}
 function weekView(){const w=weekStats();app.innerHTML=hdr("📊 주간 진도표")+`<div class="card"><h3>${w.a.slice(5)} ~ ${w.b.slice(5)}</h3><p class="muted">이번 주 ${w.days}일 공부 · 퀘스트 ${w.total}개 · 보석 상자 ${w.gemDays}번</p>
   <table class="ptab"><tr><th>과목</th><th>진도</th><th>다음 / 비고</th></tr>${progRows().map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join("")}</table>
   <button class="big" id="wsend" type="button">💌 엄마에게 진도표 보내기</button><p class="muted" id="wmsg"></p></div>`;bindBack();
@@ -3276,17 +3319,18 @@ function weekBanner(){const isSat=new Date().getDay()===6,[a]=weekRange(),sent=S
 
 function rulesHTML(){return `<h2>💎 보석 모으는 법</h2>
 <ol class="rules">
-<li><b>💎 보석 상자 +10</b><span>하루에 요리·한국사·한자·영어·기억 탐험 5개를 모두 끝내면!</span></li>
-<li><b>💎 +2 · +1</b><span>그날 퀘스트를 더 하면 1개마다 +2, 만점 퀴즈마다 +1</span></li>
+<li><b>🗓️ 보석 상자 +10</b><span>홈의 ‘오늘의 코스’ 5칸을 모두 끝내면!</span></li>
+<li><b>💎 +1</b><span>코스 밖 퀘스트 1개마다 +1, 만점 퀴즈마다 +1 (각각 하루 3개까지)</span></li>
 <li><b>🏠 빅토리아 하우스</b><span>보석으로 아기 맞이 준비, 집 꾸미기, 펫샵(아기 백일 뒤 열림)</span></li>
 <li><b>💖 돌봄 하트</b><span>퀘스트 1개 = 하트 1개. 아기와 펫을 돌보는 데 함께 써요</span></li>
 <li><b>🐱 고양이 도감</b><span>보석 상자를 연 날마다 고양이 친구가 한 마리씩 (12마리)</span></li>
 <li><b>🎉 더블 포인트</b><span>퀴즈를 하나도 안 틀리면 XP가 두 배!</span></li>
 <li><b>👑 왕관</b><span>한 주에 보석 5개를 모으면 이번 주 왕관</span></li>
 <li><b>🔥 연속 배지</b><span>3일, 7일, 14일, 30일 연속으로 하면 배지</span></li>
-<li><b>📝 오답 복습</b><span>틀렸던 문제를 다시 맞히면 한 문제에 💎+1 (하루 최대 10개)</span></li>
+<li><b>📝 오답 복습</b><span>틀렸던 문제를 다시 맞히면 한 문제에 💎+1 (하루 최대 5개)</span></li>
 <li><b>💌 엄마 쿠폰</b><span>시장에서 보석으로 엄마 쿠폰을 살 수 있어요</span></li>
-<li><b>📝 오답 복습 2배</b><span>오답 복습을 한 번도 안 틀리고 모두 맞히면 그날 받은 오답 보석이 2배!</span></li>
+<li><b>📝 오답 복습 2배</b><span>오답 복습을 한 번도 안 틀리고 모두 맞히면 받은 오답 보석이 2배!</span></li>
+<li><b>🗣️ 단원 도장</b><span>과학·사회 단원은 퀴즈 통과 후 ‘내 말로 설명 + 질문 하나’를 써야 도장 (첫 도장 💎+1)</span></li>
 </ol>
 <p class="muted" style="text-align:left">⏰ 퀘스트는 매일 아침 7시에 열리고, 하루에 퀘스트마다 5개까지 할 수 있어요. 💡 모르면 힌트를 눌러 봐요!</p>`}
 function showRules(){const o=document.createElement("div");o.className="pop-ov";o.innerHTML=`<div class="pop-card">${rulesHTML()}<button class="big" type="button">알겠어!</button></div>`;document.body.appendChild(o);o.querySelector("button").onclick=()=>{o.remove();if(!S.rulesSeen){S.rulesSeen=true;save()}}}
