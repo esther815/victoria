@@ -532,7 +532,10 @@ function today(){const d=new Date();return d.getFullYear()+"-"+pad(d.getMonth()+
 function hourNow(){const d=new Date();return d.getHours()+d.getMinutes()/60}
 function isOpen(h){return S.test||hourNow()>=h}
 const DAILY=5;
-function doneToday(t){if(!S[t])return false;return S[t].last===today()&&(S[t].cnt||1)>=DAILY&&!S.test}
+function subjComplete(t){try{if(t==="hist")return S.hist.n>=HSTORY.length;if(t==="hz")return S.hz.n>=HZDAYS.length;if(t==="en")return S.en.n>=ENGDAYS.length;if(t==="ko")return S.ko.n>=KO.length;
+  if(t==="ma"){maInit();return Object.entries(MTRK).every(([k,v])=>(S.ma.t[k]||0)>=v.list.length)}if(t==="sci"){sciInit();skInit();return S.sci.lv>=SCI.length&&SKU.every(U=>S.sk.done[U[0]])}if(t==="so"){soInit();return SOU.every(U=>S.so.done[U[0]])}}catch(e){}return false}
+function dailyMax(t){return subjComplete(t)?1:2}
+function doneToday(t){if(!S[t])return false;return S[t].last===today()&&(S[t].cnt||1)>=dailyMax(t)&&!S.test}
 function markDone(t){evLog(t);const d=today(),was=S[t].last===d;if(was)S[t].cnt=(S[t].cnt||1)+1;else S[t].cnt=1;S[t].last=d;S[t].n++;checkGem();if(!was&&courseToday().some(x=>x.k===t))courseToast()}
 function addXP(n){S.xp+=n;const t=today();if(!S.days.includes(t))S.days.push(t);if(S.days.length>60)S.days=S.days.slice(-60);save()}
 function streak(){let c=0;const d=new Date();for(;;){const s=d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());if(S.days.includes(s)){c++;d.setDate(d.getDate()-1)}else{if(c===0&&s===today()){d.setDate(d.getDate()-1);if(S.days.includes(d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())))continue}break}}return c}
@@ -658,7 +661,7 @@ function status(t){
   if(t==="cook")return["go","언제든지"];if(t==="so")soInit();
   const h=7;
   if(doneToday(t))return["done","오늘 완료"];
-  if(S[t].last===today()&&(S[t].cnt||1)<DAILY&&isOpen(h))return["go","한 개 더!"];
+  if(S[t].last===today()&&(S[t].cnt||1)<dailyMax(t)&&isOpen(h))return["go","한 개 더!"];if(subjComplete(t)&&isOpen(h))return["go","복습하기"];
   if(!isOpen(h))return["wait",h+"시에 열려요"];
   return["go","지금 도전!"];
 }
@@ -684,7 +687,7 @@ function home(){
   ${wrongCard()}
   ${petCardHome()}
   ${shopHTML(nextCook())}
-  <p class="foot" id="ver">Victoria Quest v4.5</p>`;
+  <p class="foot" id="ver">Victoria Quest v4.6</p>`;
   if(S.test){$("#parent").onclick=parentPanel;$("#rst").onclick=()=>{$("#rstAsk").hidden=false};$("#rstYes").onclick=()=>{try{localStorage.removeItem(KEY)}catch(e){}location.reload()}}
   app.querySelectorAll(".tile").forEach(b=>b.onclick=()=>({cook:cookStart,hist,hz,en,mem,ko,ma,sci,so:soc})[b.dataset.t]());app.querySelectorAll(".crow").forEach(b=>b.onclick=()=>slotGo(b.dataset.c));bindGoal();
   updBadge();
@@ -1079,7 +1082,7 @@ function mem(){const m=memInit(),T="기억 탐험";
   if(!isOpen(7))return lockScreen(T,7,"아침 7시에 열려요!");
   const lv=m.lv,log=m.log.slice(-14);
   const bars=log.length?`<div class="membars">${log.map(r=>`<i style="height:${Math.min(100,r.corsi*11)}%" title="${r.d}"><b>${r.corsi}</b></i>`).join("")}</div><p class="muted" style="text-align:center">최근 ${log.length}번의 '고양이 발자국' 최고 기록</p>`:"";
-  const done=m.last===today()&&(m.cnt||1)>=DAILY&&!S.test;
+  const done=m.last===today()&&(m.cnt||1)>=2&&!S.test;
   app.innerHTML=hdr("🧠 "+T)+`<div class="card">
    <h3>${done?"오늘 기억 탐험 완료! 연습은 언제든지 OK":"오늘의 기억 탐험: 게임 3개, 약 4분"}</h3>
    <ul class="chips">${MEMGAMES.map(([k,n])=>`<li>${n} · ${k==="nb"?nbWord(lv.nb):k==="corsi"?"발자국 "+lv[k]+"개":"그림 "+lv[k]+"개"}</li>`).join("")}</ul>
@@ -1148,7 +1151,7 @@ function nbGame(m,done){const N=Math.max(1,m.lv.nb),K=12,pal=[CATS[0],CATS[4],CA
     cur=-1;const acc=(hit+cr)/K;if(acc>=.9)m.lv.nb=Math.min(2,N+1);else if(acc<.6)m.lv.nb=1;
     app.innerHTML=hdr("👀 아까 그 고양이?")+`<div class="card lock"><h2>정확도 ${Math.round(acc*100)}%</h2><p>찾아낸 '같아요' ${hit}개 · 놓친 것 ${miss}개 · 잘못 누른 것 ${fa}개</p><p class="muted">${m.lv.nb>N?`대단해! 다음엔 '${nbWord(m.lv.nb)}' 고양이로 도전해요.`:"다음에도 같은 단계로 연습해요. 할수록 쉬워져요!"}</p><button class="big" id="go" type="button">다음</button></div>`;bindBack();$("#go").onclick=()=>done(Math.round(acc*100))}}
 function memEnd(res,practice){const m=memInit();
-  if(!practice&&!(m.last===today()&&(m.cnt||1)>=DAILY)){m.cnt=m.last===today()?(m.cnt||1)+1:1;m.last=today();evLog("mem");m.log.push({d:today(),corsi:res.corsi||0,back:res.back||0,nb:res.nb||0});if(m.log.length>60)m.log=m.log.slice(-60);addXP(20);checkGem()}else save();
+  if(!practice&&!(m.last===today()&&(m.cnt||1)>=2)){m.cnt=m.last===today()?(m.cnt||1)+1:1;m.last=today();evLog("mem");m.log.push({d:today(),corsi:res.corsi||0,back:res.back||0,nb:res.nb||0});if(m.log.length>60)m.log=m.log.slice(-60);addXP(20);checkGem()}else save();
   try{if(!S.log||S.log.d!==today())S.log={d:today(),r:[]};S.log.r.push(["기억 탐험",`발자국 ${res.corsi} · 거꾸로 ${res.back} · 고양이 ${res.nb}%`,"",1]);save()}catch(e){}
   app.innerHTML=hdr("🧠 기억 탐험")+`<div class="card result"><div class="stars">🧠✨</div><h2>오늘의 기억 기록</h2>
    <ul class="rw" style="width:100%"><li><b>🐾</b><span>고양이 발자국 최고</span><em>${res.corsi}개</em></li><li><b>🔁</b><span>거꾸로 기억 최고</span><em>${res.back}개</em></li><li><b>👀</b><span>아까 그 고양이 정확도</span><em>${res.nb}%</em></li></ul>
@@ -3230,13 +3233,14 @@ function soc(){const s=soInit(),n=soCount(),due=soDue().length,cur=SOU.filter(U=
 /* 🗓️ 오늘의 코스 (하루 5칸) */
 const CNAME={ma:["🔢","수학"],ko:["📘","국어"],hist:["📜","한국사"],so:["🌏","사회"],sci:["🔬","과학"],hz:["漢","한자"],en:["🔤","영어"],rev:["📝","복습"],mem:["🧠","기억 탐험"],fr:["🤝","마음 연습"]};
 function dayIdx(){const[y,m,d]=today().split("-").map(Number);return Math.floor(Date.UTC(y,m-1,d)/864e5)}
-function courseToday(){const i=dayIdx();return[{k:["ma","ko","hist"][i%3],tag:"학교 공부"},{k:["so","sci"][i%2],tag:["학교 진도","탐구"][i%2]},{k:["hz","en"][i%2],tag:"언어"},{k:"rev",tag:"복습"},(new Date().getDay()===1||(showD()>=0&&showD()<=2)?{k:"fr",tag:showD()>=0&&showD()<=2?"발표회 준비":"뮤지컬 날"}:{k:["mem","fr"][i%2],tag:["두뇌","마음"][i%2]})]}
+function courseToday(){const i=dayIdx(),pickR=(arr)=>{const open=arr.filter(t=>!subjComplete(t));const L=open.length?open:arr;return L[i%L.length]};const s2=pickR(["so","sci"]);
+  return[{k:pickR(["ma","ko","hist"]),tag:subjComplete("ko")&&subjComplete("hist")?"수학 진도":"학교 공부"},{k:s2,tag:s2==="so"?"학교 진도":"탐구"},{k:dday()>=0?"hz":["hz","en"][i%2],tag:dday()>=0?"8급 시험 준비":"언어"},{k:"rev",tag:"복습"},(new Date().getDay()===1||(showD()>=0&&showD()<=2)?{k:"fr",tag:showD()>=0&&showD()<=2?"발표회 준비":"뮤지컬 날"}:{k:["mem","fr"][i%2],tag:["두뇌","마음"][i%2]})]}
 function slotDone(k){const td=today();if(k==="rev")return !!(S.rev&&S.rev.d===td);return !!(S[k]&&S[k].last===td)}
 function revDone(){const was=S.rev&&S.rev.d===today();S.rev={d:today()};save();checkGem();if(!was)courseToast()}
 function slotSub(k){if(k==="so"){soInit();const n=SOU.find(U=>!S.so.done[U[0]]);return n?`${n[1]}${n[2]==="6-2"?" · 학교 진도":""}`:"복습"}
   if(k==="sci"){skInit();const n=SKU.find(U=>!S.sk.done[U[0]]);return n?`개념어 · ${n[1]}`:"태양계 탐험"}
-  if(k==="rev"){const w=wrongPool().length;const c=soDue().length+skDue().length+kwDue().length;return w?`오답 ${w}개 (안 틀리면 2배!)`:c?`개념어 복습 ${c}개`:"복습할 게 없으면 눌러서 바로 통과"}
-  if(k==="ma")return "연산·도형 도장깨기";if(k==="ko")return "글냥이와 탐험";if(k==="hist")return "선애의 이야기";if(k==="hz")return "8급 합격 작전";if(k==="en")return "파닉스 · 장면 영어";if(k==="mem")return "작업 기억 게임";if(k==="fr"){const n=frNext();return `${FRCAT[n[1]]} · ${frWho(n[2])[0]}`}return ""}
+  if(k==="rev"){const w=wrongPool().length;const c=soDue().length+skDue().length+kwDue().length;return w?`오답 ${Math.min(5,w)}개만 풀면 완료! (남은 ${w}개)`:c?`개념어 복습 ${c}개`:"복습할 게 없으면 눌러서 바로 통과"}
+  if(k==="ma"){maInit();const nx=Object.entries(MTRK).find(([kk,v])=>(S.ma.t[kk]||0)<v.list.length);return nx?`${nx[1].n} 다음 단계`:"복습"}if(k==="hz"&&dday()>=0)return `시험 D-${dday()} · 퀴즈나 실전 도전`;if(k==="ko")return "글냥이와 탐험";if(k==="hist")return "선애의 이야기";if(k==="hz")return "8급 합격 작전";if(k==="en")return "파닉스 · 장면 영어";if(k==="mem")return "작업 기억 게임";if(k==="fr"){const n=frNext();return `${FRCAT[n[1]]} · ${frWho(n[2])[0]}`}return ""}
 function slotGo(k){if(k==="rev")return revSlot();if(k==="so")return soc();if(k==="fr")return frRun(frNext()[0]);({hist,hz,en,mem,ko,ma,sci})[k]()}
 function revSlot(){if(wrongPool().length)return wrongReview();if(soDue().length)return soReview();if(skDue().length)return skReview();if(kwDue().length)return kwReview(()=>{revDone();home()});
   const seenSo=SOALL.some(x=>soSeen(x.t)&&!soMast(x.t)),seenSk=SKALL.some(x=>skSeen(x.t)&&!skMast(x.t));if(seenSo)return soReview();if(seenSk)return skReview();
@@ -3257,7 +3261,7 @@ function habruta(subj,u,sc){const isSo=subj==="so",U=isSo?SOU.find(x=>x[0]===u):
    <textarea id="hq" class="pinput" rows="2" placeholder="예) 바다에서 물이 증발하면 왜 소금은 남을까?"></textarea>
    <p class="muted">🎤 키보드의 마이크 버튼을 누르면 말로 해도 글자로 바뀌어요.</p><p class="muted" id="hmsg" style="color:var(--bad)"></p>
    <div class="btns2"><button class="big" id="hsave" type="button">엄마에게 보내고 도장 받기</button><button class="big alt" id="hskip" type="button">다음에 할래</button></div></div>`;bindBack();
-  let term=pick[0];app.querySelectorAll(".hpick").forEach(b=>b.onclick=()=>{term=b.dataset.t;app.querySelectorAll(".hpick").forEach(x=>x.classList.toggle("on",x===b));const t=$("#hx");if(!t.value.trim())t.value=`${term}은(는) `;t.focus()});
+  let term=pick[0];{const t=$("#hx");t.value=`${term}은(는) ____이에요. 예를 들면 ____.`;const b0=app.querySelector(".hpick");if(b0)b0.classList.add("on")}app.querySelectorAll(".hpick").forEach(b=>b.onclick=()=>{term=b.dataset.t;app.querySelectorAll(".hpick").forEach(x=>x.classList.toggle("on",x===b));const t=$("#hx");if(!t.value.trim()||/^.+은\(는\) ____이에요\. 예를 들면 ____\.$/.test(t.value))t.value=`${term}은(는) ____이에요. 예를 들면 ____.`;t.focus()});
   app.querySelectorAll(".hq").forEach(b=>b.onclick=()=>{const t=$("#hq");t.value=b.dataset.q;t.focus()});$("#hframe").onclick=()=>{const t=$("#hx");t.value=`${term}은(는) ____이에요. 예를 들면 ____.`;t.focus();const i=t.value.indexOf("____");t.setSelectionRange(i,i+4)};
   $("#hskip").onclick=()=>{toast("설명과 질문을 써야 도장을 받아요. 다음에 꼭!");isSo?soc():skHub()};
   $("#hsave").onclick=()=>{const a=$("#hx").value.trim(),q=$("#hq").value.trim();
@@ -3388,11 +3392,11 @@ function frRun(id){const s=FRS.find(x=>x[0]===id),w=frWho(s[2]),f=frInit(),tried
   const step2=()=>{app.innerHTML=hdr("🗣️ 소리 내어 따라 말하기")+`<div class="card">${scene()}<div class="frsay">“${esc(s[7])}”</div><button class="ttsb" id="sp2" type="button">🔊 먼저 들어 보기</button>
      <p class="muted">상대의 눈을 보고, 웃는 얼굴로, 또박또박 한 번 소리 내어 말해 봐요. 엄마나 인형을 친구라고 생각해도 좋아요!</p><button class="big" id="said" type="button">✅ 소리 내어 말했어요</button></div>`;bindBack();
     $("#sp2").onclick=()=>sayKo(s[7]);$("#said").onclick=()=>s[8]?step3():finish()};
-  const step3=()=>{const sug=["“많이 속상했지? 내가 옆에 있을게.”","“괜찮아, 네가 노력한 거 알아.”","“같이 다시 해 보자!”","“말해 줘서 고마워.”"];
+  const step3=()=>{const sug=shuffle(["“많이 속상했지? 내가 옆에 있을게.”","“괜찮아, 네가 노력한 거 알아.”","“같이 다시 해 보자!”","“말해 줘서 고마워.”","“천천히 해도 괜찮아.”","“너는 소중한 친구야.”","“다음엔 꼭 잘될 거야.”","“네 마음 이해해.”","“힘들면 언제든 나한테 말해.”","“실수해도 괜찮아. 다시 하면 돼.”"]).slice(0,4);let warned=false;
     app.innerHTML=hdr("💜 내 마음 들여다보기")+`<div class="card"><h3>${esc(s[8])}</h3><p class="muted">정답은 없어요. 내 마음에 드는 말을 고르거나 직접 써 봐요.</p><div class="fropts">${sug.map(t=>`<button type="button" class="opt frh2">${t}</button>`).join("")}</div>
      <textarea id="frw" class="pinput" rows="2" placeholder="내가 듣고 싶은 말을 직접 써도 좋아요"></textarea><button class="big" id="frs" type="button">이 말로 할게</button></div>`;bindBack();
     let pick="";app.querySelectorAll(".frh2").forEach(b=>b.onclick=()=>{pick=b.textContent.replace(/[“”]/g,"");app.querySelectorAll(".frh2").forEach(x=>x.classList.toggle("sel",x===b))});
-    $("#frs").onclick=()=>{const a=($("#frw").value.trim()||pick);if(!a)return toast("하나 골라 주거나 써 줘요!");f.hear.push({d:today(),q:s[8],a});if(f.hear.length>60)f.hear.shift();save();finish()}};
+    $("#frs").onclick=()=>{const a=($("#frw").value.trim()||pick);if(!a)return toast("하나 골라 주거나 써 줘요!");const last=f.hear.length?f.hear[f.hear.length-1].a:"";if(a===last&&!warned){warned=true;return toast("지난번에도 이 말을 골랐어! 다른 말도 생각해 볼까? 그래도 이게 좋으면 한 번 더 눌러 줘 😊")}f.hear.push({d:today(),q:s[8],a});if(f.hear.length>60)f.hear.shift();save();finish()}};
   const finish=()=>{const first=!f.done[s[0]],before=frLv(s[2]);f.done[s[0]]=today();f.love[s[2]]=(f.love[s[2]]||0)+1;const up=frLv(s[2])>before;if(!doneToday("fr")){markDone("fr");addXP(10)}save();
     popup(`<div class="bigem">${up?"💞":"🌟"}</div><h2>${up?`${esc(w[0])}와(과) 더 친해졌어요!`:"마음 연습 완료!"}</h2><p>“${esc(s[7])}”</p>${up&&["sora","doyun"].includes(s[2])?`<p class="muted">🏠 ${esc(w[0])}가 빅토리아 하우스에 놀러 와요! 집에서 친구를 눌러 봐요.</p>`:""}<p class="muted">실제로 이런 상황이 오면, 오늘 연습한 말을 떠올려 봐요.</p>`);friendView()};
   step1()}
@@ -3513,7 +3517,7 @@ function rulesHTML(){return `<h2>💎 보석 모으는 법</h2>
 <li><b>📝 오답 복습 2배</b><span>오답 복습을 한 번도 안 틀리고 모두 맞히면 받은 오답 보석이 2배!</span></li>
 <li><b>🗣️ 단원 도장</b><span>과학·사회 단원은 퀴즈 통과 후 ‘내 말로 설명 + 질문 하나’를 써야 도장 (첫 도장 💎+1)</span></li>
 </ol>
-<p class="muted" style="text-align:left">⏰ 퀘스트는 매일 아침 7시에 열리고, 하루에 퀘스트마다 5개까지 할 수 있어요. 💡 모르면 힌트를 눌러 봐요!</p>`}
+<p class="muted" style="text-align:left">⏰ 퀘스트는 매일 아침 7시에 열려요. 과목마다 하루 2개까지(다 끝낸 과목은 복습 1개). 많이 하는 것보다 오늘의 코스를 끝내는 게 먼저! 💡 모르면 힌트를 눌러 봐요!</p>`}
 function showRules(){const o=document.createElement("div");o.className="pop-ov";o.innerHTML=`<div class="pop-card">${rulesHTML()}<button class="big" type="button">알겠어!</button></div>`;document.body.appendChild(o);o.querySelector("button").onclick=()=>{o.remove();if(!S.rulesSeen){S.rulesSeen=true;save()}}}
 function cookStart(){const n=nextCook();S.cookCur=n?n.id:LEVELS.length;save();cook()}
 const cOpen=id=>id===1||(S.cook[id-1]&&S.cook[id-1].clear);
