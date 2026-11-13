@@ -11,7 +11,8 @@
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="apple-touch-icon" href="./icon-180.png?v=cat">
 <link rel="icon" href="./icon-192.png?v=cat">
-<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;-webkit-tap-highlight-color:transparent}[hidden]{display:none!important}*{box-sizing:border-box}img{max-width:100%}</style>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;-webkit-tap-highlight-color:transparent}[hidden]{display:none!important}*{box-sizing:border-box}img{max-width:100%}.realm{border:2px solid #FFD43B;background:linear-gradient(#FFF9DB,#fff)}.rmrow{display:flex;gap:10px;align-items:center;padding:6px 0;border-top:1px dashed #eee}.rmrow>div{flex:1}.rmic{font-size:26px}.rmsay{margin:2px 0 0;font-weight:700;color:#C2255C}.rmdone{font-weight:700;margin:8px 0 0}
+</style>
 <title>Victoria Quest</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&family=Noto+Serif+KR:wght@700&display=swap">
@@ -668,6 +669,17 @@ function status(t){
 }
 function updBadge(){try{const n=["hist","hz","en","ko","ma","sci","so","mem"].filter(t=>status(t)[0]==="go").length;if("setAppBadge" in navigator){n?navigator.setAppBadge(n).catch(()=>{}):navigator.clearAppBadge().catch(()=>{})}}catch(e){}}
 setInterval(()=>{updBadge();if(document.querySelector("#ver")&&!document.hidden)home()},60000);
+
+const REALM=[["🍱","급식 받을 때","선생님이 밥을 담아 주시면","감사합니다! 잘 먹겠습니다."],["🏫","아침 교문에서","선생님이나 어른을 보면","안녕하세요!"],["🎒","집에 갈 때","담임 선생님께","안녕히 계세요! 내일 뵙겠습니다."],["🏢","아파트에서","경비 아저씨나 이웃 어른을 보면","안녕하세요!"],["✏️","친구가 도와주면","무언가 빌려주거나 도와주면","고마워!"],["💪","쉬는 시간에","같이 놀고 싶은 친구에게","나도 같이 해도 돼?"],["🛗","엘리베이터에서","이웃 어른을 만나면","안녕하세요!"],["🌈","집에 갈 때","같이 논 친구에게","오늘 재밌었어! 내일 또 놀자!"]];
+function realInit(){S.real=S.real||{log:{}};return S.real}
+function realToday(){const d=new Date(),dw=d.getDay();if(dw===0||dw===6)return [REALM[6],REALM[4]];const i=Math.floor((d-new Date(d.getFullYear(),0,1))/864e5);return [REALM[0],REALM[[1,2,6][i%3]],REALM[[5,7,4][i%3]]]}
+function realHTML(){const r=realInit(),td=today(),st=r.log[td],m=realToday(),h=new Date().getHours();
+  return `<div class="card realm"><h3>🌟 오늘의 실천 미션</h3><p class="muted">앱에서 연습한 말을 진짜로 말해 봐요!</p>${m.map((x,i)=>`<div class="rmrow"><span class="rmic">${x[0]}</span><div><b>${x[1]}</b> <span class="muted">${x[2]}</span><p class="rmsay">“${x[3]}”</p></div><button class="back rmsp" type="button" data-i="${i}" aria-label="듣기">🔊</button></div>`).join("")}
+  ${st?`<p class="rmdone">${st==="y"?"✅ 오늘 실제로 말했어요! 정말 멋져요 💎+2":"😅 괜찮아요. 내일 다시 도전! 작게 말해도 돼요."}</p>`:`<p class="muted" style="margin:6px 0 2px">${h<13?"학교 다녀와서 눌러요.":"오늘 학교에서 말해 봤나요?"}</p><div class="btns2"><button class="big" id="rmy" type="button">✅ 실제로 했어요</button><button class="big alt" id="rmn" type="button">😅 아직 못 했어요</button></div>`}</div>`}
+function bindReal(){const m=realToday();app.querySelectorAll(".rmsp").forEach(b=>b.onclick=()=>say(m[+b.dataset.i][3].replace(/\(.*\)/,"")));
+  const set=v=>{const r=realInit(),td=today();if(r.log[td])return;r.log[td]=v;if(v==="y"){S.gems=(S.gems||0)+2;addXP(5);setTimeout(()=>toast("🌟 진짜로 말했구나! 💎+2 · +5 XP"),300)}else setTimeout(()=>toast("괜찮아! 내일 한 번 더 해 보자 💪"),300);save();home()};
+  if($("#rmy"))$("#rmy").onclick=()=>set("y");if($("#rmn"))$("#rmn").onclick=()=>set("n")}
+function realWeek(a,b){const l=realInit().log;const ks=Object.keys(l).filter(k=>k>=a&&k<=b);return [ks.filter(k=>l[k]==="y").length,ks.length]}
 function home(){
   const lv=Math.floor(S.xp/50)+1,pct=(S.xp%50)/50*100,h=new Date().getHours();
   const hi=h<12?"좋은 아침":h<18?"안녕":"오늘도 수고했어";
@@ -680,6 +692,7 @@ function home(){
    <button class="rulesb" id="rulesb" type="button">📖 보석 규칙 보기</button></header>
   ${showD()===0?`<div class="card showday"><h3>🎭 오늘은 라푼젤 발표회 날!</h3><p>떨리면 선생님께 “너무 떨려요.” 하고 말하고, 숨을 크게 세 번 쉬어요. 끝나면 친구들에게 “멋졌어!” 하고 칭찬해 줘요 💗</p></div>`:""}
   ${courseHTML()}
+  ${realHTML()}
   <details class="more"><summary>➕ 더 하고 싶으면 · 과목 전체 · 요리</summary><p class="muted">코스 밖 퀘스트는 1개마다 💎+1 (하루 3개까지)</p><div class="tiles">${T.map(([k,n,w,c,ic])=>{const[s,txt]=status(k);return `<button class="tile" type="button" data-t="${k}"><span class="ic" style="background:var(${c});${k==="hz"||k==="hist"?"font-family:var(--han)":""}">${ic}</span><h3>${n}</h3><span class="when">${w}</span><span class="chip ${s}">${txt}</span>${s==="go"&&k!=="cook"?`<span class="heart" aria-label="새 퀘스트">♥</span>`:""}</button>`}).join("")}</div></details>
   ${("Notification" in window)&&Notification.permission!=="granted"&&("setAppBadge" in navigator)?`<button class="big alt" id="badgeOn" type="button">♥ 새 퀘스트 알림 켜기</button>`:""}
   ${S.test?`<button class="big" id="parent" type="button">🔧 보호자 설정 (진도·펫·백업)</button><button class="big alt" id="rst" type="button">기록 전체 초기화</button><p class="foot" id="rstAsk" hidden>정말 지울까요? <button class="back" id="rstYes" type="button">네, 지워요</button></p>`:""}
@@ -688,9 +701,9 @@ function home(){
   ${wrongCard()}
   ${petCardHome()}
   ${shopHTML(nextCook())}
-  <p class="foot" id="ver">Victoria Quest v4.8</p>`;
+  <p class="foot" id="ver">Victoria Quest v5.0</p>`;
   if(S.test){$("#parent").onclick=parentPanel;$("#rst").onclick=()=>{$("#rstAsk").hidden=false};$("#rstYes").onclick=()=>{try{localStorage.removeItem(KEY)}catch(e){}location.reload()}}
-  app.querySelectorAll(".tile").forEach(b=>b.onclick=()=>({cook:cookStart,hist,hz,en,mem,ko,ma,sci,so:soc})[b.dataset.t]());app.querySelectorAll(".crow").forEach(b=>b.onclick=()=>slotGo(b.dataset.c));bindGoal();
+  app.querySelectorAll(".tile").forEach(b=>b.onclick=()=>({cook:cookStart,hist,hz,en,mem,ko,ma,sci,so:soc})[b.dataset.t]());app.querySelectorAll(".crow").forEach(b=>b.onclick=()=>slotGo(b.dataset.c));bindGoal();bindReal();
   updBadge();
   $("#gem").onclick=gemRoom;$("#petgo").onclick=houseView;$("#wrgo").onclick=wrongReview;$("#wkgo").onclick=weekView;
   $("#rulesb").onclick=showRules;
@@ -3247,7 +3260,7 @@ function soc(){const s=soInit(),n=soCount(),due=soDue().length,cur=SOU.filter(U=
 const CNAME={ma:["🔢","수학"],ko:["📘","국어"],hist:["📜","한국사"],so:["🌏","사회"],sci:["🔬","과학"],hz:["漢","한자"],en:["🔤","영어"],rev:["📝","복습"],mem:["🧠","기억 탐험"],fr:["🤝","마음 연습"]};
 function dayIdx(){const[y,m,d]=today().split("-").map(Number);return Math.floor(Date.UTC(y,m-1,d)/864e5)}
 function courseToday(){const i=dayIdx(),pickR=(arr)=>{const open=arr.filter(t=>!subjComplete(t));const L=open.length?open:arr;return L[i%L.length]};const s2=pickR(["so","sci"]);
-  return[{k:pickR(["ma","ko","hist"]),tag:subjComplete("ko")&&subjComplete("hist")?"수학 진도":"학교 공부"},{k:s2,tag:s2==="so"?"학교 진도":"탐구"},{k:dday()>=0?"hz":["hz","en"][i%2],tag:dday()>=0?"8급 시험 준비":"언어"},{k:"rev",tag:"복습"},(new Date().getDay()===1||(showD()>=0&&showD()<=2)?{k:"fr",tag:showD()>=0&&showD()<=2?"발표회 준비":"뮤지컬 날"}:{k:["mem","fr"][i%2],tag:["두뇌","마음"][i%2]})]}
+  return[{k:pickR(["ma","ko","hist"]),tag:subjComplete("ko")&&subjComplete("hist")?"수학 진도":"학교 공부"},{k:s2,tag:s2==="so"?"학교 진도":"탐구"},{k:dday()>=0?"hz":["hz","en"][i%2],tag:dday()>=0?"8급 시험 준비":"언어"},{k:"rev",tag:"복습"},{k:"fr",tag:new Date().getDay()===1||(showD()>=0&&showD()<=2)?(showD()>=0&&showD()<=2?"발표회 준비":"뮤지컬 날"):"말 연습 · 매일"}]}
 function slotDone(k){const td=today();if(k==="rev")return !!(S.rev&&S.rev.d===td);return !!(S[k]&&S[k].last===td)}
 function revDone(){const was=S.rev&&S.rev.d===today();S.rev={d:today()};save();checkGem();if(!was)courseToast()}
 function slotSub(k){if(k==="so"){soInit();const n=SOU.find(U=>!S.so.done[U[0]]);return n?`${n[1]}${n[2]==="6-2"?" · 학교 진도":""}`:"복습"}
@@ -3343,9 +3356,36 @@ function bindGoal(){if($("#goalset"))$("#goalset").onclick=goalPick;if($("#goalg
 function courseToast(){const c=courseToday(),n=c.filter(x=>slotDone(x.k)).length;if(n<5)setTimeout(()=>toast(`✅ 오늘의 코스 ${n}/5 · 🎁 선물까지 ${5-n}칸!`),1600)}
 
 /* 🤝 마음 연습: 관계·상황 대처 [id, 분류, 누구, 장소, 그림, 상황, [[말, good|ok|bad, 상대 마음/풀이]], 따라 말할 문장, 듣고 싶은 말 질문(없으면 "")] */
-const FRN={sora:["소라","👧","#FFB3D1","같은 반 친구"],doyun:["도윤","👦","#9ED8FF","같은 반 친구"],teacher:["담임 선생님","👩‍🏫","#B78CFF","어른"],grandma:["이웃 할머니","👵","#E9C46A","어른"],shop:["가게 사장님","🧑‍🍳","#FF8A65","어른"],lib:["사서 선생님","📚","#6EDC9A","어른"],baby:["아기","👶","#FFE79A","동생"],stranger:["모르는 어른","🧍","#9AA3B5","낯선 사람"],me:["나","💜","#C9B6FF","내 마음"],musict:["뮤지컬 선생님","🎭","#FF9EC4","방과후 선생님"],haneul:["하늘","🧒","#B5E7A0","뮤지컬 친구"]};
-const FRCAT={musical:"🎭 뮤지컬 수업",hello:"👋 인사와 시작",play:"🤸 같이 놀기",comfort:"🤗 위로하기",praise:"🎉 칭찬·축하",sorry:"🙏 사과와 화해",help:"🙋 도움 요청",adult:"🙇 어른께 예의",little:"👶 동생 돌보기",safe:"🛡️ 낯선 상황·안전",mine:"💜 내 마음 말하기"};
+const FRN={sora:["소라","👧","#FFB3D1","같은 반 친구"],doyun:["도윤","👦","#9ED8FF","같은 반 친구"],teacher:["담임 선생님","👩‍🏫","#B78CFF","어른"],grandma:["이웃 할머니","👵","#E9C46A","어른"],shop:["가게 사장님","🧑‍🍳","#FF8A65","어른"],lib:["사서 선생님","📚","#6EDC9A","어른"],baby:["아기","👶","#FFE79A","동생"],stranger:["모르는 어른","🧍","#9AA3B5","낯선 사람"],me:["나","💜","#C9B6FF","내 마음"],musict:["뮤지컬 선생님","🎭","#FF9EC4","방과후 선생님"],haneul:["하늘","🧒","#B5E7A0","뮤지컬 친구"],guard:["경비 아저씨","👮","#9AA3B5","어른"],aunt:["엄마 친구","👩","#FFC6A8","어른"],cls:["반 친구","🧑","#C9CED6","같은 반"],newf:["새 친구","🧒","#FFD8A8","친해지고 싶은 친구"],neigh:["이웃 아저씨","👨","#B8D8F0","어른"],acad:["학원 선생님","🧑‍🏫","#A5D8FF","어른"],fmom:["친구 엄마","👩","#FFC9C9","어른"]};
+const FRCAT={greet:"🙇 어른께 인사하기",thanks:"🙏 고맙습니다 말하기",courage:"💪 용기 내어 친구에게 말하기",musical:"🎭 뮤지컬 수업",hello:"👋 인사와 시작",play:"🤸 같이 놀기",comfort:"🤗 위로하기",praise:"🎉 칭찬·축하",sorry:"🙏 사과와 화해",help:"🙋 도움 요청",adult:"🙇 어른께 예의",little:"👶 동생 돌보기",safe:"🛡️ 낯선 상황·안전",mine:"💜 내 마음 말하기"};
 const FRS=[
+["cr1","courage","newf","쉬는 시간 교실","🙋","쉬는 시간에 반 친구가 혼자 그림을 그리고 있어요. 같이 놀고 싶어요.",[["친구 옆에 가서 “안녕! 같이 그려도 돼?”","good","친구 마음: 😊 먼저 말 걸어 줘서 반가워요! 용기 내서 한 말이 친구를 만들어요."],["멀리서 계속 쳐다보기만 한다.","ok","친구 마음: 🤔 왜 보고 있지? 내 마음은 말로 해야 전해져요. 짧게 ‘안녕!’부터 해 봐요."],["친구 그림을 말없이 가져가서 본다.","bad","친구 마음: 😟 허락 없이 가져가서 놀랐어요. 먼저 ‘봐도 돼?’ 하고 물어봐요."]],"안녕! 같이 그려도 돼?",""],
+["cr2","courage","newf","운동장","⚽","친구들이 운동장에서 술래잡기를 하고 있어요. 나도 하고 싶어요.",[["가까이 가서 “나도 같이 해도 돼?”","good","친구 마음: 😄 좋아! 같이 하자! 물어보면 대부분 끼워 줘요."],["갑자기 뛰어들어 친구를 잡는다.","bad","친구 마음: 😕 놀이 규칙을 몰라서 놀이가 엉켰어요. 먼저 물어봐요."],["그냥 혼자 교실로 들어간다.","ok","나: 😔 아쉬워요. 다음엔 ‘나도 해도 돼?’ 한마디로 같이 놀 수 있어요."]],"나도 같이 해도 돼?",""],
+["cr3","courage","newf","교실","👋","새 학기, 아직 이름을 모르는 친구가 내 옆자리에 앉았어요.",[["“안녕, 나는 빅토리아야. 너는 이름이 뭐야?”","good","친구 마음: 😊 이름을 물어봐 줘서 고마워요. 이름을 부르면 금방 친해져요."],["아무 말 없이 앉아 있는다.","ok","괜찮아요. 하지만 먼저 내 이름을 말하면 친구도 편해져요."],["“너 누구야?” 하고 퉁명스럽게 말한다.","bad","친구 마음: 😟 무섭게 들려요. 웃으며 내 이름부터 말해요."]],"안녕, 나는 빅토리아야. 너는 이름이 뭐야?",""],
+["cr4","courage","newf","미술 시간","🎨","옆 친구가 그린 그림이 정말 멋져요.",[["“와, 그림 예쁘다! 어떻게 그렸어?”","good","친구 마음: 🥰 칭찬받으니 기뻐요. 물어봐 주니 더 이야기하고 싶어요."],["속으로만 멋지다고 생각한다.","ok","좋은 마음은 말로 꺼내면 친구에게 선물이 돼요."],["“내 게 더 잘 그렸어.” 한다.","bad","친구 마음: 😞 칭찬 대신 비교해서 속상해요."]],"와, 그림 예쁘다! 어떻게 그렸어?","친구가 내 그림을 보고 어떤 말을 해 주면 기쁠까?"],
+["cr5","courage","newf","하교길","🌈","오늘 친구와 같이 놀아서 정말 즐거웠어요. 이제 집에 가요.",[["“오늘 재밌었어! 내일 또 같이 놀자!”","good","친구 마음: 😄 나도 재밌었어! 내일이 기다려져요."],["인사 없이 집으로 간다.","ok","친구 마음: 🙂 재미없었나? 즐거웠다고 말해 주면 우정이 자라요."],["“내일은 너랑 안 놀 거야.” 한다.","bad","친구 마음: 😢 갑자기 왜? 마음이 아파요."]],"오늘 재밌었어! 내일 또 같이 놀자!",""],
+["cr6","courage","newf","쉬는 시간","🙂","“같이 놀래?” 하고 물었는데 친구가 “지금은 책 읽고 있어.” 해요.",[["“알겠어! 그럼 다음에 같이 놀자.” 하고 웃는다.","good","잘했어요! 👍 ‘지금은 안 돼’는 나를 싫어한다는 뜻이 아니에요. 다음에 또 물어보면 돼요."],["“너 나 싫지?” 하고 운다.","bad","친구 마음: 😥 그런 뜻이 아니었는데… 지금은 책 읽고 싶었을 뿐이에요."],["다시는 말 걸지 않기로 한다.","ok","속상했구나. 한 번 안 됐다고 끝이 아니에요. 다른 때 다시 용기 내 봐요."]],"알겠어! 그럼 다음에 같이 놀자.","친구에게 같이 놀자고 했는데 안 된다고 하면, 나는 어떤 말을 듣고 싶어?"],
+["cr7","courage","newf","모둠 활동","🧩","모둠 친구들이 역할을 나누고 있어요. 나도 하고 싶은 게 있어요.",[["손을 들고 “나는 색칠을 해 볼게!”","good","친구 마음: 👍 하고 싶은 걸 말해 줘서 역할 나누기가 쉬워요."],["아무 말 안 하고 남은 걸 한다.","ok","괜찮지만, 하고 싶은 게 있으면 말해도 돼요. 내 생각도 소중해요."],["“내가 다 할 거야!” 하고 가져간다.","bad","친구 마음: 😠 모둠은 같이 하는 거예요. 나눠서 해요."]],"나는 색칠을 해 볼게!",""],
+["gr6","greet","neigh","엘리베이터","🛗","엘리베이터 문이 열리고 같은 아파트 아저씨가 타셨어요.",[["아저씨를 보고 “안녕하세요!” 하고 인사한다.","good","아저씨 마음: 😊 인사 잘하는 이웃 아이네! 엘리베이터가 따뜻해져요."],["벽만 보고 가만히 있는다.","ok","부끄러울 수 있어요. 작은 목소리로 ‘안녕하세요’ 한마디면 충분해요."],["아저씨가 타는데 문 닫힘 버튼을 누른다.","bad","아저씨 마음: 😟 문에 끼일 뻔했어요. 탈 때는 기다려 드려요."]],"안녕하세요!",""],
+["gr7","greet","neigh","엘리베이터","🚪","내가 먼저 내리려는데 아저씨가 열림 버튼을 눌러 주셨어요.",[["“감사합니다! 안녕히 가세요.” 하고 내린다.","good","아저씨 마음: 🥰 고맙다는 말에 기분이 좋아요."],["말없이 내린다.","ok","아저씨 마음: 🙂 괜찮지만, 도움을 받으면 ‘감사합니다’가 약속이에요."],["뛰어서 내리다 아저씨와 부딪친다.","bad","아저씨 마음: 😣 아파요. 천천히 내리고, 부딪치면 ‘죄송합니다’ 해요."]],"감사합니다! 안녕히 가세요.",""],
+["gr8","greet","acad","학원","🏫","학원에 도착했어요. 선생님이 문 앞에 계세요.",[["“안녕하세요!” 하고 인사하고 들어간다.","good","선생님 마음: 😊 인사하며 들어오니 수업이 즐거워요."],["신발만 벗고 자리로 간다.","ok","선생님 마음: 🙂 왔구나! 인사해 주면 더 반가워요."],["선생님을 피해서 돌아 들어간다.","bad","선생님 마음: 😕 무슨 일 있나 걱정돼요."]],"안녕하세요!",""],
+["gr9","greet","fmom","친구 집","🏠","친구 집에 놀러 갔어요. 친구 엄마가 문을 열어 주세요.",[["“안녕하세요! 저는 빅토리아예요. 초대해 주셔서 감사합니다.”","good","친구 엄마 마음: 🥰 예의 바른 친구가 왔네! 또 놀러 와도 좋아요."],["말없이 친구 방으로 들어간다.","bad","친구 엄마 마음: 😐 인사가 없어서 서운해요."],["작게 “안녕하세요…” 한다.","ok","친구 엄마 마음: 🙂 인사해 줘서 고마워요. 이름까지 말하면 더 좋아요."]],"안녕하세요! 저는 빅토리아예요. 초대해 주셔서 감사합니다.",""],
+["gr1","greet","teacher","아침 교문","🏫","아침에 학교에 들어가는데 교문 앞에 선생님이 서 계세요.",[["선생님 눈을 보고 고개를 숙이며 “안녕하세요!”","good","선생님 마음: 😊 인사를 받으니 아침부터 기분이 좋아요. 인사는 ‘당신을 봤어요, 반가워요’라는 뜻이에요."],["모른 척하고 지나간다.","bad","선생님 마음: 😐 나를 못 봤나? 서운해요. 인사 한마디로 마음이 따뜻해져요."],["작게 고개만 까딱한다.","ok","선생님 마음: 🙂 인사하려는 마음은 보여요. ‘안녕하세요’ 말까지 하면 더 잘 전해져요."]],"안녕하세요!",""],
+["gr2","greet","teacher","교실, 집에 갈 때","🎒","수업이 끝나고 집에 가려고 해요. 담임 선생님이 교실에 계세요.",[["선생님께 “안녕히 계세요! 내일 뵙겠습니다.” 하고 인사한다.","good","선생님 마음: 🥰 인사하고 가니 대견해요. 내일이 기다려져요."],["가방만 메고 조용히 나간다.","bad","선생님 마음: 😐 인사 없이 가서 조금 서운해요."],["“안녕!” 하고 손을 흔든다.","ok","선생님 마음: 🙂 반갑지만, 선생님께는 ‘안녕히 계세요’처럼 높임말로 인사해요."]],"안녕히 계세요! 내일 뵙겠습니다.",""],
+["gr3","greet","guard","아파트 입구","🏢","학교 끝나고 집에 가는데 아파트 입구에 경비 아저씨가 계세요.",[["“안녕하세요!” 하고 고개 숙여 인사한다.","good","아저씨 마음: 😊 매일 인사해 주는 아이라서 더 잘 지켜 주고 싶어요."],["휴대폰을 보며 지나간다.","bad","아저씨 마음: 😐 매일 보는데 인사가 없어서 서운해요."],["눈이 마주치면 웃기만 한다.","ok","아저씨 마음: 🙂 웃어 줘서 좋아요. ‘안녕하세요’까지 하면 더 좋아요."]],"안녕하세요!",""],
+["gr4","greet","aunt","우리 집","👋","엄마 친구가 집에 놀러 오셨어요. 엄마가 “인사드려야지” 하세요.",[["앞으로 가서 고개 숙이며 “안녕하세요! 만나서 반갑습니다.”","good","엄마 친구 마음: 😊 인사를 참 잘하는구나! 엄마도 뿌듯해요."],["엄마 뒤에 숨어서 아무 말 안 한다.","ok","부끄러울 수 있어요. 엄마 옆에 서서 작게라도 ‘안녕하세요’ 하면 충분해요."],["방으로 들어가 버린다.","bad","엄마 친구 마음: 😕 내가 싫은가? 하고 오해할 수 있어요."]],"안녕하세요! 만나서 반갑습니다.",""],
+["gr5","greet","grandma","엘리베이터","🛗","엘리베이터를 탔는데 아는 이웃 할머니가 계세요. 내릴 때가 됐어요.",[["탈 때 “안녕하세요!”, 내릴 때 “안녕히 가세요!”","good","할머니 마음: 🥰 인사를 두 번이나 해 주다니 정말 예의 바른 아이예요."],["타고 내릴 때 아무 말도 안 한다.","bad","할머니 마음: 😐 아는 사이인데 인사가 없어 서운해요."],["내릴 때만 “안녕!” 한다.","ok","할머니 마음: 🙂 고마워요. 어른께는 ‘안녕히 가세요’라고 해요."]],"안녕하세요! … 안녕히 가세요!",""],
+["th1","thanks","teacher","급식실","🍱","급식 시간이에요. 담임 선생님이 내 식판에 밥과 반찬을 담아 주세요.",[["선생님을 보고 “감사합니다! 잘 먹겠습니다.”","good","선생님 마음: 😊 고맙다는 말을 들으니 힘이 나요. 받으면 ‘감사합니다’, 이게 약속이에요."],["말없이 식판을 들고 자리로 간다.","bad","선생님 마음: 😐 매일 담아 주는데 한마디 없으니 서운해요."],["고개만 살짝 숙인다.","ok","선생님 마음: 🙂 마음은 보여요. 목소리로 ‘감사합니다’까지 하면 더 잘 전해져요."]],"감사합니다! 잘 먹겠습니다.",""],
+["th2","thanks","teacher","급식실","🥦","선생님이 내가 잘 못 먹는 반찬을 많이 담아 주시려고 해요.",[["“조금만 주세요. 감사합니다.” 하고 부드럽게 말한다.","good","선생님 마음: 🙂 정중하게 말해 줘서 알맞게 담아 줄 수 있어요."],["“싫어요! 안 먹어요!” 하고 소리친다.","bad","선생님 마음: 😟 갑자기 소리 질러서 놀라요. 원하는 걸 부드럽게 말하면 들어줄 수 있어요."],["아무 말 없이 받고 다 남긴다.","ok","선생님 마음: 😕 말해 줬으면 조금만 줬을 텐데 아까워요."]],"조금만 주세요. 감사합니다.",""],
+["th3","thanks","teacher","급식실","🍚","밥이 맛있어서 조금 더 먹고 싶어요.",[["배식대로 가서 “조금 더 먹어도 될까요?” 하고 여쭌다.","good","선생님 마음: 😊 맛있게 먹어 줘서 기뻐요. 물어봐 줘서 고마워요."],["친구 식판에서 몰래 가져온다.","bad","친구 마음: 😠 허락 없이 가져가서 속상해요."],["더 먹고 싶지만 그냥 참는다.","ok","나: 😔 아쉬워요. 정중하게 물어보면 괜찮아요."]],"조금 더 먹어도 될까요?",""],
+["th4","thanks","sora","교실","✏️","지우개를 안 가져왔는데 소라가 빌려줬어요.",[["“고마워, 소라야! 다 쓰고 돌려줄게.”","good","소라 마음: 😊 고맙다고 해 주니 또 도와주고 싶어요."],["말없이 받아서 쓴다.","ok","소라 마음: 🙂 괜찮지만, ‘고마워’ 한마디면 더 기뻐요."],["다 쓰고 돌려주지 않는다.","bad","소라 마음: 😕 빌려준 건데 돌려받지 못해 속상해요."]],"고마워, 소라야! 다 쓰고 돌려줄게.",""],
+["th5","thanks","teacher","교실","🙋","문제를 못 풀고 있었는데 선생님이 옆에 와서 도와주셨어요.",[["“도와주셔서 감사합니다!”","good","선생님 마음: 🥰 도와준 보람이 있어요."],["다 풀고 아무 말 안 한다.","ok","선생님 마음: 🙂 잘 풀어서 다행이에요. 고맙다고 말해 주면 더 기뻐요."],["“원래 알았어요.”라고 말한다.","bad","선생님 마음: 😕 도와준 마음이 서운해요."]],"도와주셔서 감사합니다!",""],
+["ap1","apology","cls","교실 (선생님과 함께)","🤝","그동안 나를 놀렸던 친구가 선생님 앞에서 “그동안 놀려서 미안해.”라고 사과해요.",[["친구 눈을 보고 “사과해 줘서 고마워. 다음엔 그러지 마.”","good","좋은 대답이에요! 👍 사과를 들었다는 것, 그리고 내가 바라는 것을 분명하게 말했어요."],["“아직 마음이 아파. 시간이 조금 필요해.”","good","이것도 좋은 대답이에요! 👍 바로 괜찮지 않아도 돼요. 내 마음을 솔직하게 말하는 게 중요해요."],["아무 말 없이 가만히 있는다.","ok","말이 안 나올 수 있어요. 괜찮아요. 하지만 아무 말도 안 하면 친구도 선생님도 내 마음을 몰라요. 고개를 끄덕이거나 ‘응, 들었어’ 한마디만 해도 돼요."],["“너 미워! 저리 가!” 하고 소리친다.","bad","화난 마음은 당연해요. 그래도 소리치면 내가 혼날 수 있어요. 화난 마음은 ‘아직 속상해’라는 말로 전해요."]],"사과해 줘서 고마워. 다음엔 그러지 마.","친구가 사과할 때 내 마음은 어때? 나는 어떤 말을 하고 싶어?"],
+["ap2","apology","cls","쉬는 시간","😶","친구가 사과했는데, 나는 아직도 속이 상해요. 친구가 “이제 괜찮지?” 하고 물어요.",[["“사과는 들었어. 그래도 아직 조금 속상해.”","good","좋아요! 👍 억지로 ‘괜찮아’ 하지 않아도 돼요. 솔직한 말이 더 좋은 친구 사이를 만들어요."],["억지로 “응, 괜찮아.” 하고 참는다.","ok","친구를 생각하는 마음은 좋아요. 하지만 마음이 안 괜찮으면 솔직하게 말해도 괜찮아요."],["친구를 밀친다.","bad","몸으로 하면 다칠 수 있고 나도 혼날 수 있어요. 마음은 말로 해요."]],"사과는 들었어. 그래도 아직 조금 속상해.","아직 속상할 때, 친구나 어른이 나에게 어떤 말을 해 주면 좋을까?"],
+["ap3","apology","teacher","교실","🧑‍🏫","선생님이 “친구가 사과했는데, 너는 어떻게 생각하니?” 하고 물으세요. 말이 잘 안 나와요.",[["“잠깐만 생각해도 될까요?” 하고 말한 뒤, 생각나면 말한다.","good","선생님 마음: 😊 생각할 시간을 달라고 말해 줘서 기다려 줄 수 있어요."],["계속 아무 말도 안 한다.","ok","말이 안 나오는 건 이상한 게 아니에요. ‘잠깐만요’ 한마디로 시간을 벌 수 있어요."],["“몰라요!” 하고 소리친다.","bad","선생님 마음: 😟 도와주고 싶은데 마음을 알 수 없어요."]],"잠깐만 생각해도 될까요?",""],
+["te1","tease","cls","교실","😠","친구가 내 말투를 따라 하며 놀려요. 다른 친구들이 웃어요.",[["친구 눈을 보고 “그만해. 나는 그 말 싫어.” 하고 분명하게 말한다.","good","잘했어요! 🛡️ 싫다고 분명하게 말했어요. 그래도 계속하면 선생님께 꼭 말해요."],["울면서 아무 말도 못 한다.","ok","속상한 게 당연해요. 말이 안 나오면 선생님께 가서 ‘도와주세요’ 한마디만 해도 돼요."],["같이 욕을 한다.","bad","나도 혼날 수 있어요. 싫다고 말하고 어른께 알리는 게 나를 지키는 방법이에요."]],"그만해. 나는 그 말 싫어.","누가 나를 놀릴 때, 친구가 내 편이 되어 어떤 말을 해 주면 좋을까?"],
+["te2","tease","teacher","교무실 앞","🙋","친구들이 며칠째 계속 놀려요. 선생님께 말씀드리기로 했어요.",[["“선생님, 친구들이 계속 놀려서 마음이 힘들어요. 도와주세요.”","good","잘했어요! 🛡️ 어른께 말하는 건 고자질이 아니라 나를 지키는 용기예요."],["혼자 참는다.","bad","혼자 참으면 더 힘들어져요. 선생님과 엄마는 나를 도와주는 사람이에요."],["“아무것도 아니에요.” 하고 돌아선다.","ok","말하기 어려웠구나. 쪽지에 써서 드려도 괜찮아요."]],"선생님, 친구들이 계속 놀려서 마음이 힘들어요. 도와주세요.",""],
+["te3","tease","me","우리 집","🏠","학교에서 놀림을 받아 속상해요. 엄마가 저녁을 차려 주세요.",[["“엄마, 오늘 친구가 놀려서 속상했어. 이야기해도 돼?”","good","엄마 마음: 🤗 말해 줘서 고마워요. 같이 방법을 찾을 수 있어요."],["아무 일 없는 척한다.","ok","엄마 마음: 😟 무슨 일인지 몰라서 도와줄 수 없어요. 엄마는 언제나 내 편이에요."],["밥을 안 먹고 방에 들어간다.","bad","엄마 마음: 😢 걱정돼요. 속상한 마음은 말로 꺼내면 가벼워져요."]],"엄마, 오늘 친구가 놀려서 속상했어. 이야기해도 돼?",""],
 ["mu1","musical","haneul","방과후 뮤지컬 교실","👑","라푼젤 역할을 정하는 날이에요. 나도 라푼젤을 하고 싶었는데, 하늘이가 라푼젤로 뽑혔어요.",[["“아쉽지만 괜찮아. 하늘아, 축하해! 나는 내 역할을 열심히 할게.”","good","하늘 마음: 🥰 축하해 줘서 고마워요. 같이 멋진 공연을 만들고 싶어요. 아쉬운 마음을 참고 축하하는 건 정말 멋진 일이에요."],["“왜 하늘이가 해요? 불공평해요!” 하고 소리친다.","bad","하늘 마음: 😢 기뻤는데 갑자기 속상해졌어요. 아쉬운 마음은 나중에 선생님께 조용히 말할 수 있어요."],["시무룩하게 아무 말도 안 한다.","ok","선생님 마음: 🤔 많이 아쉽구나. ‘아쉬워요’ 하고 말로 알려 주면 마음을 나눌 수 있어요."]],"아쉽지만 괜찮아. 하늘아, 축하해!","원하는 역할을 못 맡아서 아쉬울 때, 어떤 말을 들으면 힘이 날까?"],
 ["mu2","musical","musict","방과후 뮤지컬 교실","🎤","연습 중에 내 대사가 갑자기 생각나지 않아요. 모두 나를 보고 있어요.",[["숨을 크게 한 번 쉬고 “선생님, 대사를 잊어버렸어요. 첫 단어만 알려 주실 수 있어요?”","good","선생님 마음: 😊 솔직하게 말해 줘서 바로 도와줄 수 있어요. 배우들도 대사를 잊을 때가 있어요."],["그대로 굳어서 가만히 서 있는다.","ok","선생님 마음: 🤔 많이 당황했구나. 말로 알려 주면 금방 도와줄 수 있어요."],["울면서 무대 밖으로 뛰쳐나간다.","bad","친구들 마음: 😟 걱정돼요. 잊어도 괜찮아요. 도움을 청하면 돼요."]],"선생님, 대사를 잊어버렸어요. 첫 단어만 알려 주실 수 있어요?","실수해서 당황했을 때 듣고 싶은 말은?"],
 ["mu3","musical","haneul","방과후 뮤지컬 교실","🎵","하늘이가 노래하다가 음이 틀렸어요. 몇몇 친구들이 킥킥 웃어요.",[["“괜찮아, 나도 자주 틀려. 다시 해 보자!” 하고 말해 준다.","good","하늘 마음: 🥹 창피했는데 편들어 줘서 용기가 나요."],["친구들과 같이 웃는다.","bad","하늘 마음: 😭 더 창피하고 노래하기가 무서워져요."],["못 들은 척 가만히 있는다.","ok","하늘 마음: 😔 아무도 편이 없는 것 같아요. 작은 한마디가 큰 힘이 돼요."]],"괜찮아, 나도 자주 틀려. 다시 해 보자!",""],
@@ -3384,9 +3424,10 @@ const FRS=[
 ["m1","mine","doyun","교실","🙅","도윤이가 장난으로 내 머리를 자꾸 잡아당겨요. 나는 싫어요.",[["도윤이 눈을 보고 “그만해. 나는 그거 싫어.”라고 분명하게 말한다.","good","도윤 마음: 😳 싫은 줄 몰랐어요. 분명하게 말해 줘서 알게 됐어요. 그래도 계속하면 선생님께 말해요."],["참고 아무 말도 안 한다.","ok","내 마음: 😣 계속 참으면 더 힘들어져요. 싫은 건 싫다고 말해도 돼요."],["도윤이를 세게 때린다.","bad","도윤 마음: 😭 아프고, 나도 혼날 수 있어요. 말로 먼저 해요."]],"그만해. 나는 그거 싫어.","누가 나를 불편하게 할 때, 친구들이 나에게 어떤 말을 해 주면 힘이 날까?"],
 ["m2","mine","me","집","🌧️","오늘 학교에서 속상한 일이 있었어요. 집에 와서 엄마가 “오늘 어땠어?” 하고 물어요.",[["“오늘 속상한 일이 있었어. 이야기해도 돼?”","good","엄마 마음: 🤗 말해 줘서 고마워요. 같이 생각할 수 있어요."],["“몰라!” 하고 방문을 쾅 닫는다.","bad","엄마 마음: 😟 무슨 일인지 몰라서 걱정돼요."],["“괜찮아.” 하고 혼자 참는다.","ok","엄마 마음: 🙂 괜찮은 줄 알아요. 힘든 마음은 나누면 가벼워져요."]],"오늘 속상한 일이 있었어. 이야기해도 돼?","내가 속상한 날, 엄마가 어떤 말을 해 주면 좋을까?"],
 ["m3","mine","sora","교실","🙋","모둠 활동에서 내 의견을 말하고 싶은데 다들 다른 이야기를 해요.",[["손을 들고 “나도 생각이 있는데 말해도 될까?” 하고 묻는다.","good","친구들 마음: 🙂 차례를 정중하게 물어봐서 귀 기울여 들을 수 있어요."],["친구 말을 끊고 내 말만 한다.","bad","친구 마음: 😕 말을 끊어서 기분이 상해요."],["말하지 못하고 끝난다.","ok","내 마음: 😔 아쉬워요. 내 생각도 소중해요. 용기 내어 말해 봐요."]],"나도 생각이 있는데 말해도 될까?",""]];
+const FRS_ALL=FRS.slice(),FRLATER_D="2026-12-07";if(today()<FRLATER_D){for(let k=FRS.length-1;k>=0;k--)if(FRS[k][1]==="apology"||FRS[k][1]==="tease")FRS.splice(k,1)}else{FRCAT.apology="🤝 사과 받기";FRCAT.tease="🛡️ 놀림에 대처하기"}
 function frInit(){S.fr=S.fr||{n:0,last:"",cnt:0};S.fr.done=S.fr.done||{};S.fr.love=S.fr.love||{};S.fr.hear=S.fr.hear||[];return S.fr}
 const frWho=k=>k==="baby"&&S.baby?[S.baby.name,"👶","#FFE79A","동생"]:FRN[k];
-function frNext(){const f=frInit(),cats=Object.keys(FRCAT);{const d=showD();if(d>=0&&d<=7){const m=["mu8","mu7","mu2","mu3"].map(id=>FRS.find(s=>s[0]===id)).find(s=>s&&f.done[s[0]]!==today()&&(!f.done[s[0]]||d<=1));if(m)return m}}if(new Date().getDay()===1){const m=FRS.find(s=>s[1]==="musical"&&!f.done[s[0]]);if(m)return m}let best=null,bi=1e9;FRS.forEach((s,i)=>{if(f.done[s[0]])return;const r=Object.values(f.done).length,score=(cats.indexOf(s[1])-r%cats.length+cats.length)%cats.length*100+i;if(score<bi){bi=score;best=s}});return best||FRS[Math.floor(Math.random()*FRS.length)]}
+function frNext(){const f=frInit(),cats=Object.keys(FRCAT);{const core=FRS.filter(s=>["greet","thanks","courage"].includes(s[1]));const CO=["courage","thanks","greet"],nd=core.filter(s=>!f.done[s[0]]).sort((x,y)=>(+x[0].slice(2)-+y[0].slice(2))||(CO.indexOf(x[1])-CO.indexOf(y[1])))[0];if(nd&&!(showD()>=0&&showD()<=2))return nd;const rc=(f.cnt2=f.cnt2||{});const due=core.filter(s=>(rc[s[0]]||0)<3&&f.done[s[0]]!==today());if(due.length&&!(showD()>=0&&showD()<=2))return due.sort((a,b)=>(rc[a[0]]||0)-(rc[b[0]]||0))[0]}{const d=showD();if(d>=0&&d<=7){const m=["mu8","mu7","mu2","mu3"].map(id=>FRS.find(s=>s[0]===id)).find(s=>s&&f.done[s[0]]!==today()&&(!f.done[s[0]]||d<=1));if(m)return m}}if(new Date().getDay()===1){const m=FRS.find(s=>s[1]==="musical"&&!f.done[s[0]]);if(m)return m}let best=null,bi=1e9;FRS.forEach((s,i)=>{if(f.done[s[0]])return;const r=Object.values(f.done).length,score=(cats.indexOf(s[1])-r%cats.length+cats.length)%cats.length*100+i;if(score<bi){bi=score;best=s}});return best||FRS[Math.floor(Math.random()*FRS.length)]}
 function frLv(k){return Math.floor((frInit().love[k]||0)/3)}
 function friendView(){hInit();const f=frInit(),nx=frNext(),done=Object.keys(f.done).length;
   app.innerHTML=hdr("🤝 마음 연습")+hTabs("friend")+`<div class="card"><h3>🤝 빅토리아 마을 친구들</h3><p class="muted">친구, 어른, 동생, 낯선 사람… 상황마다 어떤 말을 하면 좋을지 연습해요. 연습할수록 친구와 더 친해지고, 친한 친구는 내 집에 놀러 와요!</p>
@@ -3410,7 +3451,7 @@ function frRun(id){const s=FRS.find(x=>x[0]===id),w=frWho(s[2]),f=frInit(),tried
      <textarea id="frw" class="pinput" rows="2" placeholder="내가 듣고 싶은 말을 직접 써도 좋아요"></textarea><button class="big" id="frs" type="button">이 말로 할게</button></div>`;bindBack();
     let pick="";app.querySelectorAll(".frh2").forEach(b=>b.onclick=()=>{pick=b.textContent.replace(/[“”]/g,"");app.querySelectorAll(".frh2").forEach(x=>x.classList.toggle("sel",x===b))});
     $("#frs").onclick=()=>{const a=($("#frw").value.trim()||pick);if(!a)return toast("하나 골라 주거나 써 줘요!");const last=f.hear.length?f.hear[f.hear.length-1].a:"";if(a===last&&!warned){warned=true;return toast("지난번에도 이 말을 골랐어! 다른 말도 생각해 볼까? 그래도 이게 좋으면 한 번 더 눌러 줘 😊")}f.hear.push({d:today(),q:s[8],a});if(f.hear.length>60)f.hear.shift();save();finish()}};
-  const finish=()=>{const first=!f.done[s[0]],before=frLv(s[2]);f.done[s[0]]=today();f.love[s[2]]=(f.love[s[2]]||0)+1;const up=frLv(s[2])>before;if(!doneToday("fr")){markDone("fr");addXP(10)}save();
+  const finish=()=>{f.cnt2=f.cnt2||{};f.cnt2[s[0]]=(f.cnt2[s[0]]||0)+1;const first=!f.done[s[0]],before=frLv(s[2]);f.done[s[0]]=today();f.love[s[2]]=(f.love[s[2]]||0)+1;const up=frLv(s[2])>before;if(!doneToday("fr")){markDone("fr");addXP(10)}save();
     popup(`<div class="bigem">${up?"💞":"🌟"}</div><h2>${up?`${esc(w[0])}와(과) 더 친해졌어요!`:"마음 연습 완료!"}</h2><p>“${esc(s[7])}”</p>${up&&["sora","doyun"].includes(s[2])?`<p class="muted">🏠 ${esc(w[0])}가 빅토리아 하우스에 놀러 와요! 집에서 친구를 눌러 봐요.</p>`:""}<p class="muted">실제로 이런 상황이 오면, 오늘 연습한 말을 떠올려 봐요.</p>`);friendView()};
   step1()}
 function frParkVisit(){if(H3&&H3.walk)H3.walk.say("공원에 친구들이 있네! 마음 연습하러 가자 🤝",2000);setTimeout(friendView,1200)}
@@ -3483,6 +3524,7 @@ function sciLesson(n,practice){const L=SCI[n];let i=0;
 function evLog(t){S.ev=S.ev||[];S.ev.push([today(),t]);if(S.ev.length>800)S.ev=S.ev.slice(-800)}
 function weekRange(){const d=new Date(),day=d.getDay(),start=new Date(d.getFullYear(),d.getMonth(),d.getDate()-day);const f=x=>x.getFullYear()+"-"+pad(x.getMonth()+1)+"-"+pad(x.getDate());const end=new Date(start);end.setDate(start.getDate()+6);return[f(start),f(end),start]}
 function progRows(){maInit();sciInit();koInit();const r=[],pc=(a,b)=>`${Math.min(a,b)}/${b} (${Math.round(Math.min(a,b)/b*100)}%)`;
+  {const[a,b]=weekRange(),[y,n]=realWeek(a,b);r.push(["🌟 실천 미션",`이번 주 ${y}일 성공`,n?`기록 ${n}일 중 실제로 말한 날 ${y}일`:"아직 기록 없음"])}
   r.push(["🍳 요리",pc(LEVELS.filter(l=>S.cook[l.id]&&S.cook[l.id].clear).length,LEVELS.length),(nextCook()||{name:"모두 완료"}).name||""]);
   r.push(["📜 한국사",pc(S.hist.n,HSTORY.length),S.hist.n<HSTORY.length?HSTORY[S.hist.n].t:"복습 단계"]);
   r.push(["漢 한자",pc(S.hz.n,HZDAYS.length),`익힌 한자 ${hzLearnedChars(Math.min(S.hz.n,HZDAYS.length)).length}/${HZ.length}자${S.hz.best?` · 모의 최고 ${S.hz.best}/25`:""}`]);
@@ -3499,6 +3541,7 @@ const TNAME={hist:"한국사",hz:"한자",en:"영어",ko:"국어",ma:"수학",sc
 function weekText(){const w=weekStats(),wr=wrongPool().length,ww=[...(S.ko.writes||[]),...(S.ma.writes||[]),...((S.so&&S.so.writes)||[]),...((S.sk&&S.sk.writes)||[])].filter(x=>x.d>=w.a&&x.d<=w.b),wq=ww.filter(x=>x.qq);
   return `[Victoria 주간 진도표 📊] ${w.a.slice(5).replace("-","/")} ~ ${w.b.slice(5).replace("-","/")}
 ✅ 이번 주: ${w.days}일 공부 · 퀘스트 ${w.total}개 · 보석 상자 ${w.gemDays}번
+🌟 실천 미션(실제로 말하기): ${realWeek(w.a,w.b)[0]}일 성공 / 기록 ${realWeek(w.a,w.b)[1]}일
 ${Object.entries(w.cnt).map(([k,v])=>`· ${TNAME[k]||k} ${v}개`).join("\n")||"· (이번 주 기록이 아직 없어요)"}
 
 📚 과목별 진도
