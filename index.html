@@ -742,7 +742,7 @@ function home(){
   ${wrongCard()}
   ${petCardHome()}
   ${shopHTML(nextCook())}
-  <p class="foot" id="ver">Victoria Quest v5.6</p>`;
+  <p class="foot" id="ver">Victoria Quest v5.7</p>`;
   if(S.test){$("#parent").onclick=parentPanel;$("#rst").onclick=()=>{$("#rstAsk").hidden=false};$("#rstYes").onclick=()=>{try{localStorage.removeItem(KEY)}catch(e){}location.reload()}}
   app.querySelectorAll(".tile").forEach(b=>b.onclick=()=>({cook:cookStart,hist,hz,en,mem,ko,ma,sci,so:soc})[b.dataset.t]());app.querySelectorAll(".crow").forEach(b=>b.onclick=()=>slotGo(b.dataset.c));bindGoal();bindReal();if($("#pmgo"))$("#pmgo").onclick=pmView;pmEvents();
   updBadge();
@@ -2683,7 +2683,7 @@ function midFs(f){return Object.entries(f).filter(([b,e])=>e>0).map(([b,e])=>e>1
 function midWrong(f){const ks=Object.keys(f),o=[],c1={...f};c1[ks[0]]++;o.push(midFs(c1));const c2={...f};if(c2[ks[ks.length-1]]>1)c2[ks[ks.length-1]]--;else c2[ks[ks.length-1]]=2;o.push(midFs(c2));const n=ks.reduce((a,k)=>a*k**f[k],1);if(f[2]>=2){const c3={...f};c3[2]-=2;o.push(["4",midFs(c3)].filter(Boolean).join(" × ").replace(/ × $/,""))}else o.push(`${ks[0]} × ${n/ks[0]}`);return uniq(midFs(f),o)}
 function midGcd(a,b){return b?midGcd(b,a%b):a}
 function midLine(){let t="";for(let i=-5;i<=5;i++){const x=20+(i+5)*22;t+=`<line x1="${x}" y1="22" x2="${x}" y2="32" stroke="#5B4BD6" stroke-width="2"/><text x="${x}" y="48" font-size="11" text-anchor="middle" fill="${i<0?"#D9485F":i>0?"#2F6FEB":"#1E2940"}">${i>0?"+"+i:i<0?"−"+(-i):"0"}</text>`}return SV(260,60,`<line x1="10" y1="27" x2="250" y2="27" stroke="#5B4BD6" stroke-width="2.5"/>${t}`)}
-function midOpen(){try{return today()>=PMDATES.grad||pmLv(pmStats().int)>=3}catch(e){return false}}
+function midOpen(){return today()>=PMDATES.grad}
 function sbTrk(n){for(const k in MTRK){const i=MTRK[k].list.findIndex(x=>x[0]==="sb"&&x[1]===n);if(i>=0)return[i+1,MTRK[k].list.length,k]}return[n+1,SB.length,"shape"]}function sbPos(n){return sbTrk(n)[0]}
 function sbLesson(n,practice){const L=SB[n];let i=0;
   const card=()=>{const c=L.c[i];app.innerHTML=hdr((L.boss?"🏆 ":L.mid?"🏫 ":"🏰 ")+`${L.mid?"중1 수학 ":""}${sbPos(n)}단계`)+`<div class="card"><div class="row"><span class="pill">${L.mid?(L.boss?"🏫 중1 보스 💎8":"🏫 중1 예습 💎3"):L.boss?"보스 스테이지 💎8":"도장깨기 💎3"}</span><span class="pill">${sbTrk(n)[0]} / ${sbTrk(n)[1]}</span></div><h3 style="text-align:center">${L.t}</h3><div class="dots">${L.c.map((_,j)=>`<i class="${j===i?"on":""}"></i>`).join("")}</div><div class="hstory"><span class="hem">${c[0]}</span></div>
@@ -2715,7 +2715,7 @@ const mtTitle=it=>it[0]==="mb"?MB[it[1]].t:it[0]==="sb"?SB[it[1]].t:MA[it[1]].t;
 function maRun(trk,pos,practice){MCUR=trk;const it=MTRK[trk].list[pos];if(!it)return;it[0]==="mb"?mbLesson(it[1],practice):it[0]==="sb"?sbLesson(it[1],practice):maLesson(it[1],practice)}
 function maMain(){const T="수학 탐험",k=maInit(),done=doneToday("ma"),open=isOpen(7);
   app.innerHTML=hdr(T)+(open?"":`<div class="card lock"><p>아침 7시에 열려요! 지금은 지난 과 연습만 할 수 있어요.</p></div>`)+(done?`<div class="card"><p>오늘 수학 탐험 완료! 아래에서 지난 과 연습이나 논리 게임은 언제든 할 수 있어요.</p></div>`:"")+
-  Object.entries(MTRK).map(([key,tr])=>{if(key==="mid"&&!midOpen())return `<div class="card lock"><div class="row"><h3>${tr.n}</h3><span class="pill">🔒</span></div><p class="muted">${tr.d}</p><p>🔓 <b>👑 성장 기록의 🧠 지성 Lv.3</b>이 되거나 <b>초등학교 졸업일(2027. 1. 7.)</b>이 되면 열려요!</p></div>`;const p=Math.min(k.t[key],tr.list.length),nx=tr.list[p];return `<div class="card"><div class="row"><h3>${tr.n}</h3><span class="pill">${p} / ${tr.list.length}</span></div><p class="muted">${tr.d}</p>${key==="shape"?stampBoard():""}<div class="bar"><i style="width:${p/tr.list.length*100}%;background:#16A3A3"></i></div>
+  Object.entries(MTRK).map(([key,tr])=>{if(key==="mid"&&!midOpen())return "";const p=Math.min(k.t[key],tr.list.length),nx=tr.list[p];return `<div class="card"><div class="row"><h3>${tr.n}</h3><span class="pill">${p} / ${tr.list.length}</span></div><p class="muted">${tr.d}</p>${key==="shape"?stampBoard():""}<div class="bar"><i style="width:${p/tr.list.length*100}%;background:#16A3A3"></i></div>
     ${nx?`<button class="big" type="button" data-trk="${key}" ${!open||done?"disabled":""}>다음: ${mtTitle(nx)}</button>`:`<p class="pill">🌟 이 파트 완료!</p>`}
     ${p?`<details><summary class="muted">지난 과 다시 하기 (${p}개)</summary><div class="tapchips">${tr.list.slice(0,p).map((it,i)=>`<button type="button" class="tc" data-past="${key}:${i}">${i+1}. ${mtTitle(it)}</button>`).join("")}</div></details>`:""}</div>`}).join("")+
   `<div class="card"><h3>🧩 논리 게임</h3><p class="muted">머리로 차근차근 따져 보는 게임! 하나를 끝까지 풀면 오늘 수학 퀘스트 1개로 쳐요.</p><div class="btns2"><button class="big alt" data-lg="sudoku" type="button">🐱 동물 스도쿠</button><button class="big alt" data-lg="pattern" type="button">🔁 규칙 찾기</button><button class="big alt" data-lg="balance" type="button">⚖️ 저울 추리</button><button class="big alt" data-lg="truth" type="button">🕵️ 누가 했을까?</button></div></div>`;
