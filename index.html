@@ -543,7 +543,7 @@ function subjComplete(t){try{if(t==="hist")return S.hist.n>=HSTORY.length;if(t==
   if(t==="ma"){maInit();return Object.entries(MTRK).every(([k,v])=>(S.ma.t[k]||0)>=v.list.length)}if(t==="sci"){sciInit();skInit();return S.sci.lv>=SCI.length&&SKU.every(U=>S.sk.done[U[0]])}if(t==="so"){soInit();return SOU.every(U=>S.so.done[U[0]])}}catch(e){}return false}
 function dailyMax(t){if(t==="ma")return subjComplete(t)?3:5;return subjComplete(t)?1:2}
 function doneToday(t){if(!S[t])return false;return S[t].last===today()&&(S[t].cnt||1)>=dailyMax(t)&&!S.test}
-function markDone(t){evLog(t);const d=today(),was=S[t].last===d;if(was)S[t].cnt=(S[t].cnt||1)+1;else S[t].cnt=1;S[t].last=d;S[t].n++;checkGem();if(!was&&courseToday().some(x=>x.k===t))courseToast()}
+function markDone(t){evLog(t);const d=today(),was=S[t].last===d;if(was)S[t].cnt=(S[t].cnt||1)+1;else S[t].cnt=1;S[t].last=d;S[t].n++;checkGem();if(!was&&courseToday().some(x=>x.k===t))courseToast();setTimeout(momDaily,1500)}
 function addXP(n){S.xp+=n;const t=today();if(!S.days.includes(t))S.days.push(t);if(S.days.length>60)S.days=S.days.slice(-60);save()}
 function streak(){let c=0;const d=new Date();for(;;){const s=d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());if(S.days.includes(s)){c++;d.setDate(d.getDate()-1)}else{if(c===0&&s===today()){d.setDate(d.getDate()-1);if(S.days.includes(d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())))continue}break}}return c}
 function dday(){const t=new Date();t.setHours(0,0,0,0);return Math.round((EXAM-t)/864e5)}
@@ -722,9 +722,19 @@ function pmEvents(){const P=pmInit(),t=today();
   if(t>=PMDATES.grad&&!P.ev.grad){P.ev.grad=1;save();const[a]=pmTop(),dr=pmDream();setTimeout(()=>popup(`<div class="bigem">🎓</div><h2>초등학교 졸업을 축하해요!</h2><p>6년 동안 정말 수고했어요, Victoria.<br>지금 Victoria는 <b>${PMTITLE[a]}</b>!<br>장래 희망: ${dr[0]}</p><p class="muted">3월 2일, 중학교 입학과 함께 새 단계가 열려요.</p>`),900)}
   else if(t>=PMDATES.mid&&!P.ev.mid){P.ev.mid=1;save();setTimeout(()=>popup(`<div class="bigem">🏫</div><h2>중학생이 된 걸 축하해요!</h2><p>오늘부터 <b>중학교 1학년 1학기</b>예요.<br>새 친구에게 먼저 “안녕, 나는 ○○야!” 하고 인사해 볼까?</p>`),900)}}
 
-const VQVER="Victoria Quest v6.1";
+const VQVER="Victoria Quest v6.2";
 async function vqUpdCheck(){if(location.protocol==="file:"||document.querySelector(".updbar"))return;try{const t=await fetch("./index.html?u="+Date.now(),{cache:"no-store"}).then(r=>r.text());const m=t.match(/const VQVER="(Victoria Quest v[\d.]+)"/);if(m&&m[1]!==VQVER){const b=document.createElement("button");b.type="button";b.className="updbar";b.textContent="🔄 새 버전이 나왔어요! 눌러서 업데이트 (진도는 그대로)";b.onclick=async()=>{b.textContent="업데이트 중…";try{const rs=await navigator.serviceWorker.getRegistrations();await Promise.all(rs.map(r=>r.update()))}catch(e){}location.reload()};document.body.appendChild(b)}}catch(e){}}
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)vqUpdCheck()});setTimeout(vqUpdCheck,2500);
+/* ===== 엄마 알림(ntfy 푸시): 하루 한 번 자동 보고 + 감사 일기·소원은 쓸 때마다 ===== */
+const MOMK="vq-mom";
+function momTopic(){try{return localStorage.getItem(MOMK)||""}catch(e){return ""}}
+(function(){try{const q=new URLSearchParams(location.search).get("mom");if(q&&/^vq-[a-f0-9]{16}$/.test(q)){localStorage.setItem(MOMK,q);history.replaceState(null,"",location.pathname);setTimeout(()=>{try{toast("📲 엄마 알림이 연결됐어요")}catch(e){}momPost("📲 Victoria 알림 연결 완료","이제 매일 한 번 공부 기록이 오고, 감사 일기와 소원은 쓸 때마다 와요.")},1500)}}catch(e){}})();
+async function momPost(title,body){const t=momTopic();if(!t)return false;try{const r=await fetch(`https://ntfy.sh/${t}?title=${encodeURIComponent(title)}&tags=crown`,{method:"POST",body});return r.ok}catch(e){return false}}
+function momNotes(td){const C=S.church||{},p=(C.prayers||[]).filter(x=>x.d===td),w=(C.wishes||[]).filter(x=>x.d===td||x.dd===td);let o="";if(p.length)o+="\n📔 오늘의 감사 일기\n"+p.map(x=>"· "+x.t).join("\n");if(w.length)o+="\n💌 마음의 소원\n"+w.map(x=>(x.dd===td?"✨(이루어짐) ":"· ")+x.t).join("\n");return o}
+async function momDaily(){if(!momTopic())return;const td=today();if(S.momSent===td)return;let done=false;try{done=courseToday().every(x=>slotDone(x.k))}catch(e){}if(!(done||new Date().getHours()>=19))return;
+  S.momSent=td;save();let pm="";try{const st=pmStats();pm="\n👑 성장: "+PMST.map(([k,n])=>n.split(" ")[1]+" Lv."+pmLv(st[k])).join(" · ")}catch(e){}
+  const ok=await momPost(`👑 Victoria 오늘의 공부 ${td.slice(5).replace("-","/")}${done?" · 코스 완주!":""}`,reportText()+pm+momNotes(td));if(!ok){S.momSent="";save()}}
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)momDaily()});
 function home(){
   const lv=Math.floor(S.xp/50)+1,pct=(S.xp%50)/50*100,h=new Date().getHours();
   const hi=h<12?"좋은 아침":h<18?"안녕":"오늘도 수고했어";
@@ -749,7 +759,7 @@ function home(){
   ${shopHTML(nextCook())}
   <p class="foot" id="ver">${VQVER}</p>`;
   if(S.test){$("#parent").onclick=parentPanel;$("#rst").onclick=()=>{$("#rstAsk").hidden=false};$("#rstYes").onclick=()=>{try{localStorage.removeItem(KEY)}catch(e){}location.reload()}}
-  app.querySelectorAll(".tile").forEach(b=>b.onclick=()=>({cook:cookStart,hist,hz,en,mem,ko,ma,sci,so:soc})[b.dataset.t]());app.querySelectorAll(".crow").forEach(b=>b.onclick=()=>slotGo(b.dataset.c));bindGoal();bindReal();if($("#pmgo"))$("#pmgo").onclick=pmView;pmEvents();
+  app.querySelectorAll(".tile").forEach(b=>b.onclick=()=>({cook:cookStart,hist,hz,en,mem,ko,ma,sci,so:soc})[b.dataset.t]());app.querySelectorAll(".crow").forEach(b=>b.onclick=()=>slotGo(b.dataset.c));bindGoal();bindReal();if($("#pmgo"))$("#pmgo").onclick=pmView;pmEvents();setTimeout(momDaily,1200);
   updBadge();
   $("#gem").onclick=gemRoom;$("#petgo").onclick=houseView;$("#wrgo").onclick=wrongReview;$("#wkgo").onclick=weekView;
   $("#rulesb").onclick=showRules;
@@ -2039,9 +2049,9 @@ function notesView(from){S.church=S.church||{prayers:[]};const C=S.church;C.wish
    <div class="card"><h3>💌 마음의 소원 나누기</h3><p class="muted">마음속 바람이나 기도 제목을 적어 두어요. 이루어지면 ‘이루어졌어요’를 눌러요.</p><div class="kexample"><b>✏️ 예시</b><p>새 학교에서 마음이 맞는 친구를 만나게 해 주세요.</p></div><textarea id="wt" class="kwrite" rows="3" maxlength="300" placeholder="나의 마음의 소원은…"></textarea><button class="big" id="wsave" type="button">소원 적기</button>
    ${C.wishes.length?`<ul class="tricks">${C.wishes.map((w,i)=>({w,i})).reverse().map(({w,i})=>`<li class="${w.done?"ok":""}">${w.done?"✨ ":"🙏 "}${esc(w.t)}<br><small>${w.d.replace(/-/g,". ")} 적음${w.done?` · ${w.dd.replace(/-/g,". ")} 이루어졌어요!`:""}</small>${w.done?"":`<br><button type="button" class="buy" data-wd="${i}">🌟 이루어졌어요</button>`}</li>`).join("")}</ul>`:""}</div>`;
   bindBack();$("#back").onclick=back;
-  $("#nsave").onclick=()=>{const v=$("#nt").value.trim();if(v.length<5)return toast("한 문장만 써 볼까?");C.prayers.push({d:today(),t:v});const first=C.last!==today();C.last=today();if(first)addXP(5);save();toast("📔 감사 일기를 남겼어요"+(first?" +5 XP":""));notesView(from)};
-  $("#wsave").onclick=()=>{const v=$("#wt").value.trim();if(v.length<3)return toast("소원을 한 줄 써 볼까?");C.wishes.push({d:today(),t:v,done:false});save();toast("💌 마음의 소원을 적었어요");notesView(from)};
-  app.querySelectorAll("[data-wd]").forEach(b=>b.onclick=()=>{const w=C.wishes[+b.dataset.wd];w.done=true;w.dd=today();save();try{confetti()}catch(e){}toast("✨ 감사해요! 소원이 이루어졌어요");notesView(from)})}
+  $("#nsave").onclick=()=>{const v=$("#nt").value.trim();if(v.length<5)return toast("한 문장만 써 볼까?");C.prayers.push({d:today(),t:v});const first=C.last!==today();C.last=today();if(first)addXP(5);save();momPost("📔 Victoria 감사 일기 "+today().slice(5).replace("-","/"),v);toast("📔 감사 일기를 남겼어요"+(first?" +5 XP":""));notesView(from)};
+  $("#wsave").onclick=()=>{const v=$("#wt").value.trim();if(v.length<3)return toast("소원을 한 줄 써 볼까?");C.wishes.push({d:today(),t:v,done:false});save();momPost("💌 Victoria 마음의 소원 "+today().slice(5).replace("-","/"),v);toast("💌 마음의 소원을 적었어요");notesView(from)};
+  app.querySelectorAll("[data-wd]").forEach(b=>b.onclick=()=>{const w=C.wishes[+b.dataset.wd];w.done=true;w.dd=today();save();momPost("✨ Victoria 소원이 이루어졌어요","「"+w.t+"」 ("+w.d.replace(/-/g,". ")+" 적음)");try{confetti()}catch(e){}toast("✨ 감사해요! 소원이 이루어졌어요");notesView(from)})}
 function townAction(k){if(k==="home"){H3MODE="house";return houseView()}if(k==="market")return market();if(k==="pet")return petShop();if(k==="lib")return kwDict();if(k==="church")return churchVisit();if(k==="park")return frParkVisit();if(k==="beauty")return makeupView("town");if(k==="play")return playground();if(k==="wed")return weddingHall()}
 function bindTown(B,cam,cv,st){const ray=new THREE.Raycaster(),pl=new THREE.Plane(new THREE.Vector3(0,1,0),-.07);B.vic.name="vic";const W={path:[],cb:null};H3.walk=W;
   const bub=document.createElement("div");bub.className="vbub";st.appendChild(bub);let until=0;const say=(t,ms=2600)=>{bub.textContent=t;until=performance.now()+ms;vqTalk(t)};voiceBtn(st);W.say=say;say("마을에 나왔어! 가고 싶은 곳을 눌러 봐 👆",4500);
@@ -2840,9 +2850,9 @@ function koReview(){const ids=pick(S.ko.wrong,4);const all=KO.flatMap((L,n)=>L.q
     onPass:()=>{if(!doneToday("ko")){markDone("ko");addXP(15)}}})}
 
 /* 보호자: 진도 되살리기 · 백업 */
-function parentPanel(){hInit();koInit();const cl=LEVELS.filter(l=>S.cook[l.id]&&S.cook[l.id].clear).length;
+function parentPanel(){setTimeout(()=>{const b=document.querySelector("#momtest");if(b)b.onclick=async()=>{S.momSent="";const td=today();const ok=await momPost(`👑 Victoria 기록 ${td.slice(5).replace("-","/")} (보호자 요청)`,reportText()+momNotes(td));toast(ok?"📨 보냈어요":"보내지 못했어요. 인터넷 연결을 확인해 주세요")}},50);hInit();koInit();const cl=LEVELS.filter(l=>S.cook[l.id]&&S.cook[l.id].clear).length;
   const row=(id,label,val,max,unit)=>`<li><span>${label}</span><div><input class="pnum" type="number" inputmode="numeric" id="${id}" min="0" max="${max}" value="${val}"><small>${unit} (최대 ${max})</small></div></li>`;
-  app.innerHTML=hdr("🔧 보호자 설정")+`<div class="card"><h3>📋 진도 되살리기</h3><p class="muted">아이가 마지막으로 끝낸 곳을 숫자로 넣으면 그다음부터 이어서 해요.</p>
+  app.innerHTML=hdr("🔧 보호자 설정")+`<div class="card"><h3>📲 엄마 알림</h3><p class="muted">${momTopic()?"✅ 연결됨 · 매일 한 번 공부 기록, 감사 일기·소원은 쓸 때마다 알림이 가요.":"❌ 연결 안 됨 · 엄마가 받은 연결 링크를 이 기기에서 한 번 열어 주세요."}</p>${momTopic()?`<button class="big alt" id="momtest" type="button">📨 지금 오늘 기록 보내기</button>`:""}</div><div class="card"><h3>📋 진도 되살리기</h3><p class="muted">아이가 마지막으로 끝낸 곳을 숫자로 넣으면 그다음부터 이어서 해요.</p>
    <ul class="mkt pform">${row("p_cook","🍳 요리 클리어",cl,LEVELS.length,"레벨")}${row("p_hist","📜 한국사",S.hist.n,HSTORY.length,"편")}${row("p_hz","漢 한자",S.hz.n,HZDAYS.length,"과")}${row("p_en","🔤 영어",S.en.n,ENGDAYS.length,"Day")}${row("p_ko","📘 국어",S.ko.n,KO.length,"과")}${(maInit(),"")}${row("p_mc","🧮 수학 연산",S.ma.t.calc,MTRK.calc.list.length,"과")}${row("p_ms","📐 수학 도형",S.ma.t.shape,MTRK.shape.list.length,"과")}${row("p_mr","⚖️ 수학 비와 비례",S.ma.t.ratio,MTRK.ratio.list.length,"과")}${row("p_gem","💎 보석",S.gems||0,9999,"개")}</ul>
    <button class="big" id="psave" type="button">진도 저장</button><p class="muted" id="pmsg"></p></div>
   <div class="card"><h3>🔁 모르는 한자 목록</h3><p class="muted">아이가 모르는 한자를 붙여 넣으면 집중 반복에 들어가요. (8급 52자 안의 글자만)</p><input id="pfz" class="pinput" placeholder="예) 母校南韓"><button class="big alt" id="pfzb" type="button">집중 반복에 추가</button></div>
