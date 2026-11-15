@@ -15,6 +15,7 @@
 .sdghost{position:fixed;z-index:9999;font-size:44px;transform:translate(-50%,-60%);pointer-events:none;filter:drop-shadow(0 4px 6px rgba(0,0,0,.25))}.sc.dov{outline:3px solid #F59F00;background:#FFF3BF!important}.sdpick button{touch-action:none;user-select:none;-webkit-user-select:none}
 .vnight{position:absolute;inset:0;background:radial-gradient(circle at 70% 20%,rgba(255,240,180,.25),rgba(20,24,70,.6));opacity:0;transition:opacity 1s;pointer-events:none;border-radius:inherit}.vsec{margin:10px 0 4px;font-weight:700}.vgrid button.on,.mkb.on{outline:3px solid #FF7AB0}.mkrow{display:flex;flex-wrap:wrap;gap:6px}.mkb{display:flex;align-items:center;gap:6px;border:1px solid #ddd;background:#fff;border-radius:999px;padding:6px 12px;font:inherit}.mkb span{display:inline-block;width:18px;height:18px;border-radius:50%;border:1px solid #ccc}.mkface{display:flex;justify-content:center}.playtap{font-size:72px;width:140px;height:140px;border-radius:50%;border:4px solid #FFD54A;background:#FFF9DB;margin:10px auto;display:block}.playtap.pop{animation:ptp .25s}@keyframes ptp{50%{transform:scale(1.15)}}.hidegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:280px;margin:10px auto}.hidegrid button{font-size:40px;padding:10px;border-radius:14px;border:1px solid #ddd;background:#F1F6FB}.frc.on{outline:3px solid #FF7AB0}.wedphoto{text-align:center;background:linear-gradient(#FFF0F6,#fff)}.wedpic{font-size:40px;white-space:nowrap}.wedguests{font-size:30px;margin:4px 0}.vowq{font-weight:700;color:#C2255C}
 [data-fc].big:not(.alt){background:#9B6BF2!important;color:#fff!important;font-weight:700}.pmlink{border:2px solid #E7C6FF;background:linear-gradient(#FBF4FF,#fff)}.pmmini{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}.pmmini span{color:#fff;font-size:.78rem;border-radius:999px;padding:1px 8px}.pmhead{display:flex;gap:12px;align-items:center}.pmava{font-size:56px}.pmrow{margin:8px 0}.pmtop{display:flex;justify-content:space-between}.pmdream{display:flex;gap:10px;align-items:center;background:#FFF9DB;border-radius:14px;padding:10px}.pmdream span{font-size:1.3rem;font-weight:700;white-space:nowrap}.pmdream p{margin:0}
+.updbar{position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 8px);z-index:10000;background:#2F6FEB;color:#fff;border:0;border-radius:999px;padding:12px 18px;font:inherit;font-weight:700;box-shadow:0 6px 18px rgba(0,0,0,.25);max-width:92vw}
 </style>
 <title>Victoria Quest</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -720,6 +721,9 @@ function pmEvents(){const P=pmInit(),t=today();
   if(t>=PMDATES.grad&&!P.ev.grad){P.ev.grad=1;save();const[a]=pmTop(),dr=pmDream();setTimeout(()=>popup(`<div class="bigem">🎓</div><h2>초등학교 졸업을 축하해요!</h2><p>6년 동안 정말 수고했어요, Victoria.<br>지금 Victoria는 <b>${PMTITLE[a]}</b>!<br>장래 희망: ${dr[0]}</p><p class="muted">3월 2일, 중학교 입학과 함께 새 단계가 열려요.</p>`),900)}
   else if(t>=PMDATES.mid&&!P.ev.mid){P.ev.mid=1;save();setTimeout(()=>popup(`<div class="bigem">🏫</div><h2>중학생이 된 걸 축하해요!</h2><p>오늘부터 <b>중학교 1학년 1학기</b>예요.<br>새 친구에게 먼저 “안녕, 나는 ○○야!” 하고 인사해 볼까?</p>`),900)}}
 
+const VQVER="Victoria Quest v5.8";
+async function vqUpdCheck(){if(location.protocol==="file:"||document.querySelector(".updbar"))return;try{const t=await fetch("./index.html?u="+Date.now(),{cache:"no-store"}).then(r=>r.text());const m=t.match(/const VQVER="(Victoria Quest v[\d.]+)"/);if(m&&m[1]!==VQVER){const b=document.createElement("button");b.type="button";b.className="updbar";b.textContent="🔄 새 버전이 나왔어요! 눌러서 업데이트 (진도는 그대로)";b.onclick=async()=>{b.textContent="업데이트 중…";try{const rs=await navigator.serviceWorker.getRegistrations();await Promise.all(rs.map(r=>r.update()))}catch(e){}location.reload()};document.body.appendChild(b)}}catch(e){}}
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)vqUpdCheck()});setTimeout(vqUpdCheck,2500);
 function home(){
   const lv=Math.floor(S.xp/50)+1,pct=(S.xp%50)/50*100,h=new Date().getHours();
   const hi=h<12?"좋은 아침":h<18?"안녕":"오늘도 수고했어";
@@ -742,7 +746,7 @@ function home(){
   ${wrongCard()}
   ${petCardHome()}
   ${shopHTML(nextCook())}
-  <p class="foot" id="ver">Victoria Quest v5.7</p>`;
+  <p class="foot" id="ver">${VQVER}</p>`;
   if(S.test){$("#parent").onclick=parentPanel;$("#rst").onclick=()=>{$("#rstAsk").hidden=false};$("#rstYes").onclick=()=>{try{localStorage.removeItem(KEY)}catch(e){}location.reload()}}
   app.querySelectorAll(".tile").forEach(b=>b.onclick=()=>({cook:cookStart,hist,hz,en,mem,ko,ma,sci,so:soc})[b.dataset.t]());app.querySelectorAll(".crow").forEach(b=>b.onclick=()=>slotGo(b.dataset.c));bindGoal();bindReal();if($("#pmgo"))$("#pmgo").onclick=pmView;pmEvents();
   updBadge();
