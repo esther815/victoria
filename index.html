@@ -333,6 +333,7 @@ const HZSTORY={
 "王":["👑","큰 도끼날을 그린 모양이라는 연구가 있어요. 하늘·땅·사람(三)을 하나로 잇는(丨) 사람이라는 옛 풀이도 있어요.","tale"],
 "男":["🚜","밭(田)에서 힘(力, 쟁기)을 쓰는 사람이에요.","pic"],
 "子":["👶","포대기에 싸여 두 팔을 벌린 아기 모습이에요.","pic"]};
+HZ.push(["江","강","강"],["口","입","구"],["內","안","내"],["目","눈","목"],["上","위","상"],["手","손","수"],["右","오른","우"],["入","들","입"],["足","발","족"],["左","왼","좌"],["出","날","출"],["下","아래","하"]);
 const HZU=[["日","月"],["火","水"],["木","金"],["土","外"],["寸","長"],[],["一","二"],["三","四"],["五","六"],["七","八"],["九","十"],[],["東","西"],["南","北"],["小","門"],["山","中"],["靑","白"],[],["父","母"],["兄","弟"],["先","生"],["學","校"],["敎","室"],[],["大","韓"],["民","國"],["軍","人"],["萬","年"],["女","王"],[],["男","子"]];
 const HZDAYS=HZU.map(u=>u.map(ix));
 const HZREVOF=d=>HZDAYS.slice(Math.max(0,d-5),d).flat();
@@ -590,15 +591,15 @@ function missInject(o){if(o.noMiss)return o;const g=o.missKey||o.title,have=new 
 function missHit(q,ok){if(!q.miss||!S.miss)return;const e=S.miss[q.miss];if(!e)return;if(ok){e.c=(e.c||0)+1;if(e.c>=2)delete S.miss[q.miss]}else{e.n++;e.c=0;e.t=today()}save()}
 const COMBO_REWARD={5:1,10:1,15:1,20:1};const COMBO_CHEER={3:["🎆 3연속 정답!","잘하고 있어, Victoria! 차근차근 생각한 덕분이야!"],5:["🎇 5연속! 대단해!","한자 박사가 되어 가고 있어! 이대로 쭉 가자!"],7:["🌟 7연속! 멈출 수 없어!","내일 시험장에서도 이렇게만 하면 돼!"],10:["👑 10연속! 한자 여왕!","정말 자랑스러워! 엄마도 깜짝 놀라겠다!"],15:["🏆 15연속! 전설의 Victoria!","끝까지 집중하는 힘, 최고야!"],20:["💎 20연속! 완벽 그 자체!","너는 해낼 줄 알았어! 합격이 보인다!"]};
 /* 잘하면 빅토리아 방 아이템 바로 선물·바로 적용 */
-function roomReward(why){const V=vroomInit();V.dOwn=V.dOwn||[];const own=souvInit();
-  const pool=[...SOUV.filter(x=>!own.includes(x[0])).map(x=>({k:"s",x})),...VDRESS.filter(d=>d[5]>0&&!V.dOwn.includes(d[0])).map(d=>({k:"d",x:d})),...Object.entries(VROOM_T).filter(([k,t])=>t.p>0&&!V.own.includes(k)).map(([k,t])=>({k:"t",x:[k,t]}))];
+function roomReward(why,pref){const V=vroomInit();V.dOwn=V.dOwn||[];const own=souvInit();
+  const dolls=SOUV.filter(x=>x[4]==="plush"&&!own.includes(x[0])).map(x=>({k:"s",x}));const pool=pref==="doll"&&dolls.length?dolls:[...SOUV.filter(x=>!own.includes(x[0])).map(x=>({k:"s",x})),...VDRESS.filter(d=>d[5]>0&&!V.dOwn.includes(d[0])).map(d=>({k:"d",x:d})),...Object.entries(VROOM_T).filter(([k,t])=>t.p>0&&!V.own.includes(k)).map(([k,t])=>({k:"t",x:[k,t]}))];
   if(!pool.length)return false;const g=pool[Math.floor(Math.random()*pool.length)];let em,nm,where;
-  if(g.k==="s"){own.push(g.x[0]);em=g.x[2];nm=g.x[1];where="침실 선반에 바로 놓았어요";V.r="bed"}
+  if(g.k==="s"){own.push(g.x[0]);em=g.x[2];nm=g.x[1];where=g.x[4]==="plush"?`침실 선반에 바로 앉혔어요 · 인형 ${own.filter(k=>(SOUV.find(z=>z[0]===k)||[])[4]==="plush").length}/${SOUV.filter(z=>z[4]==="plush").length}종`:"침실 선반에 바로 놓았어요";V.r="bed"}
   if(g.k==="d"){V.dOwn.push(g.x[0]);V.dress=g.x[0];em=g.x[4]==="pj"?"🌙":"👗";nm=g.x[1];where="지금 바로 갈아입었어요";V.r="dress"}
   if(g.k==="t"){V.own.push(g.x[0]);V.t=g.x[0];em="✨";nm=g.x[1].n+" 방";where="내 방을 바로 새단장했어요";V.r="bed"}
   S.rwLog=S.rwLog||[];S.rwLog.push({d:today(),n:nm});save();try{confetti()}catch(e){}
   setTimeout(()=>{popup(`<div class="bigem">🎁</div><h2>${why}</h2><div class="souvbig">${em}</div><p><b>${nm}</b>을(를) 선물로 받았어요!</p><p class="muted">👑 ${where}.</p><button class="big" id="rwgo" type="button">👑 내 방에서 보기</button>`);const b=document.getElementById("rwgo");if(b)b.onclick=()=>{document.querySelectorAll(".pop-ov").forEach(x=>x.remove());H3MODE="room";houseView()}},700);return true}
-function comboCheer(n){if(COMBO_REWARD[n]&&(!S.rwDay||S.rwDay.d!==today()||S.rwDay.n<8)){S.rwDay=S.rwDay&&S.rwDay.d===today()?S.rwDay:{d:today(),n:0};S.rwDay.n++;setTimeout(()=>roomReward(`🔥 ${n}연속 정답 선물!`),2600)}const c=COMBO_CHEER[n]||(n>20&&n%5===0?[`🚀 ${n}연속!`,"믿을 수 없을 만큼 잘하고 있어!"]:null);if(!c)return;try{confetti()}catch(e){}if(n>=5)setTimeout(()=>{try{confetti()}catch(e){}},450);if(n>=10)setTimeout(()=>{try{confetti()}catch(e){}},900);
+function comboCheer(n){if(COMBO_REWARD[n]&&(!S.rwDay||S.rwDay.d!==today()||S.rwDay.n<8)){S.rwDay=S.rwDay&&S.rwDay.d===today()?S.rwDay:{d:today(),n:0};S.rwDay.n++;setTimeout(()=>roomReward(`🔥 ${n}연속 정답 선물!`,HZT7()&&document.title&&app.querySelector(".qtag")?"doll":""),2600)}const c=COMBO_CHEER[n]||(n>20&&n%5===0?[`🚀 ${n}연속!`,"믿을 수 없을 만큼 잘하고 있어!"]:null);if(!c)return;try{confetti()}catch(e){}if(n>=5)setTimeout(()=>{try{confetti()}catch(e){}},450);if(n>=10)setTimeout(()=>{try{confetti()}catch(e){}},900);
   const d=document.createElement("div");d.className="cheerpop";d.innerHTML=`<div class="cheerfw">🎆🎇✨🎆</div><b>${c[0]}</b><p>${c[1]}</p>`;document.body.appendChild(d);setTimeout(()=>d.classList.add("out"),2300);setTimeout(()=>d.remove(),2800);try{sayKo(c[0].replace(/[^가-힣0-9 !]/g,"")+" "+c[1],{quiet:true})}catch(e){}}
 function quiz(o){o=missInject(o);
   const N=o.qs.length,queue=o.qs.map(q=>Object.assign({},q,{re:false}));let i=0,score=0,combo=0,fastWrong=0;const marks=[],past=[];
@@ -738,7 +739,7 @@ function pmEvents(){const P=pmInit(),t=today();
   if(t>=PMDATES.grad&&!P.ev.grad){P.ev.grad=1;save();const[a]=pmTop(),dr=pmDream();setTimeout(()=>popup(`<div class="bigem">🎓</div><h2>초등학교 졸업을 축하해요!</h2><p>6년 동안 정말 수고했어요, Victoria.<br>지금 Victoria는 <b>${PMTITLE[a]}</b>!<br>장래 희망: ${dr[0]}</p><p class="muted">3월 2일, 중학교 입학과 함께 새 단계가 열려요.</p>`),900)}
   else if(t>=PMDATES.mid&&!P.ev.mid){P.ev.mid=1;save();setTimeout(()=>popup(`<div class="bigem">🏫</div><h2>중학생이 된 걸 축하해요!</h2><p>오늘부터 <b>중학교 1학년 1학기</b>예요.<br>새 친구에게 먼저 “안녕, 나는 ○○야!” 하고 인사해 볼까?</p>`),900)}}
 
-const VQVER="Victoria Quest v6.8";
+const VQVER="Victoria Quest v6.9";
 async function vqUpdCheck(){if(location.protocol==="file:"||document.querySelector(".updbar"))return;try{const t=await fetch("./index.html?u="+Date.now(),{cache:"no-store"}).then(r=>r.text());const m=t.match(/const VQVER="(Victoria Quest v[\d.]+)"/);if(m&&m[1]!==VQVER){const b=document.createElement("button");b.type="button";b.className="updbar";b.textContent="🔄 새 버전이 나왔어요! 눌러서 업데이트 (진도는 그대로)";b.onclick=async()=>{b.textContent="업데이트 중…";try{const rs=await navigator.serviceWorker.getRegistrations();await Promise.all(rs.map(r=>r.update()))}catch(e){}location.reload()};document.body.appendChild(b)}}catch(e){}}
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)vqUpdCheck()});setTimeout(vqUpdCheck,2500);
 /* ===== 엄마 알림(ntfy 푸시): 하루 한 번 자동 보고 + 감사 일기·소원은 쓸 때마다 ===== */
@@ -1012,7 +1013,7 @@ function hzMain(){
   const T="한자 8급 합격 작전";const n=S.hz.n,dd=dday();
   if(!isOpen(7))return lockScreen(T,7,"아침 7시에 열려요!");
   const U=HZDAYS.length,learning=n<U,isRev=learning&&HZDAYS[n].length===0,known=hzLearnedChars(Math.min(n,U)).length;
-  const head=`<div class="row"><span class="dday">시험 D-${dd<=0?"DAY":dd} · 11월 28일(토)</span><span class="pill">배운 한자 ${known} / ${HZ.length} · ${Math.min(n,U)}/${U}과</span></div><div class="bar"><i style="width:${Math.min(n,U)/U*100}%;background:var(--hanja)"></i></div>`;
+  const head=`<div class="row"><span class="dday">시험 D-${dd<=0?"DAY":dd} · 11월 28일(토)</span><span class="pill">배운 한자 ${known} / 52 · ${Math.min(n,U)}/${U}과</span></div><div class="bar"><i style="width:${Math.min(n,U)/U*100}%;background:var(--hanja)"></i></div>`;
   const mock=n>=U?`<button class="big alt" id="mock" type="button">대한검정회 8급 모의시험 (30자 범위, 25문제, 18개 이상 합격)${S.hz.best?` · 최고 ${S.hz.best}점`:""}</button>`:"";
   if(doneToday("hz")){app.innerHTML=hdr(T)+`<div class="card">${head}<h3>오늘 한자 퀘스트 완료!</h3><p class="muted">내일 아침 7시에 다음 퀘스트가 열려요.</p><div class="btns"><button class="big alt" id="rev" type="button">연습 한 번 더</button>${mock}<button class="big" id="gohome" type="button">홈으로</button></div></div>`;
     bindBack();$("#gohome").onclick=home;$("#rev").onclick=()=>learning?hzLearn(Math.max(0,n-1),true):hzReview(true);if($("#mock"))$("#mock").onclick=hzMock;return}
@@ -1294,43 +1295,56 @@ function pastHTML(t){const cap=t==="ma"?MA.length:t==="ko"?KO.length:t==="hist"?
   return `<div class="card"><h3>지난 퀘스트 다시 하기</h3><p class="muted">언제든 다시 할 수 있어요. 복습용이라 진도는 그대로예요.</p><div class="tapchips">${Array.from({length:n},(_,d)=>`<button type="button" class="tc past" data-t="${t}" data-d="${d}" ${t==="hz"?'style="font-family:var(--han)"':""}>${lab(d)}</button>`).join("")}</div></div>`}
 function withPast(t){app.insertAdjacentHTML("beforeend",pastHTML(t));app.querySelectorAll(".past").forEach(b=>b.onclick=()=>{const d=+b.dataset.d;if(t==="hist")histLesson(d,true);else if(t==="ko")koLesson(d,true);else if(t==="ma")maLesson(d,true);else if(t==="hz")hzLearn(d,true);else enLearn(d,true)})}
 function hist(){histMain();withPast("hist")}
+/* ===== v6.9 🏯 7급 (대한검정회 7급 50자 = 8급 30자 + 7급 신출 20자, 공식 표제훈음) ===== */
+const HZ7_START="2026-11-29";const HZT7=()=>today()>=HZ7_START;
+const HZ7NEW="江口內年大目白山上小手外右入足左中靑出下";
+const G7=[...EXAM30,...HZ7NEW];
+const HZ7HUN={"父":"아버지","母":"어머니","兄":"맏","山":"메"};
+const hunT=i=>(HZT7()&&HZ7HUN[HZ[i][0]]?HZ7HUN[HZ[i][0]]:HZ[i][1])+" "+HZ[i][2];
+const meanT=i=>HZT7()&&HZ7HUN[HZ[i][0]]?HZ7HUN[HZ[i][0]]:HZ[i][1];
+function hztPool(){return HZT7()?G7.map(c=>HZ.findIndex(h=>h[0]===c)).filter(i=>i>=0):HZ.map((_,i)=>i).filter(i=>HZ[i][0]&&!HZ7NEW_ONLY.includes(HZ[i][0]))}
+const HZ7NEW_ONLY=["江","口","內","目","上","手","右","入","足","左","出","下"];
+function hz7Intro(chars,done){const T=hztInit();T.seen=T.seen||[];const L=chars.filter(c=>!T.seen.includes(c));if(!L.length)return done();let k=0;
+  const draw=()=>{const c=L[k],i=HZ.findIndex(h=>h[0]===c),st=HZSTORY[c];app.innerHTML=hdr("🖼️ 새 한자 그림 카드")+`<div class="card"><div class="row"><span class="pill">새 한자 ${k+1} / ${L.length}</span><span class="pill">${hunT(i)}</span></div>${hzPicCard(c)}${st&&st[2]==="tale"?`<p class="muted">※ 글자의 유래를 쉽게 풀어 쓴 ‘전해지는 이야기’예요.</p>`:""}<p class="prompt">손가락으로 허공에 <b>${c}</b>를 한 번 써 보고, 소리 내어 읽어요: <b>“${hunT(i)}”</b></p><div class="btns2"><button class="big alt" id="nsay" type="button">🔊 들려줘</button><button class="big" id="nok" type="button">${k<L.length-1?"외웠어요! 다음 카드 ▶":"외웠어요! 문제 풀기 ▶"}</button></div></div>`;bindBack();$("#back").onclick=hztView;try{bindPicCards&&bindPicCards()}catch(e){}
+    const sayIt=()=>{try{sayKo(`${c}. ${hunT(i)}. `+(st?st[1]:""),{quiet:true})}catch(e){}};sayIt();$("#nsay").onclick=sayIt;$("#nok").onclick=()=>{T.seen.push(c);save();k++;if(k<L.length)draw();else done()}};draw()}
 /* ===== v6.5 🏆 시험 전날 특훈: 8급 전체 돌아가며 모의고사 + 오답은 맞힐 때까지 ===== */
 const HZT_TY={A:"👀 한자 보고 뜻·소리",B:"🔍 뜻·소리 보고 한자",S:"💡 뜻만 보고 한자",O:"🔊 소리만 듣고 한자",W:"🧩 낱말 읽기",X:"📖 문장 속 한자어",P:"🔄 짝꿍(반대) 한자"};
-function hztInit(){S.hzt=S.hzt||{order:[],pos:0,wrong:{},ok:{},rounds:0,gold:0};const T=S.hzt;if(!T.order.length)T.order=shuffle(HZ.map((_,i)=>i));return T}
+function hztInit(){const K=HZT7()?"hzt7":"hzt";S[K]=S[K]||{order:[],pos:0,wrong:{},ok:{},rounds:0,gold:0};const T=S[K];if(!T.order.length){const P=hztPool();T.order=HZT7()?[...shuffle(P.filter(i=>HZ7NEW.includes(HZ[i][0])&&HZ7NEW_ONLY.includes(HZ[i][0]))),...shuffle(P.filter(i=>!HZ7NEW_ONLY.includes(HZ[i][0])))]:shuffle(P)}return T}
 function hztGold(c){const T=hztInit();return !T.wrong[c]&&(T.ok[c]||[]).length>=2}
 function hztTypes(i){const c=HZ[i][0],t=["A","B","S","O"];if(HZWORD.some(w=>w[0].includes(c)))t.push("W");if(HZX_SENT.some(x=>x[1].includes(c)))t.push("X");if(HZX_PAIR.some(p=>p.includes(c)))t.push("P");return t}
-function hztQ(i,ty){const all=HZ.map((_,k)=>k),h=HZ[i],c=h[0],hint=`<b>기억 도우미</b> ${HZHINT[c]||"글자 모양을 천천히 떠올려 봐!"}`,ex=`${c} = ${hun(i)}${HZTIP[c]?" · "+HZTIP[c]:""}`;let q=null;
-  if(ty==="A")q=mkQ(tagH(HZT_TY.A)+hzSpan(c)+"이 한자의 뜻과 소리는?",hun(i),pick(all,3,[i]).map(hun),ex,{hint});
-  if(ty==="B")q=mkQ(tagH(HZT_TY.B)+`<span class="word">${hun(i)}</span>알맞은 한자는?`,hzSpan(c),pick(all,3,[i]).map(k=>hzSpan(HZ[k][0])),ex,{hint});
-  if(ty==="S"){const w=pick(all.filter(k=>HZ[k][1]!==h[1]),3);q=mkQ(tagH(HZT_TY.S)+`<span class="word">‘${h[1]}’</span>이라는 뜻을 가진 한자는?`,hzSpan(c),w.map(k=>hzSpan(HZ[k][0])),ex,{hint})}
+function hztQ(i,ty){const all=hztPool(),h=HZ[i],c=h[0],hint=`<b>기억 도우미</b> ${HZHINT[c]||"글자 모양을 천천히 떠올려 봐!"}`,ex=`${c} = ${hunT(i)}${HZTIP[c]?" · "+HZTIP[c]:""}`;let q=null;
+  if(ty==="A")q=mkQ(tagH(HZT_TY.A)+hzSpan(c)+"이 한자의 뜻과 소리는?",hunT(i),pick(all,3,[i]).map(hunT),ex,{hint});
+  if(ty==="B")q=mkQ(tagH(HZT_TY.B)+`<span class="word">${hunT(i)}</span>알맞은 한자는?`,hzSpan(c),pick(all,3,[i]).map(k=>hzSpan(HZ[k][0])),ex,{hint});
+  if(ty==="S"){const w=pick(all.filter(k=>meanT(k)!==meanT(i)),3);q=mkQ(tagH(HZT_TY.S)+`<span class="word">‘${meanT(i)}’</span>이라는 뜻을 가진 한자는?`,hzSpan(c),w.map(k=>hzSpan(HZ[k][0])),ex,{hint})}
   if(ty==="O"){const w=pick(all.filter(k=>HZ[k][2]!==h[2]&&!(h[2]==="금"&&HZ[k][2]==="김")),3);q=mkQ(tagH(HZT_TY.O)+`<span class="word">소리가 ‘${h[2]}’</span>인 한자는?<br><small class="muted">뜻은 무엇일지도 함께 떠올려 봐!</small>`,hzSpan(c),w.map(k=>hzSpan(HZ[k][0])),ex,{hint})}
   if(ty==="W"){const L=HZWORD.filter(w=>w[0].includes(c)),w=L[Math.floor(Math.random()*L.length)];q=mkQ(tagH(HZT_TY.W)+`<span class="hz" style="font-size:3.4rem">${w[0]}</span>어떻게 읽을까요?`,w[1],pick([...new Set(HZWORD.map(x=>x[1]))].filter(r=>r!==w[1]),3),`${w[0]} = ${w[1]} (${w[2]})`,{hint:`한 글자씩 소리를 떠올려 이어 봐! ${[...w[0]].map(k=>{const j=HZ.findIndex(x=>x[0]===k);return j>=0?k+"="+HZ[j][2]:""}).join(", ")}`})}
   if(ty==="X"){const L=HZX_SENT.filter(x=>x[1].includes(c)),x=L[Math.floor(Math.random()*L.length)];q=mkQ(tagH(HZT_TY.X)+`<p style="font-size:1.15rem;line-height:1.8">${x[0].replace(/\{(.+?)\}/,'<b class="hz" style="font-size:1.6rem;color:#C2255C">$1</b>')}</p>빨간 한자어는 어떻게 읽을까요?`,x[2],pick([...new Set(HZWORD.map(w=>w[1]).concat(HZX_SENT.map(y=>y[2])))].filter(r=>r!==x[2]),3),`${x[1]} = ${x[2]}`,{hint:"문장의 뜻을 생각하면서 한 글자씩 소리를 이어 봐!"})}
-  if(ty==="P"){const p=HZX_PAIR.find(p=>p.includes(c)),o=p[0]===c?p[1]:p[0],oi=HZ.findIndex(x=>x[0]===o);q=mkQ(tagH(HZT_TY.P)+hzSpan(c)+`<b>${hun(i)}</b>과(와) 뜻이 반대(짝꿍)인 한자는?`,hzSpan(o),pick(all,3,[oi,i]).map(k=>hzSpan(HZ[k][0])),`${c}(${hun(i)}) ↔ ${o}(${hun(oi)})`,{hint:"해와 달, 아버지와 어머니처럼 서로 짝이 되는 뜻을 떠올려 봐!"})}
+  if(ty==="P"){const p=HZX_PAIR.find(p=>p.includes(c)),o=p[0]===c?p[1]:p[0],oi=HZ.findIndex(x=>x[0]===o);q=mkQ(tagH(HZT_TY.P)+hzSpan(c)+`<b>${hunT(i)}</b>과(와) 뜻이 반대(짝꿍)인 한자는?`,hzSpan(o),pick(all,3,[oi,i]).map(k=>hzSpan(HZ[k][0])),`${c}(${hunT(i)}) ↔ ${o}(${hunT(oi)})`,{hint:"해와 달, 아버지와 어머니처럼 서로 짝이 되는 뜻을 떠올려 봐!"})}
   if(q){q.hc=c;q.ty=ty}return q}
 function hztPickTy(i){const T=hztInit(),done=T.ok[HZ[i][0]]||[],av=hztTypes(i),left=av.filter(t=>!done.includes(t));return shuffle(left.length?left:av)[0]}
 function hztRoundQs(onlyWrong){const T=hztInit(),wr=Object.keys(T.wrong).map(c=>HZ.findIndex(h=>h[0]===c)).filter(i=>i>=0),list=[];
   if(onlyWrong)shuffle(wr).slice(0,10).forEach(i=>list.push(i));
-  else{shuffle(wr).slice(0,4).forEach(i=>list.push(i));while(list.length<10){const i=T.order[T.pos%T.order.length];T.pos++;if(T.pos%T.order.length===0)T.order=shuffle(HZ.map((_,k)=>k));if(!list.includes(i))list.push(i)}}
+  else{shuffle(wr).slice(0,4).forEach(i=>list.push(i));const uns=HZT7()?hztPool().filter(i=>HZ7NEW_ONLY.includes(HZ[i][0])&&!(T.seen||[]).includes(HZ[i][0])):[];uns.slice(0,3).forEach(i=>{if(!list.includes(i))list.push(i)});let guard=0;while(list.length<10&&guard++<200){const i=T.order[T.pos%T.order.length];T.pos++;if(uns.includes(i)&&!list.includes(i))continue;if(T.pos%T.order.length===0)T.order=shuffle(hztPool());if(!list.includes(i))list.push(i)}}
   save();return list.map(i=>hztQ(i,hztPickTy(i))).filter(Boolean)}
 const HZT_SP_END="2026-11-28";const hztSpecial=()=>today()<=HZT_SP_END;
 function hztMark(q,ok){const T=hztInit(),c=q.hc;if(!c)return;if(ok&&hztSpecial()){const g=T.wrong[c]?2:1;S.gems=(S.gems||0)+g;T.spg=(T.spg||0)+g;setTimeout(()=>{const d=document.createElement("div");d.className="gemfly";d.textContent=`💎+${g}`;document.body.appendChild(d);setTimeout(()=>d.remove(),1300)},150)}if(ok){T.ok[c]=T.ok[c]||[];if(!T.ok[c].includes(q.ty))T.ok[c].push(q.ty);if(T.wrong[c]){delete T.wrong[c];setTimeout(()=>toast(`🎉 ${c} 오답 정복!`),300)}}else{T.wrong[c]=(T.wrong[c]||0)+1}save()}
-function hztRun(onlyWrong){const T=hztInit(),qs=hztRoundQs(onlyWrong);if(!qs.length)return toast("오답이 하나도 없어요! 👏");
-  quiz({title:onlyWrong?"🔥 오답 정복 라운드":`🏆 모의고사 ${T.rounds+1}라운드`,qs,noMiss:true,onAnswer:(q,ok)=>hztMark(q,ok),
-    onPass:()=>{T.rounds++;const first=!S.hztDay||S.hztDay.d!==today();S.hztDay=first?{d:today(),n:0}:S.hztDay;let g="";if(hztSpecial()){S.gems=(S.gems||0)+3;g=" 🎁 특별판 라운드 보너스 💎+3";if(Object.keys(T.wrong).length===0)setTimeout(()=>roomReward("🏆 오답 없이 라운드 클리어!"),1600)}else if(S.hztDay.n<5){S.hztDay.n++;S.gems=(S.gems||0)+1;g=" 💎+1"}const all=HZ.every(h=>hztGold(h[0]));if(all&&!T.allGold){T.allGold=today();S.gems=(S.gems||0)+3;g+=" · 52자 전부 금색! 💎+3";try{confetti()}catch(e){}}if(!doneToday("hz")){markDone("hz");addXP(15)}save();setTimeout(()=>toast(`🏆 라운드 클리어!${g}`),500)},
+function hztRun(onlyWrong){const T=hztInit(),qs=hztRoundQs(onlyWrong);if(!qs.length)return toast("오답이 하나도 없어요! 👏");if(HZT7()&&!hztRun._intro){hztRun._intro=1;return hz7Intro([...new Set(qs.map(q=>q.hc))].filter(c=>HZ7NEW_ONLY.includes(c)),()=>{hztRun._intro=0;hztGo(qs,onlyWrong)})}hztRun._intro=0;hztGo(qs,onlyWrong)}
+function hztGo(qs,onlyWrong){const T=hztInit();
+  quiz({title:onlyWrong?"🔥 오답 정복 라운드":`${HZT7()?"🏯 7급":"🏆"} 모의고사 ${T.rounds+1}라운드`,qs,noMiss:true,onAnswer:(q,ok)=>hztMark(q,ok),
+    onPass:()=>{T.rounds++;const first=!S.hztDay||S.hztDay.d!==today();S.hztDay=first?{d:today(),n:0}:S.hztDay;let g="";if(hztSpecial()){S.gems=(S.gems||0)+3;g=" 🎁 특별판 라운드 보너스 💎+3";if(Object.keys(T.wrong).length===0)setTimeout(()=>roomReward("🏆 오답 없이 라운드 클리어!"),1600)}else if(S.hztDay.n<5){S.hztDay.n++;S.gems=(S.gems||0)+1;g=" 💎+1"}if(HZT7()&&Object.keys(T.wrong).length===0&&qs.every(q=>(T.ok[q.hc]||[]).includes(q.ty)))setTimeout(()=>roomReward("🏯 7급 라운드 완벽 클리어!","doll"),1600);const all=hztPool().every(i=>hztGold(HZ[i][0]));if(all&&!T.allGold){T.allGold=today();S.gems=(S.gems||0)+3;g+=` · ${hztPool().length}자 전부 금색! 💎+3`;try{confetti()}catch(e){}}if(!doneToday("hz")){markDone("hz");addXP(15)}save();setTimeout(()=>toast(`🏆 라운드 클리어!${g}`),500)},
     after:hztView,afterLabel:"특훈 판으로 돌아가기"})}
-function hztView(){const T=hztInit(),wr=Object.keys(T.wrong),gold=HZ.filter(h=>hztGold(h[0])).length,dd=dday();
-  app.innerHTML=hdr("🏆 시험 전날 특훈")+(hztSpecial()?`<div class="card spban"><b>🎁 시험 특별판 (11/28까지)</b><p>한 번에 맞힐 때마다 <b>💎+1</b>, 🔴 오답 글자를 맞히면 <b>💎+2</b>, 라운드 끝낼 때마다 <b>💎+3</b>! 지금까지 특별판 보석 💎 ${hztInit().spg||0}개</p></div>`:"")+`<div class="card"><div class="row"><h3>${dd>0?`시험까지 D-${dd}`:dd===0?"오늘은 시험 날! 화이팅":"시험 끝! 복습 모드"}</h3><span class="pill">금색 ${gold} / ${HZ.length}</span></div>
-   <p class="muted">8급 한자 ${HZ.length}자가 돌아가며 나와요. 한 글자를 <b>서로 다른 방법 2가지</b>로 맞히면 금색 ⭐. 틀린 글자는 🔴 표시가 되고, <b>맞힐 때까지</b> 계속 나와요.</p>
-   <div class="hztb">${HZ.map(h=>{const c=h[0],g=hztGold(c),w=T.wrong[c];return `<span class="hzt ${g?"g":""} ${w?"w":""}" title="${h[1]} ${h[2]}">${c}<small>${g?"⭐":w?"🔴":((T.ok[c]||[]).length?"✓":"")}</small></span>`}).join("")}</div>
-   <div class="bar"><i style="width:${gold/HZ.length*100}%;background:#F59F00"></i></div></div>
+function hztView(){const T=hztInit(),wr=Object.keys(T.wrong),PL=hztPool(),gold=PL.filter(i=>hztGold(HZ[i][0])).length,dd=dday(),G7M=HZT7();
+  app.innerHTML=hdr(G7M?"🏯 7급 도전":"🏆 시험 전날 특훈")+(hztSpecial()?`<div class="card spban"><b>🎁 시험 특별판 (11/28까지)</b><p>한 번에 맞힐 때마다 <b>💎+1</b>, 🔴 오답 글자를 맞히면 <b>💎+2</b>, 라운드 끝낼 때마다 <b>💎+3</b>! 지금까지 특별판 보석 💎 ${hztInit().spg||0}개</p></div>`:"")+`<div class="card"><div class="row"><h3>${G7M?"🏯 대한검정회 7급 50자":dd>0?`시험까지 D-${dd}`:dd===0?"오늘은 시험 날! 화이팅":"시험 끝! 복습 모드"}</h3><span class="pill">금색 ${gold} / ${PL.length}</span></div>
+   <p class="muted">${G7M?"7급 한자 50자(8급 30자 + 새 한자 20자)가 돌아가며 나와요. 처음 보는 한자는 먼저 🖼️ 그림 카드로 만나요.":`8급 한자 ${PL.length}자가 돌아가며 나와요.`} 한 글자를 <b>서로 다른 방법 2가지</b>로 맞히면 금색 ⭐. 틀린 글자는 🔴 표시가 되고, <b>맞힐 때까지</b> 계속 나와요.</p>
+   <div class="hztb">${PL.map(i=>HZ[i]).map(h=>{const c=h[0],g=hztGold(c),w=T.wrong[c];return `<span class="hzt ${g?"g":""} ${w?"w":""}" title="${h[1]} ${h[2]}">${c}<small>${g?"⭐":w?"🔴":((T.ok[c]||[]).length?"✓":"")}</small></span>`}).join("")}</div>
+   <div class="bar"><i style="width:${gold/PL.length*100}%;background:#F59F00"></i></div></div>
    ${wr.length?`<button class="card petlink hotw" id="hztw" type="button"><span class="petem">🔥</span><div><h3>오답 정복 라운드 (${wr.length}글자)</h3><p class="muted">${wr.slice(0,12).join(" ")}${wr.length>12?" …":""} — 맞히면 바로 🔴가 사라져요</p></div></button>`:""}
    <button class="big" id="hztgo" type="button">▶ 모의고사 ${T.rounds+1}라운드 (10문제)</button>
-   <div class="card"><h3>🎮 이렇게 풀어요 (찍기 금지!)</h3><ul class="tricks"><li>문제마다 <b>생각하는 시간</b>이 지나야 보기를 누를 수 있어요.</li><li>고른 뒤 <b>✅ 이걸로 할게!</b>를 눌러야 제출돼요. 잘못 눌렀으면 ↩️ 취소.</li><li>너무 빨리 연달아 틀리면 🐢 잠깐 쉬어 가요.</li><li>문제 종류 7가지가 번갈아 나와요: ${Object.values(HZT_TY).join(" · ")}</li><li>${hztSpecial()?"🎁 특별판: 맞힐 때마다 💎+1, 오답 글자 정복 💎+2, 라운드 💎+3":"라운드를 끝낼 때마다 💎+1 (하루 5번)"}, 52자 모두 금색이면 💎+3!</li></ul></div>
-   <div class="card"><h3>📝 마지막 점검</h3><p class="muted">특훈이 끝나면 실제 시험과 같은 25문항·40분 실전 도전으로 확인해 봐요.</p><button class="big alt" id="hztx" type="button">실전 도전하기</button></div>`;
+   <div class="card"><h3>🎮 이렇게 풀어요 (찍기 금지!)</h3><ul class="tricks"><li>문제마다 <b>생각하는 시간</b>이 지나야 보기를 누를 수 있어요.</li><li>고른 뒤 <b>✅ 이걸로 할게!</b>를 눌러야 제출돼요. 잘못 눌렀으면 ↩️ 취소.</li><li>너무 빨리 연달아 틀리면 🐢 잠깐 쉬어 가요.</li><li>문제 종류 7가지가 번갈아 나와요: ${Object.values(HZT_TY).join(" · ")}</li><li>${hztSpecial()?"🎁 특별판: 맞힐 때마다 💎+1, 오답 글자 정복 💎+2, 라운드 💎+3":"라운드를 끝낼 때마다 💎+1 (하루 5번)"}, ${PL.length}자 모두 금색이면 💎+3!${G7M?" 잘 맞히면 🧸 새 인형이 내 방에 바로 와요!":""}</li></ul></div>
+   <div class="card"><h3>📝 마지막 점검</h3><p class="muted">${G7M?"대한검정회 7급과 같은 형식 25문항·60분 실전 도전으로 확인해 봐요(18개 이상 합격).":"특훈이 끝나면 실제 시험과 같은 25문항·40분 실전 도전으로 확인해 봐요."}</p><button class="big alt" id="hztx" type="button">실전 도전하기</button></div>`;
   bindBack();$("#back").onclick=hz;$("#hztgo").onclick=()=>hztRun(false);if($("#hztw"))$("#hztw").onclick=()=>hztRun(true);$("#hztx").onclick=hzExam}
 
-function hz(){hzMain();if(isOpen(7)){app.insertAdjacentHTML("afterbegin","");{const T=hztInit(),w=Object.keys(T.wrong).length,g=HZ.filter(h=>hztGold(h[0])).length;const c=document.createElement("div");c.innerHTML=`<button class="card petlink hztc" id="hztc" type="button"><span class="petem">🏆</span><div><h3>시험 전날 특훈 · 8급 전체 모의고사</h3><p class="muted">${hztSpecial()?"🎁 오늘 특별판: 맞힐 때마다 💎! · ":""}금색 ${g}/${HZ.length}${w?` · 🔴 오답 ${w}글자 남음`:""} · 틀린 글자는 맞힐 때까지!</p></div></button>`;const hd=app.querySelector(".card");if(hd&&hd.nextSibling)hd.parentNode.insertBefore(c.firstChild,hd.nextSibling);else app.appendChild(c.firstChild);$("#hztc").onclick=hztView}app.insertAdjacentHTML("beforeend",hzFocusCard());if($("#hzf"))$("#hzf").onclick=hzFocusRun;if($("#hzfc"))$("#hzfc").onclick=hzFlip;app.insertAdjacentHTML("beforeend",`<div class="card xcard"><div class="row"><h3>📝 8급 실전 도전</h3><span class="pill">시험 D-${Math.max(0,dday())}</span></div><p class="muted">대한검정회 8급과 같은 형식 · 25문항 · 40분 · 70점 합격${S.hz.xbest?` · 최고 ${S.hz.xbest}점`:""}</p><button class="big" id="hzx" type="button">실전 도전하기</button></div>`);$("#hzx").onclick=hzExam;app.insertAdjacentHTML("beforeend",`<div class="card"><div class="row"><h3>🖼️ 그림 보고 한자 떠올리기</h3></div><p class="muted">한자가 생겨난 그림만 보고 모양을 떠올려요. 8개 이상 떠올리면 💎+1</p><button class="big" id="hzpg" type="button">그림 카드 시작</button></div>`);$("#hzpg").onclick=hzPicGame}withPast("hz")}
+function hz(){hzMain();if(isOpen(7)){app.insertAdjacentHTML("afterbegin","");{const T=hztInit(),w=Object.keys(T.wrong).length,g=hztPool().filter(i=>hztGold(HZ[i][0])).length;const c=document.createElement("div");c.innerHTML=`<button class="card petlink hztc" id="hztc" type="button"><span class="petem">${HZT7()?"🏯":"🏆"}</span><div><h3>${HZT7()?"7급 도전 · 그림 카드 + 모의고사":"시험 전날 특훈 · 8급 전체 모의고사"}</h3><p class="muted">${hztSpecial()?"🎁 오늘 특별판: 맞힐 때마다 💎! · ":""}${HZT7()?"새 한자 20자 · 잘 맞히면 🧸 인형 선물 · ":""}금색 ${g}/${hztPool().length}${w?` · 🔴 오답 ${w}글자 남음`:""} · 틀린 글자는 맞힐 때까지!</p></div></button>`;const hd=app.querySelector(".card");if(hd&&hd.nextSibling)hd.parentNode.insertBefore(c.firstChild,hd.nextSibling);else app.appendChild(c.firstChild);$("#hztc").onclick=hztView}app.insertAdjacentHTML("beforeend",hzFocusCard());if($("#hzf"))$("#hzf").onclick=hzFocusRun;if($("#hzfc"))$("#hzfc").onclick=hzFlip;app.insertAdjacentHTML("beforeend",`<div class="card xcard"><div class="row"><h3>📝 ${HZT7()?"7급":"8급"} 실전 도전</h3><span class="pill">시험 D-${Math.max(0,dday())}</span></div><p class="muted">대한검정회 ${HZT7()?"7급":"8급"}과 같은 형식 · 25문항 · ${HZT7()?60:40}분 · 70점 합격${S.hz.xbest?` · 최고 ${S.hz.xbest}점`:""}</p><button class="big" id="hzx" type="button">실전 도전하기</button></div>`);$("#hzx").onclick=hzExam;app.insertAdjacentHTML("beforeend",`<div class="card"><div class="row"><h3>🖼️ 그림 보고 한자 떠올리기</h3></div><p class="muted">한자가 생겨난 그림만 보고 모양을 떠올려요. 8개 이상 떠올리면 💎+1</p><button class="big" id="hzpg" type="button">그림 카드 시작</button></div>`);$("#hzpg").onclick=hzPicGame}withPast("hz")}
 function en(){enMain();withPast("en")}
 function histDay(d){quiz({title:"선애의 한국사 퀴즈 (복습)",mascot:true,qs:[0,1,2,3,4].map(k=>{const id=d*5+k,h=HIST[id];return mkQ(esc(h[0]),h[1],h[2],esc(h[3]),{id})}),
   onAnswer:(q,ok)=>{const w=S.hist.wrong;if(!ok&&!w.includes(q.id))w.push(q.id);save()}})}
@@ -3635,7 +3649,7 @@ function souvInit(){S.souv=S.souv||[];return S.souv}
 function giftSouv(){const own=souvInit(),left=SOUV.filter(x=>!own.includes(x[0]));if(!left.length||S.souvDay===today())return;const g=left[Math.floor(Math.random()*left.length)];own.push(g[0]);S.souvDay=today();save();
   setTimeout(()=>popup(`<div class="bigem">🎁</div><h2>코스 완주 선물!</h2><div class="souvbig">${g[2]}</div><p><b>${g[1]}</b>을(를) 받았어요.</p><p class="muted">👑 내 방(침실) 선반에 놓았어요. 컬렉션 ${own.length} / ${SOUV.length}</p>`),900)}
 function souvModel(g){const c=g[3],t=g[4],G=new THREE.Group();const em=(col)=>mat(col,{emissive:col,emissiveIntensity:.7});
-  if(t==="plush"){G.add(at(sph(.11,c),0,.11,0),at(sph(.08,c),0,.26,0),at(sph(.035,c),-.06,.33,0),at(sph(.035,c),.06,.33,0),at(sph(.015,"#2B2233"),-.03,.27,.07),at(sph(.015,"#2B2233"),.03,.27,.07));if(g[0]==="bunny"){G.add(at(cyl(.02,.02,.12,c,6),-.03,.38,0),at(cyl(.02,.02,.12,c,6),.03,.38,0))}}
+  if(t==="plush"){G.add(at(sph(.11,c),0,.11,0),at(sph(.08,c),0,.26,0),at(sph(.035,c),-.06,.33,0),at(sph(.035,c),.06,.33,0),at(sph(.015,"#2B2233"),-.03,.27,.07),at(sph(.015,"#2B2233"),.03,.27,.07));if(g[0]==="bunny"){G.add(at(cyl(.02,.02,.12,c,6),-.03,.38,0),at(cyl(.02,.02,.12,c,6),.03,.38,0))}if(g[0]==="unicorn")G.add(at(cone(.02,.09,"#F3C24A",8),0,.37,.03));if(g[0]==="panda"){G.add(at(sph(.037,"#2B2233"),-.06,.33,0),at(sph(.037,"#2B2233"),.06,.33,0),at(sph(.022,"#2B2233"),-.03,.27,.06),at(sph(.022,"#2B2233"),.03,.27,.06))}if(g[0]==="penguin")G.add(at(sph(.08,"#FFFFFF",1,1.1,.5),0,.11,.05),at(cone(.02,.04,"#FF9F43",6).rotateX(Math.PI/2),0,.25,.09));if(g[0]==="lion")G.add(at(msh(new THREE.TorusGeometry(.08,.03,6,14),"#C98B52"),0,.26,-.01));if(g[0]==="dino")[0,1,2].forEach(k=>G.add(at(cone(.02,.05,"#2FB673",4),0,.2+k*.05,-.08)))}
   else if(t==="vase"){G.add(at(cyl(.06,.08,.18,"#9FD8F5",14),0,.09,0));[[0,.26,0],[-.05,.24,.02],[.05,.24,-.02]].forEach(p=>G.add(at(sph(.04,c),...p)));G.add(at(cyl(.008,.008,.1,"#6CC75A",4),0,.2,0))}
   else if(t==="plant"){G.add(at(cyl(.07,.055,.1,"#E9A27A",12),0,.05,0),at(sph(.08,c,1,g[0]==="cactus"?1.6:1,1),0,.17,0))}
   else if(t==="candle"){G.add(at(cyl(.05,.05,.12,c,14),0,.06,0));const f=msh(new THREE.ConeGeometry(.02,.05,8),em("#FFB830"));f.position.y=.15;G.add(f)}
@@ -3793,22 +3807,61 @@ function hzHardQs(L,n,skip){const pool=hzHardPool(L).filter(i=>!skip.has(HZ[i][0
   return got.map((i,k)=>{const q=hzQ(k%2?"B":"A",i,L);q.prompt=q.prompt.replace(/^<span class="qtag">[^<]*<\/span>/,'<span class="qtag miss">🔥 어려운 한자 다시</span>');return q})}
 const HZX_PAIR=[["東","西"],["南","北"],["父","母"],["兄","弟"],["男","女"],["日","月"],["水","火"]];
 const HZX_SENT=[["{父母}님께 감사 편지를 썼어요.","父母","부모"],["우리는 사이좋은 {兄弟}예요.","兄弟","형제"],["학교 {南門} 앞에서 만나요.","南門","남문"],["{五月} 5일은 어린이날이에요.","五月","오월"],["{六月}에는 비가 많이 와요.","六月","유월"],["{十月} 9일은 한글날이에요.","十月","시월"],["{東西}남북 네 방향을 알아봐요.","東西","동서"],["운동장에 {男女} 학생들이 모였어요.","男女","남녀"],["강의 {水門}을 열어 물을 흘려보냈어요.","水門","수문"],["{父子}가 함께 낚시를 갔어요.","父子","부자"]];
-function hzExamQs(){const E=[...EXAM30],idx=E.map(c=>HZ.findIndex(h=>h[0]===c)),hun2=i=>`${HZ[i][1]} ${HZ[i][2]}`,qs=[],sp=c=>`<span class="hz xh">${c}</span>`,mk=(t,p,a,w,e)=>{const o=shuffle([a,...w]);return{t,p,o,a:o.indexOf(a),e}};
+/* 7급 새 한자 그림문자 카드 · 이야기 · 기억 도우미 */
+Object.assign(HZP,{
+"口":[P_("M18 40 Q50 18 82 40 Q80 80 50 86 Q20 80 18 40 Z","#FFD6DC","#E8455A",3)+P_("M30 48 Q50 40 70 48 Q66 70 50 74 Q34 70 30 48 Z","#8B1E3F")+P_("M40 66 Q50 58 60 66 Q56 73 50 73 Q44 73 40 66 Z","#FF9EB0"),P_("M24 30 Q50 22 76 30 L72 74 Q50 82 28 74 Z")],
+"目":[P_("M8 50 Q50 12 92 50 Q50 88 8 50 Z","#FFFFFF","#2B2233",4)+C_(50,50,17,"#7A4A2E")+C_(50,50,8,"#111")+C_(56,44,4,"#FFF")+P_("M14 36 L20 30 M30 26 L33 18 M50 22 L50 13 M70 26 L67 18 M86 36 L80 30",0,"#2B2233",3),P_("M8 50 Q50 18 92 50 Q50 82 8 50 Z")+`<circle cx="50" cy="50" r="11"/>`],
+"手":[R_(30,48,40,42,"#FFE3D0",16)+[[30,18,22],[41,10,30],[52,10,30],[63,16,26]].map(([x,y,h])=>R_(x,y,9,h+20,"#FFE3D0",5)).join("")+P_("M22 62 Q14 54 20 46 Q26 42 32 52",0,"#E9B08C",9)+P_("M30 48 Q50 54 70 48",0,"#E9B08C",2),P_("M50 92 L50 14 M50 28 Q34 24 24 16 M50 28 Q66 24 76 16 M50 48 Q32 44 22 38 M50 48 Q68 44 78 38")],
+"足":[R_(42,8,18,52,"#FFE3D0",9)+C_(51,34,10,"#FFC9B0")+P_("M42 58 L42 84 Q42 92 50 92 L84 92 Q92 86 84 78 L60 78 L60 58 Z","#FFE3D0","#C98B52",2)+R_(40,84,48,8,"#FF7AB0",4),`<circle cx="50" cy="24" r="15"/>`+P_("M50 39 L50 86 M50 62 L72 62 M28 86 L80 86 M34 66 L34 86")],
+"上":[R_(8,74,84,9,"#9AD47F",4)+C_(50,36,13,"#FF7AB0")+P_("M50 66 L50 54 M44 60 L50 54 L56 60",0,"#888",3),P_("M12 76 L88 76 M38 46 L62 46")],
+"下":[R_(8,22,84,9,"#7FC8FF",4)+C_(50,64,13,"#FFD54A")+P_("M50 36 L50 46 M44 40 L50 46 L56 40",0,"#888",3),P_("M12 26 L88 26 M38 56 L62 56")],
+"入":[P_("M50 12 L12 88 L88 88 Z","#FFE3EF","#C98B52",3)+P_("M38 88 L50 62 L62 88 Z","#5B4BD6")+P_("M50 26 L50 56 M42 48 L50 56 L58 48",0,"#E8455A",5),P_("M50 14 L24 86 M50 14 L78 86")],
+"出":[P_("M14 54 L14 90 L86 90 L86 54",0,"#B5814A",7)+P_("M40 16 Q52 8 62 18 L62 48 Q70 54 64 60 L34 60 Q28 54 38 48 Z","#FFE3D0","#C98B52",2)+P_("M50 66 L50 80 M44 74 L50 66 L56 74",0,"#E8455A",4),P_("M50 14 L50 48 M50 30 L70 24 M32 48 L68 48")+P_("M20 54 L20 86 L80 86 L80 54")],
+"江":[R_(0,0,100,100,"#E8F6FF",14)+P_("M0 62 Q25 48 50 62 T100 62 L100 100 L0 100 Z","#4FA8F0")+P_("M0 76 Q25 64 50 76 T100 76",0,"#BFE6FF",3)+P_("M60 52 L82 52 L78 60 L64 60 Z","#C98B52")+P_("M71 52 L71 36 L80 48 Z","#FFFFFF"),0],
+"內":[P_("M14 90 L14 24 L86 24 L86 90",0,"#C98B52",7)+R_(14,18,72,10,"#E8455A",4)+KID(50,74,1.2,"#7FC8FF")+P_("M50 34 L50 44 M44 40 L50 46 L56 40",0,"#E8455A",4),P_("M16 88 L16 24 L84 24 L84 88 M50 30 L32 78 M50 30 L68 78")],
+"左":[R_(16,62,68,12,"#C98B52",4)+P_("M30 62 L30 40 L70 40 L70 62",0,"#9AA3B5",6)+P_("M22 36 Q16 22 30 18 L48 26 Q54 32 46 38 L30 40 Z","#FFE3D0","#C98B52",2),0],
+"右":[C_(66,66,20,"#FFF3E0")+P_("M52 66 Q66 78 80 66",0,"#E8455A",4)+P_("M78 34 Q86 20 72 16 L52 24 Q46 30 54 36 L70 38 Z","#FFE3D0","#C98B52",2)+P_("M60 40 L56 54",0,"#C98B52",3),0],
+"ナ":[P_("M30 30 Q20 18 34 14 L56 22 Q62 30 52 34 L34 36 Z","#FFE3D0","#C98B52",2)+P_("M40 36 L30 80",0,"#E9B08C",8),0],
+"工":[R_(14,16,72,12,"#9AA3B5",4)+R_(44,24,12,56,"#9AA3B5",4)+R_(14,76,72,12,"#9AA3B5",4),0],
+"氵":[[24,40,62].map((y,k)=>P_(`M${30+k*6} ${y-10} Q${40+k*6} ${y} ${30+k*6} ${y+8} Q${20+k*6} ${y} ${30+k*6} ${y-10} Z`,"#7FC8FF")).join(""),0],
+"冂":[P_("M16 88 L16 20 L84 20 L84 88",0,"#C98B52",8),0]});
+Object.assign(HZPARTS,{"江":[["氵","물"],["工","소리 ‘공→강’"]],"內":[["冂","집"],["入","들어가다"]],"左":[["ナ","왼손"],["工","도구(자)"]],"右":[["ナ","오른손"],["口","입"]]});
+Object.assign(HZSTORY,{
+"口":["👄","벌린 입 모양을 그렸어요. 동그란 입이 네모난 口가 됐어요. 사람 수를 셀 때도 써요(人口=인구).","pic"],
+"目":["👁️","눈을 그린 모양이에요. 옛날엔 눈을 옆으로 그렸는데, 세로로 세워서 目이 됐어요. 가운데 두 줄은 눈동자예요.","pic"],
+"手":["✋","다섯 손가락을 쫙 편 손을 그렸어요. 가운데 세로줄이 손목, 옆으로 뻗은 줄이 손가락이에요.","pic"],
+"足":["🦶","위의 동그라미(口)는 무릎, 아래는 발 모양이에요. 무릎부터 발끝까지 = 발!","pic"],
+"上":["⬆️","긴 땅(一) 위에 짧은 표시를 해서 ‘위’를 나타냈어요. 그림으로 그릴 수 없는 뜻을 기호로 만든 글자예요.","pic"],
+"下":["⬇️","긴 선(一) 아래에 짧은 표시를 해서 ‘아래’를 나타냈어요. 上과 짝꿍이에요!","pic"],
+"入":["⛺","뾰족한 지붕 입구로 쏙 들어가는 모양이에요. 사람(人)과 비슷하지만 왼쪽 획이 더 짧아요.","pic"],
+"出":["👣","움푹한 구덩이(凵)에서 발(止)이 밖으로 나오는 모양이에요. 그래서 ‘나다, 나가다’!","pic"],
+"江":["🏞️","왼쪽 氵(물)은 뜻, 오른쪽 工(공)은 소리를 알려 줘요. 물이 큰 길처럼 흐르는 곳 = 강!","tale"],
+"內":["🏠","집(冂) 안으로 들어가는(入) 모습이에요. 그래서 ‘안’! 반대는 外(바깥 외).","pic"],
+"左":["🫲","왼손(ナ)에 도구(工)를 든 모습이에요. 왼손은 도구를 잡아 일을 돕는다고 해서 ‘왼쪽’!","tale"],
+"右":["🫱","오른손(ナ)과 입(口)! 밥을 먹을 때 입으로 가져가는 손이라서 ‘오른쪽’이라고 풀이해요.","tale"]});
+Object.assign(HZHINT,{"口":"벌린 입 모양! 네모 하나만 기억해.","目":"눈을 세로로 세운 모양. 안에 줄이 두 개야.","手":"손가락을 쫙 편 손 모양을 떠올려 봐.","足":"위는 무릎(口), 아래는 발!","上":"긴 줄 ‘위’에 짧은 표시가 있어.","下":"긴 줄 ‘아래’로 표시가 내려가.","入":"人과 닮았지만 들어가는 입구 모양! 왼쪽 획이 짧아.","出":"구덩이(凵)에서 발이 쑥 나오는 모양.","江":"물(氵) 옆에 工! 강물이 흐르는 곳.","內":"집 안으로 들어가는(入) 모양. 外의 반대!","左":"손 아래에 工(도구)! 왼쪽.","右":"손 아래에 口(입)! 오른쪽.","年":"벼(禾)를 지고 가는 사람. 벼는 1년에 한 번 익어!","大":"사람이 팔다리를 크게 벌린 모양.","小":"작은 점 세 개! 작다.","白":"하얗게 빛나는 모양이라고 풀이해요.","中":"과녁의 한가운데를 꿰뚫은 모양!","靑":"새싹(生)처럼 푸른 빛!"});
+Object.assign(HZTIP,{"入":"人(사람 인)과 헷갈리지 않게! 入은 왼쪽 획이 짧아요.","出":"‘날 출’의 ‘날’은 ‘나가다’라는 뜻이에요.","山":"대한검정회 표제훈음은 ‘메 산’(‘뫼 산’이라고도 해요)."});
+HZWORD.push(["入口","입구","들어가는 곳"],["出口","출구","나가는 곳"],["出入","출입","나가고 들어옴"],["上下","상하","위와 아래"],["左右","좌우","왼쪽과 오른쪽"],["手足","수족","손과 발"],["內外","내외","안과 밖"],["大小","대소","크고 작음"],["江山","강산","강과 산, 나라의 땅"],["下山","하산","산에서 내려옴"],["人口","인구","사람의 수"],["日出","일출","해가 떠오름"],["木手","목수","나무로 집이나 가구를 만드는 사람"],["江南","강남","강의 남쪽"],["江北","강북","강의 북쪽"],["中年","중년","마흔 살 안팎의 나이"],["靑山","청산","푸른 산"],["山中","산중","산 속"],["入學","입학","학교에 들어감"],["白土","백토","흰 흙"]);
+HZX_SENT.push(["{入口}에서 표를 보여 주세요.","入口","입구"],["불이 나면 {出口}로 나가요.","出口","출구"],["{上下} 좌우를 잘 살펴요.","上下","상하"],["길을 건널 때는 {左右}를 살펴요.","左右","좌우"],["우리 마을 {人口}가 늘었어요.","人口","인구"],["새해 첫날 {日出}을 보러 갔어요.","日出","일출"],["{木手} 아저씨가 의자를 만들어요.","木手","목수"],["아름다운 {江山}을 지켜요.","江山","강산"],["해가 지기 전에 {下山}했어요.","下山","하산"],["{手足}이 차가우면 따뜻하게 해 주세요.","手足","수족"]);
+HZX_PAIR.push(["上","下"],["左","右"],["大","小"],["入","出"],["內","外"]);
+SOUV.push(["unicorn","유니콘 인형","🦄","#FFFFFF","plush"],["panda","판다 인형","🐼","#FFFFFF","plush"],["fox","여우 인형","🦊","#FF8A3D","plush"],["penguin","펭귄 인형","🐧","#2B3A55","plush"],["koala","코알라 인형","🐨","#AEB4C2","plush"],["lion","사자 인형","🦁","#F5B66E","plush"],["polar","북극곰 인형","🐻‍❄️","#F5F8FF","plush"],["chick","병아리 인형","🐥","#FFD54A","plush"],["whale","고래 인형","🐳","#7FC8FF","plush"],["dino","공룡 인형","🦕","#6EDC9A","plush"],["puppy","강아지 인형","🐶","#E9C49A","plush"],["hamsterp","햄스터 인형","🐹","#F5B66E","plush"]);
+
+function hzExamQs(){const E=HZT7()?[...G7]:[...EXAM30],idx=E.map(c=>HZ.findIndex(h=>h[0]===c)),hun2=i=>hunT(i),qs=[],sp=c=>`<span class="hz xh">${c}</span>`,mk=(t,p,a,w,e)=>{const o=shuffle([a,...w]);return{t,p,o,a:o.indexOf(a),e}};
   const pick3=(arr,ex)=>shuffle(arr.filter(x=>!ex.includes(x))).slice(0,3);
   shuffle(idx).slice(0,8).forEach(i=>qs.push(mk("훈음",`다음 한자의 뜻과 소리로 알맞은 것은?<div class="xbig">${HZ[i][0]}</div>`,hun2(i),pick3(idx,[i]).map(hun2),`${HZ[i][0]} = ${hun2(i)}`)));
   shuffle(idx).slice(0,8).forEach(i=>qs.push(mk("한자",`‘${hun2(i)}’에 알맞은 한자는?`,sp(HZ[i][0]),pick3(idx,[i]).map(k=>sp(HZ[k][0])),`${hun2(i)} = ${HZ[i][0]}`)));
   const W=HZWORD.filter(w=>[...w[0]].every(c=>E.includes(c)));shuffle(W).slice(0,4).forEach(w=>qs.push(mk("독음",`다음 한자어를 바르게 읽은 것은?<div class="xbig">${w[0]}</div>`,w[1],pick3(W.map(x=>x[1]),[w[1]]),`${w[0]} = ${w[1]} (${w[2]})`)));
-  shuffle(HZX_PAIR).slice(0,2).forEach(p=>{const[a,b]=Math.random()<.5?p:[p[1],p[0]];qs.push(mk("상대",`‘${a}’과(와) 뜻이 서로 상대되는 한자는?`,sp(b),pick3(E,[a,b]).map(sp),`${a} ↔ ${b}`))});
-  shuffle(HZX_SENT).slice(0,3).forEach(([s,w,r])=>qs.push(mk("문장",`밑줄 친 한자어를 바르게 읽은 것은?<div class="xsent">${s.replace(/\{(.+?)\}/,'<u>$1</u>')}</div>`,r,pick3(HZX_SENT.map(x=>x[2]),[r]),`${w} = ${r}`)));
+  shuffle(HZX_PAIR.filter(p=>p.every(c=>E.includes(c)))).slice(0,2).forEach(p=>{const[a,b]=Math.random()<.5?p:[p[1],p[0]];qs.push(mk("상대",`‘${a}’과(와) 뜻이 서로 상대되는 한자는?`,sp(b),pick3(E,[a,b]).map(sp),`${a} ↔ ${b}`))});
+  shuffle(HZX_SENT.filter(x=>[...x[1]].every(c=>E.includes(c)))).slice(0,3).forEach(([s,w,r])=>qs.push(mk("문장",`밑줄 친 한자어를 바르게 읽은 것은?<div class="xsent">${s.replace(/\{(.+?)\}/,'<u>$1</u>')}</div>`,r,pick3([...new Set(HZX_SENT.map(x=>x[2]))],[r]),`${w} = ${r}`)));
   return qs}
 function hzExam(){const st=S.hz;st.exams=st.exams||[];
-  const ov=document.createElement("div");ov.className="pop-ov";ov.innerHTML=`<div class="pop-card"><div class="bigem">📝</div><h2>8급 실전 도전</h2><p class="muted">대한검정회 8급 시험과 같은 방식이에요.</p>
-   <ol class="rules"><li><b>25문항</b><span>모두 객관식, 출제 범위 8급 한자 30자</span></li><li><b>40분</b><span>시간이 끝나면 자동으로 제출돼요</span></li><li><b>힌트 없음</b><span>실제 시험처럼 한 번만 풀어요. 답은 제출 전까지 바꿀 수 있어요</span></li><li><b>합격 70점</b><span>한 문항 4점 · 18문항 이상 맞히면 합격!</span></li></ol>
+  const ov=document.createElement("div");ov.className="pop-ov";ov.innerHTML=`<div class="pop-card"><div class="bigem">📝</div><h2>${HZT7()?"7급":"8급"} 실전 도전</h2><p class="muted">대한검정회 ${HZT7()?"7급":"8급"} 시험과 같은 방식이에요.</p>
+   <ol class="rules"><li><b>25문항</b><span>모두 객관식, 출제 범위 ${HZT7()?"7급 한자 50자":"8급 한자 30자"}</span></li><li><b>${HZT7()?60:40}분</b><span>시간이 끝나면 자동으로 제출돼요</span></li><li><b>힌트 없음</b><span>실제 시험처럼 한 번만 풀어요. 답은 제출 전까지 바꿀 수 있어요</span></li><li><b>합격 70점</b><span>한 문항 4점 · 18문항 이상 맞히면 합격!</span></li></ol>
    <p class="muted">실제 기출문제가 아니라, 시험과 같은 형식으로 새로 만든 문제예요. 볼 때마다 문제가 바뀌어요.</p><button class="big" id="xgo" type="button">시험 시작!</button><button class="big alt" id="xno" type="button">다음에</button></div>`;document.body.appendChild(ov);
   ov.querySelector("#xno").onclick=()=>ov.remove();ov.querySelector("#xgo").onclick=()=>{ov.remove();hzExamRun()}}
-function hzExamRun(){const qs=hzExamQs(),ans=Array(qs.length).fill(-1),end=Date.now()+40*60e3;let cur=0,tm=null,doneX=false;
+function hzExamRun(){const qs=hzExamQs(),ans=Array(qs.length).fill(-1),end=Date.now()+(HZT7()?60:40)*60e3;let cur=0,tm=null,doneX=false;
   const draw=()=>{const q=qs[cur],left=Math.max(0,end-Date.now()),mm=Math.floor(left/60e3),ss=Math.floor(left%60e3/1e3);
-    app.innerHTML=`<div class="xhead"><button class="back" id="xquit" type="button">그만두기</button><b>📝 8급 실전 도전</b><span class="pill" id="xtm">⏱ ${mm}:${String(ss).padStart(2,"0")}</span></div><div class="card"><div class="row"><span class="pill">${cur+1} / ${qs.length}</span><span class="muted">${q.t}</span></div>
+    app.innerHTML=`<div class="xhead"><button class="back" id="xquit" type="button">그만두기</button><b>📝 ${HZT7()?"7급":"8급"} 실전 도전</b><span class="pill" id="xtm">⏱ ${mm}:${String(ss).padStart(2,"0")}</span></div><div class="card"><div class="row"><span class="pill">${cur+1} / ${qs.length}</span><span class="muted">${q.t}</span></div>
      <div class="prompt xq">${cur+1}. ${q.p}</div><div class="opts">${q.o.map((x,k)=>`<button class="opt ${ans[cur]===k?"sel":""}" type="button" data-k="${k}"><b class="xn">${"①②③④"[k]}</b> ${x}</button>`).join("")}</div>
      <div class="btns2"><button class="big alt" id="xp" type="button" ${cur===0?"disabled":""}>◀ 이전</button><button class="big ${cur===qs.length-1?"":"alt"}" id="xn2" type="button">${cur===qs.length-1?"답안 제출":"다음 ▶"}</button></div>
      <div class="omr">${qs.map((_,k)=>`<button type="button" class="${ans[k]>=0?"on":""} ${k===cur?"cur":""}" data-j="${k}">${k+1}</button>`).join("")}</div><p class="muted" style="text-align:center">번호를 누르면 그 문제로 가요 · 푼 문제 ${ans.filter(a=>a>=0).length}/${qs.length}</p></div>`;
