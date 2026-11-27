@@ -19,6 +19,7 @@
 .vbtn{position:absolute;bottom:34px;right:8px;z-index:6;border:0;border-radius:999px;background:rgba(255,255,255,.9);padding:6px 12px;font:inherit;font-size:.85rem;box-shadow:0 2px 6px rgba(0,0,0,.15)}
 .studyc{border:2px solid #B5E7A0;background:linear-gradient(#F3FFF0,#fff)}.pkeys{display:flex;gap:4px;justify-content:center;margin:12px 0}.pkey{width:42px;height:120px;border:1px solid #999;border-radius:0 0 8px 8px;background:#fff;font:inherit;font-weight:700;display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px}.pkey.hot{background:#FFF3BF;box-shadow:0 0 0 3px #FFD43B inset}.pkey.bad{background:#FFD6DC}
 .hztc{border:3px solid #F59F00;background:linear-gradient(#FFF4D6,#fff)}.hotw{border:2px solid #E8455A;background:#FFF0F2}.hztb{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin:10px 0}.hzt{position:relative;font-family:var(--han);font-size:1.4rem;text-align:center;border:1px solid #ddd;border-radius:8px;padding:4px 0 10px;background:#fff}.hzt small{position:absolute;bottom:0;left:0;right:0;font-size:.6rem}.hzt.g{background:#FFE7A0;border-color:#F59F00}.hzt.w{background:#FFE3E8;border-color:#E8455A}
+.cheerpop{position:fixed;left:50%;top:22%;width:300px;transform:translate(-50%,0) scale(.6);z-index:10001;background:linear-gradient(135deg,#FFF4D6,#FFE3F1);border:3px solid #F59F00;border-radius:24px;padding:16px 22px;text-align:center;box-shadow:0 12px 30px rgba(0,0,0,.25);max-width:88vw;animation:chin .35s forwards;pointer-events:none}.cheerpop b{font-size:1.5rem;display:block;color:#C2255C}.cheerpop p{margin:6px 0 0;font-size:1.05rem}.cheerfw{font-size:2rem;white-space:nowrap;animation:chfw .8s infinite alternate}.cheerpop.out{opacity:0;transition:opacity .45s}@keyframes chin{to{transform:translate(-50%,0) scale(1)}}@keyframes chfw{from{transform:scale(1)}to{transform:scale(1.25)}}
 </style>
 <title>Victoria Quest</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -586,6 +587,9 @@ function missQ(k,e){const right=e.q.opts[e.q.ans],op=shuffle(e.q.opts.slice());r
 function missInject(o){if(o.noMiss)return o;const g=o.missKey||o.title,have=new Set(o.qs.map(q=>missTxt(q.prompt)));const extra=missDue(g).filter(([k,e])=>!have.has(missTxt(e.q.prompt))).sort((a,b)=>b[1].n-a[1].n).slice(0,2).map(([k,e])=>missQ(k,e));
   return extra.length?Object.assign({},o,{qs:o.qs.concat(extra)}):o}
 function missHit(q,ok){if(!q.miss||!S.miss)return;const e=S.miss[q.miss];if(!e)return;if(ok){e.c=(e.c||0)+1;if(e.c>=2)delete S.miss[q.miss]}else{e.n++;e.c=0;e.t=today()}save()}
+const COMBO_CHEER={3:["🎆 3연속 정답!","잘하고 있어, Victoria! 차근차근 생각한 덕분이야!"],5:["🎇 5연속! 대단해!","한자 박사가 되어 가고 있어! 이대로 쭉 가자!"],7:["🌟 7연속! 멈출 수 없어!","내일 시험장에서도 이렇게만 하면 돼!"],10:["👑 10연속! 한자 여왕!","정말 자랑스러워! 엄마도 깜짝 놀라겠다!"],15:["🏆 15연속! 전설의 Victoria!","끝까지 집중하는 힘, 최고야!"],20:["💎 20연속! 완벽 그 자체!","너는 해낼 줄 알았어! 합격이 보인다!"]};
+function comboCheer(n){const c=COMBO_CHEER[n]||(n>20&&n%5===0?[`🚀 ${n}연속!`,"믿을 수 없을 만큼 잘하고 있어!"]:null);if(!c)return;try{confetti()}catch(e){}if(n>=5)setTimeout(()=>{try{confetti()}catch(e){}},450);if(n>=10)setTimeout(()=>{try{confetti()}catch(e){}},900);
+  const d=document.createElement("div");d.className="cheerpop";d.innerHTML=`<div class="cheerfw">🎆🎇✨🎆</div><b>${c[0]}</b><p>${c[1]}</p>`;document.body.appendChild(d);setTimeout(()=>d.classList.add("out"),2300);setTimeout(()=>d.remove(),2800);try{sayKo(c[0].replace(/[^가-힣0-9 !]/g,"")+" "+c[1],{quiet:true})}catch(e){}}
 function quiz(o){o=missInject(o);
   const N=o.qs.length,queue=o.qs.map(q=>Object.assign({},q,{re:false}));let i=0,score=0,combo=0,fastWrong=0;const marks=[],past=[];
   const CAT_OK=["생각해서 맞혔어! 최고!","냥! 한 번에 정답!","완벽해, Victoria!","우와, 꼼꼼하게 풀었네!"];
@@ -636,7 +640,7 @@ function quiz(o){o=missInject(o);
       const k=+b.dataset.k,ok=k===q.ans,quick=Date.now()-openAt<700;tries++;if(tries===1)past.push({q,picks:[]});past[past.length-1].picks.push(k);
       if(tries===1&&!re){marks[i]=ok;if(q.miss)missHit(q,ok);else if(!o.noMiss)missRec(o.missKey||o.title,q,ok);if(o.onAnswer)o.onAnswer(q,ok);app.querySelector(".qprog").children[i].className=ok?"ok":"no"}
       if(ok){b.classList.add("pop");
-        if(tries===1){if(!re){score++;combo++}fastWrong=0;finish(true,re?"이번엔 정확해! 기억했구나!":(o.mascot===true?"딩동댕! 맞았어!":CAT_OK[Math.floor(Math.random()*CAT_OK.length)]+(combo>=3?` 🔥${combo}연속!`:"")),"--good")}
+        if(tries===1){if(!re){score++;combo++;comboCheer(combo)}fastWrong=0;finish(true,re?"이번엔 정확해! 기억했구나!":(o.mascot===true?"딩동댕! 맞았어!":CAT_OK[Math.floor(Math.random()*CAT_OK.length)]+(combo>=3?` 🔥${combo}연속!`:"")),"--good")}
         else finish(false,"맞았어! 다음엔 한 번에 맞혀 보자. 이 문제는 끝에 한 번 더 나와요.","--good");
         return}
       b.classList.add("shake","no");b.disabled=true;combo=0;
@@ -724,7 +728,7 @@ function pmEvents(){const P=pmInit(),t=today();
   if(t>=PMDATES.grad&&!P.ev.grad){P.ev.grad=1;save();const[a]=pmTop(),dr=pmDream();setTimeout(()=>popup(`<div class="bigem">🎓</div><h2>초등학교 졸업을 축하해요!</h2><p>6년 동안 정말 수고했어요, Victoria.<br>지금 Victoria는 <b>${PMTITLE[a]}</b>!<br>장래 희망: ${dr[0]}</p><p class="muted">3월 2일, 중학교 입학과 함께 새 단계가 열려요.</p>`),900)}
   else if(t>=PMDATES.mid&&!P.ev.mid){P.ev.mid=1;save();setTimeout(()=>popup(`<div class="bigem">🏫</div><h2>중학생이 된 걸 축하해요!</h2><p>오늘부터 <b>중학교 1학년 1학기</b>예요.<br>새 친구에게 먼저 “안녕, 나는 ○○야!” 하고 인사해 볼까?</p>`),900)}}
 
-const VQVER="Victoria Quest v6.5";
+const VQVER="Victoria Quest v6.6";
 async function vqUpdCheck(){if(location.protocol==="file:"||document.querySelector(".updbar"))return;try{const t=await fetch("./index.html?u="+Date.now(),{cache:"no-store"}).then(r=>r.text());const m=t.match(/const VQVER="(Victoria Quest v[\d.]+)"/);if(m&&m[1]!==VQVER){const b=document.createElement("button");b.type="button";b.className="updbar";b.textContent="🔄 새 버전이 나왔어요! 눌러서 업데이트 (진도는 그대로)";b.onclick=async()=>{b.textContent="업데이트 중…";try{const rs=await navigator.serviceWorker.getRegistrations();await Promise.all(rs.map(r=>r.update()))}catch(e){}location.reload()};document.body.appendChild(b)}}catch(e){}}
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)vqUpdCheck()});setTimeout(vqUpdCheck,2500);
 /* ===== 엄마 알림(ntfy 푸시): 하루 한 번 자동 보고 + 감사 일기·소원은 쓸 때마다 ===== */
