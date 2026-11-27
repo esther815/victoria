@@ -206,6 +206,7 @@ button:focus-visible,label:focus-within{outline:3px solid var(--accent);outline-
 svg.old{background:#FBF4E6!important}svg.old *{fill:none;stroke:#9C5B33;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}svg.old .f{fill:#9C5B33;stroke:none}
 .hzpc.play .f1{animation:hzin .5s both}.hzpc.play .f2{animation:hzin .5s .7s both}.hzpc.play .f3{animation:hzin .5s 1.4s both}.hzpc.play svg.old path,.hzpc.play svg.old circle,.hzpc.play svg.old rect{stroke-dasharray:400;stroke-dashoffset:400;animation:hzdraw 1.2s .8s forwards}@keyframes hzin{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:none}}@keyframes hzdraw{to{stroke-dashoffset:0}}
 .hzparts{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:4px;background:#fff;border-radius:14px;padding:8px}.hzpt{display:flex;flex-direction:column;align-items:center;min-width:50px}.hzpt svg{width:38px;height:38px}.hzpt i{font-style:normal;font-family:var(--han);font-size:1.6rem;color:var(--hanja);line-height:1.1}.hzpt small{font-size:.66rem;color:#8A7F96}.hzpt.res i{color:#FF4F8B}.hzparts>b{color:#C9B6E8}
+.gcard{text-align:left}.gstage{width:min(66vw,250px);aspect-ratio:1;margin:0 auto;background:#FFFDF7;border-radius:22px;box-shadow:0 3px 12px rgba(80,40,120,.14);overflow:hidden}.gstage svg{width:100%;height:100%;display:block}.gcard .gd{transition:opacity .6s}.gcard .gs{transition:stroke .5s,stroke-width .5s,opacity .5s}.gcard .gt{font-family:var(--han);font-size:86px;text-anchor:middle;dominant-baseline:central;fill:var(--hanja);opacity:0;transition:opacity .5s}.gcard.m-ov .gstage .gd{opacity:.28}.gstage .gs{stroke-width:13px}svg.qpic .gs{stroke-width:8px}.hzpt .gs{stroke-width:3px}.hzf .gs{stroke-width:5px}.gcard.m-ov .gstage .gs{stroke:#2B2233;stroke-width:9px}.gcard.m-ov.draw .gstage .gs{stroke-dasharray:100;stroke-dashoffset:100;animation:gdraw 2s forwards}.gcard.m-ch .gstage .gd{opacity:.13}.gcard.m-ch .gstage .gs{opacity:0}.gcard.m-ch .gt{opacity:1}@keyframes gdraw{to{stroke-dashoffset:0}}.gmodes{display:flex;gap:6px;justify-content:center}.gmodes button{flex:1;max-width:110px;border:0;border-radius:12px;padding:8px 2px;font-size:.85rem;white-space:nowrap;background:#fff;font-weight:700;color:#5B4BD6;box-shadow:0 1px 4px rgba(80,40,120,.12)}.gcard.m-pic [data-m=pic],.gcard.m-ov [data-m=ov],.gcard.m-ch [data-m=ch]{background:#6B4FBB;color:#fff}.gkind{margin:0;font-size:.78rem;color:#7A6E8A;text-align:center}.gmap{margin:0;padding:8px 10px 8px 26px;background:#fff;border-radius:14px;font-size:.92rem;line-height:1.6}.gmap li::marker{color:#FF4F8B}
 .hzst{margin:0;font-size:.95rem;line-height:1.55}.hzbtns{display:flex;gap:6px;flex-wrap:wrap}.hzsrc{margin:0;font-size:.66rem;color:#A89FB4}.hidech .f3 .hz3{color:#C9B6E8}svg.qpic{width:120px;height:120px;background:#fff;border-radius:16px;display:block;margin:6px auto}
 .skmap{display:grid;grid-template-columns:1fr 1fr;gap:8px}.skst{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;border:2px solid #E3F4EA;background:#fff;border-radius:16px;padding:10px;font:inherit}.skst.on{border-color:#2FB673;background:#F0FBF4}.skst .skem{font-size:1.6rem}.skst small{color:#7A8F80;font-size:.72rem}.skcard .skem{font-size:2.6rem}.skm{font-size:1.05rem;line-height:1.55;margin:6px 0}.ske{color:#6B5E78;font-size:.92rem;margin:0}.skdl{list-style:none;padding:0;margin:0;display:grid;gap:8px}.skdl li{background:var(--soft);border-radius:12px;padding:8px 10px;font-size:.9rem;line-height:1.45}
 .qtag.miss{background:#FFE3EC;color:#D6336C}
@@ -275,6 +276,7 @@ const HZ=[["日","날","일"],["月","달","월"],["火","불","화"],["水","�
 ["父","아비","부"],["母","어미","모"],["兄","형","형"],["弟","아우","제"],["先","먼저","선"],["生","날","생"],["學","배울","학"],["校","학교","교"],["敎","가르칠","교"],["室","집","실"],
 ["大","큰","대"],["韓","한국","한"],["民","백성","민"],["國","나라","국"],["軍","군사","군"],["人","사람","인"],["萬","일만","만"],["年","해","년"],["女","여자","녀"],["王","임금","왕"],
 ["男","사내","남"],["子","아들","자"]];
+const HZB=52;
 const HZTIP={"六":"'육'으로도 읽어요. 六月은 '유월'!","女":"낱말 맨 앞에서는 '여'로 읽어요. 女王 = 여왕","十":"十月은 '시월'!","三":"'석'은 셋이라는 뜻이에요.","四":"'넉'은 넷이라는 뜻이에요.","年":"낱말 맨 앞에서는 '연'으로 읽어요. 年中 = 연중","長":"'긴'은 길다는 뜻이에요.","山":"'메'는 산의 옛말이에요.","父":"'아비'는 아버지라는 뜻이에요.","母":"'어미'는 어머니라는 뜻이에요.","男":"대한검정회 8급에 나오는 글자예요.","子":"대한검정회 8급에 나오는 글자예요."};
 const HZWORD=[["日月","일월","해와 달"],["火山","화산","불을 뿜는 산"],["山水","산수","산과 물, 경치"],["土木","토목","흙과 나무로 하는 공사"],["水門","수문","물을 막거나 흘려보내는 문"],["三寸","삼촌","아버지의 형제"],["外三寸","외삼촌","어머니의 남자 형제"],["三月","삼월","3월"],["五月","오월","5월"],["六月","유월","6월"],["十月","시월","10월"],["八月","팔월","8월"],["九月","구월","9월"],["東西","동서","동쪽과 서쪽"],["南北","남북","남쪽과 북쪽"],["大門","대문","큰 문"],["東門","동문","동쪽 문"],["南門","남문","남쪽 문"],["中國","중국","나라 이름"],["外國","외국","다른 나라"],["靑年","청년","젊은 사람"],["白人","백인","피부가 흰 사람"],["父母","부모","아버지와 어머니"],["兄弟","형제","형과 아우"],["先生","선생","가르치는 분"],["學生","학생","배우는 사람"],["生日","생일","태어난 날"],["學校","학교","배우는 곳"],["校門","교문","학교의 문"],["敎室","교실","공부하는 방"],["韓國","한국","우리나라"],["國民","국민","나라의 백성"],["王國","왕국","왕이 다스리는 나라"],["軍人","군인","나라를 지키는 사람"],["女王","여왕","여자 임금"],["萬年","만년","아주 오랜 세월"],["年長","연장","나이가 많음"],["長女","장녀","맏딸"],["男女","남녀","남자와 여자"],["子女","자녀","아들과 딸"],["父子","부자","아버지와 아들"],["母女","모녀","어머니와 딸"]];
 const YOIL=[["월요일","月"],["화요일","火"],["수요일","水"],["목요일","木"],["금요일","金"],["토요일","土"],["일요일","日"]];
@@ -739,7 +741,7 @@ function pmEvents(){const P=pmInit(),t=today();
   if(t>=PMDATES.grad&&!P.ev.grad){P.ev.grad=1;save();const[a]=pmTop(),dr=pmDream();setTimeout(()=>popup(`<div class="bigem">🎓</div><h2>초등학교 졸업을 축하해요!</h2><p>6년 동안 정말 수고했어요, Victoria.<br>지금 Victoria는 <b>${PMTITLE[a]}</b>!<br>장래 희망: ${dr[0]}</p><p class="muted">3월 2일, 중학교 입학과 함께 새 단계가 열려요.</p>`),900)}
   else if(t>=PMDATES.mid&&!P.ev.mid){P.ev.mid=1;save();setTimeout(()=>popup(`<div class="bigem">🏫</div><h2>중학생이 된 걸 축하해요!</h2><p>오늘부터 <b>중학교 1학년 1학기</b>예요.<br>새 친구에게 먼저 “안녕, 나는 ○○야!” 하고 인사해 볼까?</p>`),900)}}
 
-const VQVER="Victoria Quest v6.9";
+const VQVER="Victoria Quest v7.0";
 async function vqUpdCheck(){if(location.protocol==="file:"||document.querySelector(".updbar"))return;try{const t=await fetch("./index.html?u="+Date.now(),{cache:"no-store"}).then(r=>r.text());const m=t.match(/const VQVER="(Victoria Quest v[\d.]+)"/);if(m&&m[1]!==VQVER){const b=document.createElement("button");b.type="button";b.className="updbar";b.textContent="🔄 새 버전이 나왔어요! 눌러서 업데이트 (진도는 그대로)";b.onclick=async()=>{b.textContent="업데이트 중…";try{const rs=await navigator.serviceWorker.getRegistrations();await Promise.all(rs.map(r=>r.update()))}catch(e){}location.reload()};document.body.appendChild(b)}}catch(e){}}
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)vqUpdCheck()});setTimeout(vqUpdCheck,2500);
 /* ===== 엄마 알림(ntfy 푸시): 하루 한 번 자동 보고 + 감사 일기·소원은 쓸 때마다 ===== */
@@ -892,8 +894,8 @@ function hzDayQs(d){
   const have=new Set(F.map(i=>HZ[i][0]));return shuffle(qs).concat(hzHardQs(L,2,have));
 }
 const EXAM30="九金南男女東六母木門父北四三西水十五月二人日一子弟七土八兄火";
-function hzMixQs(n){const mock=n===25,L=mock?[...EXAM30]:HZ.map(h=>h[0]),qs=[];const plan=n===25?["A","A","A","A","A","A","A","A","B","B","B","B","B","B","B","B","C","C","C","C","C","C","D","D","D"]:["A","A","A","B","B","B","C","C","D","A"];
-  const idx=shuffle(HZ.map((_,k)=>k).filter(k=>!mock||EXAM30.includes(HZ[k][0])));let p=0;plan.forEach(t=>{qs.push(hzQ(t,idx[p++%idx.length],L))});return shuffle(qs)}
+function hzMixQs(n){const mock=n===25,L=mock?[...EXAM30]:HZ.slice(0,HZB).map(h=>h[0]),qs=[];const plan=n===25?["A","A","A","A","A","A","A","A","B","B","B","B","B","B","B","B","C","C","C","C","C","C","D","D","D"]:["A","A","A","B","B","B","C","C","D","A"];
+  const idx=shuffle(HZ.map((_,k)=>k).filter(k=>k<HZB&&(!mock||EXAM30.includes(HZ[k][0]))));let p=0;plan.forEach(t=>{qs.push(hzQ(t,idx[p++%idx.length],L))});return shuffle(qs)}
 /* 모르는 한자 집중 반복 */
 /* 한자 그림 카드: [그림, 옛 글자(갑골·금문을 쉽게 그린 선)] */
 const C_=(x,y,r,f)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${f}"/>`,P_=(d,f,s,w)=>`<path d="${d}" fill="${f||"none"}" ${s?`stroke="${s}" stroke-width="${w||4}" stroke-linecap="round" stroke-linejoin="round"`:""}/>`,R_=(x,y,w,h,f,r)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r||3}" fill="${f}"/>`;
@@ -1019,7 +1021,7 @@ function hzMain(){
     bindBack();$("#gohome").onclick=home;$("#rev").onclick=()=>learning?hzLearn(Math.max(0,n-1),true):hzReview(true);if($("#mock"))$("#mock").onclick=hzMock;return}
   app.innerHTML=hdr(T)+`<div class="card">${head}
     <h3>${!learning?`오늘의 퀘스트: 복습 10문제`:isRev?`${n+1}과: 앞 5과 복습`:`${n+1}과: 새 한자 ${HZDAYS[n].length}개`}</h3>
-    <p class="muted">${!learning?`${HZ.length}자를 모두 배웠어요! 매일 복습하고 모의시험으로 실력을 확인해요.`:isRev?`${HZREVOF(n).map(i=>HZ[i][0]).join(" ")} 를 10문제로 복습해요. 7개 이상 맞히면 클리어!`:`${HZDAYS[n].map(i=>HZ[i][0]).join(" ")} 를 배우고 8문제 중 6개를 맞히면 클리어!`}</p>
+    <p class="muted">${!learning?`${HZB}자를 모두 배웠어요! 매일 복습하고 모의시험으로 실력을 확인해요.`:isRev?`${HZREVOF(n).map(i=>HZ[i][0]).join(" ")} 를 10문제로 복습해요. 7개 이상 맞히면 클리어!`:`${HZDAYS[n].map(i=>HZ[i][0]).join(" ")} 를 배우고 8문제 중 6개를 맞히면 클리어!`}</p>
     <div class="btns"><button class="big" id="start" type="button">${learning&&!isRev?"한자 카드 보기":"복습 시작"}</button>${mock}</div></div>`;
   bindBack();$("#start").onclick=()=>learning?hzLearn(n,false):hzReview(false);if($("#mock"))$("#mock").onclick=hzMock;
 }
@@ -1050,7 +1052,7 @@ Object.assign(HZHINT,{"外":"안의 반대쪽! 집 밖을 떠올려 봐.","寸":
 function cho(s){const C="ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ";return [...s].map(c=>{const k=c.charCodeAt(0)-0xAC00;return k>=0&&k<11172?C[Math.floor(k/588)]:c}).join("")}
 const tagH=t=>`<span class="qtag">${t}</span>`;
 function hzQ(type,i,learned){
-  const all=HZ.map((_,k)=>k),h=HZ[i];
+  const all=HZ.map((_,k)=>k).filter(k=>k<HZB),h=HZ[i];
   const hintZ=`<b>기억 도우미</b> ${HZHINT[h[0]]||""}`;
   if(type==="A"){const w=pick(all,3,[i]);return mkQ(tagH("👀 한자 보고 맞히기")+hzSpan(h[0])+"이 한자의 뜻과 소리는?",hun(i),w.map(hun),`${h[0]} = ${hun(i)}${HZTIP[h[0]]?" · "+HZTIP[h[0]]:""}${HZSTORY[h[0]]?"<br>"+HZSTORY[h[0]][0]+" "+HZSTORY[h[0]][1]:""}`,{hint:hintZ})}
   if(type==="B"){const w=pick(all,3,[i]);return mkQ(tagH("🔍 한자 찾기")+`<span class="word">${hun(i)}</span>알맞은 한자는?`,hzSpan(h[0]),w.map(k=>hzSpan(HZ[k][0])),`${hun(i)} = ${h[0]}`,{hint:hintZ})}
@@ -1297,22 +1299,20 @@ function withPast(t){app.insertAdjacentHTML("beforeend",pastHTML(t));app.querySe
 function hist(){histMain();withPast("hist")}
 /* ===== v6.9 🏯 7급 (대한검정회 7급 50자 = 8급 30자 + 7급 신출 20자, 공식 표제훈음) ===== */
 const HZ7_START="2026-11-29";const HZT7=()=>today()>=HZ7_START;
-const HZ7NEW="江口內年大目白山上小手外右入足左中靑出下";
-const G7=[...EXAM30,...HZ7NEW];
-const HZ7HUN={"父":"아버지","母":"어머니","兄":"맏","山":"메"};
+const HZ7HUN={};
 const hunT=i=>(HZT7()&&HZ7HUN[HZ[i][0]]?HZ7HUN[HZ[i][0]]:HZ[i][1])+" "+HZ[i][2];
 const meanT=i=>HZT7()&&HZ7HUN[HZ[i][0]]?HZ7HUN[HZ[i][0]]:HZ[i][1];
-function hztPool(){return HZT7()?G7.map(c=>HZ.findIndex(h=>h[0]===c)).filter(i=>i>=0):HZ.map((_,i)=>i).filter(i=>HZ[i][0]&&!HZ7NEW_ONLY.includes(HZ[i][0]))}
-const HZ7NEW_ONLY=["江","口","內","目","上","手","右","入","足","左","出","下"];
+function hztPool(){return HZT7()?G7.map(c=>HZ.findIndex(h=>h[0]===c)).filter(i=>i>=0):HZ.map((_,i)=>i).filter(i=>i<HZB)}
 function hz7Intro(chars,done){const T=hztInit();T.seen=T.seen||[];const L=chars.filter(c=>!T.seen.includes(c));if(!L.length)return done();let k=0;
   const draw=()=>{const c=L[k],i=HZ.findIndex(h=>h[0]===c),st=HZSTORY[c];app.innerHTML=hdr("🖼️ 새 한자 그림 카드")+`<div class="card"><div class="row"><span class="pill">새 한자 ${k+1} / ${L.length}</span><span class="pill">${hunT(i)}</span></div>${hzPicCard(c)}${st&&st[2]==="tale"?`<p class="muted">※ 글자의 유래를 쉽게 풀어 쓴 ‘전해지는 이야기’예요.</p>`:""}<p class="prompt">손가락으로 허공에 <b>${c}</b>를 한 번 써 보고, 소리 내어 읽어요: <b>“${hunT(i)}”</b></p><div class="btns2"><button class="big alt" id="nsay" type="button">🔊 들려줘</button><button class="big" id="nok" type="button">${k<L.length-1?"외웠어요! 다음 카드 ▶":"외웠어요! 문제 풀기 ▶"}</button></div></div>`;bindBack();$("#back").onclick=hztView;try{bindPicCards&&bindPicCards()}catch(e){}
     const sayIt=()=>{try{sayKo(`${c}. ${hunT(i)}. `+(st?st[1]:""),{quiet:true})}catch(e){}};sayIt();$("#nsay").onclick=sayIt;$("#nok").onclick=()=>{T.seen.push(c);save();k++;if(k<L.length)draw();else done()}};draw()}
 /* ===== v6.5 🏆 시험 전날 특훈: 8급 전체 돌아가며 모의고사 + 오답은 맞힐 때까지 ===== */
-const HZT_TY={A:"👀 한자 보고 뜻·소리",B:"🔍 뜻·소리 보고 한자",S:"💡 뜻만 보고 한자",O:"🔊 소리만 듣고 한자",W:"🧩 낱말 읽기",X:"📖 문장 속 한자어",P:"🔄 짝꿍(반대) 한자"};
-function hztInit(){const K=HZT7()?"hzt7":"hzt";S[K]=S[K]||{order:[],pos:0,wrong:{},ok:{},rounds:0,gold:0};const T=S[K];if(!T.order.length){const P=hztPool();T.order=HZT7()?[...shuffle(P.filter(i=>HZ7NEW.includes(HZ[i][0])&&HZ7NEW_ONLY.includes(HZ[i][0]))),...shuffle(P.filter(i=>!HZ7NEW_ONLY.includes(HZ[i][0])))]:shuffle(P)}return T}
+const HZT_TY={G:"🖼️ 모양 그림 보고 한자",A:"👀 한자 보고 뜻·소리",B:"🔍 뜻·소리 보고 한자",S:"💡 뜻만 보고 한자",O:"🔊 소리만 듣고 한자",W:"🧩 낱말 읽기",X:"📖 문장 속 한자어",P:"🔄 짝꿍(반대) 한자"};
+function hztInit(){const K=HZT7()?"hzt7a":"hzt";S[K]=S[K]||{order:[],pos:0,wrong:{},ok:{},rounds:0,gold:0};const T=S[K];if(!T.order.length){const P=hztPool();T.order=HZT7()?[...shuffle(P.filter(i=>AW72.includes(HZ[i][0]))),...shuffle(P.filter(i=>AW7.includes(HZ[i][0]))),...shuffle(P.filter(i=>!G7NEW.includes(HZ[i][0])))]:shuffle(P)}return T}
 function hztGold(c){const T=hztInit();return !T.wrong[c]&&(T.ok[c]||[]).length>=2}
-function hztTypes(i){const c=HZ[i][0],t=["A","B","S","O"];if(HZWORD.some(w=>w[0].includes(c)))t.push("W");if(HZX_SENT.some(x=>x[1].includes(c)))t.push("X");if(HZX_PAIR.some(p=>p.includes(c)))t.push("P");return t}
+function hztTypes(i){const c=HZ[i][0],t=["A","B","S","O"];if(HZT7()&&typeof GC!=="undefined"&&GC[c])t.push("G");if(HZWORD.some(w=>w[0].includes(c)))t.push("W");if(HZX_SENT.some(x=>x[1].includes(c)))t.push("X");if(HZX_PAIR.some(p=>p.includes(c)))t.push("P");return t}
 function hztQ(i,ty){const all=hztPool(),h=HZ[i],c=h[0],hint=`<b>기억 도우미</b> ${HZHINT[c]||"글자 모양을 천천히 떠올려 봐!"}`,ex=`${c} = ${hunT(i)}${HZTIP[c]?" · "+HZTIP[c]:""}`;let q=null;
+  if(ty==="G")q=mkQ(tagH(HZT_TY.G)+gSvg(c,"qpic")+"굵은 선이 획이 되는 한자는?",hzSpan(c),pick(all,3,[i]).map(k=>hzSpan(HZ[k][0])),ex+" · "+(GC[c].L||[]).join(" · "),{hint:"그림 속 굵은 선의 모양을 그대로 따라가 봐!"});
   if(ty==="A")q=mkQ(tagH(HZT_TY.A)+hzSpan(c)+"이 한자의 뜻과 소리는?",hunT(i),pick(all,3,[i]).map(hunT),ex,{hint});
   if(ty==="B")q=mkQ(tagH(HZT_TY.B)+`<span class="word">${hunT(i)}</span>알맞은 한자는?`,hzSpan(c),pick(all,3,[i]).map(k=>hzSpan(HZ[k][0])),ex,{hint});
   if(ty==="S"){const w=pick(all.filter(k=>meanT(k)!==meanT(i)),3);q=mkQ(tagH(HZT_TY.S)+`<span class="word">‘${meanT(i)}’</span>이라는 뜻을 가진 한자는?`,hzSpan(c),w.map(k=>hzSpan(HZ[k][0])),ex,{hint})}
@@ -1324,27 +1324,27 @@ function hztQ(i,ty){const all=hztPool(),h=HZ[i],c=h[0],hint=`<b>기억 도우미
 function hztPickTy(i){const T=hztInit(),done=T.ok[HZ[i][0]]||[],av=hztTypes(i),left=av.filter(t=>!done.includes(t));return shuffle(left.length?left:av)[0]}
 function hztRoundQs(onlyWrong){const T=hztInit(),wr=Object.keys(T.wrong).map(c=>HZ.findIndex(h=>h[0]===c)).filter(i=>i>=0),list=[];
   if(onlyWrong)shuffle(wr).slice(0,10).forEach(i=>list.push(i));
-  else{shuffle(wr).slice(0,4).forEach(i=>list.push(i));const uns=HZT7()?hztPool().filter(i=>HZ7NEW_ONLY.includes(HZ[i][0])&&!(T.seen||[]).includes(HZ[i][0])):[];uns.slice(0,3).forEach(i=>{if(!list.includes(i))list.push(i)});let guard=0;while(list.length<10&&guard++<200){const i=T.order[T.pos%T.order.length];T.pos++;if(uns.includes(i)&&!list.includes(i))continue;if(T.pos%T.order.length===0)T.order=shuffle(hztPool());if(!list.includes(i))list.push(i)}}
+  else{shuffle(wr).slice(0,4).forEach(i=>list.push(i));const uns=HZT7()?hztPool().filter(i=>G7NEW.includes(HZ[i][0])&&!(T.seen||[]).includes(HZ[i][0])):[];uns.slice(0,3).forEach(i=>{if(!list.includes(i))list.push(i)});let guard=0;while(list.length<10&&guard++<200){const i=T.order[T.pos%T.order.length];T.pos++;if(uns.includes(i)&&!list.includes(i))continue;if(T.pos%T.order.length===0)T.order=shuffle(hztPool());if(!list.includes(i))list.push(i)}}
   save();return list.map(i=>hztQ(i,hztPickTy(i))).filter(Boolean)}
 const HZT_SP_END="2026-11-28";const hztSpecial=()=>today()<=HZT_SP_END;
 function hztMark(q,ok){const T=hztInit(),c=q.hc;if(!c)return;if(ok&&hztSpecial()){const g=T.wrong[c]?2:1;S.gems=(S.gems||0)+g;T.spg=(T.spg||0)+g;setTimeout(()=>{const d=document.createElement("div");d.className="gemfly";d.textContent=`💎+${g}`;document.body.appendChild(d);setTimeout(()=>d.remove(),1300)},150)}if(ok){T.ok[c]=T.ok[c]||[];if(!T.ok[c].includes(q.ty))T.ok[c].push(q.ty);if(T.wrong[c]){delete T.wrong[c];setTimeout(()=>toast(`🎉 ${c} 오답 정복!`),300)}}else{T.wrong[c]=(T.wrong[c]||0)+1}save()}
-function hztRun(onlyWrong){const T=hztInit(),qs=hztRoundQs(onlyWrong);if(!qs.length)return toast("오답이 하나도 없어요! 👏");if(HZT7()&&!hztRun._intro){hztRun._intro=1;return hz7Intro([...new Set(qs.map(q=>q.hc))].filter(c=>HZ7NEW_ONLY.includes(c)),()=>{hztRun._intro=0;hztGo(qs,onlyWrong)})}hztRun._intro=0;hztGo(qs,onlyWrong)}
+function hztRun(onlyWrong){const T=hztInit(),qs=hztRoundQs(onlyWrong);if(!qs.length)return toast("오답이 하나도 없어요! 👏");if(HZT7()&&!hztRun._intro){hztRun._intro=1;return hz7Intro([...new Set(qs.map(q=>q.hc))].filter(c=>G7NEW.includes(c)),()=>{hztRun._intro=0;hztGo(qs,onlyWrong)})}hztRun._intro=0;hztGo(qs,onlyWrong)}
 function hztGo(qs,onlyWrong){const T=hztInit();
   quiz({title:onlyWrong?"🔥 오답 정복 라운드":`${HZT7()?"🏯 7급":"🏆"} 모의고사 ${T.rounds+1}라운드`,qs,noMiss:true,onAnswer:(q,ok)=>hztMark(q,ok),
     onPass:()=>{T.rounds++;const first=!S.hztDay||S.hztDay.d!==today();S.hztDay=first?{d:today(),n:0}:S.hztDay;let g="";if(hztSpecial()){S.gems=(S.gems||0)+3;g=" 🎁 특별판 라운드 보너스 💎+3";if(Object.keys(T.wrong).length===0)setTimeout(()=>roomReward("🏆 오답 없이 라운드 클리어!"),1600)}else if(S.hztDay.n<5){S.hztDay.n++;S.gems=(S.gems||0)+1;g=" 💎+1"}if(HZT7()&&Object.keys(T.wrong).length===0&&qs.every(q=>(T.ok[q.hc]||[]).includes(q.ty)))setTimeout(()=>roomReward("🏯 7급 라운드 완벽 클리어!","doll"),1600);const all=hztPool().every(i=>hztGold(HZ[i][0]));if(all&&!T.allGold){T.allGold=today();S.gems=(S.gems||0)+3;g+=` · ${hztPool().length}자 전부 금색! 💎+3`;try{confetti()}catch(e){}}if(!doneToday("hz")){markDone("hz");addXP(15)}save();setTimeout(()=>toast(`🏆 라운드 클리어!${g}`),500)},
     after:hztView,afterLabel:"특훈 판으로 돌아가기"})}
 function hztView(){const T=hztInit(),wr=Object.keys(T.wrong),PL=hztPool(),gold=PL.filter(i=>hztGold(HZ[i][0])).length,dd=dday(),G7M=HZT7();
-  app.innerHTML=hdr(G7M?"🏯 7급 도전":"🏆 시험 전날 특훈")+(hztSpecial()?`<div class="card spban"><b>🎁 시험 특별판 (11/28까지)</b><p>한 번에 맞힐 때마다 <b>💎+1</b>, 🔴 오답 글자를 맞히면 <b>💎+2</b>, 라운드 끝낼 때마다 <b>💎+3</b>! 지금까지 특별판 보석 💎 ${hztInit().spg||0}개</p></div>`:"")+`<div class="card"><div class="row"><h3>${G7M?"🏯 대한검정회 7급 50자":dd>0?`시험까지 D-${dd}`:dd===0?"오늘은 시험 날! 화이팅":"시험 끝! 복습 모드"}</h3><span class="pill">금색 ${gold} / ${PL.length}</span></div>
-   <p class="muted">${G7M?"7급 한자 50자(8급 30자 + 새 한자 20자)가 돌아가며 나와요. 처음 보는 한자는 먼저 🖼️ 그림 카드로 만나요.":`8급 한자 ${PL.length}자가 돌아가며 나와요.`} 한 글자를 <b>서로 다른 방법 2가지</b>로 맞히면 금색 ⭐. 틀린 글자는 🔴 표시가 되고, <b>맞힐 때까지</b> 계속 나와요.</p>
+  app.innerHTML=hdr(G7M?"🏯 7급 도전":"🏆 시험 전날 특훈")+(hztSpecial()?`<div class="card spban"><b>🎁 시험 특별판 (11/28까지)</b><p>한 번에 맞힐 때마다 <b>💎+1</b>, 🔴 오답 글자를 맞히면 <b>💎+2</b>, 라운드 끝낼 때마다 <b>💎+3</b>! 지금까지 특별판 보석 💎 ${hztInit().spg||0}개</p></div>`:"")+`<div class="card"><div class="row"><h3>${G7M?"🏯 한국어문회 7급 150자":dd>0?`시험까지 D-${dd}`:dd===0?"오늘은 시험 날! 화이팅":"시험 끝! 복습 모드"}</h3><span class="pill">금색 ${gold} / ${PL.length}</span></div>
+   <p class="muted">${G7M?"한국어문회 7급 150자(8급 50 + 7급Ⅱ 50 + 7급 50)가 돌아가며 나와요. 새 한자는 7급Ⅱ부터 한 라운드에 3자씩 🖼️ 모양 그림 카드로 먼저 만나요. 그림의 굵은 선이 바로 한자의 획이에요!":`8급 한자 ${PL.length}자가 돌아가며 나와요.`} 한 글자를 <b>서로 다른 방법 2가지</b>로 맞히면 금색 ⭐. 틀린 글자는 🔴 표시가 되고, <b>맞힐 때까지</b> 계속 나와요.</p>
    <div class="hztb">${PL.map(i=>HZ[i]).map(h=>{const c=h[0],g=hztGold(c),w=T.wrong[c];return `<span class="hzt ${g?"g":""} ${w?"w":""}" title="${h[1]} ${h[2]}">${c}<small>${g?"⭐":w?"🔴":((T.ok[c]||[]).length?"✓":"")}</small></span>`}).join("")}</div>
    <div class="bar"><i style="width:${gold/PL.length*100}%;background:#F59F00"></i></div></div>
    ${wr.length?`<button class="card petlink hotw" id="hztw" type="button"><span class="petem">🔥</span><div><h3>오답 정복 라운드 (${wr.length}글자)</h3><p class="muted">${wr.slice(0,12).join(" ")}${wr.length>12?" …":""} — 맞히면 바로 🔴가 사라져요</p></div></button>`:""}
    <button class="big" id="hztgo" type="button">▶ 모의고사 ${T.rounds+1}라운드 (10문제)</button>
    <div class="card"><h3>🎮 이렇게 풀어요 (찍기 금지!)</h3><ul class="tricks"><li>문제마다 <b>생각하는 시간</b>이 지나야 보기를 누를 수 있어요.</li><li>고른 뒤 <b>✅ 이걸로 할게!</b>를 눌러야 제출돼요. 잘못 눌렀으면 ↩️ 취소.</li><li>너무 빨리 연달아 틀리면 🐢 잠깐 쉬어 가요.</li><li>문제 종류 7가지가 번갈아 나와요: ${Object.values(HZT_TY).join(" · ")}</li><li>${hztSpecial()?"🎁 특별판: 맞힐 때마다 💎+1, 오답 글자 정복 💎+2, 라운드 💎+3":"라운드를 끝낼 때마다 💎+1 (하루 5번)"}, ${PL.length}자 모두 금색이면 💎+3!${G7M?" 잘 맞히면 🧸 새 인형이 내 방에 바로 와요!":""}</li></ul></div>
-   <div class="card"><h3>📝 마지막 점검</h3><p class="muted">${G7M?"대한검정회 7급과 같은 형식 25문항·60분 실전 도전으로 확인해 봐요(18개 이상 합격).":"특훈이 끝나면 실제 시험과 같은 25문항·40분 실전 도전으로 확인해 봐요."}</p><button class="big alt" id="hztx" type="button">실전 도전하기</button></div>`;
+   <div class="card"><h3>📝 마지막 점검</h3><p class="muted">${G7M?"7급 150자에서 25문항 객관식 연습 시험(70% = 18개 이상 합격). 실제 한국어문회 7급은 70문항, 49문항 이상 합격이고 답을 직접 써요.":"특훈이 끝나면 실제 시험과 같은 25문항·40분 실전 도전으로 확인해 봐요."}</p><button class="big alt" id="hztx" type="button">실전 도전하기</button></div>`;
   bindBack();$("#back").onclick=hz;$("#hztgo").onclick=()=>hztRun(false);if($("#hztw"))$("#hztw").onclick=()=>hztRun(true);$("#hztx").onclick=hzExam}
 
-function hz(){hzMain();if(isOpen(7)){app.insertAdjacentHTML("afterbegin","");{const T=hztInit(),w=Object.keys(T.wrong).length,g=hztPool().filter(i=>hztGold(HZ[i][0])).length;const c=document.createElement("div");c.innerHTML=`<button class="card petlink hztc" id="hztc" type="button"><span class="petem">${HZT7()?"🏯":"🏆"}</span><div><h3>${HZT7()?"7급 도전 · 그림 카드 + 모의고사":"시험 전날 특훈 · 8급 전체 모의고사"}</h3><p class="muted">${hztSpecial()?"🎁 오늘 특별판: 맞힐 때마다 💎! · ":""}${HZT7()?"새 한자 20자 · 잘 맞히면 🧸 인형 선물 · ":""}금색 ${g}/${hztPool().length}${w?` · 🔴 오답 ${w}글자 남음`:""} · 틀린 글자는 맞힐 때까지!</p></div></button>`;const hd=app.querySelector(".card");if(hd&&hd.nextSibling)hd.parentNode.insertBefore(c.firstChild,hd.nextSibling);else app.appendChild(c.firstChild);$("#hztc").onclick=hztView}app.insertAdjacentHTML("beforeend",hzFocusCard());if($("#hzf"))$("#hzf").onclick=hzFocusRun;if($("#hzfc"))$("#hzfc").onclick=hzFlip;app.insertAdjacentHTML("beforeend",`<div class="card xcard"><div class="row"><h3>📝 ${HZT7()?"7급":"8급"} 실전 도전</h3><span class="pill">시험 D-${Math.max(0,dday())}</span></div><p class="muted">대한검정회 ${HZT7()?"7급":"8급"}과 같은 형식 · 25문항 · ${HZT7()?60:40}분 · 70점 합격${S.hz.xbest?` · 최고 ${S.hz.xbest}점`:""}</p><button class="big" id="hzx" type="button">실전 도전하기</button></div>`);$("#hzx").onclick=hzExam;app.insertAdjacentHTML("beforeend",`<div class="card"><div class="row"><h3>🖼️ 그림 보고 한자 떠올리기</h3></div><p class="muted">한자가 생겨난 그림만 보고 모양을 떠올려요. 8개 이상 떠올리면 💎+1</p><button class="big" id="hzpg" type="button">그림 카드 시작</button></div>`);$("#hzpg").onclick=hzPicGame}withPast("hz")}
+function hz(){hzMain();if(isOpen(7)){app.insertAdjacentHTML("afterbegin","");{const T=hztInit(),w=Object.keys(T.wrong).length,g=hztPool().filter(i=>hztGold(HZ[i][0])).length;const c=document.createElement("div");c.innerHTML=`<button class="card petlink hztc" id="hztc" type="button"><span class="petem">${HZT7()?"🏯":"🏆"}</span><div><h3>${HZT7()?"7급 도전 · 그림 카드 + 모의고사":"시험 전날 특훈 · 8급 전체 모의고사"}</h3><p class="muted">${hztSpecial()?"🎁 오늘 특별판: 맞힐 때마다 💎! · ":""}${HZT7()?"새 한자 20자 · 잘 맞히면 🧸 인형 선물 · ":""}금색 ${g}/${hztPool().length}${w?` · 🔴 오답 ${w}글자 남음`:""} · 틀린 글자는 맞힐 때까지!</p></div></button>`;const hd=app.querySelector(".card");if(hd&&hd.nextSibling)hd.parentNode.insertBefore(c.firstChild,hd.nextSibling);else app.appendChild(c.firstChild);$("#hztc").onclick=hztView}app.insertAdjacentHTML("beforeend",hzFocusCard());if($("#hzf"))$("#hzf").onclick=hzFocusRun;if($("#hzfc"))$("#hzfc").onclick=hzFlip;app.insertAdjacentHTML("beforeend",`<div class="card xcard"><div class="row"><h3>📝 ${HZT7()?"7급":"8급"} 실전 도전</h3><span class="pill">시험 D-${Math.max(0,dday())}</span></div><p class="muted">대한검정회 ${HZT7()?"7급":"8급"}과 같은 형식 · 25문항 · 40분 · 70점 합격${S.hz.xbest?` · 최고 ${S.hz.xbest}점`:""}</p><button class="big" id="hzx" type="button">실전 도전하기</button></div>`);$("#hzx").onclick=hzExam;app.insertAdjacentHTML("beforeend",`<div class="card"><div class="row"><h3>🖼️ 그림 보고 한자 떠올리기</h3></div><p class="muted">한자가 생겨난 그림만 보고 모양을 떠올려요. 8개 이상 떠올리면 💎+1</p><button class="big" id="hzpg" type="button">그림 카드 시작</button></div>`);$("#hzpg").onclick=hzPicGame}withPast("hz")}
 function en(){enMain();withPast("en")}
 function histDay(d){quiz({title:"선애의 한국사 퀴즈 (복습)",mascot:true,qs:[0,1,2,3,4].map(k=>{const id=d*5+k,h=HIST[id];return mkQ(esc(h[0]),h[1],h[2],esc(h[3]),{id})}),
   onAnswer:(q,ok)=>{const w=S.hist.wrong;if(!ok&&!w.includes(q.id))w.push(q.id);save()}})}
@@ -1357,7 +1357,7 @@ function reportText(){const d=new Date(),td=today(),c=t=>S[t].last===td?(S[t].cn
   return `[Victoria 오늘의 자랑 💌] ${d.getMonth()+1}/${d.getDate()}(${days})
 🍳 요리: 오늘 ${ck}번 · Lv.${lv}까지 클리어
 📜 한국사: 오늘 ${c("hist")}개 · ${Math.min(S.hist.n,HSTORY.length)}/${HSTORY.length}편${S.hist.wrong.length?` · 다시 볼 문제 ${S.hist.wrong.length}개`:""}
-漢 한자: 오늘 ${c("hz")}개${(()=>{const a=Object.keys(hzF()),l=hzFList();return a.length?` · 집중 반복 ${a.length-l.length}/${a.length}자 외움`:""})()} · ${hzLearnedChars(Math.min(S.hz.n,HZDAYS.length)).length}/${HZ.length}자 (${Math.min(S.hz.n,HZDAYS.length)}/${HZDAYS.length}과)${S.hz.best?` · 모의시험 최고 ${S.hz.best}/25`:""} · 시험 D-${Math.max(dday(),0)}
+漢 한자: 오늘 ${c("hz")}개${(()=>{const a=Object.keys(hzF()),l=hzFList();return a.length?` · 집중 반복 ${a.length-l.length}/${a.length}자 외움`:""})()} · ${hzLearnedChars(Math.min(S.hz.n,HZDAYS.length)).length}/${HZB}자 (${Math.min(S.hz.n,HZDAYS.length)}/${HZDAYS.length}과)${S.hz.best?` · 모의시험 최고 ${S.hz.best}/25`:""} · 시험 D-${Math.max(dday(),0)}
 🔤 영어: 오늘 ${c("en")}개 · Day ${Math.min(S.en.n,ENGDAYS.length)}/${ENGDAYS.length}
 ${(S.hardQ||[]).filter(h=>h.d===td).length?`🙋 말이 어려웠던 문제 ${(S.hardQ||[]).filter(h=>h.d===td).length}개: ${(S.hardQ||[]).filter(h=>h.d===td).slice(-3).map(h=>"「"+h.q+"」").join(" / ")}\n`:""}📘 국어: 오늘 ${c("ko")}개 · ${Math.min(S.ko.n,KO.length)}/${KO.length}과 · 개념어 마스터 ${kwCount()}/${KW.length}${(()=>{kwInit();const u=Object.entries(S.kw.w).filter(([t,v])=>v.unk&&!kwMastered(t)).map(([t])=>t);return u.length?`\n   🔸 아직 익히는 개념어: ${u.slice(0,8).join(", ")}`:""})()}${S.ko.writes.length&&S.ko.writes.at(-1).d===td?`\n   ✏️ 생각 한 줄: “${S.ko.writes.at(-1).a}”`:""}
 🔢 수학: 오늘 ${c("ma")}개 · ${(()=>{maInit();return Object.entries(MTRK).map(([k,t])=>`${t.n.split(" ")[1]} ${Math.min(S.ma.t[k],t.list.length)}/${t.list.length}`).join(" · ")})()}${S.ma.writes.length&&S.ma.writes.at(-1).d===td?`\n   ✏️ 말로 설명: “${S.ma.writes.at(-1).a}”`:""}
@@ -3846,6 +3846,226 @@ HZX_SENT.push(["{入口}에서 표를 보여 주세요.","入口","입구"],["�
 HZX_PAIR.push(["上","下"],["左","右"],["大","小"],["入","出"],["內","外"]);
 SOUV.push(["unicorn","유니콘 인형","🦄","#FFFFFF","plush"],["panda","판다 인형","🐼","#FFFFFF","plush"],["fox","여우 인형","🦊","#FF8A3D","plush"],["penguin","펭귄 인형","🐧","#2B3A55","plush"],["koala","코알라 인형","🐨","#AEB4C2","plush"],["lion","사자 인형","🦁","#F5B66E","plush"],["polar","북극곰 인형","🐻‍❄️","#F5F8FF","plush"],["chick","병아리 인형","🐥","#FFD54A","plush"],["whale","고래 인형","🐳","#7FC8FF","plush"],["dino","공룡 인형","🦕","#6EDC9A","plush"],["puppy","강아지 인형","🐶","#E9C49A","plush"],["hamsterp","햄스터 인형","🐹","#F5B66E","plush"]);
 
+/* ===== v7.0 ✍️ 모양 그림 카드: 그림의 굵은 선 = 글자의 획 (한국어문회 7급) ===== */
+const DR_=(x,y,s,f)=>P_(`M${x} ${y-s*1.5} Q${x+s} ${y} ${x} ${y+s} Q${x-s} ${y} ${x} ${y-s*1.5} Z`,f);
+const FL_=(x,y,s,f)=>P_(`M${x} ${y+s} Q${x-s} ${y+s} ${x-s*.8} ${y} Q${x-s*.5} ${y-s*.6} ${x} ${y-s*1.6} Q${x+s*.5} ${y-s*.6} ${x+s*.8} ${y} Q${x+s} ${y+s} ${x} ${y+s} Z`,f||"#FFA94D");
+const LF_=(x,y,a,s,f)=>`<ellipse cx="${x}" cy="${y}" rx="${s}" ry="${s*.45}" transform="rotate(${a} ${x} ${y})" fill="${f||"#8CE99A"}"/>`;
+/* 부품: [획(중심선), 그림, 획 색, 이름표] — 100×100 칸 기준 */
+const GP={
+"木":["M12 34 L88 34 M50 8 L50 94 M50 36 L14 80 M50 36 L86 80",C_(50,20,17,"#A9E34B")+C_(26,30,12,"#C0EB75")+C_(74,30,12,"#C0EB75")+R_(6,90,88,6,"#E9C49A",3),"#8B5A2B","나무(木)"],
+"氵":["M38 12 L60 26 M28 40 L50 54 M24 92 L56 60",DR_(49,20,11,"#A5D8FF")+DR_(39,48,11,"#A5D8FF")+DR_(42,78,13,"#A5D8FF"),"#1C7ED6","물(氵)"],
+"亻":["M70 6 Q56 38 16 64 M50 38 L50 96",C_(78,12,9,"#FFD8C2")+P_("M38 40 L62 40 L62 84 L38 84 Z","#FFC9DE"),"#D6336C","사람(亻)"],
+"人":["M54 8 Q50 50 12 92 M50 46 Q64 72 90 92",C_(60,10,9,"#FFD8C2")+P_("M40 30 L62 30 L66 66 L36 66 Z","#FFC9DE"),"#D6336C","사람(人)"],
+"口":["M20 24 L20 80 M20 24 L80 24 L80 80 M20 80 L80 80",P_("M24 34 Q50 24 76 34 Q74 74 50 78 Q26 74 24 34 Z","#FF8FA3")+P_("M36 60 Q50 50 64 60 Q60 72 50 72 Q40 72 36 60 Z","#FFC2CF"),"#C2255C","입(口)"],
+"日":["M24 12 L24 90 M24 12 L76 12 L76 90 M24 51 L76 51 M24 90 L76 90",R_(24,12,52,78,"#FFE066",8)+P_("M50 1 L50 6 M8 51 L15 51 M85 51 L92 51 M10 8 L16 14 M90 8 L84 14 M10 94 L16 88 M90 94 L84 88",0,"#FAB005",4),"#E67700","해(日)"],
+"月":["M30 10 Q30 70 12 92 M30 10 L76 10 L76 84 Q76 94 64 90 M30 36 L76 36 M30 60 L76 60",P_("M66 4 A46 46 0 1 0 66 96 A36 36 0 1 1 66 4 Z","#FFEC99"),"#B08900","달(月)"],
+"⺼":["M30 10 Q30 70 12 92 M30 10 L76 10 L76 84 Q76 94 64 90 M30 36 L76 36 M30 60 L76 60",P_("M16 18 Q50 0 86 18 L86 82 Q50 100 16 82 Z","#FFC9C9")+P_("M22 48 Q50 40 82 48",0,"#FFF5F5",6),"#C92A2A","고기·몸(月)"],
+"田":["M16 16 L16 86 M16 16 L84 16 L84 86 M16 51 L84 51 M50 16 L50 86 M16 86 L84 86",R_(16,16,68,70,"#B2F2BB",4)+[[33,33],[67,33],[33,69],[67,69]].map(([x,y])=>C_(x-6,y,4,"#40C057")+C_(x+6,y,4,"#40C057")).join(""),"#7A5230","밭(田)"],
+"土":["M22 44 L78 44 M50 12 L50 86 M10 86 L90 86",P_("M16 86 Q30 52 50 44 Q70 52 84 86 Z","#E3B98A")+LF_(40,14,-30,10,"#69DB7C")+LF_(60,14,30,10,"#69DB7C"),"#8B4513","흙(土)"],
+"女":["M46 8 Q40 36 24 60 Q54 68 82 92 M68 34 Q62 66 20 92 M10 52 L90 52",C_(46,10,9,"#FFD8C2")+P_("M28 52 L72 52 L84 94 L16 94 Z","#FFC9DE"),"#C2255C","여자(女)"],
+"子":["M24 14 L74 14 Q60 28 50 36 L50 86 Q50 94 38 90 M10 54 L90 54",C_(49,24,15,"#FFE3D0")+C_(44,23,2.2,"#333")+C_(55,23,2.2,"#333")+P_("M38 42 L62 42 L58 94 L42 94 Z","#FFE8A3"),"#E8590C","아이(子)"],
+"宀":["M50 4 L50 18 M14 44 L14 28 L86 28 L86 44",P_("M4 32 L50 6 L96 32 L88 32 L88 46 L12 46 L12 32 Z","#FFC9C9"),"#C92A2A","집·지붕(宀)"],
+"艹":["M8 36 L92 36 M32 12 L32 56 M68 12 L68 56",LF_(22,14,-35,12)+LF_(42,22,35,10,"#69DB7C")+LF_(78,14,35,12)+LF_(58,22,-35,10,"#69DB7C"),"#2B8A3E","풀(艹)"],
+"門":["M14 8 L14 94 M14 8 L42 8 L42 44 M14 26 L42 26 M14 44 L42 44 M58 8 L86 8 L86 88 Q86 96 76 92 M58 8 L58 44 M58 26 L86 26 M58 44 L86 44",R_(14,8,28,86,"#F3D9B1",2)+R_(58,8,28,86,"#F3D9B1",2)+C_(38,66,3,"#8B5A2B")+C_(62,66,3,"#8B5A2B"),"#8B5A2B","문(門)"],
+"言":["M46 2 L54 12 M14 22 L86 22 M28 38 L72 38 M28 52 L72 52 M28 66 L28 94 M28 66 L72 66 L72 94 M28 94 L72 94",P_("M8 14 Q50 4 92 14 L92 58 Q50 64 8 58 Z","#FFF3BF")+R_(30,68,40,24,"#FFC2CF",4),"#6741D9","말(言)"],
+"心":["M16 54 L24 70 M32 34 Q30 86 50 88 L80 88 Q88 88 86 74 M50 24 L58 42 M76 44 L88 62",P_("M50 96 C8 70 8 30 32 26 C42 24 48 32 50 38 C52 32 58 24 68 26 C92 30 92 70 50 96 Z","#FFC9C9"),"#E03131","마음(心)"],
+"力":["M20 32 L80 32 Q82 78 70 92 L58 84 M50 8 Q50 62 12 92",P_("M70 76 L92 96 L60 96 Z","#CED4DA")+R_(4,94,92,5,"#E9C49A",2),"#5C3D2E","힘·쟁기(力)"],
+"雨":["M12 10 L88 10 M50 10 L50 30 M18 30 L18 92 M18 30 L82 30 L82 88 Q82 96 72 92 M32 48 L40 54 M32 70 L40 76 M60 48 L68 54 M60 70 L68 76",P_("M8 30 Q8 4 30 10 Q42 -2 58 8 Q80 0 92 22 Q96 30 88 32 Z","#DEE2E6")+DR_(36,52,6,"#74C0FC")+DR_(36,74,6,"#74C0FC")+DR_(64,52,6,"#74C0FC")+DR_(64,74,6,"#74C0FC"),"#1971C2","비(雨)"],
+"禾":["M74 6 Q52 16 26 18 M10 40 L90 40 M50 18 L50 96 M50 42 L16 80 M50 42 L84 76",[[28,22],[36,24],[44,22],[56,18],[66,14]].map(([x,y])=>C_(x,y,5,"#FFD43B")).join(""),"#5C940D","벼(禾)"],
+"糸":["M46 6 L26 34 L60 32 M58 20 L22 62 L76 56 M64 44 L78 64 M50 60 L50 96 M34 74 L20 90 M66 74 L80 90",C_(44,26,15,"#F3D9FA")+C_(50,52,17,"#F3D9FA"),"#9C36B5","실(糸)"],
+"⺮":["M26 6 L12 30 M20 16 L46 16 M32 18 L40 32 M66 6 L54 30 M62 16 L90 16 M72 18 L80 32",LF_(16,8,-40,9)+LF_(48,8,30,9)+LF_(58,8,-40,9)+LF_(90,8,30,9),"#2B8A3E","대나무(⺮)"],
+"灬":["M14 70 L20 92 M38 74 L40 92 M60 74 L62 92 M84 70 L90 90",FL_(18,84,8)+FL_(40,84,8)+FL_(62,84,8)+FL_(86,82,8),"#E8590C","불(灬)"],
+"火":["M22 30 L32 48 M78 26 L66 46 M50 6 Q50 60 14 92 M50 58 Q64 80 90 92",P_("M50 98 C12 94 12 58 30 40 C32 56 42 58 42 58 C38 36 46 18 58 4 C58 28 78 38 82 58 C86 82 72 98 50 98 Z","#FFC078"),"#E8590C","불(火)"],
+"又":["M16 14 L74 14 Q66 54 16 92 M30 32 Q50 66 88 90",P_("M14 8 L80 8 Q86 50 60 70 Q40 84 20 70 Q10 40 14 8 Z","#FFE3D0"),"#D9480F","손(又)"],
+"辶":["M18 10 L28 22 M8 40 L30 40 Q28 64 12 78 M24 66 Q40 94 94 90",P_("M16 72 Q40 100 98 96 L98 84 Q46 88 30 62 Z","#E9ECEF"),"#495057","길·가다(辶)"],
+"目":["M26 8 L26 92 M26 8 L74 8 L74 92 M26 36 L74 36 M26 64 L74 64 M26 92 L74 92",P_("M50 4 Q90 50 50 96 Q10 50 50 4 Z","#FFFFFF","#CED4DA",2)+C_(50,50,14,"#9775FA")+C_(50,50,6,"#212529")+C_(54,45,3,"#FFF"),"#343A40","눈(目)"],
+"大":["M10 38 L90 38 M50 6 L50 52 Q40 78 12 94 M52 52 Q62 78 90 94",C_(50,12,9,"#FFD8C2")+P_("M38 40 L62 40 L60 62 L40 62 Z","#FFC9DE"),"#D6336C","사람(大)"],
+"寸":["M8 30 L92 30 M66 8 L66 86 Q66 96 52 90 M32 50 L44 66",P_("M54 30 L80 30 L80 92 Q66 98 54 90 Z","#FFE3D0")+C_(38,58,7,"#FFA8A8"),"#D9480F","손·마디(寸)"],
+"示":["M24 12 L76 12 M10 34 L90 34 M50 34 L50 86 Q50 96 38 90 M30 52 L16 76 M70 52 L84 76",R_(8,28,84,12,"#D0BFFF",4)+R_(28,6,44,10,"#E5DBFF",4),"#5F3DC4","제단(示)"],
+"攵":["M36 6 L22 40 M28 24 L86 24 M64 24 Q56 60 12 92 M34 46 Q56 76 90 92",P_("M80 10 L86 6",0,"#C9A27A",6)+C_(30,22,8,"#FFE3D0"),"#5C3D2E","막대 든 손(攵)"],
+"工":["M16 16 L84 16 M50 16 L50 84 M8 84 L92 84",R_(12,10,76,12,"#DEE2E6",4)+R_(44,16,12,68,"#DEE2E6",4)+R_(6,78,88,12,"#DEE2E6",4),"#495057","도구(工)"],
+"生":["M36 8 L22 34 M28 30 L84 30 M56 8 L56 88 M26 58 L82 58 M10 88 L92 88",R_(6,88,88,8,"#E3B98A",3)+LF_(40,22,-30,12)+LF_(72,22,30,12)+LF_(40,50,-25,12,"#69DB7C")+LF_(72,50,25,12,"#69DB7C"),"#2F9E44","새싹·나다(生)"],
+"舌":["M78 6 Q50 16 20 18 M10 38 L90 38 M50 16 L50 58 M28 58 L28 92 M28 58 L72 58 L72 92 M28 92 L72 92",R_(28,58,44,34,"#FFC2CF",4)+P_("M40 18 Q50 8 60 18 L58 52 Q50 62 42 52 Z","#FF8FA3"),"#C2255C","혀(舌)"],
+"且":["M24 10 L24 86 M24 10 L76 10 L76 86 M24 36 L76 36 M24 62 L76 62 M8 88 L92 88",R_(24,10,52,76,"#F3D9B1",8),"#8B5A2B","위패(且)"],
+"夕":["M46 6 Q36 30 12 50 M40 18 L76 18 Q70 60 24 92 M34 42 L54 56",P_("M78 14 A44 44 0 0 0 22 92 A36 36 0 0 1 78 14 Z","#FFE066")+C_(80,60,2.5,"#FAB005")+C_(16,20,2.5,"#FAB005"),"#E67700","저녁·초승달(夕)"],
+"冂":["M14 94 L14 22 L86 22 L86 88 Q86 96 76 92",R_(14,22,72,72,"#FFF0E0",4)+P_("M8 24 L50 4 L92 24 Z","#FFC9C9"),"#8B5A2B","집(冂)"],
+"入":["M50 6 L50 30 Q46 54 18 82 M52 40 Q64 62 84 80",P_("M50 30 L44 46 M38 40 L44 46 L50 40",0,"#FF6B6B",3),"#E8590C","들어가다(入)"],
+"豕":["M20 12 L80 12 M52 12 Q36 32 16 44 M46 26 Q64 40 40 56 Q30 62 20 66 M44 50 L16 84 M50 46 Q62 70 52 92 L44 88 M58 46 L86 70 M64 30 L82 22",P_("M20 38 Q50 18 80 38 Q88 60 70 74 Q46 82 24 70 Q12 56 20 38 Z","#FFC9DE")+C_(78,30,3,"#333"),"#C2255C","돼지(豕)"],
+"穴":["M50 4 L50 14 M12 32 L12 20 L88 20 L88 32 M38 28 L24 46 M62 28 L78 46",P_("M14 46 Q50 10 86 46 Z","#495057"),"#5C3D2E","구멍·굴(穴)"],
+"己":["M16 14 L80 14 L80 46 M20 46 L80 46 M20 46 L20 80 Q20 92 34 92 L88 92 L88 76","","#495057","소리(己 기)"],
+"寺":["M28 12 L72 12 M50 2 L50 28 M18 28 L82 28 M10 46 L90 46 M68 34 L68 88 Q68 96 54 90 M34 60 L46 74","","#495057","소리(寺 시)"],
+"昜":["M30 4 L30 30 M30 4 L74 4 L74 30 M30 17 L74 17 M30 30 L74 30 M14 42 L88 42 M34 52 Q28 72 14 82 M34 52 L80 52 Q78 82 66 94 M48 60 Q40 78 26 90 M64 62 Q56 82 44 94",R_(30,4,44,26,"#FFE066",6)+P_("M30 52 Q20 72 10 84 M50 56 Q42 76 28 94 M66 58 Q60 80 48 96",0,"#FFD43B",4),"#E67700","햇볕(昜)"],
+"每":["M28 4 L18 22 M22 14 L80 14 M24 30 L20 78 M24 30 L76 30 Q74 60 70 90 M8 54 L92 54 M44 38 L52 46 M44 64 L52 72",P_("M18 32 L80 32 L76 90 L22 90 Z","#FFE3EC")+C_(78,10,6,"#FFD43B"),"#C2255C","소리(每 매)"],
+"堇":["M14 10 L86 10 M34 2 L34 20 M66 2 L66 20 M28 28 L28 46 M28 28 L72 28 L72 46 M28 37 L72 37 M28 46 L72 46 M12 58 L88 58 M50 28 L50 72 M50 64 Q34 84 14 94 M50 64 Q66 84 88 94","","#495057","소리(한)"],
+"同":["M16 92 L16 10 L84 10 L84 88 Q84 96 74 92 M32 30 L68 30 M34 46 L34 74 M34 46 L66 46 L66 74 M34 74 L66 74",R_(16,10,68,84,"#E7F5FF",6)+R_(34,46,32,28,"#FFC2CF",4),"#1971C2","한가지·함께(同)"],
+"直":["M50 2 L50 18 M14 14 L86 14 M22 28 L22 90 L90 90 M34 28 L34 80 M34 28 L74 28 L74 80 M34 45 L74 45 M34 62 L74 62 M34 80 L74 80",R_(34,28,40,52,"#FFFFFF",4)+C_(54,54,9,"#9775FA")+C_(54,54,4,"#212529"),"#343A40","곧다(直)"],
+"主":["M46 4 L56 16 M18 28 L82 28 M24 54 L76 54 M50 28 L50 88 M10 88 L90 88",FL_(51,12,9,"#FF922B")+R_(30,70,40,18,"#F3D9B1",4)+R_(44,28,12,44,"#FFE8CC",3),"#B35C00","등잔불(主)"],
+"更":["M14 8 L88 8 M28 20 L28 56 M28 20 L72 20 L72 56 M28 38 L72 38 M28 56 L72 56 M50 8 Q50 70 18 94 M30 66 Q56 86 90 94","","#495057","소리(更 편)"],
+"也":["M14 34 L84 22 Q84 52 74 58 M48 6 L48 80 M22 20 L22 80 Q22 94 38 94 L88 94 L88 80","","#495057","소리(也 야→지)"],
+"氏":["M80 6 Q50 14 22 16 M22 16 L22 88 L46 76 M24 46 L88 46 M50 16 Q58 70 90 92 M80 74 L88 66","","#495057","소리(氏 씨→지)"],
+"吾":["M14 8 L86 8 M44 8 L36 42 M22 26 L74 26 L72 44 M8 44 L92 44 M24 56 L24 92 M24 56 L76 56 L76 92 M24 92 L76 92",R_(24,56,52,36,"#FFC2CF",4),"#495057","나·소리(吾 오→어)"],
+"欠":["M36 6 L20 34 M28 22 L82 22 L70 40 M52 30 Q46 68 10 94 M52 56 Q64 82 92 94",C_(36,12,9,"#FFD8C2")+P_("M72 12 Q86 6 88 16",0,"#74C0FC",3)+P_("M76 4 Q94 -2 96 12",0,"#74C0FC",3),"#D6336C","입 벌린 사람(欠)"],
+"哥":["M10 8 L90 8 M24 18 L24 34 M24 18 L54 18 L54 34 M24 34 L54 34 M74 8 L74 46 Q74 52 66 50 M10 56 L90 56 M24 66 L24 82 M24 66 L54 66 L54 82 M24 82 L54 82 M74 56 L74 94 Q74 100 66 98",R_(24,18,30,16,"#FFC2CF",4)+R_(24,66,30,16,"#FFC2CF",4),"#C2255C","노래하는 입(哥)"],
+"化":["M36 8 Q26 34 10 50 M26 30 L26 96 M80 14 L54 46 M62 10 L62 84 Q62 96 76 94 L90 94 L90 82",C_(20,10,7,"#FFD8C2")+LF_(76,60,0,9,"#FFC9DE"),"#C2255C","바뀌다(化)"],
+"早":["M28 8 L28 40 M28 8 L72 8 L72 40 M28 24 L72 24 M28 40 L72 40 M10 60 L90 60 M50 40 L50 96",R_(28,8,44,32,"#FFE066",8)+LF_(36,70,-30,10)+LF_(64,70,30,10),"#E67700","이른 아침(早)"],
+"合":["M50 6 Q34 22 12 32 M50 6 Q66 22 88 32 M34 40 L66 40 M28 54 L28 92 M28 54 L72 54 L72 92 M28 92 L72 92",P_("M8 34 L50 4 L92 34 Z","#D0EBFF")+R_(28,54,44,38,"#E7F5FF",4),"#1971C2","뚜껑이 맞다(合)"],
+"首":["M30 4 L38 14 M70 4 L62 14 M16 22 L84 22 M50 22 L44 34 M28 36 L28 92 M28 36 L72 36 L72 92 M28 54 L72 54 M28 72 L72 72 M28 92 L72 92",R_(28,36,44,56,"#FFE3D0",10)+C_(40,62,3,"#333")+C_(60,62,3,"#333"),"#D9480F","머리(首)"],
+"重":["M70 6 Q50 12 26 14 M12 26 L88 26 M28 38 L28 66 M28 38 L72 38 L72 66 M28 52 L72 52 M28 66 L72 66 M50 14 L50 90 M20 78 L80 78 M8 92 L92 92",P_("M22 36 Q50 24 78 36 L80 70 Q50 80 20 70 Z","#E9C49A"),"#5C3D2E","무겁다(重)"],
+"牛":["M40 8 L18 38 M24 26 L82 26 M8 58 L90 58 M52 6 L52 96",P_("M20 12 Q4 4 8 20 M84 12 Q98 4 94 20",0,"#ADB5BD",5)+P_("M22 28 L80 28 L76 54 L26 54 Z","#E9C49A"),"#5C3D2E","소(牛)"],
+"勿":["M44 8 Q38 26 26 38 M38 24 L86 24 Q86 76 70 92 M56 26 Q50 56 26 84 M72 28 Q66 60 44 88","","#495057","소리(勿 물)"],
+"戶":["M14 8 L86 8 M24 22 L24 56 Q24 82 8 96 M24 22 L80 22 L80 52 M24 52 L80 52",R_(24,22,56,30,"#F3D9B1",3),"#8B5A2B","문짝(戶)"],
+"斤":["M80 6 Q60 14 36 18 M36 18 L36 56 Q36 82 20 96 M36 46 L92 46 M66 46 L66 96",P_("M30 14 L44 14 L44 40 L30 40 Q22 28 30 14 Z","#CED4DA")+R_(62,46,8,50,"#E9C49A",3),"#495057","도끼(斤)"],
+"婁":["M14 8 L86 8 M24 18 L24 34 M24 18 L76 18 L76 34 M24 34 L76 34 M50 2 L50 50 M8 50 L92 50 M44 56 Q36 76 24 86 Q50 88 84 96 M70 60 Q60 84 16 96",C_(30,26,4,"#FFD43B")+C_(50,26,4,"#FFD43B")+C_(70,26,4,"#FFD43B"),"#5C3D2E","하나씩 세다(婁)"],
+"方":["M48 4 L56 16 M10 26 L90 26 M40 26 Q40 70 14 94 M40 50 L78 50 Q80 84 66 94","","#495057","방향(方)"],
+"其":["M40 4 L30 18 M34 12 L90 12 M46 22 L84 22 M54 28 L54 70 M74 28 L74 70 M46 40 L82 40 M46 54 L82 54 M36 70 L92 70 M54 78 L44 92 M74 78 L86 92",P_("M90 12 Q96 30 84 40 Q92 54 82 62",0,"#FF8787",4),"#C92A2A","깃발(㫃)+소리(其 기)"],
+"彳":["M66 6 Q50 22 24 34 M70 34 Q50 56 14 70 M44 50 L44 94",P_("M30 40 L60 40 L60 96 L30 96 Z","#E9ECEF"),"#495057","길을 가다(彳)"],
+"夂幺":["M50 4 L36 20 L60 22 M56 14 L30 40 L76 38 M70 30 L78 40 M44 50 L82 50 Q66 76 24 94 M44 60 Q56 84 90 94",P_("M40 80 Q46 74 52 80 Q52 88 46 90 Q40 88 40 80 Z M64 84 Q70 78 76 84 Q76 92 70 94 Q64 92 64 84 Z","#FFD8C2"),"#495057","실(幺)+느린 발(夂)"],
+"耂":["M20 30 L80 30 M50 6 L50 42 M88 8 Q60 40 8 58",P_("M30 4 Q50 -4 70 4 Q72 18 60 22 L40 22 Q28 18 30 4 Z","#F1F3F5"),"#868E96","늙은이(耂)"],
+"火2":["M22 30 L32 48 M78 26 L66 46 M50 6 Q50 60 14 92 M50 58 Q64 80 90 92",P_("M50 98 C12 94 12 58 30 40 C32 56 42 58 42 58 C38 36 46 18 58 4 C58 28 78 38 82 58 C86 82 72 98 50 98 Z","#FFC078"),"#E8590C","불(火)"]};
+const LR_=(a,b,k)=>{k=k||44;return [[a,0,4,k,92],[b,k-4,4,104-k,92]]};
+const TB_=(a,b,k)=>{k=k||42;return [[a,4,0,92,k],[b,4,k-2,92,102-k]]};
+/* 글자 설계: P=부품 배치 [부품,x,y,w,h] / s=획, d=그림, k=획 색 · L=그림↔획 연결 설명 · t: pic=모양에서 온 글자, comp=뜻 부품을 합친 글자, mem=기억 그림(유래 아님) */
+const GC={
+/* ── 7급Ⅱ ── */
+"家":{t:"comp",P:[["宀",4,0,92,40],["豕",10,36,80,64]],L:["위 宀 = 지붕","아래 豕 = 돼지"]},
+"間":{t:"comp",P:[["門",0,0,100,100],["日",34,46,32,42]],L:["바깥 門 = 문 두 짝","안쪽 日 = 문틈으로 비치는 햇빛"]},
+"江":{t:"comp",P:LR_("氵","工",36),L:["왼쪽 氵 = 물방울 세 개","오른쪽 工 = 소리 ‘공→강’"]},
+"車":{t:"pic",s:"M14 14 L86 14 M24 30 L24 66 M24 30 L76 30 L76 66 M24 48 L76 48 M24 66 L76 66 M8 84 L92 84 M50 4 L50 96",d:R_(10,6,80,16,"#495057",8)+R_(6,76,88,16,"#495057",8)+R_(24,30,52,36,"#F3D9B1",4)+C_(50,14,4,"#FFD43B")+C_(50,84,4,"#FFD43B"),k:"#8B5A2B",L:["위·아래 가로획 = 바퀴 두 개(위에서 본 모습)","가운데 네모 = 사람이 타는 수레 칸","가운데 세로획 = 두 바퀴를 잇는 굴대"]},
+"工":{t:"pic",P:[["工",0,0,100,100]],L:["위·아래 가로획 = 도구의 넓은 면","세로획 = 손잡이"]},
+"空":{t:"comp",P:[["穴",4,0,92,46],["工",14,46,72,52]],L:["위 穴 = 텅 빈 굴(구멍)","아래 工 = 소리 ‘공’"]},
+"氣":{t:"pic",s:"M30 6 L14 30 M24 16 L84 16 M26 30 L74 30 M18 44 L76 44 Q80 78 92 94 M40 54 L44 62 M64 54 L58 62 M28 68 L70 68 M50 50 L50 96 M48 70 L30 90 M52 70 L68 90",d:P_("M10 12 Q30 2 50 12 Q70 2 90 12",0,"#CED4DA",5)+P_("M16 26 Q36 18 56 26 Q72 18 84 26",0,"#DEE2E6",5)+C_(36,80,5,"#FFF3BF")+C_(64,80,5,"#FFF3BF")+C_(50,62,5,"#FFF3BF"),k:"#868E96",L:["위의 气 = 피어오르는 김(수증기)","안쪽 米 = 쌀","밥 지을 때 쌀에서 김이 오르는 모습"]},
+"記":{t:"comp",P:LR_("言","己",46),L:["왼쪽 言 = 말","오른쪽 己 = 소리 ‘기’","말을 적어 두다 = 기록하다"]},
+"男":{t:"comp",P:[["田",14,0,72,48],["力",6,44,88,56]],L:["위 田 = 밭","아래 力 = 쟁기(힘)","밭에서 힘쓰는 사람 = 사내"]},
+"內":{t:"comp",P:[["冂",0,10,100,90],["入",14,0,72,80]],L:["바깥 冂 = 집(둘러싼 벽)","안쪽 入 = 들어가다","집 안으로 들어가는 곳 = 안"]},
+"農":{t:"comp",s:"M18 10 L18 40 M18 10 L82 10 L82 40 M18 24 L82 24 M18 40 L82 40 M38 2 L38 40 M62 2 L62 40 M22 50 L22 72 Q20 88 10 96 M22 50 L84 50 M34 62 L74 62 M30 74 L80 74 M50 74 L50 96 M52 78 Q66 90 90 96 M70 80 L84 72",d:R_(18,10,64,30,"#B2F2BB",4)+P_("M60 70 Q80 64 92 80 Q80 96 60 90 Z","#FFE8CC"),k:"#7A5230",L:["위 曲 모양 = 밭","아래 辰 = 옛날 조개껍데기 농기구","밭을 가는 일 = 농사"]},
+"答":{t:"comp",P:[["⺮",4,0,92,34],["合",8,30,84,70]],L:["위 ⺮ = 대나무(옛날엔 대나무 조각에 글을 썼어요)","아래 合 = 뚜껑이 딱 맞다","묻는 말에 딱 맞게 하는 말 = 대답"]},
+"道":{t:"comp",P:[["首",30,0,64,72],["辶",0,0,100,100]],L:["오른쪽 위 首 = 머리","왼쪽·아래 辶 = 길을 가다","앞을 보고 걸어가는 곳 = 길"]},
+"動":{t:"comp",P:LR_("重","力",54),L:["왼쪽 重 = 무거운 짐","오른쪽 力 = 힘","무거운 것을 힘써 옮기다 = 움직이다"]},
+"力":{t:"pic",P:[["力",0,0,100,100]],L:["긴 획 = 쟁기 손잡이","갈고리 획 = 땅을 파는 날"]},
+"立":{t:"pic",s:"M50 4 L50 18 M16 30 L84 30 M32 44 L42 76 M70 42 L60 76 M8 88 L92 88",d:C_(50,12,8,"#FFD8C2")+P_("M38 30 L62 30 L64 60 L36 60 Z","#FFC9DE")+R_(4,88,92,8,"#B2F2BB",3),k:"#D6336C",L:["점 = 머리","첫 가로획 = 쭉 편 두 팔","가운데 두 획 = 두 다리","아래 긴 가로획 = 서 있는 땅"]},
+"每":{t:"mem",P:[["每",0,0,100,100]],L:["맨 위 = 머리에 꽂은 장식","아래 母 = 어머니","‘매양(늘)’이라는 뜻은 소리를 빌려 쓴 거예요"]},
+"名":{t:"comp",P:[["夕",8,0,84,56],["口",26,50,52,48]],L:["위 夕 = 초승달(어두운 저녁)","아래 口 = 입","어두워 얼굴이 안 보일 때 입으로 부르는 것 = 이름"]},
+"物":{t:"comp",P:LR_("牛","勿",44),L:["왼쪽 牛 = 소(옛날 가장 귀한 재산)","오른쪽 勿 = 소리 ‘물’"]},
+"方":{t:"mem",P:[["方",0,0,100,100]],d:P_("M44 50 L80 50",0,"#FF8787",3),L:["기억 그림: 팔을 뻗어 방향을 가리키는 사람","맨 위 점 = 머리, 가로획 = 어깨"]},
+"不":{t:"mem",s:"M12 14 L88 14 M56 14 Q42 50 12 78 M50 40 L50 96 M60 50 L84 68",d:R_(6,4,88,8,"#D0EBFF",4)+P_("M50 40 Q30 30 22 44 M50 40 Q70 30 78 44",0,"#868E96",4),k:"#1971C2",L:["위 가로획 = 하늘","아래 = 하늘로 날아가 내려오지 않는 새(옛 풀이)","그래서 ‘아니다’"]},
+"事":{t:"mem",s:"M14 12 L86 12 M30 22 L30 34 M30 22 L70 22 L70 34 M30 34 L70 34 M22 46 L78 46 L78 70 M10 58 L90 58 M22 70 L78 70 M50 2 L50 92 Q50 98 40 94",d:P_("M54 2 L82 2 L82 16 L54 16 Z","#FFC9C9")+P_("M24 46 L76 46 L76 70 L24 70 Z","#FFE3D0"),k:"#5C3D2E",L:["가운데 긴 세로획 = 깃발 단 막대","아래 ⺕ = 막대를 쥔 손","손에 도구를 들고 하는 것 = 일"]},
+"上":{t:"pic",s:"M50 8 L50 84 M50 44 L82 44 M8 86 L92 86",d:R_(4,86,92,10,"#B2F2BB",4)+P_("M52 44 L82 44 L76 30 Z","#FF8787"),k:"#2B8A3E",L:["아래 긴 가로획 = 땅(기준선)","세로획과 짧은 획 = 땅 ‘위’를 가리키는 표시"]},
+"姓":{t:"comp",P:LR_("女","生",44),L:["왼쪽 女 = 여자(어머니)","오른쪽 生 = 태어나다","어머니에게서 태어나 물려받은 것 = 성"]},
+"世":{t:"pic",s:"M8 40 L92 40 M28 14 L28 84 L88 84 M52 10 L52 66 L28 66 M74 10 L74 66",d:C_(28,40,7,"#FFE066")+C_(52,40,7,"#FFE066")+C_(74,40,7,"#FFE066"),k:"#E67700",L:["十 세 개를 이어 붙인 모양 = 30","30년 = 한 세대 → 사람이 사는 세상"]},
+"手":{t:"pic",s:"M76 6 Q50 14 24 16 M16 38 L84 38 M10 60 L90 60 M50 14 L50 88 Q50 96 38 90",d:P_("M30 26 Q50 20 70 26 L74 74 Q50 86 26 74 Z","#FFE3D0")+R_(10,34,18,8,"#FFE3D0",4)+R_(72,34,18,8,"#FFE3D0",4)+R_(6,56,20,8,"#FFE3D0",4)+R_(74,56,20,8,"#FFE3D0",4),k:"#D9480F",L:["가로획들 = 쫙 편 손가락","세로획 = 손바닥과 팔목"]},
+"時":{t:"comp",P:LR_("日","寺",40),L:["왼쪽 日 = 해(해가 움직이며 시간이 흘러요)","오른쪽 寺 = 소리 ‘시’"]},
+"市":{t:"mem",s:"M50 4 L50 16 M12 24 L88 24 M22 42 L22 82 M22 42 L78 42 L78 78 Q78 86 70 84 M50 24 L50 96",d:P_("M8 26 L92 26 L84 40 L16 40 Z","#FFC9C9")+R_(24,46,52,30,"#FFF3BF",3),k:"#C92A2A",L:["기억 그림: 지붕 아래 천막을 친 장터","가운데 세로획 = 장대"]},
+"食":{t:"pic",s:"M50 4 Q32 22 10 34 M50 4 Q68 22 90 34 M50 24 L54 32 M28 40 L28 86 M28 40 L72 40 L72 72 M28 56 L72 56 M28 72 L72 72 M28 86 L40 78 M56 74 L88 94",d:P_("M8 36 L50 2 L92 36 Z","#D0BFFF")+R_(28,40,44,32,"#FFF3BF",6)+C_(40,48,3,"#FFFFFF")+C_(54,50,3,"#FFFFFF")+C_(62,62,3,"#FFFFFF"),k:"#5F3DC4",L:["위 人 모양 = 뚜껑","아래 = 밥이 담긴 그릇","뚜껑 덮은 밥그릇 = 먹다·밥"]},
+"安":{t:"comp",P:[["宀",4,0,92,40],["女",10,34,80,66]],L:["위 宀 = 집","아래 女 = 여자","집 안에 있어 편안하다"]},
+"午":{t:"mem",s:"M30 6 L18 28 M22 20 L80 20 M10 52 L90 52 M50 20 L50 96",d:R_(42,4,16,92,"#E9C49A",8),k:"#8B5A2B",L:["모양은 곡식을 찧는 절굿공이","‘낮’이라는 뜻은 빌려 쓴 거예요"]},
+"右":{t:"comp",s:"M58 6 Q44 50 14 86 M12 30 L88 30 M40 54 L40 92 M40 54 L84 54 L84 92 M40 92 L84 92",d:P_("M14 16 L60 16 Q66 40 48 50 L20 40 Z","#FFE3D0")+R_(40,54,44,38,"#FFC2CF",4),k:"#D9480F",L:["위 ナ = 손","아래 口 = 입","밥 먹을 때 입으로 가져가는 손 = 오른쪽(전해지는 풀이)"]},
+"子":{t:"pic",P:[["子",0,0,100,100]],L:["위 = 아기의 큰 머리","가로획 = 두 팔","아래 갈고리 = 포대기에 싸인 몸"]},
+"自":{t:"pic",s:"M54 2 L44 14 M24 16 L24 92 M24 16 L76 16 L76 92 M24 40 L76 40 M24 64 L76 64 M24 92 L76 92",d:P_("M40 10 Q50 2 60 10 L82 80 Q84 94 68 94 L32 94 Q16 94 18 80 Z","#FFE3D0")+C_(38,84,5,"#E8A87C")+C_(62,84,5,"#E8A87C"),k:"#D9480F",L:["네모 전체 = 코","‘나’를 가리킬 때 코를 가리켜서 → 스스로"]},
+"場":{t:"comp",P:LR_("土","昜",40),L:["왼쪽 土 = 흙(땅)","오른쪽 昜 = 햇볕","햇볕 잘 드는 넓은 땅 = 마당"]},
+"電":{t:"comp",P:[["雨",4,0,92,48],["申",8,44,84,56]],L:["위 雨 = 비구름","아래 = 번쩍이는 번개","비 올 때 치는 것 = 번개(전기)"]},
+"前":{t:"mem",s:"M30 4 L38 14 M70 4 L62 14 M10 22 L90 22 M18 34 Q18 80 10 94 M18 34 L52 34 L52 88 Q52 96 44 92 M18 52 L52 52 M18 68 L52 68 M68 36 L68 76 M86 32 L86 90 Q86 96 76 92",d:P_("M16 34 L54 34 L54 90 L14 90 Z","#D0EBFF")+P_("M64 36 L72 36 L72 76 L64 76 Z M82 32 L90 32 L90 90 L82 90 Z","#DEE2E6"),k:"#1971C2",L:["위 = 발(앞으로 나아감)","왼쪽 月 = 배(舟)","오른쪽 刂 = 칼","배가 앞으로 나아가는 모습으로 기억해요"]},
+"全":{t:"mem",s:"M50 4 Q34 20 10 34 M50 4 Q66 20 90 34 M24 48 L76 48 M28 66 L72 66 M50 48 L50 88 M14 88 L86 88",d:P_("M8 36 L50 2 L92 36 Z","#E5DBFF")+R_(20,46,60,44,"#C3FAE8",6),k:"#087F5B",L:["위 入 = 덮개(들어가 있다)","아래 王 = 구슬(玉)","흠 없이 온전한 구슬"]},
+"正":{t:"pic",s:"M14 12 L86 12 M50 12 L50 88 M50 50 L80 50 M24 42 L24 88 M8 88 L92 88",d:R_(8,4,84,14,"#FFC9C9",6)+P_("M30 60 Q36 50 44 58 Q46 72 38 80 Q28 80 30 60 Z","#FFE3D0"),k:"#C92A2A",L:["맨 위 가로획 = 가야 할 목표","아래 止 = 발","목표를 향해 똑바로 가다 = 바르다"]},
+"足":{t:"pic",s:"M30 8 L30 40 M30 8 L70 8 L70 40 M30 40 L70 40 M50 40 L50 86 M50 62 L76 62 M30 56 L30 86 M12 90 Q50 84 92 92",d:C_(50,24,18,"#FFE3D0")+P_("M40 40 L60 40 L60 80 L92 80 Q96 94 84 96 L40 96 Z","#FFE3D0"),k:"#D9480F",L:["위 口 = 무릎(둥근 무릎뼈)","아래 = 다리와 발"]},
+"左":{t:"comp",s:"M54 6 Q42 50 12 86 M10 30 L90 30 M40 54 L80 54 M60 54 L60 88 M30 88 L90 88",d:P_("M14 16 L60 16 Q66 40 48 50 L20 40 Z","#FFE3D0")+R_(36,50,48,10,"#DEE2E6",4)+R_(26,84,68,10,"#DEE2E6",4),k:"#D9480F",L:["위 ナ = 손","아래 工 = 도구(자)","도구를 잡고 돕는 손 = 왼쪽(전해지는 풀이)"]},
+"直":{t:"comp",P:[["直",0,0,100,100]],L:["가운데 目 = 눈","위 十 = 똑바른 선","눈으로 똑바로 보다 = 곧다"]},
+"平":{t:"mem",s:"M18 14 L82 14 M30 28 L38 44 M70 28 L62 44 M8 58 L92 58 M50 14 L50 96",d:P_("M22 46 Q34 58 46 46 Z M54 46 Q66 58 78 46 Z","#FFE066"),k:"#E67700",L:["기억 그림: 양쪽이 똑같이 고른 저울","가운데 세로획 = 저울대"]},
+"下":{t:"pic",s:"M8 14 L92 14 M50 14 L50 90 M50 42 L76 56",d:R_(4,4,92,10,"#A5D8FF",4)+P_("M52 42 L76 56 L58 64 Z","#FF8787"),k:"#1971C2",L:["위 긴 가로획 = 기준선","세로획과 짧은 획 = 기준선 ‘아래’를 가리키는 표시"]},
+"漢":{t:"comp",P:LR_("氵","堇",36),L:["왼쪽 氵 = 물(중국의 큰 강 ‘한수’)","오른쪽 = 소리 ‘한’"]},
+"海":{t:"comp",P:LR_("氵","每",36),L:["왼쪽 氵 = 물","오른쪽 每 = 소리 ‘매→해’"]},
+"話":{t:"comp",P:LR_("言","舌",46),L:["왼쪽 言 = 말","오른쪽 舌 = 혀","혀를 움직여 하는 말 = 말씀"]},
+"活":{t:"comp",P:LR_("氵","舌",36),L:["왼쪽 氵 = 물","오른쪽 舌 = 혀(소리 부분)","물이 있어야 살 수 있다 → 살다"]},
+"孝":{t:"comp",P:[["耂",4,0,92,50],["子",14,40,72,60]],L:["위 耂 = 머리 하얀 늙은이","아래 子 = 아이","아이가 어른을 업고 모시는 모습 = 효도"]},
+"後":{t:"comp",P:[["彳",0,4,38,92],["夂幺",32,4,68,92]],L:["왼쪽 彳 = 길을 가다","오른쪽 = 실(幺)에 묶인 듯 느린 발(夂)","느리게 걸어 뒤처지다 = 뒤"]},
+/* ── 7급 ── */
+"歌":{t:"comp",P:LR_("哥","欠",50),L:["왼쪽 哥 = 노래하는 입","오른쪽 欠 = 입을 크게 벌린 사람","입 벌려 부르는 것 = 노래"]},
+"口":{t:"pic",P:[["口",0,0,100,100]],L:["네모 = 벌린 입"]},
+"旗":{t:"comp",P:LR_("方","其",42),L:["왼쪽 方 + 오른쪽 위 = 깃대에 달린 깃발(㫃)","오른쪽 其 = 소리 ‘기’"]},
+"冬":{t:"pic",s:"M44 4 Q34 24 12 36 M40 16 L78 16 Q62 50 18 70 M42 30 Q60 56 90 68 M44 76 L54 82 M40 90 L56 96",d:P_("M44 79 L54 79 M49 74 L49 84 M45 75 L53 83 M53 75 L45 83",0,"#74C0FC",2.5)+P_("M42 93 L54 93 M48 88 L48 98 M44 89 L52 97 M52 89 L44 97",0,"#74C0FC",2.5)+P_("M16 34 Q40 10 80 14 L88 22 Q50 20 22 40 Z","#E7F5FF"),k:"#1971C2",L:["위 夂 = 걸어가는 발","아래 점 두 개 = 얼음","발밑이 꽁꽁 언 계절 = 겨울"]},
+"同":{t:"comp",P:[["同",0,0,100,100]],L:["바깥 = 모두를 덮는 큰 덮개","안쪽 口 = 입","여럿이 한 입으로 말하다 = 한가지(같다)"]},
+"洞":{t:"comp",P:LR_("氵","同",36),L:["왼쪽 氵 = 물","오른쪽 同 = 함께","같은 물을 함께 쓰는 마을 = 골(동네)"]},
+"登":{t:"comp",s:"M22 8 L40 22 L14 40 M34 20 L44 30 M60 8 L58 24 M54 14 L86 14 M60 24 Q72 34 90 40 M20 48 L80 48 M30 58 L30 74 M30 58 L70 58 L70 74 M30 74 L70 74 M36 80 L42 90 M64 80 L58 90 M12 94 L88 94",d:P_("M18 14 Q26 8 32 16 Q32 26 24 28 Q16 24 18 14 Z M62 14 Q70 8 76 16 Q76 26 68 28 Q60 24 62 14 Z","#FFD8C2")+R_(28,56,44,20,"#E9C49A",3)+R_(10,90,80,6,"#E9C49A",3),k:"#8B5A2B",L:["위 癶 = 두 발","아래 豆 = 발판(받침대)","두 발로 발판을 딛고 오르다"]},
+"來":{t:"pic",s:"M12 26 L88 26 M50 4 L50 96 M30 34 L22 54 M34 40 L42 56 M70 34 L62 54 M72 40 L80 56 M50 56 Q34 78 12 92 M50 56 Q66 78 88 92",d:[[24,46],[40,48],[60,48],[76,46]].map(([x,y])=>`<ellipse cx="${x}" cy="${y}" rx="5" ry="9" fill="#FFD43B"/>`).join("")+C_(50,8,6,"#FFD43B"),k:"#5C940D",L:["모양은 이삭이 달린 보리","작은 人 두 개 = 보리 이삭","‘오다’라는 뜻은 빌려 쓴 거예요"]},
+"老":{t:"pic",s:"M20 26 L76 26 M48 6 L48 40 M88 8 Q62 38 10 56 M36 52 Q36 70 30 74 M36 64 L66 56 M30 74 L30 86 Q30 96 44 94 L86 94 L86 82",d:P_("M24 4 Q48 -4 72 6 Q74 18 60 22 L36 22 Q22 18 24 4 Z","#F1F3F5")+P_("M84 56 L84 98",0,"#C9A27A",4),k:"#868E96",L:["위 耂 = 머리가 하얗고 긴 늙은이","아래 匕 = 지팡이 짚고 구부린 몸"]},
+"里":{t:"comp",P:[["田",14,0,72,50],["土",4,40,92,60]],L:["위 田 = 밭","아래 土 = 흙(땅)","밭과 땅이 있는 곳 = 마을"]},
+"林":{t:"comp",P:LR_("木","木",52),L:["나무(木) + 나무(木)","나무가 많은 곳 = 수풀"]},
+"面":{t:"pic",s:"M10 10 L90 10 M48 10 L38 26 M18 28 L18 94 M18 28 L82 28 L82 94 M38 28 L38 94 M62 28 L62 94 M38 50 L62 50 M38 72 L62 72 M18 94 L82 94",d:R_(18,28,64,66,"#FFE3D0",14)+C_(50,50,7,"#9775FA")+C_(50,50,3,"#212529"),k:"#D9480F",L:["바깥 네모 = 얼굴 윤곽","가운데 目 = 눈","얼굴 = 낯"]},
+"命":{t:"comp",s:"M50 4 Q34 22 10 34 M50 4 Q66 22 90 34 M38 40 L62 40 M18 56 L18 80 M18 56 L44 56 L44 80 M18 80 L44 80 M58 54 L84 54 L84 76 Q84 84 74 80 M58 54 L58 96",d:P_("M8 36 L50 2 L92 36 Z","#E5DBFF")+R_(18,56,26,24,"#FFC2CF",4),k:"#5F3DC4",L:["위 = 지붕(높은 곳)","왼쪽 口 = 입","오른쪽 卩 = 무릎 꿇은 사람","입으로 내린 명령을 받드는 모습"]},
+"問":{t:"comp",P:[["門",0,0,100,100],["口",32,50,36,40]],L:["바깥 門 = 문","안쪽 口 = 입","문 앞에서 입으로 묻다"]},
+"文":{t:"pic",s:"M50 4 L56 16 M12 26 L88 26 M30 30 Q44 70 86 94 M70 30 Q56 70 14 94",d:C_(52,12,8,"#FFD8C2")+P_("M26 28 L74 28 L66 62 L34 62 Z","#FFE3EC")+P_("M42 38 L58 52 M58 38 L42 52",0,"#F06595",3),k:"#C2255C",L:["위 = 사람의 머리와 어깨","가운데 X = 가슴에 새긴 무늬","무늬 → 글월(글)"]},
+"百":{t:"mem",s:"M10 12 L90 12 M54 12 L44 30 M26 30 L26 92 M26 30 L74 30 L74 92 M26 60 L74 60 M26 92 L74 92",d:R_(26,30,48,62,"#F8F9FA",6)+[[38,44],[50,44],[62,44],[38,76],[50,76],[62,76]].map(([x,y])=>C_(x,y,3,"#FFD43B")).join(""),k:"#495057",L:["위 一 = 하나","아래 白 = 소리 ‘백’","하나(一)에 白을 붙여 ‘일백’"]},
+"夫":{t:"pic",s:"M20 22 L80 22 M12 46 L88 46 M50 6 L50 50 Q40 78 12 94 M52 50 Q62 78 90 94",d:C_(50,12,9,"#FFD8C2")+R_(16,18,68,7,"#FFD43B",3)+P_("M38 48 L62 48 L60 66 L40 66 Z","#D0EBFF"),k:"#1971C2",L:["大 = 다 자란 어른","맨 위 가로획 = 상투에 꽂은 비녀","어른 남자 = 지아비"]},
+"算":{t:"comp",s:"M24 6 L14 24 M20 14 L44 14 M30 16 L36 26 M64 6 L54 24 M60 14 L88 14 M70 16 L76 26 M28 32 L28 64 M28 32 L72 32 L72 64 M28 43 L72 43 M28 54 L72 54 M28 64 L72 64 M10 78 L90 78 M36 64 Q34 86 20 96 M64 64 L64 96",d:LF_(16,8,-40,8)+LF_(46,8,30,8)+LF_(56,8,-40,8)+LF_(88,8,30,8)+R_(28,32,44,32,"#F3D9B1",3)+C_(20,90,6,"#FFE3D0")+C_(68,90,6,"#FFE3D0"),k:"#2B8A3E",L:["위 ⺮ = 대나무 셈 막대","가운데 目 = 눈(셈 막대를 봄)","아래 廾 = 두 손","두 손으로 막대를 놓으며 세다 = 셈"]},
+"色":{t:"mem",s:"M38 4 L22 26 M30 14 L64 14 L50 30 M20 34 L20 64 M20 34 L74 34 L74 64 M20 50 L74 50 M48 34 L48 64 M20 64 L20 84 Q20 94 34 94 L86 94 L86 80",d:R_(20,34,28,16,"#FF8787",3)+R_(48,34,26,16,"#FFD43B",3)+R_(20,50,28,14,"#69DB7C",3)+R_(48,50,26,14,"#74C0FC",3),k:"#5F3DC4",L:["기억 그림: 네모 칸마다 다른 색을 칠한 팔레트","유래는 여러 풀이가 있어요"]},
+"夕":{t:"pic",P:[["夕",0,0,100,100]],L:["굽은 획 = 초승달","안쪽 점 = 달의 무늬","달이 막 뜨는 때 = 저녁"]},
+"少":{t:"mem",s:"M50 4 L50 46 Q50 54 42 52 M28 20 L16 42 M70 18 L84 38 M82 50 Q60 82 16 94",d:C_(22,30,5,"#FFD43B")+C_(78,28,5,"#FFD43B")+C_(50,12,5,"#FFD43B"),k:"#E67700",L:["위 小 = 작다","아래 삐침 = 거기서 또 덜어 냄","작은 것에서 덜어 내니 = 적다"]},
+"所":{t:"comp",P:LR_("戶","斤",48),L:["왼쪽 戶 = 문짝","오른쪽 斤 = 도끼","도끼로 나무를 찍는 곳 → 곳·바(장소)"]},
+"數":{t:"comp",P:LR_("婁","攵",54),L:["왼쪽 婁 = 하나씩 포개어 세다","오른쪽 攵 = 막대 든 손","막대로 하나씩 짚으며 세다 = 셈"]},
+"植":{t:"comp",P:LR_("木","直",40),L:["왼쪽 木 = 나무","오른쪽 直 = 곧게","나무를 곧게 세워 심다"]},
+"心":{t:"pic",P:[["心",0,0,100,100]],L:["가운데 큰 굽은 획 = 심장","점 세 개 = 심장의 방(모양을 간단히 한 것)"]},
+"語":{t:"comp",P:LR_("言","吾",46),L:["왼쪽 言 = 말","오른쪽 吾 = 나(소리 부분)","내가 하는 말 = 말씀"]},
+"然":{t:"comp",s:"M24 6 Q22 40 10 56 M24 6 L44 6 L44 52 M24 22 L44 22 M24 36 L44 36 M56 22 L92 22 M74 4 Q74 30 54 56 M74 30 Q82 46 94 56 M84 8 L90 14 M14 72 L20 92 M38 74 L40 92 M60 74 L62 92 M84 70 L90 90",d:P_("M14 8 Q30 0 48 8 L48 54 Q30 60 12 54 Z","#FFC9C9")+FL_(18,84,8)+FL_(40,84,8)+FL_(62,84,8)+FL_(86,82,8),k:"#E8590C",L:["위 = 고기(⺼)와 개(犬)","아래 灬 = 불","원래 ‘불타다’ → 지금은 ‘그러하다’"]},
+"有":{t:"pic",s:"M60 4 Q44 30 12 50 M8 22 L92 22 M30 40 Q30 80 22 94 M30 40 L78 40 L78 88 Q78 96 68 92 M30 58 L78 58 M30 74 L78 74",d:P_("M20 10 L84 10 Q90 26 70 32 L30 32 Q14 28 20 10 Z","#FFE3D0")+R_(30,40,48,52,"#FFC9C9",6),k:"#C92A2A",L:["위 ナ = 손","아래 月 = 고기(⺼)","손에 고기를 쥐고 있다 = 있다"]},
+"育":{t:"comp",s:"M50 2 L50 12 M10 18 L90 18 M38 18 Q30 30 24 36 L74 32 M66 26 L80 38 M28 46 Q28 82 20 94 M28 46 L72 46 L72 88 Q72 96 62 92 M28 62 L72 62 M28 76 L72 76",d:C_(50,28,9,"#FFE3D0")+R_(28,46,44,46,"#FFC9C9",6),k:"#C92A2A",L:["위 𠫓 = 막 태어난 아기(거꾸로 된 子)","아래 月 = 몸(⺼)","아기 몸을 기르다"]},
+"邑":{t:"pic",s:"M24 6 L24 34 M24 6 L76 6 L76 34 M24 34 L76 34 M24 46 L24 82 Q24 94 38 94 L86 94 L86 80 M24 46 L74 46 L74 66 L24 66 M50 46 L50 66",d:R_(24,6,52,28,"#E9ECEF",3)+P_("M20 2 L28 6 M80 2 L72 6",0,"#868E96",3)+C_(40,56,5,"#FFD8C2"),k:"#495057",L:["위 口 = 성벽으로 둘러싼 고을","아래 巴 = 무릎 꿇고 앉은 사람","사람들이 모여 사는 곳 = 고을"]},
+"入":{t:"pic",P:[["入",0,0,100,100]],d:P_("M50 6 L14 92 L86 92 Z","#FFF0E0"),L:["뾰족한 입구로 쏙 들어가는 모양","人보다 왼쪽 획이 짧아요"]},
+"字":{t:"comp",P:[["宀",4,0,92,40],["子",14,34,72,66]],L:["위 宀 = 집","아래 子 = 아이","집에서 아이가 늘듯 불어나는 것 = 글자"]},
+"祖":{t:"comp",P:LR_("示","且",44),L:["왼쪽 示 = 제단","오른쪽 且 = 조상의 이름을 쓴 위패","제사로 모시는 분 = 할아버지·조상"]},
+"主":{t:"pic",P:[["主",0,0,100,100]],L:["맨 위 점 = 등잔불의 불꽃","아래 = 등잔과 받침","방 한가운데 불 = 주인"]},
+"住":{t:"comp",P:LR_("亻","主",40),L:["왼쪽 亻 = 사람","오른쪽 主 = 등잔불(머무는 곳)","사람이 머물러 살다"]},
+"重":{t:"pic",P:[["重",0,0,100,100]],L:["가운데 = 꽁꽁 묶은 짐 보따리","아래 土 = 땅","땅에 내려놓을 만큼 무겁다"]},
+"地":{t:"comp",P:LR_("土","也",40),L:["왼쪽 土 = 흙","오른쪽 也 = 소리 부분","흙으로 된 것 = 땅"]},
+"紙":{t:"comp",P:LR_("糸","氏",42),L:["왼쪽 糸 = 실(실·풀 섬유로 만듦)","오른쪽 氏 = 소리 ‘씨→지’"]},
+"千":{t:"mem",s:"M72 6 Q50 14 24 20 M10 46 L90 46 M50 16 L50 94",d:C_(50,46,8,"#FFD43B"),k:"#E67700",L:["人(사람)에 一을 더한 모양","사람이 아주 많다 = 일천"]},
+"天":{t:"pic",s:"M18 16 L82 16 M10 44 L90 44 M50 16 L50 50 Q40 76 12 94 M52 50 Q62 78 90 94",d:R_(8,2,84,22,"#D0EBFF",8)+P_("M38 46 L62 46 L60 66 L40 66 Z","#FFC9DE"),k:"#1971C2",L:["아래 大 = 두 팔 벌린 사람","맨 위 가로획 = 사람 머리 위","머리 위로 펼쳐진 것 = 하늘"]},
+"川":{t:"pic",s:"M24 12 Q24 60 12 92 M50 20 L50 80 M78 8 L78 94",d:P_("M30 10 L72 10 L72 96 L18 96 Q30 60 30 10 Z","#A5D8FF"),k:"#1971C2",L:["세 줄 = 흘러가는 물줄기","양쪽 = 냇가 둑"]},
+"草":{t:"comp",P:[["艹",4,0,92,34],["早",10,28,80,72]],L:["위 艹 = 풀","아래 早 = 소리 ‘조→초’(해 뜨는 아침)"]},
+"村":{t:"comp",P:LR_("木","寸",46),L:["왼쪽 木 = 나무","오른쪽 寸 = 마디(소리 부분 ‘촌’)","나무 많은 시골 = 마을"]},
+"秋":{t:"comp",P:LR_("禾","火2",46),L:["왼쪽 禾 = 벼","오른쪽 火 = 불(햇볕)","벼가 누렇게 익는 때 = 가을"]},
+"春":{t:"mem",s:"M18 16 L82 16 M22 30 L78 30 M10 44 L90 44 M50 4 Q46 44 14 70 M52 44 Q64 60 88 70 M32 62 L32 94 M32 62 L68 62 L68 94 M32 78 L68 78 M32 94 L68 94",d:LF_(26,10,-30,9)+LF_(74,10,30,9)+R_(32,62,36,32,"#FFE066",6),k:"#2F9E44",L:["위 三·人 = 땅을 뚫고 돋는 새싹","아래 日 = 따뜻한 해","해 아래 새싹이 돋는 때 = 봄"]},
+"出":{t:"pic",s:"M50 4 L50 92 M24 14 L24 44 L76 44 L76 14 M14 54 L14 92 L86 92 L86 54",d:R_(14,54,72,38,"#E9C49A",3)+P_("M42 14 Q50 6 58 14 Q60 34 50 40 Q40 34 42 14 Z","#FFE3D0"),k:"#8B5A2B",L:["위 = 밖으로 나가는 발","아래 凵 = 움푹한 구덩이","구덩이에서 발이 나오다 = 나다"]},
+"便":{t:"comp",P:LR_("亻","更",40),L:["왼쪽 亻 = 사람","오른쪽 更 = 고치다","사람이 불편한 것을 고치니 = 편하다"]},
+"夏":{t:"mem",s:"M10 6 L90 6 M50 6 L42 18 M28 18 L28 58 M28 18 L72 18 L72 58 M28 32 L72 32 M28 45 L72 45 M28 58 L72 58 M48 64 Q36 80 16 90 M44 72 L78 72 Q64 88 22 98 M46 80 Q64 92 90 98",d:R_(28,18,44,40,"#FFE3D0",8)+C_(86,20,8,"#FFD43B"),k:"#D9480F",L:["위 頁 = 큰 머리","아래 夂 = 발","크게 팔다리를 펴고 춤추는 사람으로 기억 → 여름"]},
+"花":{t:"comp",P:[["艹",4,0,92,34],["化",12,28,76,72]],L:["위 艹 = 풀","아래 化 = 바뀌다","풀이 모습을 바꿔 피어난 것 = 꽃"]},
+"休":{t:"comp",P:LR_("亻","木",40),L:["왼쪽 亻 = 사람","오른쪽 木 = 나무","사람이 나무에 기대어 쉬다"]}};
+/* 짝 부품(그림만): 申(번개) */
+GP["申"]=["M24 10 L24 46 M24 10 L72 10 L72 46 M24 28 L72 28 M24 46 L72 46 M48 2 L48 80 Q48 94 62 94 L90 94 L90 82",P_("M56 2 L40 40 L52 40 L38 80 L66 34 L54 34 L66 2 Z","#FFE066"),"#E67700","번개(电)"];
+/* 어문회 7급 배정한자 (8급 50 + 7급Ⅱ 50 + 7급 50) */
+const AW72="家間江車工空氣記男內農答道動力立每名物方不事上姓世手時市食安午右子自場電前全正足左直平下漢海話活孝後";
+const AW7="歌口旗冬同洞登來老里林面命問文百夫算色夕少所數植心語然有育邑入字祖主住重地紙千天川草村秋春出便夏花休";
+[["家","집","가"],["間","사이","간"],["車","수레","거·차"],["工","장인","공"],["空","빌","공"],["氣","기운","기"],["記","기록할","기"],["農","농사","농"],["答","대답","답"],["道","길","도"],["動","움직일","동"],["力","힘","력"],["立","설","립"],["每","매양","매"],["名","이름","명"],["物","물건","물"],["方","모","방"],["不","아닐","불"],["事","일","사"],["姓","성","성"],["世","인간","세"],["時","때","시"],["市","저자","시"],["食","먹을","식"],["安","편안","안"],["午","낮","오"],["自","스스로","자"],["場","마당","장"],["電","번개","전"],["前","앞","전"],["全","온전","전"],["正","바를","정"],["直","곧을","직"],["平","평평할","평"],["漢","한나라","한"],["海","바다","해"],["話","말씀","화"],["活","살","활"],["孝","효도","효"],["後","뒤","후"],
+ ["歌","노래","가"],["旗","기","기"],["冬","겨울","동"],["同","한가지","동"],["洞","골","동"],["登","오를","등"],["來","올","래"],["老","늙을","로"],["里","마을","리"],["林","수풀","림"],["面","낯","면"],["命","목숨","명"],["問","물을","문"],["文","글월","문"],["百","일백","백"],["夫","지아비","부"],["算","셈","산"],["色","빛","색"],["夕","저녁","석"],["少","적을","소"],["所","바","소"],["數","셈","수"],["植","심을","식"],["心","마음","심"],["語","말씀","어"],["然","그럴","연"],["有","있을","유"],["育","기를","육"],["邑","고을","읍"],["字","글자","자"],["祖","할아비","조"],["主","주인","주"],["住","살","주"],["重","무거울","중"],["地","땅","지"],["紙","종이","지"],["千","일천","천"],["天","하늘","천"],["川","내","천"],["草","풀","초"],["村","마을","촌"],["秋","가을","추"],["春","봄","춘"],["便","편할","편"],["夏","여름","하"],["花","꽃","화"],["休","쉴","휴"]].forEach(h=>{if(!HZ.some(x=>x[0]===h[0]))HZ.push(h)});
+HZ[HZ.findIndex(h=>h[0]==="上")][1]="윗";
+const G7=[...HZ.slice(0,50).map(h=>h[0]),...AW72,...AW7];
+const G7NEW=[...AW72,...AW7];
+Object.assign(HZTIP,{"車":"‘거’와 ‘차’ 두 가지로 읽어요. 自轉車 자전거, 電車 전차","洞":"‘밝을 통’으로도 읽어요. 洞口 = 동구","便":"‘똥오줌 변’으로도 읽어요. 便紙 = 편지, 便所 = 변소","力":"낱말 맨 앞에서는 ‘역’으로 읽어요. 力道 = 역도","立":"낱말 맨 앞에서는 ‘입’으로 읽어요. 立春 = 입춘","來":"낱말 맨 앞에서는 ‘내’로 읽어요. 來日 = 내일","老":"낱말 맨 앞에서는 ‘노’로 읽어요. 老人 = 노인","里":"낱말 맨 앞에서는 ‘이’로 읽어요. 里長 = 이장","林":"낱말 맨 앞에서는 ‘임’으로 읽어요. 山林 = 산림","不":"ㄷ·ㅈ 앞에서는 ‘부’로 읽어요. 不足 = 부족, 不安 = 불안","上":"한국어문회 훈음은 ‘윗 상’이에요.","山":"한국어문회 훈음은 ‘메 산’이에요.","入":"人(사람 인)과 헷갈리지 않게! 入은 왼쪽 획이 짧아요."});
+HZWORD.push(["家口","가구","한집에 사는 식구"],["國家","국가","나라"],["時間","시간","때와 때 사이"],["人間","인간","사람"],["間食","간식","끼니 사이에 먹는 음식"],["車道","차도","차가 다니는 길"],["電車","전차","전기로 가는 차"],["自動車","자동차","스스로 움직이는 차"],["工場","공장","물건을 만드는 곳"],["木工","목공","나무로 물건을 만드는 일"],["空間","공간","비어 있는 곳"],["空氣","공기","숨 쉬는 기체"],["電氣","전기","전깃불을 켜는 힘"],["日記","일기","날마다 쓰는 기록"],["記事","기사","신문에 실린 글"],["農事","농사","곡식을 기르는 일"],["農夫","농부","농사짓는 사람"],["農村","농촌","농사짓는 마을"],["正答","정답","옳은 답"],["問答","문답","묻고 대답함"],["人道","인도","사람이 다니는 길"],["水道","수도","물이 흐르는 관"],["動物","동물","움직이는 생물"],["活動","활동","힘차게 움직임"],["自動","자동","저절로 움직임"],["力道","역도","무거운 것을 드는 운동"],["全力","전력","모든 힘"],["自立","자립","스스로 섬"],["國立","국립","나라에서 세움"],["每日","매일","날마다"],["每年","매년","해마다"],["有名","유명","이름이 널리 알려짐"],["名物","명물","이름난 물건"],["人物","인물","사람"],["地方","지방","어느 한 지역"],["四方","사방","동서남북 네 방향"],["不安","불안","마음이 편하지 않음"],["不足","부족","모자람"],["不便","불편","편하지 않음"],["人事","인사","만나거나 헤어질 때 하는 예의"],["姓名","성명","성과 이름"],["世上","세상","사람이 사는 곳"],["手話","수화","손으로 하는 말"],["歌手","가수","노래하는 사람"],["市場","시장","물건을 사고파는 곳"],["市民","시민","시에 사는 사람"],["食口","식구","한집에서 함께 밥 먹는 사람"],["食事","식사","밥을 먹음"],["安全","안전","위험하지 않음"],["平安","평안","걱정 없이 편안함"],["便安","편안","편하고 좋음"],["午前","오전","낮 12시 전"],["午後","오후","낮 12시 뒤"],["正午","정오","낮 12시"],["自然","자연","저절로 그러한 산·물·풀·나무"],["場所","장소","어떤 일이 벌어지는 곳"],["電話","전화","말을 전하는 기계"],["前後","전후","앞과 뒤"],["全國","전국","온 나라"],["正直","정직","거짓 없이 바름"],["正門","정문","앞쪽의 큰 문"],["平地","평지","평평한 땅"],["漢字","한자","중국에서 온 글자"],["漢江","한강","서울을 흐르는 강"],["東海","동해","동쪽 바다"],["海軍","해군","바다를 지키는 군대"],["生活","생활","살아감"],["孝道","효도","부모를 잘 모심"],["孝女","효녀","효도하는 딸"],["孝子","효자","효도하는 아들"],["後門","후문","뒤쪽 문"],["校歌","교가","학교의 노래"],["國歌","국가","나라의 노래"],["國旗","국기","나라의 깃발"],["立冬","입동","겨울이 시작되는 날"],["春夏秋冬","춘하추동","봄·여름·가을·겨울"],["同生","동생","아우나 손아래 누이"],["同時","동시","같은 때"],["洞口","동구","마을 어귀"],["登山","등산","산에 오름"],["登校","등교","학교에 감"],["來年","내년","다음 해"],["來日","내일","오늘의 다음 날"],["老人","노인","나이 많은 사람"],["里長","이장","마을의 대표"],["山林","산림","산과 숲"],["水面","수면","물의 겉"],["生命","생명","살아 있게 하는 힘"],["學問","학문","배우고 익힘"],["文字","문자","글자"],["文學","문학","글로 쓴 예술"],["百姓","백성","나라의 일반 사람들"],["百年","백년","백 년"],["工夫","공부","배우고 익힘"],["算數","산수","셈하는 공부"],["色紙","색지","색깔 있는 종이"],["秋夕","추석","음력 8월 15일 명절"],["七夕","칠석","음력 7월 7일"],["少年","소년","어린 남자아이"],["少女","소녀","어린 여자아이"],["住所","주소","사는 곳"],["數學","수학","수를 다루는 학문"],["植物","식물","뿌리를 내리고 사는 생물"],["中心","중심","한가운데"],["安心","안심","마음을 놓음"],["國語","국어","나라의 말"],["有力","유력","힘이 있음"],["敎育","교육","가르쳐 기름"],["邑內","읍내","읍의 안"],["入場","입장","안으로 들어감"],["祖上","조상","할아버지 위의 어른들"],["祖父","조부","할아버지"],["祖母","조모","할머니"],["主人","주인","물건이나 집의 임자"],["住民","주민","그곳에 사는 사람"],["重大","중대","아주 크고 중요함"],["地下","지하","땅 밑"],["土地","토지","땅"],["便紙","편지","소식을 적어 보내는 글"],["休紙","휴지","쓰고 버리는 종이"],["白紙","백지","흰 종이"],["千年","천년","천 년"],["天地","천지","하늘과 땅"],["天下","천하","하늘 아래 온 세상"],["山川","산천","산과 내"],["草木","초목","풀과 나무"],["花草","화초","꽃과 풀"],["立春","입춘","봄이 시작되는 날"],["春秋","춘추","봄과 가을"],["休日","휴일","쉬는 날"],["休學","휴학","학교를 잠시 쉼"],["名所","명소","이름난 곳"]);
+HZX_SENT.push(["{每日} 아침 운동을 해요.","每日","매일"],["{來日}은 토요일이에요.","來日","내일"],["{登山}을 하면 다리가 튼튼해져요.","登山","등산"],["{秋夕}에 송편을 빚었어요.","秋夕","추석"],["할머니께 {便紙}를 썼어요.","便紙","편지"],["{植物}에 물을 주어요.","植物","식물"],["{自然}을 아끼고 보호해요.","自然","자연"],["{安全}하게 길을 건너요.","安全","안전"],["{電話}로 안부를 여쭈었어요.","電話","전화"],["교실 {空氣}가 맑아요.","空氣","공기"],["{午後}에 친구와 놀았어요.","午後","오후"],["{國旗}를 바르게 달아요.","國旗","국기"],["{孝道}는 부모님을 기쁘게 해 드리는 거예요.","孝道","효도"],["{住所}를 또박또박 적어요.","住所","주소"],["{休日}에 가족과 공원에 갔어요.","休日","휴일"],["{漢字} 공부가 재미있어요.","漢字","한자"],["{市場}에서 과일을 샀어요.","市場","시장"],["{動物}원에서 기린을 봤어요.","動物","동물"],["{生活} 계획표를 만들었어요.","生活","생활"],["{老人}께 자리를 양보해요.","老人","노인"]);
+HZX_PAIR.push(["前","後"],["春","秋"],["天","地"],["老","少"],["問","答"],["夏","冬"]);
+/* 렌더러 */
+function gPath(d,k){return `<path class="gs" vector-effect="non-scaling-stroke" d="${d}" pathLength="100" fill="none" stroke="${k}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>`}
+function gInner(c){const g=GC[c];if(!g)return "";let o=g.d?`<g class="gd">${g.d}</g>`:"";
+  (g.P||[]).forEach(([p,x,y,w,h])=>{const q=GP[p],sx=w/100,sy=h/100;o+=`<g transform="translate(${x} ${y}) scale(${sx} ${sy})">${q[1]?`<g class="gd">${q[1]}</g>`:""}${gPath(q[0],q[2])}</g>`});
+  if(g.s)o+=gPath(g.s,g.k);return o}
+const gSvg=(c,cls)=>`<svg viewBox="-4 -4 108 108" class="${cls||""}" aria-hidden="true">${gInner(c)}</svg>`;
+const gPartName=p=>p.replace(/2$/,"");
+function hzGCard(c,opt={}){const g=GC[c],h=HZ.find(x=>x[0]===c),parts=(g.P||[]).filter((v,i,a)=>a.length>1&&a.findIndex(z=>z[0]===v[0])===i);
+  const kind=g.t==="mem"?"💡 기억 그림 (유래가 아니라 외우기 쉽게 만든 그림)":g.t==="comp"?"🧩 뜻을 가진 조각이 모여 된 글자":"🖼️ 물건 모양을 본떠 만든 글자";
+  return `<div class="hzpc gcard m-pic ${opt.hide?"hidech":""}" data-c="${c}">
+   <div class="gstage"><svg viewBox="-4 -4 108 108" aria-hidden="true">${gInner(c)}<text class="gt" x="50" y="52">${opt.hide?"?":c}</text></svg></div>
+   ${opt.hide?`<p class="muted" style="text-align:center;margin:0">굵은 선이 바로 한자의 획이에요!</p>`:`<div class="gmodes"><button type="button" data-m="pic">🖼️ 그림</button><button type="button" data-m="ov">✍️ 겹쳐보기</button><button type="button" data-m="ch">${c} 글자</button></div>
+   <p class="gkind">${kind}</p>
+   <ul class="gmap">${(g.L||[]).map(t=>`<li>${t}</li>`).join("")}</ul>
+   ${parts.length?`<div class="hzparts">${parts.map(([p],i)=>`${i?"<b>+</b>":""}<span class="hzpt">${(()=>{const q=GP[p];return `<svg viewBox="-4 -4 108 108">${q[1]?`<g>${q[1]}</g>`:""}${gPath(q[0],q[2])}</svg>`})()}<i>${gPartName(p)}</i><small>${GP[p][3].replace(/\(.*\)/,"")}</small></span>`).join("")}<b>=</b><span class="hzpt res"><i>${c}</i><small>${h?h[1]:""}</small></span></div>`:""}
+   <div class="hzbtns"><button type="button" class="ttsb" data-say="${c}">🔊 왜 이런 모양인지 들어 보기</button><button type="button" class="ttsb" data-replay="1">🔁 다시 보기</button></div>
+   <p class="hzsrc">굵은 선 = 실제 한자의 획을 쉽게 단순화한 것이에요. ‘겹쳐 보기’로 그림 위에 획이 어떻게 놓이는지 확인해요.</p>`}</div>`}
+function gPlay(el){el.classList.remove("m-ov","m-ch","draw");el.classList.add("m-pic");clearTimeout(el._gt);el._gt=setTimeout(()=>{if(!document.body.contains(el))return;el.classList.remove("m-pic");el.classList.add("m-ov");void el.offsetWidth;el.classList.add("draw")},1400)}
+function bindGCards(root){(root||document).querySelectorAll(".gcard").forEach(el=>{if(el.dataset.gb)return;el.dataset.gb=1;
+  el.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{clearTimeout(el._gt);el.classList.remove("m-pic","m-ov","m-ch","draw");el.classList.add("m-"+b.dataset.m);if(b.dataset.m==="ov"){void el.offsetWidth;el.classList.add("draw")}});
+  if(!el.classList.contains("hidech"))gPlay(el)})}
+Object.keys(GC).forEach(c=>{HZP[c]=[gInner(c),1];HZSTORY[c]=[HZSTORY[c]?HZSTORY[c][0]:"✍️",(GC[c].L||[]).join(". ")+".",GC[c].t==="mem"?"tale":"pic"];delete HZPARTS[c]});
+(function(){const _pc=hzPicCard;hzPicCard=function(c,opt){return GC[c]?hzGCard(c,opt||{}):_pc(c,opt)};const _b=bindPicCards;bindPicCards=function(root){_b(root);bindGCards(root||app);(root||app).querySelectorAll(".gcard [data-replay]").forEach(r=>r.onclick=()=>gPlay(r.closest(".gcard")))}})();
+
 function hzExamQs(){const E=HZT7()?[...G7]:[...EXAM30],idx=E.map(c=>HZ.findIndex(h=>h[0]===c)),hun2=i=>hunT(i),qs=[],sp=c=>`<span class="hz xh">${c}</span>`,mk=(t,p,a,w,e)=>{const o=shuffle([a,...w]);return{t,p,o,a:o.indexOf(a),e}};
   const pick3=(arr,ex)=>shuffle(arr.filter(x=>!ex.includes(x))).slice(0,3);
   shuffle(idx).slice(0,8).forEach(i=>qs.push(mk("훈음",`다음 한자의 뜻과 소리로 알맞은 것은?<div class="xbig">${HZ[i][0]}</div>`,hun2(i),pick3(idx,[i]).map(hun2),`${HZ[i][0]} = ${hun2(i)}`)));
@@ -3855,11 +4075,11 @@ function hzExamQs(){const E=HZT7()?[...G7]:[...EXAM30],idx=E.map(c=>HZ.findIndex
   shuffle(HZX_SENT.filter(x=>[...x[1]].every(c=>E.includes(c)))).slice(0,3).forEach(([s,w,r])=>qs.push(mk("문장",`밑줄 친 한자어를 바르게 읽은 것은?<div class="xsent">${s.replace(/\{(.+?)\}/,'<u>$1</u>')}</div>`,r,pick3([...new Set(HZX_SENT.map(x=>x[2]))],[r]),`${w} = ${r}`)));
   return qs}
 function hzExam(){const st=S.hz;st.exams=st.exams||[];
-  const ov=document.createElement("div");ov.className="pop-ov";ov.innerHTML=`<div class="pop-card"><div class="bigem">📝</div><h2>${HZT7()?"7급":"8급"} 실전 도전</h2><p class="muted">대한검정회 ${HZT7()?"7급":"8급"} 시험과 같은 방식이에요.</p>
-   <ol class="rules"><li><b>25문항</b><span>모두 객관식, 출제 범위 ${HZT7()?"7급 한자 50자":"8급 한자 30자"}</span></li><li><b>${HZT7()?60:40}분</b><span>시간이 끝나면 자동으로 제출돼요</span></li><li><b>힌트 없음</b><span>실제 시험처럼 한 번만 풀어요. 답은 제출 전까지 바꿀 수 있어요</span></li><li><b>합격 70점</b><span>한 문항 4점 · 18문항 이상 맞히면 합격!</span></li></ol>
+  const ov=document.createElement("div");ov.className="pop-ov";ov.innerHTML=`<div class="pop-card"><div class="bigem">📝</div><h2>${HZT7()?"7급":"8급"} 실전 도전</h2><p class="muted">${HZT7()?"한국어문회 7급 배정한자 150자로 만든 연습 시험이에요. (실제 시험: 70문항 · 49문항 이상 합격 · 답을 직접 씀)":"대한검정회 8급 시험과 같은 방식이에요."}</p>
+   <ol class="rules"><li><b>25문항</b><span>모두 객관식, 출제 범위 ${HZT7()?"7급 한자 150자":"8급 한자 30자"}</span></li><li><b>${HZT7()?60:40}분</b><span>시간이 끝나면 자동으로 제출돼요</span></li><li><b>힌트 없음</b><span>실제 시험처럼 한 번만 풀어요. 답은 제출 전까지 바꿀 수 있어요</span></li><li><b>합격 70점</b><span>한 문항 4점 · 18문항 이상 맞히면 합격!</span></li></ol>
    <p class="muted">실제 기출문제가 아니라, 시험과 같은 형식으로 새로 만든 문제예요. 볼 때마다 문제가 바뀌어요.</p><button class="big" id="xgo" type="button">시험 시작!</button><button class="big alt" id="xno" type="button">다음에</button></div>`;document.body.appendChild(ov);
   ov.querySelector("#xno").onclick=()=>ov.remove();ov.querySelector("#xgo").onclick=()=>{ov.remove();hzExamRun()}}
-function hzExamRun(){const qs=hzExamQs(),ans=Array(qs.length).fill(-1),end=Date.now()+(HZT7()?60:40)*60e3;let cur=0,tm=null,doneX=false;
+function hzExamRun(){const qs=hzExamQs(),ans=Array(qs.length).fill(-1),end=Date.now()+40*60e3;let cur=0,tm=null,doneX=false;
   const draw=()=>{const q=qs[cur],left=Math.max(0,end-Date.now()),mm=Math.floor(left/60e3),ss=Math.floor(left%60e3/1e3);
     app.innerHTML=`<div class="xhead"><button class="back" id="xquit" type="button">그만두기</button><b>📝 ${HZT7()?"7급":"8급"} 실전 도전</b><span class="pill" id="xtm">⏱ ${mm}:${String(ss).padStart(2,"0")}</span></div><div class="card"><div class="row"><span class="pill">${cur+1} / ${qs.length}</span><span class="muted">${q.t}</span></div>
      <div class="prompt xq">${cur+1}. ${q.p}</div><div class="opts">${q.o.map((x,k)=>`<button class="opt ${ans[cur]===k?"sel":""}" type="button" data-k="${k}"><b class="xn">${"①②③④"[k]}</b> ${x}</button>`).join("")}</div>
@@ -3910,7 +4130,7 @@ function progRows(){maInit();sciInit();koInit();const r=[],pc=(a,b)=>`${Math.min
   {const[a,b]=weekRange(),[y,n]=realWeek(a,b);r.push(["🌟 실천 미션",`이번 주 ${y}일 성공`,n?`기록 ${n}일 중 실제로 말한 날 ${y}일`:"아직 기록 없음"])}
   r.push(["🍳 요리",pc(LEVELS.filter(l=>S.cook[l.id]&&S.cook[l.id].clear).length,LEVELS.length),(nextCook()||{name:"모두 완료"}).name||""]);
   r.push(["📜 한국사",pc(S.hist.n,HSTORY.length),S.hist.n<HSTORY.length?HSTORY[S.hist.n].t:"복습 단계"]);
-  r.push(["漢 한자",pc(S.hz.n,HZDAYS.length),`익힌 한자 ${hzLearnedChars(Math.min(S.hz.n,HZDAYS.length)).length}/${HZ.length}자${S.hz.best?` · 모의 최고 ${S.hz.best}/25`:""}`]);
+  r.push(["漢 한자",pc(S.hz.n,HZDAYS.length),`익힌 한자 ${hzLearnedChars(Math.min(S.hz.n,HZDAYS.length)).length}/${HZB}자${S.hz.best?` · 모의 최고 ${S.hz.best}/25`:""}`]);
   r.push(["🔤 영어",pc(S.en.n,ENGDAYS.length),S.en.n<ENGDAYS.length?(ENGDAYS[S.en.n].title||"알파벳"):"완료"]);
   r.push(["📘 국어",pc(S.ko.n,KO.length),S.ko.n<KO.length?KO[S.ko.n].t:"복습 단계"]);
   Object.entries(MTRK).forEach(([k,t])=>{const p=S.ma.t[k];r.push([t.n.replace(" 도장깨기",""),pc(p,t.list.length),p<t.list.length?mtTitle(t.list[p]):"완료"])});
