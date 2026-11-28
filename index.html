@@ -219,6 +219,7 @@ body.h3on{overflow:hidden}.h3full{position:fixed;inset:0;z-index:40;background:#
 .h3chip{position:absolute;left:12px;right:12px;bottom:calc(88px + env(safe-area-inset-bottom));z-index:7;background:#fff;border-radius:18px;padding:10px 12px;display:flex;align-items:center;gap:8px;box-shadow:0 4px 14px rgba(0,0,0,.18)}.h3chip b{flex:1;font-size:.9rem;color:#4A2F9A}.h3chip button{border:0;border-radius:12px;padding:8px 10px;background:#2F9E44;color:#fff;font-weight:700}.h3chip #h3cx{background:#EEE;color:#555}
 .h3sheet{position:absolute;left:0;right:0;bottom:0;max-height:62%;z-index:8;background:var(--bg,#F3F7FD);border-radius:22px 22px 0 0;box-shadow:0 -6px 20px rgba(0,0,0,.18);display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom)}.h3sheet[hidden]{display:none}.h3grab{display:flex;align-items:center;justify-content:center;position:relative;padding:8px}.h3grab i{width:44px;height:5px;border-radius:3px;background:#CFC6DD}.h3grab button{position:absolute;right:10px;border:0;background:none;color:#7A6E8A;font-weight:700}.h3sbody{overflow:auto;padding:0 12px 12px}
 .h3full .vmenu{bottom:calc(88px + env(safe-area-inset-bottom));z-index:9}.h3full .vbub{z-index:5}
+.h3chip.care{flex-direction:column;align-items:stretch;gap:8px;padding:10px}.h3chip .ccx{display:flex;align-items:flex-start;gap:8px}.h3chip .cch{flex:1;font-size:.88rem;color:#4A2F9A;line-height:1.35}.h3chip .cch small{color:#7A6E8A}.h3chip .ccg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.h3chip .ccg button{display:flex;flex-direction:column;align-items:center;background:#F3EEFF;color:#4A2F9A;border-radius:14px;padding:6px 2px;font-size:.8rem;line-height:1.15}.h3chip .ccg button span{font-size:1.5rem}.h3chip .ccg button small{font-size:.6rem;color:#7A6E8A;font-weight:600}.h3chip .ccg button:disabled{opacity:.45}.h3chip .ccg button.dn{opacity:1;background:#E6F7EA}.h3chip .ccg .more{background:#FFF3BF}
 .hzst{margin:0;font-size:.95rem;line-height:1.55}.hzbtns{display:flex;gap:6px;flex-wrap:wrap}.hzsrc{margin:0;font-size:.66rem;color:#A89FB4}.hidech .f3 .hz3{color:#C9B6E8}svg.qpic{width:120px;height:120px;background:#fff;border-radius:16px;display:block;margin:6px auto}
 .skmap{display:grid;grid-template-columns:1fr 1fr;gap:8px}.skst{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;border:2px solid #E3F4EA;background:#fff;border-radius:16px;padding:10px;font:inherit}.skst.on{border-color:#2FB673;background:#F0FBF4}.skst .skem{font-size:1.6rem}.skst small{color:#7A8F80;font-size:.72rem}.skcard .skem{font-size:2.6rem}.skm{font-size:1.05rem;line-height:1.55;margin:6px 0}.ske{color:#6B5E78;font-size:.92rem;margin:0}.skdl{list-style:none;padding:0;margin:0;display:grid;gap:8px}.skdl li{background:var(--soft);border-radius:12px;padding:8px 10px;font-size:.9rem;line-height:1.45}
 .qtag.miss{background:#FFE3EC;color:#D6336C}
@@ -753,7 +754,7 @@ function pmEvents(){const P=pmInit(),t=today();
   if(t>=PMDATES.grad&&!P.ev.grad){P.ev.grad=1;save();const[a]=pmTop(),dr=pmDream();setTimeout(()=>popup(`<div class="bigem">🎓</div><h2>초등학교 졸업을 축하해요!</h2><p>6년 동안 정말 수고했어요, Victoria.<br>지금 Victoria는 <b>${PMTITLE[a]}</b>!<br>장래 희망: ${dr[0]}</p><p class="muted">3월 2일, 중학교 입학과 함께 새 단계가 열려요.</p>`),900)}
   else if(t>=PMDATES.mid&&!P.ev.mid){P.ev.mid=1;save();setTimeout(()=>popup(`<div class="bigem">🏫</div><h2>중학생이 된 걸 축하해요!</h2><p>오늘부터 <b>중학교 1학년 1학기</b>예요.<br>새 친구에게 먼저 “안녕, 나는 ○○야!” 하고 인사해 볼까?</p>`),900)}}
 
-const VQVER="Victoria Quest v8.0";
+const VQVER="Victoria Quest v8.2";
 async function vqUpdCheck(){if(location.protocol==="file:"||document.querySelector(".updbar"))return;try{const t=await fetch("./index.html?u="+Date.now(),{cache:"no-store"}).then(r=>r.text());const m=t.match(/const VQVER="(Victoria Quest v[\d.]+)"/);if(m&&m[1]!==VQVER){const b=document.createElement("button");b.type="button";b.className="updbar";b.textContent="🔄 새 버전이 나왔어요! 눌러서 업데이트 (진도는 그대로)";b.onclick=async()=>{b.textContent="업데이트 중…";try{const rs=await navigator.serviceWorker.getRegistrations();await Promise.all(rs.map(r=>r.update()))}catch(e){}location.reload()};document.body.appendChild(b)}}catch(e){}}
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)vqUpdCheck()});setTimeout(vqUpdCheck,2500);
 /* ===== 엄마 알림(ntfy 푸시): 하루 한 번 자동 보고 + 감사 일기·소원은 쓸 때마다 ===== */
@@ -1477,7 +1478,7 @@ function petAct(i,a){const p=S.pets[i],P=petOf(p.k),td=today();if(p.day!==td){p.
     if(a==="play"){p.love=Math.min(100,p.love+6);msg=`${P[2]} 신나게 놀았어요! 친밀도 +6`}
     if(a==="care"){p.love=Math.min(100,p.love+4);msg=`${P[2]} 깨끗하고 기분 좋아요! 친밀도 +4`}
     if(a==="train"){p.skill++;p.love=Math.min(100,p.love+2);const j=TRICK_AT.indexOf(p.skill);msg=j>=0?`🎉 ${esc(p.name)}가 새 재주 “${P[6][j]}”를 배웠어요!`:`${P[2]} 열심히 배웠어요! 다음 재주까지 교육 ${(TRICK_AT.find(x=>x>p.skill)||p.skill)-p.skill}번`;if(j>=0)try{confetti()}catch(e){}}}
-  p.did.push(a);save();petHome();toast(msg)}
+  p.did.push(a);save();if(window.CARE3D)return care3dDone("pet",a,msg,i);petHome();toast(msg)}
 function toast(t){const d=document.createElement("div");d.className="ptoast";d.innerHTML=t;document.body.appendChild(d);setTimeout(()=>d.remove(),2600)}
 function petShop(){hInit();const own=k=>S.pets.some(p=>p.k===k);
   if(!S.pets.length&&!(S.baby&&S.baby.careDays>=10)){app.innerHTML=hdr("🏪 펫샵")+hTabs("pets")+`<div class="card lock"><div class="bigem">🏪</div><h3>펫샵은 아기 백일 잔치 뒤에 열려요</h3><p class="muted">먼저 아기를 맞이하고 백일까지 돌봐 줘요. 그다음 아기에게 동물 친구를 데려와 줄 수 있어요!</p><p class="muted">${S.baby?`지금 돌봄 ${S.baby.careDays}일 / 백일까지 10일`:"아기 맞이 준비부터 시작해요."}</p><button class="big" id="gob" type="button">👶 아기 보러 가기</button></div>`;bindBack();bindHTabs();$("#gob").onclick=babyView;return}
@@ -1818,7 +1819,7 @@ function bindWalk(B,cam,cv,st){const ray=new THREE.Raycaster(),pl=new THREE.Plan
       W.cb=()=>{B.sc.remove(s);W.stroller=null;if(B.baby)B.baby.visible=true;S.care.used++;b.did.push("walk");babyCredit();save();toast(`🚼 ${esc(b.name)}와 정원 산책 완료! 바깥바람을 쐬고 기분이 좋아졌어요.`)}})}
   let tap=null;cv.addEventListener("pointerdown",e=>{tap={x:e.clientX,y:e.clientY,t:Date.now()}});
   cv.addEventListener("pointerup",e=>{if(!tap)return;const moved=Math.hypot(e.clientX-tap.x,e.clientY-tap.y),dt=Date.now()-tap.t;tap=null;if(moved>8||dt>400)return;const h=hit(e.clientX,e.clientY);if(!h)return;
-    if(h.t==="vic"){say("어디로 갈까? 골라 줘!",2500);return menu.hidden?showMenu():hideMenu()}if(h.t==="baby"&&S.baby){say(`${S.baby.name}야~ 안녕! 👶`,2200);return H3.focus(h.o,`${babyLooks()} ${esc(S.baby.name)} · ${babyAge()}개월 · ${babyPose()[2]}`,babyView)}if(h.t==="pet"&&S.pets[h.i]){const p=S.pets[h.i];say(`${p.name}야~ 이리 와! 🐾`,2200);return H3.focus(h.o,`${petOf(p.k)[2]} ${esc(p.name)} · ${petGrow(p)[1]}${p.fed!==today()?" · 🍚 배고파요":""}`,petHome)}if(h.t==="friend"){const L=FR_VISIT_LINES(h.k);return say(`${FRN[h.k][0]}: ${L[Math.floor(Math.random()*L.length)]}`,3800)}if(h.t==="mbox")return go(-2.3,1.3,()=>musicBox());if(h.t==="flw")return go(-2.2,5.0,water);
+    if(h.t==="vic"){say("어디로 갈까? 골라 줘!",2500);return menu.hidden?showMenu():hideMenu()}if(h.t==="baby"&&S.baby){say(`${S.baby.name}야~ 안녕! 👶`,2200);return careChip("baby",0,h.o)}if(h.t==="pet"&&S.pets[h.i]){const p=S.pets[h.i];say(`${p.name}야~ 이리 와! 🐾`,2200);return careChip("pet",h.i,h.o)}if(h.t==="friend"){const L=FR_VISIT_LINES(h.k);return say(`${FRN[h.k][0]}: ${L[Math.floor(Math.random()*L.length)]}`,3800)}if(h.t==="mbox")return go(-2.3,1.3,()=>musicBox());if(h.t==="flw")return go(-2.2,5.0,water);
     if(Math.abs(h.x)<6.3&&Math.abs(h.z)<6.3)go(h.x,h.z)});
   const pv=new THREE.Vector3();const placeBub=()=>{pv.copy(B.vic.position);pv.y+=2.15;pv.project(cam);const x=Math.max(108,Math.min(st.clientWidth-108,(pv.x*.5+.5)*st.clientWidth)),y=(-pv.y*.5+.5)*st.clientHeight;bub.style.transform=`translate(${x}px,${y}px) translate(-50%,-100%)`;
     const now=performance.now();if(now>bubUntil){idle+=1;if(idle>240){idle=0;say(IDLE[Math.floor(Math.random()*IDLE.length)],3500)}else bub.style.opacity=0}if(now<=bubUntil)bub.style.opacity=1};
@@ -2270,7 +2271,7 @@ function bind3D(){const st=$("#stage"),cv=$("#h3d");if(!st)return;if(H3){cancelA
     H3.focus=(obj,label,go)=>{H3.fol=obj;H3.el=1.12;DIST=7.5;const c=$("#h3chip");if(c){c.innerHTML=`<b>${label}</b><button type="button" id="h3cgo">돌보기 ▶</button><button type="button" id="h3cx">✕</button>`;c.hidden=false;$("#h3cgo").onclick=go;$("#h3cx").onclick=()=>H3.view(window.H3VIEW||"near")}};
     H3.view(window.H3VIEW||"near");window.H3LAST=H3MODE;
     const rs=()=>{if(!H3||!document.body.contains(cv))return removeEventListener("resize",rs);const w=st.clientWidth,hh=st.clientHeight;r.setSize(w,hh,false);cam.aspect=w/hh;cam.updateProjectionMatrix()};addEventListener("resize",rs);const walkStep=H3MODE==="town"?bindTown(B,cam,cv,st):H3MODE==="room"?bindRoom(B,cam,cv,st):bindWalk(B,cam,cv,st);const loop=()=>{if(!document.body.contains(cv)){r.dispose();H3=null;return}const now=performance.now(),t=(now-t0)/1000,dt=Math.min(.25,(now-tl0)/1000);tl0=now;
-      const moving=walkStep(dt);if(H3&&H3.fol){const T=H3.fol==="vic"?B.vic.position:H3.fol.getWorldPosition?H3.fol.getWorldPosition(new THREE.Vector3()):H3.fol;const k=Math.min(1,dt*7);tgt.x+=(T.x-tgt.x)*k;tgt.z+=(T.z-tgt.z)*k;tgt.y+=((T.y||0)+.3-tgt.y)*k;place()}B.vic.position.y=.07+Math.abs(Math.sin(t*(moving?9:2.2)))*(moving?.09:.05);if(!moving)B.vic.rotation.y=AZ*Math.PI/180+Math.sin(t*.6)*.2;const mt=B.mbx.getObjectByName("mtop");if(mt)mt.rotation.y=H3&&H3.music?t*3:0;
+      const moving=walkStep(dt);if(H3&&H3.fx&&H3.fx.length)H3.fx=H3.fx.filter(f=>f(t,dt)!==false);if(H3&&H3.fol){const T=H3.fol==="vic"?B.vic.position:H3.fol.getWorldPosition?H3.fol.getWorldPosition(new THREE.Vector3()):H3.fol;const k=Math.min(1,dt*7);tgt.x+=(T.x-tgt.x)*k;tgt.z+=(T.z-tgt.z)*k;tgt.y+=((T.y||0)+.3-tgt.y)*k;place()}B.vic.position.y=.07+Math.abs(Math.sin(t*(moving?9:2.2)))*(moving?.09:.05);if(!moving)B.vic.rotation.y=AZ*Math.PI/180+Math.sin(t*.6)*.2;const mt=B.mbx.getObjectByName("mtop");if(mt)mt.rotation.y=H3&&H3.music?t*3:0;
       if(B.baby)B.baby.rotation.z=Math.sin(t*1.6)*.06;
       B.pets.forEach((p,i)=>{p.position.y=.07+Math.max(0,Math.sin(t*2.6+i))*.06;const tl=p.getObjectByName("tail");if(tl)tl.rotation.z=Math.sin(t*5+i)*.4;const f=p.getObjectByName("fish");if(f){f.position.x=Math.sin(t*1.2)*.15;f.rotation.y=Math.cos(t*1.2)>0?0:Math.PI}});
       B.sc.traverse(o=>{if(o.name==="mob")o.rotation.y=t*.6});
@@ -2279,6 +2280,34 @@ function bind3D(){const st=$("#stage"),cv=$("#h3d");if(!st)return;if(H3){cancelA
 
 function hTabs(cur){return `<div class="ptabs">${[["house","🏠 집"],["baby","👶 아기"],["pets","🐾 펫"],["decor","🛋️ 꾸미기"],["market","🛒 시장"],["friend","🤝 친구"]].map(([k,t])=>`<button type="button" class="${k===cur?"on":""}" data-pt="${k}">${t}</button>`).join("")}</div>`}
 function bindHTabs(){app.querySelectorAll("[data-pt]").forEach(b=>b.onclick=()=>({house:houseView,baby:babyView,pets:petHome,decor:decorView,market:market,friend:friendView})[b.dataset.pt]())}
+/* 🫶 3D에서 바로 돌보기 (v8.2) */
+function emoSprite(e,sz){const c=document.createElement("canvas");c.width=c.height=128;const x=c.getContext("2d");x.fillStyle="rgba(255,255,255,.92)";x.beginPath();x.arc(64,64,58,0,7);x.fill();x.lineWidth=5;x.strokeStyle="#FFB3D1";x.stroke();x.font="80px 'Apple Color Emoji','Noto Color Emoji',serif";x.textAlign="center";x.textBaseline="middle";x.fillText(e,64,70);const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),transparent:true,depthTest:false}));sp.scale.setScalar(sz||.6);sp.renderOrder=9;return sp}
+function fx3D(obj,kind){if(!H3||!H3.B||!obj)return;const sc=H3.B.sc,p=obj.getWorldPosition(new THREE.Vector3()),L={feed:["🍼","💖"],poop:["✨","🧷"],sleep:["💤","🌙"],play:["🪇","🎵"],read:["📖","⭐"],bath:["🛁","🫧"],pfeed:["🍚","💖"],pplay:["🧸","🎵"],ptrain:["🎓","⭐"],pcare:["🫧","✨"]}[kind]||["💖","✨"];
+  const big=emoSprite(L[0],.8),sm=[0,1,2].map(()=>emoSprite(L[1],.42));big.position.set(p.x+.45,p.y+1.05,p.z+.2);sc.add(big);sm.forEach((m,i)=>{m.position.set(p.x+(i-1)*.35,p.y+.5,p.z+.25);sc.add(m)});
+  const s0=obj.scale.x,y0=obj.position.y;let t0=null;H3.fx=H3.fx||[];
+  H3.fx.push((t,dt)=>{if(t0===null)t0=t;const k=t-t0;if(k>3){sc.remove(big);sm.forEach(m=>sc.remove(m));obj.scale.setScalar(s0);obj.position.y=y0;return false}
+    big.position.y=p.y+1.05+Math.sin(k*4)*.08;big.material.rotation=kind==="play"||kind==="pplay"?Math.sin(k*14)*.4:0;
+    sm.forEach((m,i)=>{const u=(k*.6+i/3)%1;m.position.y=p.y+.75+u*1.1;m.material.opacity=1-u});
+    if(kind==="sleep"){obj.scale.setScalar(s0*(1+Math.sin(k*2)*.02))}else if(kind==="ptrain"){obj.position.y=y0+Math.max(0,Math.sin(k*6))*.3}else{obj.scale.setScalar(s0*(1+Math.abs(Math.sin(k*5))*.08))}})}
+function careChip(kind,i,obj){const c=document.getElementById("h3chip");if(!c||!H3)return;H3.careK=[kind,i,obj];const h=careHearts();let head="",acts=[],more=null;
+  if(kind==="baby"){const b=S.baby,m=babyAge();babyNeedsToday(b);const food=m>=6?"puree":"formula",d=a=>b.did.includes(a);
+    head=`${babyLooks()} <b>${esc(b.name)}</b> · ${m}개월 · ${babyPose()[2]}<br><small>💖 하트 ${h}개 · ${b.credit===today()?"오늘 돌봄 완료 ✓":"먹이기 + 하트 돌봄 1번이면 오늘 돌봄 완료"}</small>`;
+    acts=[["feed",m>=6?"🥣":"🍼",m>=6?"이유식":"분유",(S.binv[food]||0)>0&&(m<6||hasB("chair")),(S.binv[food]||0)>0?(m<6||hasB("chair")?`${S.binv[food]}번 남음`:"아기 의자 필요"):"시장에서 사기"],
+      ...(b.poop?[["poop","💩","기저귀",(S.binv.diaper||0)>0&&!b.poopDone,b.poopDone?"":`${S.binv.diaper||0}장`]]:[]),
+      ["sleep","😴","재우기",h>0,"하트 1"],["play","🪇","놀기",hasB("rattle")&&h>0,hasB("rattle")?"하트 1":"딸랑이 필요"],["read","📖","책",hasB("picbook")&&h>0,hasB("picbook")?"하트 1":"그림책 필요"],["bath","🛁","목욕",hasB("bath")&&h>0,hasB("bath")?"하트 1":"욕조 필요"]].map(x=>[...x,d(x[0])]);
+    more=babyView}
+  else{const p=S.pets[i];if(!p)return;const P=petOf(p.k),td=today(),done=p.day===td?p.did||[]:[],food=S.inv[p.k+"_1"]||0;
+    head=`${P[2]} <b>${esc(p.name)}</b> · ${petGrow(p)[1]} · ${loveName(p.love)}<br><small>💖 하트 ${h}개 · ${p.fed!==td?"🍚 배고파요!":"😋 배불러요"}</small>`;
+    acts=[["feed","🍚","밥",food>0,food?`${food}번 남음`:"먹이 사기"],["play","🧸","놀기",!!S.inv[p.k+"_2"]&&h>0,S.inv[p.k+"_2"]?"하트 1":"장난감 필요"],["train","🎓","교육",!!S.inv[p.k+"_3"]&&h>0,S.inv[p.k+"_3"]?"하트 1":"도구 필요"],["care","🫧","돌봄",!!S.inv[p.k+"_4"]&&h>0,S.inv[p.k+"_4"]?"하트 1":"도구 필요"]].map(x=>[...x,done.includes(x[0])]);
+    more=petHome}
+  H3.focus(obj,"",more);
+  c.innerHTML=`<div class="ccx"><div class="cch">${head}</div><button type="button" id="h3cx">✕</button></div><div class="ccg">${acts.map(([a,e,t,ok,sub,dn])=>`<button type="button" data-ca="${a}" ${!ok||dn?"disabled":""} class="${dn?"dn":""}"><span>${dn?"✅":e}</span>${t}<small>${dn?"오늘 했어요":sub}</small></button>`).join("")}<button type="button" class="more" id="h3cgo"><span>➕</span>더 보기<small>${kind==="baby"?"가르치기·요리":"재주"}</small></button></div>`;c.hidden=false;c.classList.add("care");
+  $("#h3cx").onclick=()=>{c.classList.remove("care");H3.careK=null;H3.view(window.H3VIEW||"near")};$("#h3cgo").onclick=more;
+  c.querySelectorAll("[data-ca]").forEach(bt=>bt.onclick=()=>{window.CARE3D=1;try{kind==="baby"?babyAct(bt.dataset.ca):petAct(i,bt.dataset.ca)}finally{window.CARE3D=0}})}
+function care3dDone(kind,a,msg,i,ps0){const K=H3&&H3.careK;toast(msg);if(!K)return;fx3D(K[2],(kind==="pet"?"p":"")+a);
+  if(kind==="baby"&&ps0&&babyPose()[1]!==ps0){setTimeout(()=>{if(document.querySelector(".h3full")&&!document.querySelector(".pop-ov"))houseView()},3200);return}
+  careChip(K[0],K[1],K[2])}
+
 function houseView(){hInit();const TM=H3MODE==="town";S.pets.forEach(petDecay);save();const h=careHearts(),b=S.baby;
   const RM=H3MODE==="room",title=TM?"🗺️ 빅토리아 마을":RM?"👑 "+VR_LIST.find(x=>x[0]===(vroomInit().r||"bed"))[1].slice(3):"🏠 빅토리아 하우스",bed=RM&&(vroomInit().r||"bed")==="bed";
   const sheet=(RM?((vroomInit().r||"bed")==="bed"&&souvInit().length?`<button class="card petlink" id="spopen" type="button"><span class="petem">🧸</span><div><h3>내 인형·소품 ${souvInit().length}개 놓기</h3><p class="muted">손으로 끌어서 침대·책상·바닥 어디든 놓아요${souvInit().filter(id=>!souvPosInit()[id]).length?` · 선반에 ${souvInit().filter(id=>!souvPosInit()[id]).length}개`:""}</p></div></button>`:"")+vroomCard():"")+
@@ -2294,7 +2323,7 @@ function houseView(){hInit();const TM=H3MODE==="town";S.pets.forEach(petDecay);s
    <div class="h3chip" id="h3chip" hidden></div>
    <div class="h3sheet" id="h3sheet" hidden><div class="h3grab" id="h3grab"><i></i><button type="button" id="h3close">닫기 ✕</button></div><div class="h3sbody">${sheet}</div></div></div>`;
   document.body.classList.add("h3on");
-  bindBack();$("#back").onclick=()=>{document.body.classList.remove("h3on");home()};bindHTabs();bind3D();$("#tohome").onclick=()=>{H3MODE="house";houseView()};$("#toroom").onclick=()=>{H3MODE="room";houseView()};if(RM)bindVroom();
+  bindBack();$("#back").onclick=()=>{document.body.classList.remove("h3on");home()};bindHTabs();bind3D();if(H3MODE==="house"){const fb=app.querySelector(".h3acts [data-pt=baby]"),fp=app.querySelector(".h3acts [data-pt=pets]");if(fb&&S.baby)fb.onclick=()=>{if(H3&&H3.B&&H3.B.baby)careChip("baby",0,H3.B.baby);else babyView()};if(fp&&S.pets.length)fp.onclick=()=>{if(H3&&H3.B&&H3.B.pets[0]){const k=((window.PETCYC||0)%H3.B.pets.length);window.PETCYC=k+1;const m=H3.B.pets[k];careChip("pet",+m.name.slice(4),m)}else petHome()}}$("#tohome").onclick=()=>{H3MODE="house";houseView()};$("#toroom").onclick=()=>{H3MODE="room";houseView()};if(RM)bindVroom();
   const sp=()=>souvPlace();if($("#spopen"))$("#spopen").onclick=sp;if($("#spopen2"))$("#spopen2").onclick=sp;$("#totown").onclick=()=>{H3MODE="town";houseView()};app.querySelectorAll("[data-go]").forEach(x=>x.onclick=()=>({baby:babyView,pets:petHome})[x.dataset.go]());
   const sh=$("#h3sheet");$("#h3list").onclick=()=>{sh.hidden=!sh.hidden};$("#h3close").onclick=()=>sh.hidden=true;
   let gy=null;$("#h3grab").addEventListener("touchstart",e=>{gy=e.touches[0].clientY},{passive:true});$("#h3grab").addEventListener("touchend",e=>{if(gy!==null&&e.changedTouches[0].clientY-gy>40)sh.hidden=true;gy=null});
@@ -2356,7 +2385,7 @@ function babyAct(a){const b=S.baby,m=babyAge();babyNeedsToday(b);if(b.did.includ
   else if(a==="cookb"){if(careHearts()<1)return;return babyCook()}
   else{if(careHearts()<1)return;S.care.used++;if(a==="read")b.read=(b.read||0)+1;
     msg={sleep:"😴 토닥토닥, 새근새근 잠들었어요.",play:"🪇 딸랑딸랑! 아기가 까르르 웃어요.",read:"📖 그림책을 읽어 줬어요. 아기가 그림을 뚫어지게 봐요.",bath:"🛁 첨벙첨벙! 뽀송뽀송 좋은 냄새가 나요."}[a]}
-  b.did.push(a);babyCredit();save();babyView();toast(msg)}
+  b.did.push(a);const ps0=babyPose()[1];babyCredit();save();if(window.CARE3D)return care3dDone("baby",a,msg,0,ps0);babyView();toast(msg)}
 function babyCredit(){const b=S.baby,td=today();if(b.credit===td)return;const care=["sleep","play","read","teach","bath","cookb","church","walk"].some(x=>b.did.includes(x));
   if(!((b.did.includes("feed")||b.did.includes("cookb"))&&(!b.poop||b.poopDone)&&care))return;if(babyGate())return toast("🚪 다음 성장에 필요한 용품을 먼저 준비해요!");
   const st0=babyStage();b.credit=td;b.careDays++;const st=babyStage();save();
