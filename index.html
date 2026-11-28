@@ -744,7 +744,7 @@ function pmEvents(){const P=pmInit(),t=today();
   if(t>=PMDATES.grad&&!P.ev.grad){P.ev.grad=1;save();const[a]=pmTop(),dr=pmDream();setTimeout(()=>popup(`<div class="bigem">🎓</div><h2>초등학교 졸업을 축하해요!</h2><p>6년 동안 정말 수고했어요, Victoria.<br>지금 Victoria는 <b>${PMTITLE[a]}</b>!<br>장래 희망: ${dr[0]}</p><p class="muted">3월 2일, 중학교 입학과 함께 새 단계가 열려요.</p>`),900)}
   else if(t>=PMDATES.mid&&!P.ev.mid){P.ev.mid=1;save();setTimeout(()=>popup(`<div class="bigem">🏫</div><h2>중학생이 된 걸 축하해요!</h2><p>오늘부터 <b>중학교 1학년 1학기</b>예요.<br>새 친구에게 먼저 “안녕, 나는 ○○야!” 하고 인사해 볼까?</p>`),900)}}
 
-const VQVER="Victoria Quest v7.4";
+const VQVER="Victoria Quest v7.5";
 async function vqUpdCheck(){if(location.protocol==="file:"||document.querySelector(".updbar"))return;try{const t=await fetch("./index.html?u="+Date.now(),{cache:"no-store"}).then(r=>r.text());const m=t.match(/const VQVER="(Victoria Quest v[\d.]+)"/);if(m&&m[1]!==VQVER){const b=document.createElement("button");b.type="button";b.className="updbar";b.textContent="🔄 새 버전이 나왔어요! 눌러서 업데이트 (진도는 그대로)";b.onclick=async()=>{b.textContent="업데이트 중…";try{const rs=await navigator.serviceWorker.getRegistrations();await Promise.all(rs.map(r=>r.update()))}catch(e){}location.reload()};document.body.appendChild(b)}}catch(e){}}
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)vqUpdCheck()});setTimeout(vqUpdCheck,2500);
 /* ===== 엄마 알림(ntfy 푸시): 하루 한 번 자동 보고 + 감사 일기·소원은 쓸 때마다 ===== */
@@ -1452,7 +1452,7 @@ function petHome(){petInit();S.pets.forEach(petDecay);save();const h=careHearts(
   app.innerHTML=hdr("🐾 펫 돌보기")+hTabs("pets")+`<button class="big alt" id="toshop" type="button">🏪 펫샵 가기</button>`+`<div class="card"><div class="row"><h3>💖 돌봄 하트 ${h}개</h3><span class="pill">💎 ${S.gems||0}</span></div><p class="muted">오늘 퀘스트를 1개 끝낼 때마다 하트 1개! 하트로 놀아 주고, 교육하고, 돌봐 줄 수 있어요. 밥은 하트 없이 언제든 줄 수 있어요.</p></div>`+
   (S.pets.length?S.pets.map((p,i)=>{const P=petOf(p.k),it=P[7],td=today(),done=p.day===td?p.did||[]:[],food=S.inv[p.k+"_1"]||0,hungry=p.fed!==td;
    const act=(a,ic,txt,need,ok)=>`<button type="button" class="pact ${done.includes(a)?"done":""}" data-i="${i}" data-a="${a}" ${!ok||done.includes(a)?"disabled":""}><b>${ic}</b>${done.includes(a)?"오늘 했어요":txt}<small>${need}</small></button>`;
-   return `<div class="card pet"><div class="pethead"><span class="petem ${hungry?"":"happy"}">${P[2]}</span><div><h2>${esc(p.name)}</h2><p class="muted">${P[4]?P[4]+" ":""}${P[1]} · ${loveName(p.love)}</p></div></div>
+   return `<div class="card pet"><div class="pethead"><span class="petem ${hungry?"":"happy"}">${P[2]}</span><div><h2>${esc(p.name)}</h2><p class="muted">${P[4]?P[4]+" ":""}${P[1]} · ${loveName(p.love)} · 📏 ${petGrow(p)[1]}${(()=>{const g=petGrow(p),n=PET_GROW.find(x=>x[0]>(p.gd||0)+(p.skill||0));return n?` (밥·교육 ${n[0]-(p.gd||0)-(p.skill||0)}번 더 하면 ‘${n[1]}’)`:""})()}</p></div></div>
     <div class="bar"><i style="width:${p.love}%;background:#FF7AB0"></i></div><p class="muted">친밀도 ${p.love}/100 · ${hungry?"🍚 배고파요!":"😋 배불러요"} · 먹이 ${food}번 남음</p>
     <div class="pacts">${act("feed","🍚","밥 주기",food?"먹이 1개":"시장에서 먹이 사기",food>0)}${act("play","🧸","놀아 주기",S.inv[p.k+"_2"]?"하트 1개":"장난감 필요",S.inv[p.k+"_2"]&&h>0)}${act("train","🎓","교육하기",S.inv[p.k+"_3"]?"하트 1개":"교육 도구 필요",S.inv[p.k+"_3"]&&h>0)}${act("care","🫧","돌봐 주기",S.inv[p.k+"_4"]?"하트 1개":"돌봄 도구 필요",S.inv[p.k+"_4"]&&h>0)}</div>
     <h3>🎓 배운 재주 (교육 ${p.skill}번)</h3><ul class="tricks">${P[6].map((t,j)=>`<li class="${p.skill>=TRICK_AT[j]?"ok":""}">${p.skill>=TRICK_AT[j]?"⭐ "+t:`🔒 교육 ${TRICK_AT[j]}번이면 “${t}”`}</li>`).join("")}</ul></div>`}).join("")
@@ -1460,8 +1460,10 @@ function petHome(){petInit();S.pets.forEach(petDecay);save();const h=careHearts(
   bindBack();bindHTabs();$("#toshop").onclick=petShop;if($("#goshop"))$("#goshop").onclick=petShop;
   app.querySelectorAll(".pact").forEach(b=>b.onclick=()=>petAct(+b.dataset.i,b.dataset.a));
   window.scrollTo(0,0)}
+const PET_GROW=[[0,"아기",1],[7,"어린이",1.25],[21,"다 자랐어요",1.5]];
+function petGrow(p){const n=(p.gd||0)+(p.skill||0);let g=PET_GROW[0];PET_GROW.forEach(x=>{if(n>=x[0])g=x});return g}
 function petAct(i,a){const p=S.pets[i],P=petOf(p.k),td=today();if(p.day!==td){p.day=td;p.did=[]}if(p.did.includes(a))return;let msg="";
-  if(a==="feed"){if(!(S.inv[p.k+"_1"]>0))return;S.inv[p.k+"_1"]--;p.fed=td;p.love=Math.min(100,p.love+3);msg=`${P[2]} 냠냠! 맛있게 먹었어요.`}
+  if(a==="feed"){if(!(S.inv[p.k+"_1"]>0))return;S.inv[p.k+"_1"]--;p.fed=td;p.love=Math.min(100,p.love+3);const g0=petGrow(p);p.gd=(p.gd||0)+1;const g1=petGrow(p);msg=`${P[2]} 냠냠! 맛있게 먹었어요.`+(g1[0]!==g0[0]?` 🎉 ${esc(p.name)}가 ‘${g1[1]}’로 자랐어요! 몸이 더 커졌어요.`:"")}
   else{if(careHearts()<1)return;S.care.used++;
     if(a==="play"){p.love=Math.min(100,p.love+6);msg=`${P[2]} 신나게 놀았어요! 친밀도 +6`}
     if(a==="care"){p.love=Math.min(100,p.love+4);msg=`${P[2]} 깨끗하고 기분 좋아요! 친밀도 +4`}
@@ -1741,7 +1743,7 @@ function buildHouse(){const H=S.house,sc=new THREE.Scene(),R=2;// 방 하나 4�
   // 펫
   const pets=[];let pi=0,gi=0;S.pets.forEach(p=>{const rep=REPTILE.includes(p.k),k=rep?gi++:pi++;const x=rep?.9+k*1.4:.9+(k%3)*1.15,z=rep?3.1:-3.2+Math.floor(k/3)*1.4;
     if(S.inv[p.k+"_0"]&&!rep){const hs=petHouse(["#FFF3E0","#E3F6FF","#F1E8FF","#E8FFF1"][k%4]);hs.position.set(x,.07,z-.05);hs.scale.setScalar(.85);sc.add(hs)}
-    const m=petModel(p.k);m.position.set(x,.07,z+(rep?0:.6));m.rotation.y=-.3;m.scale.setScalar(1.3);m.userData.ph=k;sc.add(m);pets.push(m)});
+    const m=petModel(p.k);m.position.set(x,.07,z+(rep?0:.6));m.rotation.y=-.3;m.scale.setScalar(1.3*petGrow(p)[2]/1.25);m.userData.ph=k;sc.add(m);pets.push(m)});
   frInit();[["sora",-1.0,2.9,"#FFB3D1","#5A3A2A"],["doyun",3.0,4.9,"#9ED8FF","#2B2233"]].forEach(([k,x,z,c,hr])=>{if(frLv(k)<1)return;const m=chibi({dress:c,top:"#FFFFFF",hair:hr,tails:k==="sora",ribbon:c,shoe:c});m.name="friend_"+k;m.position.set(x,.07,z);m.rotation.y=-.6;sc.add(m)});
   gardenBuild(sc);const mbx=musicBoxModel();mbx.position.set(-1.8,.5,1.7);sc.add(mbx);
   return{sc,vic,baby,pets,clouds,mbx}}
