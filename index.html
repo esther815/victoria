@@ -741,7 +741,7 @@ function pmEvents(){const P=pmInit(),t=today();
   if(t>=PMDATES.grad&&!P.ev.grad){P.ev.grad=1;save();const[a]=pmTop(),dr=pmDream();setTimeout(()=>popup(`<div class="bigem">🎓</div><h2>초등학교 졸업을 축하해요!</h2><p>6년 동안 정말 수고했어요, Victoria.<br>지금 Victoria는 <b>${PMTITLE[a]}</b>!<br>장래 희망: ${dr[0]}</p><p class="muted">3월 2일, 중학교 입학과 함께 새 단계가 열려요.</p>`),900)}
   else if(t>=PMDATES.mid&&!P.ev.mid){P.ev.mid=1;save();setTimeout(()=>popup(`<div class="bigem">🏫</div><h2>중학생이 된 걸 축하해요!</h2><p>오늘부터 <b>중학교 1학년 1학기</b>예요.<br>새 친구에게 먼저 “안녕, 나는 ○○야!” 하고 인사해 볼까?</p>`),900)}}
 
-const VQVER="Victoria Quest v7.0";
+const VQVER="Victoria Quest v7.1";
 async function vqUpdCheck(){if(location.protocol==="file:"||document.querySelector(".updbar"))return;try{const t=await fetch("./index.html?u="+Date.now(),{cache:"no-store"}).then(r=>r.text());const m=t.match(/const VQVER="(Victoria Quest v[\d.]+)"/);if(m&&m[1]!==VQVER){const b=document.createElement("button");b.type="button";b.className="updbar";b.textContent="🔄 새 버전이 나왔어요! 눌러서 업데이트 (진도는 그대로)";b.onclick=async()=>{b.textContent="업데이트 중…";try{const rs=await navigator.serviceWorker.getRegistrations();await Promise.all(rs.map(r=>r.update()))}catch(e){}location.reload()};document.body.appendChild(b)}}catch(e){}}
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)vqUpdCheck()});setTimeout(vqUpdCheck,2500);
 /* ===== 엄마 알림(ntfy 푸시): 하루 한 번 자동 보고 + 감사 일기·소원은 쓸 때마다 ===== */
@@ -1298,7 +1298,7 @@ function pastHTML(t){const cap=t==="ma"?MA.length:t==="ko"?KO.length:t==="hist"?
 function withPast(t){app.insertAdjacentHTML("beforeend",pastHTML(t));app.querySelectorAll(".past").forEach(b=>b.onclick=()=>{const d=+b.dataset.d;if(t==="hist")histLesson(d,true);else if(t==="ko")koLesson(d,true);else if(t==="ma")maLesson(d,true);else if(t==="hz")hzLearn(d,true);else enLearn(d,true)})}
 function hist(){histMain();withPast("hist")}
 /* ===== v6.9 🏯 7급 (대한검정회 7급 50자 = 8급 30자 + 7급 신출 20자, 공식 표제훈음) ===== */
-const HZ7_START="2026-11-29";const HZT7=()=>today()>=HZ7_START;
+const HZ7_START="2026-11-28";const HZT7=()=>today()>=HZ7_START;
 const HZ7HUN={};
 const hunT=i=>(HZT7()&&HZ7HUN[HZ[i][0]]?HZ7HUN[HZ[i][0]]:HZ[i][1])+" "+HZ[i][2];
 const meanT=i=>HZT7()&&HZ7HUN[HZ[i][0]]?HZ7HUN[HZ[i][0]]:HZ[i][1];
